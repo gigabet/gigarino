@@ -36,6 +36,9 @@ importers:
       babel-plugin-react-compiler:
         specifier: 1.0.0
         version: 1.0.0
+      biome-tailwind-sorter:
+        specifier: ^0.2.8
+        version: 0.2.8
       tailwindcss:
         specifier: ^4
         version: 4.1.18
@@ -456,6 +459,11 @@ packages:
 
   baseline-browser-mapping@2.9.19:
     resolution: {integrity: sha512-ipDqC8FrAl/76p2SSWKSI+H9tFwm7vYqXQrItCuiVPt26Km0jS+NzSsBWAaBusvSbQcfJG+JitdMm+wZAgTYqg==}
+    hasBin: true
+
+  biome-tailwind-sorter@0.2.8:
+    resolution: {integrity: sha512-2C75jPwAGe3essEwECmxqSf0PMOYbUbfq4Esb4Gf+ekiMomR24iAcCum4iDAX3u/MWBf80veGl8QZol7/WK9Dg==}
+    engines: {node: '>=16.0.0'}
     hasBin: true
 
   caniuse-lite@1.0.30001770:
@@ -937,6 +945,8 @@ snapshots:
       '@babel/types': 7.29.0
 
   baseline-browser-mapping@2.9.19: {}
+
+  biome-tailwind-sorter@0.2.8: {}
 
   caniuse-lite@1.0.30001770: {}
 
