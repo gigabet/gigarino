@@ -1,11 +1,3 @@
 {
-  "typescript.tsdk": "node_modules\\typescript\\lib",
-  "emeraldwalk.runonsave": {
-    "commands": [
-      {
-        "match": "\\.(jsx?|tsx?|html|vue|astro)$",
-        "cmd": "npx biome-tailwind-sorter --write --preserve-cursor --cursor-offset ${cursor} ${file}"
-      }
-    ]
-  }
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }
