@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# API
 
-## Getting Started
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-First, run the development server:
+**Table of Contents** _generated with [DocToc](https://github.com/thlorenz/doctoc)_
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- [API](#api)
+  - [Casino Page API](#casino-page-api)
+    - [`games` request](#games-request)
+    - [`vendors` request](#vendors-request)
+    - [`playgame` request](#playgame-request)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## Casino Page API
+
+For slot and live casino pages.
+
+### `games` request
+
+Returns up to 16 games that match any of the selected filters.
+
+**Params:**
+
+```ts
+interface GamesRequest {
+  name?: string // partial match (used for searching)
+  vendor?: string // partial match (used for searching)
+  category?: string // Slotegrator tag, e.g. "jackpot", "christmas"
+  isLive?: boolean // live or slot casino
+  isNew?: boolean
+  isTrending?: boolean
+  page?: number = 1 // batch of 16; 1 = row 0-15, 2 = row 16-31, etc.
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Response:**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```ts
+interface GamesResponse {
+  success: boolean
+  error?: string
+  pages: number // how many batches of 16, rounded up
+  page: number // the current batch (starts at 1)
+  payload: {
+    id: number // game ID
+    name: string // game name
+    thumbnail: string // game thumbnail url
+    vendor: string // game provider name
+    category: string // Slotegrator tag, e.g. "jackpot", "christmas"
+    isLive?: true // if the game is in a live casino
+    isNew?: true // if the game appears in the new games section
+    isTrending?: true // if the game is a popular game (book of ra, starburst, etc)
+  }[] // up to 16 games
+}
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### `vendors` request
 
-## Learn More
+Returns a list of available game vendors, e.g. Pragmatic, NetEnt
 
-To learn more about Next.js, take a look at the following resources:
+**Params:**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```ts
+interface VendorsRequest {
+  isLive?: boolean // live or slot casino; if missing, return both
+}
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Response:**
 
-## Deploy on Vercel
+```ts
+interface VendorsResponse {
+  success: boolean
+  error?: string
+  payload: {
+    name: string // vendor name
+    logo: string // vendor logo url
+    games: number // number of games that the vendor has
+  }[]
+}
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### `playgame` request
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Plays a casino game. TBD.
