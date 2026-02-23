@@ -3,21 +3,12 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useRef } from 'react'
 
-const categories = [
-  { label: 'Providers', icon: true },
-  { label: 'Top', icon: true },
-  { label: 'Category A', icon: true },
-  { label: 'New', icon: true },
-  { label: 'Popular', icon: true },
-  { label: 'Exclusive', icon: true },
-  { label: 'Roulette', icon: true },
-  { label: 'Game Shows', icon: true },
-  { label: 'Blackjack', icon: true },
-  { label: 'Jackpots', icon: true },
-  { label: 'Slots', icon: true },
-]
-
-export default function CategoryTabs() {
+export default function CategoryTabs(props: {
+  categories: {
+    label: string
+    icon: boolean
+  }[]
+}) {
   const scrollRef = useRef<HTMLDivElement>(null)
 
   const scroll = (direction: 'left' | 'right') => {
@@ -31,7 +22,7 @@ export default function CategoryTabs() {
   }
 
   return (
-    <section className='relative border-b border-gray-700 bg-gray-800'>
+    <section className='sticky top-27 z-20 border-b border-gray-700 bg-gray-800'>
       {/* Scroll Buttons */}
       <button
         type='button'
@@ -54,7 +45,7 @@ export default function CategoryTabs() {
         className='scrollbar-hide flex gap-1 overflow-x-auto px-12 py-3'
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        {categories.map(category => (
+        {props.categories.map(category => (
           <a
             key={category.label}
             href='#!'

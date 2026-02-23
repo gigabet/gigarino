@@ -1,5 +1,6 @@
 'use client'
 
+import { useQuery } from '@tanstack/react-query'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useRef } from 'react'
 
@@ -11,10 +12,10 @@ interface Game {
 interface GameSectionProps {
   title: string
   seeAllCount: number
-  games: Game[]
+  // games: Game[]
 }
 
-export default function GameSection({ title, seeAllCount, games }: GameSectionProps) {
+export default function GameSection({ title, seeAllCount }: GameSectionProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
 
   const scroll = (direction: 'left' | 'right') => {
@@ -26,6 +27,22 @@ export default function GameSection({ title, seeAllCount, games }: GameSectionPr
       })
     }
   }
+
+  const { data } = useQuery<Game[]>({
+    queryKey: ['games'],
+    queryFn: () => [
+      { title: 'Game Title 1', isNew: true },
+      { title: 'Game Title 2', isNew: false },
+      { title: 'Game Title 3', isNew: true },
+      { title: 'Game Title 4', isNew: true },
+      { title: 'Game Title 5', isNew: false },
+      { title: 'Game Title 6', isNew: false },
+      { title: 'Game Title 7', isNew: false },
+      { title: 'Game Title 8', isNew: true },
+    ],
+  })
+
+  const games = data
 
   return (
     <section className='bg-gray-900 py-6'>
@@ -64,7 +81,7 @@ export default function GameSection({ title, seeAllCount, games }: GameSectionPr
           className='scrollbar-hide flex gap-3 overflow-x-auto px-4 pb-2'
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          {games.map(game => (
+          {games?.map(game => (
             <a key={game.title} href='#!' className='group w-40 shrink-0 sm:w-45'>
               {/* Game Card */}
               <div className='relative mb-2 aspect-3/4 overflow-hidden rounded-xl bg-gray-700'>
