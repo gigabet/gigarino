@@ -2,25 +2,26 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
 import { useRef } from 'react'
-
-interface Game {
-  title: string
-  isNew?: boolean
-}
+import { getGameQuery } from '@/app/context'
+import type { Game } from '@/types'
 
 interface GameSectionProps {
   title: string
-  seeAllCount: number
-  // games: Game[]
+  category: {
+    icon: boolean
+    query: string
+  }
 }
 
-export default function GameSection({ title, seeAllCount }: GameSectionProps) {
+export default function GameSection({ title, category }: GameSectionProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
-      const scrollAmount = 280
+      const scrollAmount = 320
       scrollRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth',
@@ -28,33 +29,24 @@ export default function GameSection({ title, seeAllCount }: GameSectionProps) {
     }
   }
 
-  const { data } = useQuery<Game[]>({
-    queryKey: ['games'],
-    queryFn: () => [
-      { title: 'Game Title 1', isNew: true },
-      { title: 'Game Title 2', isNew: false },
-      { title: 'Game Title 3', isNew: true },
-      { title: 'Game Title 4', isNew: true },
-      { title: 'Game Title 5', isNew: false },
-      { title: 'Game Title 6', isNew: false },
-      { title: 'Game Title 7', isNew: false },
-      { title: 'Game Title 8', isNew: true },
-    ],
+  const { data } = useQuery({
+    queryKey: ['games', category.query],
+    queryFn: getGameQuery(category.query),
   })
 
-  const games = data
+  const games = data?.items
 
   return (
     <section className='bg-gray-900 py-6'>
       {/* Section Header */}
-      <div className='mb-4 flex items-center justify-between px-4'>
+      <div className='mb-4 flex items-center justify-between px-8'>
         <h2 className='text-lg font-semibold text-gray-200'>{title}</h2>
-        <a
+        <Link
           href='#!'
           className='flex items-center gap-1 text-sm text-gray-500 transition-colors hover:text-gray-300'
         >
-          <span>See all ({seeAllCount})</span>
-        </a>
+          <span>See all ({data?.total})</span>
+        </Link>
       </div>
 
       {/* Games Carousel */}
@@ -63,52 +55,64 @@ export default function GameSection({ title, seeAllCount }: GameSectionProps) {
         <button
           type='button'
           onClick={() => scroll('left')}
-          className='absolute top-1/2 left-2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-gray-800/90 text-gray-300 shadow-lg transition-colors hover:bg-gray-700'
+          className='absolute top-1/2 left-2 z-10 flex h-10 w-10 -translate-y-3/4 items-center justify-center rounded-full bg-gray-800/90 text-gray-300 shadow-lg transition-colors hover:bg-gray-700'
         >
           <ChevronLeft size={20} />
         </button>
         <button
           type='button'
           onClick={() => scroll('right')}
-          className='absolute top-1/2 right-2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-gray-800/90 text-gray-300 shadow-lg transition-colors hover:bg-gray-700'
+          className='absolute top-1/2 right-2 z-10 flex h-10 w-10 -translate-y-3/4 items-center justify-center rounded-full bg-gray-800/90 text-gray-300 shadow-lg transition-colors hover:bg-gray-700'
         >
           <ChevronRight size={20} />
         </button>
 
         {/* Games Container */}
-        <div
-          ref={scrollRef}
-          className='scrollbar-hide flex gap-3 overflow-x-auto px-4 pb-2'
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-        >
-          {games?.map(game => (
-            <a key={game.title} href='#!' className='group w-40 shrink-0 sm:w-45'>
-              {/* Game Card */}
-              <div className='relative mb-2 aspect-3/4 overflow-hidden rounded-xl bg-gray-700'>
-                {/* Placeholder Image */}
-                <div className='absolute inset-0 flex items-center justify-center bg-linear-to-br from-gray-600 to-gray-700'>
-                  <div className='h-16 w-16 rounded-lg bg-gray-500/30' />
-                </div>
-
-                {/* New Badge */}
-                {game.isNew && (
-                  <div className='absolute top-2 left-2 rounded bg-gray-900 px-2 py-0.5 text-xs font-medium text-white'>
-                    new
-                  </div>
-                )}
-
-                {/* Hover Overlay */}
-                <div className='absolute inset-0 bg-gray-900/0 transition-colors group-hover:bg-gray-900/30' />
-              </div>
-
-              {/* Game Title */}
-              <p className='line-clamp-2 text-sm text-gray-400 transition-colors group-hover:text-gray-200'>
-                {game.title}
-              </p>
-            </a>
-          ))}
+        <div className='w-full overflow-hidden px-8 pb-2'>
+          <div
+            ref={scrollRef}
+            className='no-scrollbar @container flex gap-4 overflow-x-auto'
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {games?.map(game => (
+              <CasinoGame key={game.uuid} {...game} />
+            ))}
+          </div>
         </div>
       </div>
     </section>
+  )
+}
+
+export function CasinoGame(props: Game) {
+  return (
+    <Link
+      key={props.name}
+      href='#!'
+      className='group w-[calc(50cqi-1rem)] shrink-0 sm:w-[calc(33.33cqi-1rem)] md:w-[calc(25cqi-1rem)] lg:w-[calc(20cqi-1rem)] xl:w-[calc(16.67cqi-1rem)]'
+    >
+      {/* Game Card */}
+      <div className='relative mb-2 aspect-16/10 overflow-hidden rounded-xl bg-gray-700'>
+        {/* Game Image */}
+        <div className='relative h-full w-full'>
+          <Image src={props.image} alt={props.name} fill objectFit='cover' />
+        </div>
+
+        {/* New Badge */}
+        {props.isNew && (
+          <div className='absolute top-2 left-2 rounded bg-gray-900 px-2 py-0.5 text-xs font-medium text-white'>
+            new
+          </div>
+        )}
+
+        {/* Hover Overlay */}
+        <div className='absolute inset-0 bg-gray-900/0 transition-colors group-hover:bg-gray-900/30' />
+      </div>
+
+      {/* Game Title */}
+      <p className='line-clamp-2 text-sm text-gray-400 transition-colors group-hover:text-gray-200'>
+        {props.name}
+      </p>
+    </Link>
   )
 }

@@ -1,13 +1,14 @@
 'use client'
 
+import { entries } from 'lodash'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import Link from 'next/link'
 import { useRef } from 'react'
 
 export default function CategoryTabs(props: {
   categories: {
-    label: string
-    icon: boolean
-  }[]
+    [label: string]: { icon: boolean; query?: string; url?: string }
+  }
 }) {
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -22,7 +23,8 @@ export default function CategoryTabs(props: {
   }
 
   return (
-    <section className='sticky top-27 z-20 border-b border-gray-700 bg-gray-800'>
+    <section className='sticky top-16 z-20 border-b border-gray-700 bg-gray-800 lg:top-27.5'>
+      {/* <div className='relative mx-auto max-w-(--breakpoint-2xl)'> */}
       {/* Scroll Buttons */}
       <button
         type='button'
@@ -42,20 +44,21 @@ export default function CategoryTabs(props: {
       {/* Tabs Container */}
       <div
         ref={scrollRef}
-        className='scrollbar-hide flex gap-1 overflow-x-auto px-12 py-3'
+        className='no-scrollbar flex gap-1 overflow-x-auto px-12 py-3'
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        {props.categories.map(category => (
-          <a
-            key={category.label}
-            href='#!'
+        {entries(props.categories).map(([label, category]) => (
+          <Link
+            key={label}
+            href={category.url ?? '#!'}
             className='flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm whitespace-nowrap text-gray-400 transition-colors hover:bg-gray-700 hover:text-gray-200'
           >
             {category.icon && <div className='h-5 w-5 rounded bg-gray-600' />}
-            <span>{category.label}</span>
-          </a>
+            <span>{label}</span>
+          </Link>
         ))}
       </div>
+      {/* </div> */}
     </section>
   )
 }

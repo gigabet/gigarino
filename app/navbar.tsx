@@ -11,13 +11,14 @@ import {
   X,
   XCircle,
 } from 'lucide-react'
+import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 
 const navLinks = [
   { label: 'Promotions', href: '#!' },
-  { label: 'Home', href: '#!' },
-  { label: 'Casino', href: '#!' },
-  { label: 'Live Casino', href: '#!' },
+  { label: 'Home', href: '/' },
+  { label: 'Casino', href: '/' },
+  { label: 'Live Casino', href: '/' },
   { label: 'Jackpots', href: '#!' },
   { label: 'Sports', href: '#!' },
   { label: 'Live Betting', href: '#!' },
@@ -146,7 +147,7 @@ export default function Navbar() {
                       <p className='text-xs tracking-wider text-gray-500 uppercase'>Results</p>
                       <div className='space-y-2'>
                         {['Game Result 1', 'Game Result 2', 'Game Result 3'].map(result => (
-                          <a
+                          <Link
                             key={result}
                             href='#!'
                             className='flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-gray-700'
@@ -156,7 +157,7 @@ export default function Navbar() {
                               <p className='text-sm text-gray-300'>{result}</p>
                               <p className='text-xs text-gray-500'>Category Name</p>
                             </div>
-                          </a>
+                          </Link>
                         ))}
                       </div>
                     </div>
@@ -217,14 +218,14 @@ export default function Navbar() {
                             'New Games',
                             'Popular',
                           ].map(cat => (
-                            <a
+                            <Link
                               key={cat}
                               href='#!'
                               className='rounded-lg bg-gray-700 p-3 text-center transition-colors hover:bg-gray-600'
                             >
                               <div className='mx-auto mb-2 h-8 w-8 rounded-lg bg-gray-600' />
                               <p className='text-xs text-gray-300'>{cat}</p>
-                            </a>
+                            </Link>
                           ))}
                         </div>
                       </div>
@@ -294,7 +295,7 @@ export default function Navbar() {
       <nav className='hidden border-t border-gray-800 lg:block'>
         <div className='flex items-center gap-6 overflow-x-auto px-4'>
           {navLinks.map(link => (
-            <a
+            <Link
               key={link.label}
               href={link.href}
               className='flex items-center gap-1 px-0 py-3 text-sm whitespace-nowrap text-gray-400 transition-colors hover:text-gray-200'
@@ -303,7 +304,7 @@ export default function Navbar() {
                 <span className='h-1.5 w-1.5 rounded-full bg-gray-500' />
               )}
               <span>{link.label}</span>
-            </a>
+            </Link>
           ))}
 
           {/* Language Selector */}
@@ -316,13 +317,13 @@ export default function Navbar() {
           </button>
 
           {/* Help Link */}
-          {/* <a
+          {/* <Link
             href='#!'
             className='flex items-center gap-2 px-4 py-3 text-gray-400 hover:text-gray-200'
           >
             <HelpCircle size={16} />
             <span className='text-sm'>Help Centre</span>
-          </a> */}
+          </Link> */}
         </div>
       </nav>
 
@@ -331,14 +332,14 @@ export default function Navbar() {
         <div className='border-t border-gray-700 bg-gray-800 lg:hidden'>
           <nav className='space-y-1 px-4 py-4'>
             {navLinks.map(link => (
-              <a
+              <Link
                 key={link.label}
                 href={link.href}
                 className='flex items-center gap-3 rounded-lg px-4 py-3 text-gray-300 transition-colors hover:bg-gray-700'
               >
                 <div className='h-8 w-8 rounded bg-gray-600' />
                 <span className='text-sm'>{link.label}</span>
-              </a>
+              </Link>
             ))}
           </nav>
 

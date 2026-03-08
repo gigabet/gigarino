@@ -61,7 +61,7 @@ export default function SportsSection() {
         {/* Sports Container */}
         <div
           ref={scrollRef}
-          className='scrollbar-hide flex gap-3 overflow-x-auto px-4 pb-2'
+          className='no-scrollbar flex gap-3 overflow-x-auto px-4 pb-2'
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {sports.map(sport => (

@@ -62,8 +62,8 @@ export default function Footer() {
   return (
     <footer className='bg-gray-900 text-gray-400'>
       {/* Top Bar */}
-      <div className='flex items-center justify-between border-b border-gray-800 px-4 py-4'>
-        <div className='flex items-center gap-4'>
+      <div className='border-b border-gray-800'>
+        <div className='mx-auto flex max-w-(--breakpoint-2xl) items-center px-8 py-4'>
           {/* Language Selector */}
           <button
             type='button'
@@ -76,7 +76,7 @@ export default function Footer() {
       </div>
 
       {/* Links Grid */}
-      <div className='px-4 py-8'>
+      <div className='mx-auto max-w-(--breakpoint-2xl) px-8 py-8'>
         <div className='grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7'>
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
