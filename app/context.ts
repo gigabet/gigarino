@@ -1,4 +1,4 @@
-import type { GamesResponse, ProvidersResponse } from '@/types'
+import type { GamesResponse, ProvidersResponse, TagsResponse } from '@/types'
 
 export const categories = {
   Providers: { icon: true, url: '/casino/providers' },
@@ -56,6 +56,18 @@ export const providersQuery = async (): Promise<ProvidersResponse | []> => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/games/providers`)
 
     const data = (await res.json()) as ProvidersResponse
+    return data
+  } catch (error) {
+    console.error(error)
+    return []
+  }
+}
+
+export const tagsQuery = async (): Promise<TagsResponse | []> => {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/games/tags`)
+
+    const data = (await res.json()) as TagsResponse
     return data
   } catch (error) {
     console.error(error)

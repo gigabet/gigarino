@@ -31,3 +31,10 @@ export interface GameProvider {
 }
 
 export type ProvidersResponse = GameProvider[]
+
+export interface Tag {
+  code: string
+  label: string
+  gamesCount: number
+}
+export type TagsResponse = Tag[]
