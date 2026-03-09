@@ -138,7 +138,7 @@ export default function Navbar() {
 
       {/* Navigation Links - Desktop */}
       <nav className='hidden border-t border-gray-800 lg:block'>
-        <div className='flex items-center gap-6 overflow-x-auto px-4'>
+        <div className='custom-scrollbar flex items-center gap-6 overflow-x-auto px-4'>
           {navLinks.map(link => (
             <Link
               key={link.label}
