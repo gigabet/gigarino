@@ -5,15 +5,12 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRef } from 'react'
-import { getGameQuery } from '@/app/context'
+import { type categories, getGameQuery } from '@/app/context'
 import type { Game } from '@/types'
 
 interface GameSectionProps {
   title: string
-  category: {
-    icon: boolean
-    query: string
-  }
+  category: (typeof categories)[Exclude<keyof typeof categories, 'Providers'>]
 }
 
 export default function GameSection({ title, category }: GameSectionProps) {
@@ -42,7 +39,7 @@ export default function GameSection({ title, category }: GameSectionProps) {
       <div className='mb-4 flex items-center justify-between px-8'>
         <h2 className='text-lg font-semibold text-gray-200'>{title}</h2>
         <Link
-          href='#!'
+          href={`/casino/${category.slug}`}
           className='flex items-center gap-1 text-sm text-gray-500 transition-colors hover:text-gray-300'
         >
           <span>See all ({data?.total})</span>

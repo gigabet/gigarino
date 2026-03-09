@@ -1,17 +1,17 @@
-import type { GamesResponse, ProvidersResponse, TagsResponse } from '@/types'
+import type { GamesResponse, ProvidersResponse } from '@/types'
 
 export const categories = {
-  Providers: { icon: true, url: '/casino/providers' },
-  'Top Games': { icon: true, query: '?category=top' },
-  'New Releases': { icon: true, query: '?category=new' },
-  'Mobile Games': { icon: true, query: '?isMobile=true' },
-  'Free Spins (ingame)': { icon: true, query: '?tag=free-spins-ingame' },
-  Autoplay: { icon: true, query: '?tag=autoplay' },
-  'Bonus Buy': { icon: true, query: '?tag=bonus-buy' },
-  Classic: { icon: true, query: '?tag=classic' },
-  'Live Casino': { icon: true, query: '?type=roulette' },
-  'All Games': { icon: true, query: '' },
-}
+  Providers: { icon: true, slug: 'providers', query: '' },
+  'Top Games': { icon: true, slug: 'top', query: '?category=top' },
+  'New Releases': { icon: true, slug: 'new', query: '?category=new' },
+  'Mobile Games': { icon: true, slug: 'mobile', query: '?isMobile=true' },
+  'Free Spins (ingame)': { icon: true, slug: 'free-spins-ingame', query: '?tag=free-spins-ingame' },
+  Autoplay: { icon: true, slug: 'autoplay', query: '?tag=autoplay' },
+  'Bonus Buy': { icon: true, slug: 'bonus-buy', query: '?tag=bonus-buy' },
+  Classic: { icon: true, slug: 'classic', query: '?tag=classic' },
+  'Live Casino': { icon: true, slug: 'live-casino', query: '?type=roulette' },
+  'All Games': { icon: true, slug: 'all', query: '?limit=24' },
+} as const
 
 export const getGameQuery = (query: string) => {
   return async ({ pageParam }: { pageParam?: unknown }) => {
@@ -24,18 +24,7 @@ export const getGameQuery = (query: string) => {
 
       const res = await fetch(url.toString())
 
-      // If the API returns a non-200, force fallback
-      if (!res.ok) {
-        throw new Error('Bad response')
-      }
-
       const data = (await res.json()) as GamesResponse
-
-      // Validate shape
-      if (!data || !Array.isArray(data.items)) {
-        throw new Error('Invalid data shape')
-      }
-
       return data
     } catch (error) {
       console.error(error)
@@ -56,18 +45,6 @@ export const providersQuery = async (): Promise<ProvidersResponse | []> => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/games/providers`)
 
     const data = (await res.json()) as ProvidersResponse
-    return data
-  } catch (error) {
-    console.error(error)
-    return []
-  }
-}
-
-export const tagsQuery = async (): Promise<TagsResponse | []> => {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/games/tags`)
-
-    const data = (await res.json()) as TagsResponse
     return data
   } catch (error) {
     console.error(error)

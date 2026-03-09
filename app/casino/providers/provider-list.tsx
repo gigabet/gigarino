@@ -12,7 +12,7 @@ export default function ProviderList() {
   })
 
   return (
-    <div className='px-4 py-6'>
+    <div className='mx-auto max-w-(--breakpoint-2xl) px-8 py-6'>
       <h2 className='mb-4 text-lg font-semibold text-gray-200'>Providers</h2>
       <div className='flex flex-wrap gap-4'>
         {data?.map(prov => (

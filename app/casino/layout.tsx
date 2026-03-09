@@ -7,7 +7,7 @@ export default function CasinoLayout({
   children: React.ReactNode
 }>) {
   return (
-    <main className='bg-gray-900 text-gray-300'>
+    <main className='grow bg-gray-900 text-gray-300'>
       <CategoryTabs categories={categories} />
       {children}
     </main>

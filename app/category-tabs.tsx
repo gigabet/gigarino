@@ -4,12 +4,9 @@ import { entries } from 'lodash'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import { useRef } from 'react'
+import type { categories } from '@/app/context'
 
-export default function CategoryTabs(props: {
-  categories: {
-    [label: string]: { icon: boolean; query?: string; url?: string }
-  }
-}) {
+export default function CategoryTabs(props: { categories: typeof categories }) {
   const scrollRef = useRef<HTMLDivElement>(null)
 
   const scroll = (direction: 'left' | 'right') => {
@@ -50,7 +47,7 @@ export default function CategoryTabs(props: {
         {entries(props.categories).map(([label, category]) => (
           <Link
             key={label}
-            href={category.url ?? '#!'}
+            href={`/casino/${category.slug}`}
             className='flex items-center gap-2 rounded-lg px-4 py-2.5 text-sm whitespace-nowrap text-gray-400 transition-colors hover:bg-gray-700 hover:text-gray-200'
           >
             {category.icon && <div className='h-5 w-5 rounded bg-gray-600' />}

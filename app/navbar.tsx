@@ -3,21 +3,12 @@
 import { useQuery } from '@tanstack/react-query'
 import fuzzysort from 'fuzzysort'
 import { atom, useAtom, useSetAtom } from 'jotai'
-import {
-  Building2,
-  Clock,
-  Globe,
-  Grid3X3,
-  Menu,
-  Search,
-  TrendingUp,
-  X,
-  XCircle,
-} from 'lucide-react'
+import { isEmpty } from 'lodash'
+import { Clock, Globe, Menu, Search, TrendingUp, X, XCircle } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
-import { getGameQuery, providersQuery, tagsQuery } from '@/app/context'
+import { getGameQuery, providersQuery } from '@/app/context'
 
 const navLinks = [
   { label: 'Promotions', href: '#!' },
@@ -33,12 +24,6 @@ const navLinks = [
   { label: 'Bonus', href: '#!' },
   { label: 'Shop', href: '#!' },
   { label: 'VIP Levels', href: '#!' },
-] as const
-
-const searchCategories = [
-  { id: 'games', label: 'Games', icon: Grid3X3 },
-  { id: 'categories', label: 'Categories', icon: TrendingUp },
-  { id: 'providers', label: 'Providers', icon: Building2 },
 ] as const
 
 const recentSearches = ['Slots', 'Blackjack', 'Roulette', 'Live Casino']
@@ -243,8 +228,6 @@ const searchOpenState = atom(false)
 function RichSearch() {
   const [isSearchOpen, setIsSearchOpen] = useAtom(searchOpenState)
   const [searchQuery, setSearchQuery] = useState('')
-  const [activeCategory, setActiveCategory] =
-    useState<(typeof searchCategories)[number]['id']>('games')
   const searchInputRef = useRef<HTMLInputElement>(null)
   const searchRef = useRef<HTMLDivElement>(null)
 
@@ -300,30 +283,11 @@ function RichSearch() {
       {/* Search Dropdown */}
       {isSearchOpen && (
         <div className='absolute top-full right-0 left-0 mt-2 overflow-hidden rounded-xl border border-gray-700 bg-gray-800 shadow-2xl'>
-          {/* Category Tabs */}
-          <div className='flex border-b border-gray-700'>
-            {searchCategories.map(cat => (
-              <button
-                type='button'
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-colors ${
-                  activeCategory === cat.id
-                    ? 'border-b-2 border-gray-400 text-gray-200'
-                    : 'text-gray-500 hover:text-gray-300'
-                }`}
-              >
-                <cat.icon size={16} />
-                {cat.label}
-              </button>
-            ))}
-          </div>
-
           {/* Search Content */}
           <div className='max-h-120 overflow-auto p-4'>
             {searchQuery ? (
               // Search Results
-              <SearchResults category={activeCategory} query={debouncedQuery} />
+              <SearchResults query={debouncedQuery} />
             ) : (
               // Default Content
               <div className='space-y-4'>
@@ -401,83 +365,59 @@ function RichSearch() {
   )
 }
 
-function SearchResults(props: {
-  category: (typeof searchCategories)[number]['id']
-  query: string
-}) {
+function SearchResults(props: { query: string }) {
   const games = useSearchGames(`?search=${encodeURI(props.query)}`)
-  const categories = useSearchCategories(props.query)
   const providers = useSearchProviders(props.query)
   const setSearchOpen = useSetAtom(searchOpenState)
 
   return (
     <div className='space-y-3'>
-      <p className='text-xs tracking-wider text-gray-500 uppercase'>Results</p>
+      {/* <p className='text-xs tracking-wider text-gray-500 uppercase'>Results</p> */}
       <div className='space-y-2'>
-        {props.category === 'games' &&
-          games.map(game => (
-            <Link
-              key={game.uuid}
-              href='#!'
-              className='flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-gray-700'
-              onClick={() => setSearchOpen(false)}
-            >
-              <div className='overflow-hidden rounded-lg'>
-                <Image src={game.image} alt={game.name} width={64} height={40} />
-              </div>
-              <div>
-                <p className='text-sm text-gray-300'>{game.name}</p>
-                <p className='text-xs text-gray-500'>{game.providerName}</p>
-              </div>
-            </Link>
-          ))}
+        {!isEmpty(providers) && (
+          <h3 className='px-2 text-xs tracking-wider text-gray-500 uppercase'>Providers</h3>
+        )}
+        {providers.map(provider => (
+          <Link
+            key={provider.providerSlug}
+            href={`/casino/providers/${provider.providerSlug}/`}
+            className='flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-gray-700'
+            onClick={() => setSearchOpen(false)}
+          >
+            <div className='overflow-hidden rounded-lg'>
+              <Image
+                src={`/images/providers/${provider.providerSlug}.png`}
+                alt={provider.name}
+                width={66}
+                height={30}
+              />
+            </div>
+            <div>
+              <p className='text-sm text-gray-300'>{provider.name}</p>
+              <p className='text-xs text-gray-500'>{provider.gamesCount} Games</p>
+            </div>
+          </Link>
+        ))}
 
-        {props.category === 'categories' &&
-          categories.map(cat => (
-            <Link
-              key={cat.label}
-              href='#!'
-              // href={`/casino/providers/${cat.providerSlug}/`}
-              className='flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-gray-700'
-              onClick={() => setSearchOpen(false)}
-            >
-              {/* <div className='overflow-hidden rounded-lg'>
-                <Image
-                  src={`/images/providers/${cat.providerSlug}.png`}
-                  alt={cat.name}
-                  width={66}
-                  height={30}
-                />
-              </div> */}
-              <div>
-                <p className='text-sm text-gray-300'>{cat.label}</p>
-                <p className='text-xs text-gray-500'>{cat.gamesCount} Games</p>
-              </div>
-            </Link>
-          ))}
-
-        {props.category === 'providers' &&
-          providers.map(provider => (
-            <Link
-              key={provider.providerSlug}
-              href={`/casino/providers/${provider.providerSlug}/`}
-              className='flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-gray-700'
-              onClick={() => setSearchOpen(false)}
-            >
-              <div className='overflow-hidden rounded-lg'>
-                <Image
-                  src={`/images/providers/${provider.providerSlug}.png`}
-                  alt={provider.name}
-                  width={66}
-                  height={30}
-                />
-              </div>
-              <div>
-                <p className='text-sm text-gray-300'>{provider.name}</p>
-                <p className='text-xs text-gray-500'>{provider.gamesCount} Games</p>
-              </div>
-            </Link>
-          ))}
+        <h3 className='px-2 text-xs tracking-wider text-gray-500 uppercase'>
+          {games.length} Games
+        </h3>
+        {games.map(game => (
+          <Link
+            key={game.uuid}
+            href='#!'
+            className='flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-gray-700'
+            onClick={() => setSearchOpen(false)}
+          >
+            <div className='overflow-hidden rounded-lg'>
+              <Image src={game.image} alt={game.name} width={64} height={40} />
+            </div>
+            <div>
+              <p className='text-sm text-gray-300'>{game.name}</p>
+              <p className='text-xs text-gray-500'>{game.providerName}</p>
+            </div>
+          </Link>
+        ))}
       </div>
     </div>
   )
@@ -490,15 +430,6 @@ function useSearchGames(query: string) {
   })
 
   return data?.items ?? []
-}
-
-function useSearchCategories(query: string) {
-  const { data } = useQuery({
-    queryKey: ['categories'],
-    queryFn: tagsQuery,
-  })
-
-  return fuzzysort.go(query, data ?? [], { key: 'label', threshold: 0.5 }).map(res => res.obj)
 }
 
 function useSearchProviders(query: string) {
