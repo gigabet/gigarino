@@ -51,3 +51,25 @@ export const providersQuery = async (): Promise<ProvidersResponse | []> => {
     return []
   }
 }
+
+export const getGameDemo = async (gameUuid: string) => {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/public/games/init-demo`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        gameUuid,
+        returnUrl: window.location.href,
+        language: 'en',
+        device: 'mobile',
+      }),
+    })
+    const data = (await res.json()) as { url: string; sessionId: string }
+    return data.url
+  } catch (error) {
+    console.error(error)
+    return '#!'
+  }
+}

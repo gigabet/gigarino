@@ -1,6 +1,9 @@
 'use client'
 import { isServer, QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { cx } from 'class-variance-authority'
+import { atom, useAtomValue } from 'jotai'
+import { BarLoader } from 'react-spinners'
 
 function makeQueryClient() {
   return new QueryClient({
@@ -39,8 +42,25 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <Loading />
       {children}
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
+  )
+}
+
+export const isLoadingOverlayState = atom(false)
+function Loading() {
+  const isLoading = useAtomValue(isLoadingOverlayState)
+
+  return (
+    <div
+      className={cx(
+        isLoading ? 'flex' : 'hidden',
+        'fixed top-0 left-0 isolate z-100 h-dvh w-dvw items-center justify-center overflow-hidden bg-black/30 text-white backdrop-blur-xs'
+      )}
+    >
+      <BarLoader color='#ffffff' />
+    </div>
   )
 }

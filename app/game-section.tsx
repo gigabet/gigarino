@@ -1,11 +1,14 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
+import { useSetAtom } from 'jotai'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useRef } from 'react'
-import { type categories, getGameQuery } from '@/app/context'
+import { type categories, getGameDemo, getGameQuery } from '@/app/context'
+import { isLoadingOverlayState } from '@/context/providers'
 import type { Game } from '@/types'
 
 interface GameSectionProps {
@@ -82,11 +85,20 @@ export default function GameSection({ title, category }: GameSectionProps) {
 }
 
 export function CasinoGame(props: Game) {
+  const router = useRouter()
+  const setLoading = useSetAtom(isLoadingOverlayState)
+
+  const handleClick = async () => {
+    setLoading(true)
+    const url = await getGameDemo(props.uuid)
+    router.push(url)
+  }
+
   return (
-    <Link
-      key={props.name}
-      href='#!'
-      className='group w-[calc(50cqi-1rem)] shrink-0 sm:w-[calc(33.33cqi-1rem)] md:w-[calc(25cqi-1rem)] lg:w-[calc(20cqi-1rem)] xl:w-[calc(16.67cqi-1rem)]'
+    <button
+      type='button'
+      className='group w-[calc(50cqi-1rem)] shrink-0 cursor-pointer sm:w-[calc(33.33cqi-1rem)] md:w-[calc(25cqi-1rem)] lg:w-[calc(20cqi-1rem)] xl:w-[calc(16.67cqi-1rem)]'
+      onClick={handleClick}
     >
       {/* Game Card */}
       <div className='relative mb-2 aspect-16/10 overflow-hidden rounded-xl bg-gray-700'>
@@ -110,6 +122,6 @@ export function CasinoGame(props: Game) {
       <p className='line-clamp-2 text-sm text-gray-400 transition-colors group-hover:text-gray-200'>
         {props.name}
       </p>
-    </Link>
+    </button>
   )
 }
