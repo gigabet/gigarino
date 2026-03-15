@@ -13,7 +13,7 @@ export default function ProviderList() {
 
   return (
     <div className='mx-auto max-w-(--breakpoint-2xl) px-8 py-6'>
-      <h2 className='mb-4 text-lg font-semibold text-gray-200'>Providers</h2>
+      <h2 className='font-display mb-4 text-xl text-white sm:text-2xl lg:text-3xl'>Providers</h2>
       <div className='flex flex-wrap gap-4'>
         {data?.map(prov => (
           <Link
@@ -35,7 +35,7 @@ export default function ProviderList() {
                 />
               </div>
               {/* Hover Overlay */}
-              <div className='absolute inset-0 bg-gray-900/0 transition-colors group-hover:bg-gray-900/30' />
+              <div className='absolute inset-0 bg-neutral-900/0 transition-colors group-hover:bg-neutral-900/30' />
             </div>
           </Link>
         ))}

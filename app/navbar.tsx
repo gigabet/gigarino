@@ -1,35 +1,47 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
+import { cx } from 'class-variance-authority'
 import fuzzysort from 'fuzzysort'
 import { atom, useAtom, useSetAtom } from 'jotai'
 import { isEmpty } from 'lodash'
-import { Clock, Globe, Menu, Search, TrendingUp, X, XCircle } from 'lucide-react'
+import {
+  ClockIcon,
+  CoinsIcon,
+  GiftIcon,
+  GlobeIcon,
+  ListOrderedIcon,
+  LogInIcon,
+  MenuIcon,
+  RadioIcon,
+  SearchIcon,
+  TrendingUpIcon,
+  TvMinimalPlayIcon,
+  VolleyballIcon,
+  XCircleIcon,
+  XIcon,
+} from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { getGameQuery, providersQuery } from '@/app/context'
+import Logo from '@/components/logo'
 
 const navLinks = [
-  { label: 'Promotions', href: '#!' },
-  { label: 'Home', href: '/' },
-  { label: 'Casino', href: '/' },
-  { label: 'Live Casino', href: '/' },
-  { label: 'Jackpots', href: '#!' },
-  { label: 'Sports', href: '#!' },
-  { label: 'Live Betting', href: '#!' },
-  { label: 'Virtual Sports', href: '#!' },
-  { label: 'Challenges', href: '#!' },
-  { label: 'Tournaments', href: '#!' },
-  { label: 'Bonus', href: '#!' },
-  { label: 'Shop', href: '#!' },
-  { label: 'VIP Levels', href: '#!' },
+  { label: 'Casino', href: '/', icon: CoinsIcon },
+  { label: 'Live Casino', href: '/casino/live-casino', icon: RadioIcon },
+  { label: 'Sports', href: '#!', icon: VolleyballIcon },
+  { label: 'In Play', href: '#!', icon: TvMinimalPlayIcon },
+  { label: 'Virtual Sports', href: '#!', icon: ListOrderedIcon },
+  { label: 'Bonus', href: '#!', icon: GiftIcon },
 ] as const
 
 const recentSearches = ['Slots', 'Blackjack', 'Roulette', 'Live Casino']
 const popularSearches = ['Book', 'Fruits', 'Dice', 'Poker']
 
 export default function Navbar() {
+  const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -60,151 +72,159 @@ export default function Navbar() {
   }
 
   return (
-    <header className='sticky top-0 z-50 bg-gray-900'>
-      {/* Top Bar */}
-      <div className='flex items-center justify-between px-4 py-3'>
-        {/* Left Section */}
-        <div className='flex flex-1 items-center gap-4'>
-          {/* Mobile Menu Button */}
-          <button
-            type='button'
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className='p-2 text-gray-400 hover:text-gray-200 lg:hidden'
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-
-          {/* Logo Placeholder */}
-          <div className='flex h-8 w-32 shrink-0 items-center justify-center rounded bg-gray-700'>
-            <span className='text-sm font-medium text-gray-500'>LOGO</span>
-          </div>
-
-          <RichSearch />
-        </div>
-
-        {/* Right Section */}
-        <div className='flex items-center gap-3'>
-          {/* Mobile Search Button */}
-          <button
-            type='button'
-            onClick={() => setIsSearchOpen(!isSearchOpen)}
-            className='p-2 text-gray-400 hover:text-gray-200 lg:hidden'
-          >
-            <Search size={20} />
-          </button>
-
-          {/* Register Button */}
-          <button
-            type='button'
-            className='hidden cursor-pointer px-4 py-2 text-sm text-gray-300 transition-colors hover:text-white sm:block'
-          >
-            Register
-          </button>
-
-          {/* Login Button */}
-          <button
-            type='button'
-            className='rounded-lg bg-gray-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-500'
-          >
-            Log in
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Search Bar */}
-      {isSearchOpen && (
-        <div className='px-4 pb-3 lg:hidden'>
-          <div className='relative'>
-            <Search size={18} className='absolute top-1/2 left-3 -translate-y-1/2 text-gray-500' />
-            <input
-              type='text'
-              placeholder='Search games, categories, providers...'
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              className='w-full rounded-lg border border-gray-700 bg-gray-800 py-2.5 pr-10 pl-10 text-sm text-gray-200 placeholder-gray-500 focus:border-gray-500 focus:outline-none'
-            />
-            {searchQuery && (
-              <button
-                type='reset'
-                onClick={clearSearch}
-                className='absolute top-1/2 right-3 -translate-y-1/2 text-gray-500'
-              >
-                <XCircle size={16} />
-              </button>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Navigation Links - Desktop */}
-      <nav className='hidden border-t border-gray-800 lg:block'>
-        <div className='custom-scrollbar flex items-center gap-6 overflow-x-auto px-4'>
-          {navLinks.map(link => (
-            <Link
-              key={link.label}
-              href={link.href}
-              className='flex items-center gap-1 px-0 py-3 text-sm whitespace-nowrap text-gray-400 transition-colors hover:text-gray-200'
+    <header className='sticky top-0 z-50 bg-neutral-900'>
+      <div className='mx-auto max-w-(--breakpoint-2xl)'>
+        {/* Top Bar */}
+        <div className='flex h-20 items-center justify-between px-4 py-3'>
+          {/* Left Section */}
+          <div className='flex items-center gap-4'>
+            {/* Mobile Menu Button */}
+            <button
+              type='button'
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className='p-2 text-neutral-400 hover:text-neutral-200 lg:hidden'
             >
-              {link.label === 'Promotions' && (
-                <span className='h-1.5 w-1.5 rounded-full bg-gray-500' />
-              )}
-              <span>{link.label}</span>
+              {isMobileMenuOpen ? <XIcon size={24} /> : <MenuIcon size={24} />}
+            </button>
+
+            {/* Logo Placeholder */}
+            <Link href='/'>
+              <Logo />
             </Link>
-          ))}
+          </div>
 
-          {/* Language Selector */}
-          <button
-            type='button'
-            className='ml-auto flex items-center gap-2 px-4 py-3 text-gray-400 hover:text-gray-200'
-          >
-            <Globe size={16} />
-            <span className='text-sm'>English</span>
-          </button>
+          {/* Middle Section */}
+          <div className='hidden w-full max-w-xl sm:flex'>
+            <RichSearch />
+          </div>
 
-          {/* Help Link */}
-          {/* <Link
-            href='#!'
-            className='flex items-center gap-2 px-4 py-3 text-gray-400 hover:text-gray-200'
-          >
-            <HelpCircle size={16} />
-            <span className='text-sm'>Help Centre</span>
-          </Link> */}
+          {/* Right Section */}
+          <div className='flex items-center gap-3'>
+            {/* Mobile Search Button */}
+            <button
+              type='button'
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+              className='p-2 text-neutral-400 hover:text-neutral-200 lg:hidden'
+            >
+              <SearchIcon size={20} />
+            </button>
+
+            {/* Register Button */}
+            <button type='button' className='btn-brand-outline hidden h-10 sm:block'>
+              <span className='flex skew-x-10 items-center gap-2'>Register</span>
+            </button>
+
+            {/* Login Button */}
+            <button type='button' className='btn-brand-main h-10 px-2 text-xs sm:px-4 sm:text-sm'>
+              <span className='items-center gap-2'>
+                <LogInIcon className='hidden size-4 sm:block' /> Log in
+              </span>
+            </button>
+          </div>
         </div>
-      </nav>
 
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className='border-t border-gray-700 bg-gray-800 lg:hidden'>
-          <nav className='space-y-1 px-4 py-4'>
+        {/* Mobile Search Bar */}
+        {isSearchOpen && (
+          <div className='px-4 pb-3 lg:hidden'>
+            <div className='relative'>
+              <SearchIcon
+                size={18}
+                className='absolute top-1/2 left-3 -translate-y-1/2 text-neutral-500'
+              />
+              <input
+                type='text'
+                placeholder='Search games, categories, providers...'
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                className='w-full rounded-full border border-neutral-700 bg-neutral-800 px-10 py-2.5 text-sm text-neutral-200 placeholder-neutral-500 focus:border-neutral-500 focus:outline-none'
+              />
+              {searchQuery && (
+                <button
+                  type='reset'
+                  onClick={clearSearch}
+                  className='absolute top-1/2 right-3 -translate-y-1/2 text-neutral-500'
+                >
+                  <XCircleIcon size={16} />
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className='border-t border-neutral-700 bg-neutral-800 lg:hidden'>
+            <nav className='space-y-1 px-4 py-4'>
+              {navLinks.map(link => (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className='flex items-center gap-3 rounded-lg px-4 py-3 text-neutral-300 transition-colors hover:bg-neutral-700'
+                >
+                  <div className='h-8 w-8 rounded bg-neutral-600' />
+                  <span className='text-sm'>{link.label}</span>
+                </Link>
+              ))}
+            </nav>
+
+            {/* Mobile Auth Buttons */}
+            <div className='space-y-2 border-t border-neutral-700 px-4 py-4'>
+              <button
+                type='button'
+                className='w-full rounded-lg py-3 text-sm text-neutral-300 transition-colors hover:bg-neutral-700'
+              >
+                Register
+              </button>
+              <button
+                type='button'
+                className='w-full rounded-lg bg-neutral-600 py-3 text-sm font-medium text-white transition-colors hover:bg-neutral-500'
+              >
+                Log in
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+      <div className='border-t border-neutral-800'>
+        {/* Navigation Links - Desktop */}
+        <nav className='mx-auto hidden h-16 w-full max-w-(--breakpoint-2xl) items-center lg:flex'>
+          <div className='custom-scrollbar flex w-full grow items-center gap-2 overflow-x-auto px-4'>
             {navLinks.map(link => (
               <Link
                 key={link.label}
                 href={link.href}
-                className='flex items-center gap-3 rounded-lg px-4 py-3 text-gray-300 transition-colors hover:bg-gray-700'
+                className={cx(
+                  'flex items-center gap-1.5 rounded-md px-4 py-2 text-sm whitespace-nowrap transition-colors',
+                  pathname === link.href
+                    ? 'text-brand bg-brand/10 hover:bg-brand/15'
+                    : 'text-neutral-400 hover:bg-white/5 hover:text-white'
+                )}
               >
-                <div className='h-8 w-8 rounded bg-gray-600' />
-                <span className='text-sm'>{link.label}</span>
+                <link.icon className='size-4' />
+                <span>{link.label}</span>
               </Link>
             ))}
-          </nav>
 
-          {/* Mobile Auth Buttons */}
-          <div className='space-y-2 border-t border-gray-700 px-4 py-4'>
+            {/* Language Selector */}
             <button
               type='button'
-              className='w-full rounded-lg py-3 text-sm text-gray-300 transition-colors hover:bg-gray-700'
+              className='ml-auto flex items-center gap-2 px-4 py-3 text-neutral-400 hover:text-neutral-200'
             >
-              Register
+              <GlobeIcon size={16} />
+              <span className='text-sm'>English</span>
             </button>
-            <button
-              type='button'
-              className='w-full rounded-lg bg-gray-600 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-500'
-            >
-              Log in
-            </button>
+
+            {/* Help Link */}
+            {/* <Link
+            href='#!'
+            className='flex items-center gap-2 px-4 py-3 text-neutral-400 hover:text-neutral-200'
+          >
+            <HelpCircle size={16} />
+            <span className='text-sm'>Help Centre</span>
+          </Link> */}
           </div>
-        </div>
-      )}
+        </nav>
+      </div>
     </header>
   )
 }
@@ -259,7 +279,10 @@ function RichSearch() {
   return (
     <div ref={searchRef} className='relative hidden max-w-xl flex-1 lg:block'>
       <div className='relative'>
-        <Search size={18} className='absolute top-1/2 left-3 -translate-y-1/2 text-gray-500' />
+        <SearchIcon
+          size={18}
+          className='absolute top-1/2 left-3 -translate-y-1/2 text-neutral-500'
+        />
         <input
           ref={searchInputRef}
           type='text'
@@ -267,22 +290,22 @@ function RichSearch() {
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
           onFocus={() => setIsSearchOpen(true)}
-          className='w-full rounded-lg border border-gray-700 bg-gray-800 py-2.5 pr-10 pl-10 text-sm text-gray-200 placeholder-gray-500 transition-all focus:border-gray-500 focus:ring-1 focus:ring-gray-500 focus:outline-none'
+          className='focus:border-brand focus:ring-brand/20 w-full rounded-full border border-neutral-700 bg-neutral-800 px-10 py-2.5 text-sm text-neutral-200 placeholder-neutral-500 transition-all focus:ring-4 focus:outline-none'
         />
         {searchQuery && (
           <button
             type='reset'
             onClick={clearSearch}
-            className='absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 hover:text-gray-300'
+            className='absolute top-1/2 right-3 -translate-y-1/2 text-neutral-500 hover:text-neutral-300'
           >
-            <XCircle size={16} />
+            <XCircleIcon size={16} />
           </button>
         )}
       </div>
 
       {/* Search Dropdown */}
       {isSearchOpen && (
-        <div className='absolute top-full right-0 left-0 mt-2 overflow-hidden rounded-xl border border-gray-700 bg-gray-800 shadow-2xl'>
+        <div className='absolute top-full right-0 left-0 mt-2 overflow-hidden rounded-xl border border-neutral-700 bg-neutral-800 shadow-2xl'>
           {/* Search Content */}
           <div className='max-h-120 overflow-auto p-4'>
             {searchQuery ? (
@@ -294,8 +317,8 @@ function RichSearch() {
                 {/* Recent Searches */}
                 <div>
                   <div className='mb-2 flex items-center gap-2'>
-                    <Clock size={14} className='text-gray-500' />
-                    <p className='text-xs tracking-wider text-gray-500 uppercase'>Recent</p>
+                    <ClockIcon size={14} className='text-neutral-500' />
+                    <p className='text-xs tracking-wider text-neutral-500 uppercase'>Recent</p>
                   </div>
                   <div className='flex flex-wrap gap-2'>
                     {recentSearches.map(term => (
@@ -303,7 +326,7 @@ function RichSearch() {
                         type='button'
                         key={term}
                         onClick={() => setSearchQuery(term)}
-                        className='rounded-full bg-gray-700 px-3 py-1.5 text-sm text-gray-300 transition-colors hover:bg-gray-600'
+                        className='rounded-full bg-neutral-700 px-3 py-1.5 text-sm text-neutral-300 transition-colors hover:bg-neutral-600'
                       >
                         {term}
                       </button>
@@ -314,8 +337,8 @@ function RichSearch() {
                 {/* Popular Searches */}
                 <div>
                   <div className='mb-2 flex items-center gap-2'>
-                    <TrendingUp size={14} className='text-gray-500' />
-                    <p className='text-xs tracking-wider text-gray-500 uppercase'>Popular</p>
+                    <TrendingUpIcon size={14} className='text-neutral-500' />
+                    <p className='text-xs tracking-wider text-neutral-500 uppercase'>Popular</p>
                   </div>
                   <div className='flex flex-wrap gap-2'>
                     {popularSearches.map(term => (
@@ -323,36 +346,10 @@ function RichSearch() {
                         type='button'
                         key={term}
                         onClick={() => setSearchQuery(term)}
-                        className='rounded-full bg-gray-700 px-3 py-1.5 text-sm text-gray-300 transition-colors hover:bg-gray-600'
+                        className='rounded-full bg-neutral-700 px-3 py-1.5 text-sm text-neutral-300 transition-colors hover:bg-neutral-600'
                       >
                         {term}
                       </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Quick Categories */}
-                <div>
-                  <p className='mb-2 text-xs tracking-wider text-gray-500 uppercase'>
-                    Quick Access
-                  </p>
-                  <div className='grid grid-cols-3 gap-2'>
-                    {[
-                      'Slots',
-                      'Table Games',
-                      'Live Casino',
-                      'Jackpots',
-                      'New Games',
-                      'Popular',
-                    ].map(cat => (
-                      <Link
-                        key={cat}
-                        href='#!'
-                        className='rounded-lg bg-gray-700 p-3 text-center transition-colors hover:bg-gray-600'
-                      >
-                        <div className='mx-auto mb-2 h-8 w-8 rounded-lg bg-gray-600' />
-                        <p className='text-xs text-gray-300'>{cat}</p>
-                      </Link>
                     ))}
                   </div>
                 </div>
@@ -372,16 +369,16 @@ function SearchResults(props: { query: string }) {
 
   return (
     <div className='space-y-3'>
-      {/* <p className='text-xs tracking-wider text-gray-500 uppercase'>Results</p> */}
+      {/* <p className='text-xs tracking-wider text-neutral-500 uppercase'>Results</p> */}
       <div className='space-y-2'>
         {!isEmpty(providers) && (
-          <h3 className='px-2 text-xs tracking-wider text-gray-500 uppercase'>Providers</h3>
+          <h3 className='px-2 text-xs tracking-wider text-neutral-500 uppercase'>Providers</h3>
         )}
         {providers.map(provider => (
           <Link
             key={provider.providerSlug}
             href={`/casino/providers/${provider.providerSlug}/`}
-            className='flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-gray-700'
+            className='flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-neutral-700'
             onClick={() => setSearchOpen(false)}
           >
             <div className='overflow-hidden rounded-lg'>
@@ -393,28 +390,28 @@ function SearchResults(props: { query: string }) {
               />
             </div>
             <div>
-              <p className='text-sm text-gray-300'>{provider.name}</p>
-              <p className='text-xs text-gray-500'>{provider.gamesCount} Games</p>
+              <p className='text-sm text-neutral-300'>{provider.name}</p>
+              <p className='text-xs text-neutral-500'>{provider.gamesCount} Games</p>
             </div>
           </Link>
         ))}
 
-        <h3 className='px-2 text-xs tracking-wider text-gray-500 uppercase'>
+        <h3 className='px-2 text-xs tracking-wider text-neutral-500 uppercase'>
           {games.length} Games
         </h3>
         {games.map(game => (
           <Link
             key={game.uuid}
             href='#!'
-            className='flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-gray-700'
+            className='flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-neutral-700'
             onClick={() => setSearchOpen(false)}
           >
             <div className='overflow-hidden rounded-lg'>
               <Image src={game.image} alt={game.name} width={64} height={40} />
             </div>
             <div>
-              <p className='text-sm text-gray-300'>{game.name}</p>
-              <p className='text-xs text-gray-500'>{game.providerName}</p>
+              <p className='text-sm text-neutral-300'>{game.name}</p>
+              <p className='text-xs text-neutral-500'>{game.providerName}</p>
             </div>
           </Link>
         ))}

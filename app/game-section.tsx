@@ -2,7 +2,20 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { useSetAtom } from 'jotai'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
+import {
+  ChevronLeft,
+  ChevronRight,
+  // CirclePlus,
+  // Flame,
+  // GalleryHorizontalEnd,
+  // HandCoins,
+  // Landmark,
+  // RadioIcon,
+  // RefreshCcwDot,
+  // Smartphone,
+  // Sparkles,
+  // StoreIcon,
+} from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -10,6 +23,19 @@ import { useRef } from 'react'
 import { type categories, getGameDemo, getGameQuery } from '@/app/context'
 import { isLoadingOverlayState } from '@/context/providers'
 import type { Game } from '@/types'
+
+// const icons = {
+//   CirclePlus,
+//   Flame,
+//   GalleryHorizontalEnd,
+//   HandCoins,
+//   Landmark,
+//   RadioIcon,
+//   RefreshCcwDot,
+//   Smartphone,
+//   Sparkles,
+//   StoreIcon,
+// }
 
 interface GameSectionProps {
   title: string
@@ -35,15 +61,21 @@ export default function GameSection({ title, category }: GameSectionProps) {
   })
 
   const games = data?.items
+  // const Icon = icons[category.icon]
 
   return (
-    <section className='bg-gray-900 py-6'>
+    <section className='py-6'>
       {/* Section Header */}
       <div className='mb-4 flex items-center justify-between px-8'>
-        <h2 className='text-lg font-semibold text-gray-200'>{title}</h2>
+        <div className='flex items-center gap-2'>
+          {category.slug === 'live-casino' && (
+            <div className='bg-danger size-3 animate-pulse rounded-full'></div>
+          )}
+          <h2 className='font-display text-xl text-white sm:text-2xl lg:text-3xl'>{title}</h2>
+        </div>
         <Link
           href={`/casino/${category.slug}`}
-          className='flex items-center gap-1 text-sm text-gray-500 transition-colors hover:text-gray-300'
+          className='flex items-center gap-1 text-sm text-neutral-500 transition-colors hover:text-neutral-300'
         >
           <span>See all ({data?.total})</span>
         </Link>
@@ -55,14 +87,14 @@ export default function GameSection({ title, category }: GameSectionProps) {
         <button
           type='button'
           onClick={() => scroll('left')}
-          className='absolute top-1/2 left-2 z-10 flex h-10 w-10 -translate-y-3/4 items-center justify-center rounded-full bg-gray-800/90 text-gray-300 shadow-lg transition-colors hover:bg-gray-700'
+          className='absolute top-1/2 left-2 z-10 flex h-10 w-10 -translate-y-3/4 items-center justify-center rounded-full bg-neutral-800/90 text-neutral-300 shadow-lg transition-colors hover:bg-neutral-700'
         >
           <ChevronLeft size={20} />
         </button>
         <button
           type='button'
           onClick={() => scroll('right')}
-          className='absolute top-1/2 right-2 z-10 flex h-10 w-10 -translate-y-3/4 items-center justify-center rounded-full bg-gray-800/90 text-gray-300 shadow-lg transition-colors hover:bg-gray-700'
+          className='absolute top-1/2 right-2 z-10 flex h-10 w-10 -translate-y-3/4 items-center justify-center rounded-full bg-neutral-800/90 text-neutral-300 shadow-lg transition-colors hover:bg-neutral-700'
         >
           <ChevronRight size={20} />
         </button>
@@ -101,25 +133,26 @@ export function CasinoGame(props: Game) {
       onClick={handleClick}
     >
       {/* Game Card */}
-      <div className='relative mb-2 aspect-16/10 overflow-hidden rounded-xl bg-gray-700'>
+      <div className='relative mb-2 aspect-16/10 overflow-hidden rounded-xl bg-neutral-700'>
         {/* Game Image */}
-        <div className='relative h-full w-full'>
+        <div className='relative size-full'>
+          {/* <div className='absolute inset-0 z-1 size-full bg-linear-to-b from-black/30 via-transparent to-black/30 bg-blend-multiply group-hover:bg-transparent' /> */}
           <Image src={props.image} alt={props.name} fill objectFit='cover' />
         </div>
 
         {/* New Badge */}
         {props.isNew && (
-          <div className='absolute top-2 left-2 rounded bg-gray-900 px-2 py-0.5 text-xs font-medium text-white'>
+          <div className='absolute top-2 left-2 rounded bg-neutral-900 px-2 py-0.5 text-xs font-medium text-white'>
             new
           </div>
         )}
 
         {/* Hover Overlay */}
-        <div className='absolute inset-0 bg-gray-900/0 transition-colors group-hover:bg-gray-900/30' />
+        <div className='absolute inset-0 bg-linear-to-b from-black/40 via-transparent to-black/40 bg-blend-multiply backdrop-brightness-100 transition-all group-hover:bg-transparent group-hover:backdrop-brightness-120' />
       </div>
 
       {/* Game Title */}
-      <p className='line-clamp-2 text-sm text-gray-400 transition-colors group-hover:text-gray-200'>
+      <p className='line-clamp-2 text-sm text-neutral-400 transition-colors group-hover:text-neutral-200'>
         {props.name}
       </p>
     </button>

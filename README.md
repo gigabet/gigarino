@@ -1,87 +1,49 @@
-# API
+# Installation
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-**Table of Contents** _generated with [DocToc](https://github.com/thlorenz/doctoc)_
+**Table of Contents**:
 
-- [API](#api)
-  - [Casino Page API](#casino-page-api)
-    - [`games` request](#games-request)
-    - [`vendors` request](#vendors-request)
-    - [`playgame` request](#playgame-request)
+- [Installation](#installation)
+  - [1. Node Version Manager (`nvm`)](#1-node-version-manager-nvm)
+  - [2. pnpm](#2-pnpm)
+  - [3. Project](#3-project)
+  - [4. Optional - VS Code extensions](#4-optional---vs-code-extensions)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Casino Page API
+## 1. Node Version Manager (`nvm`)
 
-For slot and live casino pages.
-
-### `games` request
-
-Returns up to 16 games that match any of the selected filters.
-
-**Params:**
-
-```ts
-interface GamesRequest {
-  name?: string // partial match (used for searching)
-  vendor?: string // partial match (used for searching)
-  category?: string // Slotegrator tag, e.g. "jackpot", "christmas"
-  isLive?: boolean // live or slot casino
-  isNew?: boolean
-  isTrending?: boolean
-  page?: number = 1 // batch of 16; 1 = row 0-15, 2 = row 16-31, etc.
-}
+```sh
+winget install CoreyButler.NVMforWindows
 ```
 
-**Response:**
-
-```ts
-interface GamesResponse {
-  success: boolean
-  error?: string
-  pages: number // how many batches of 16, rounded up
-  page: number // the current batch (starts at 1)
-  payload: {
-    id: number // game ID
-    name: string // game name
-    thumbnail: string // game thumbnail url
-    vendor: string // game provider name
-    category: string // Slotegrator tag, e.g. "jackpot", "christmas"
-    isLive?: true // if the game is in a live casino
-    isNew?: true // if the game appears in the new games section
-    isTrending?: true // if the game is a popular game (book of ra, starburst, etc)
-  }[] // up to 16 games
-}
+```sh
+nvm install latest && nvm use latest
 ```
 
-### `vendors` request
+## 2. pnpm
 
-Returns a list of available game vendors, e.g. Pragmatic, NetEnt
+This project uses pnpm to conserve disk space and improve installation speed, while maintaining compatibility with Turbopack. It is recommended that you install and use pnpm as well.
 
-**Params:**
-
-```ts
-interface VendorsRequest {
-  isLive?: boolean // live or slot casino; if missing, return both
-}
+```sh
+npm i -g pnpm
 ```
 
-**Response:**
+## 3. Project
 
-```ts
-interface VendorsResponse {
-  success: boolean
-  error?: string
-  payload: {
-    name: string // vendor name
-    logo: string // vendor logo url
-    games: number // number of games that the vendor has
-  }[]
-}
+Before you proceed, make sure the casino backend is running on <http://localhost:3001/docs>.
+
+```sh
+pnpm install
+echo NEXT_PUBLIC_API_URL=http://localhost:3001 > .env.development
+pnpm dev
 ```
 
-### `playgame` request
+Application is now running on <http://localhost:3000>.
 
-Plays a casino game. TBD.
+## 4. Optional - VS Code extensions
+
+- Prettier: for formatting code and tailwind classes
+- Biome: linter

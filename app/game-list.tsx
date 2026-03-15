@@ -29,7 +29,7 @@ export default function GameList({ title, query }: GameListProps) {
 
   return (
     <div className='px-8 py-6'>
-      <h2 className='mb-4 text-lg font-semibold text-gray-200'>{title}</h2>
+      <h2 className='font-display mb-4 text-xl text-white sm:text-2xl lg:text-3xl'>{title}</h2>
       <div className='@container flex flex-wrap gap-4'>
         {data?.pages.map(page => page.items.map(game => <CasinoGame key={game.uuid} {...game} />))}
       </div>

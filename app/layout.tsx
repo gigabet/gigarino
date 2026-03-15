@@ -1,13 +1,21 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
-import './globals.css'
+import { Geist_Mono, Lato, Racing_Sans_One } from 'next/font/google'
 import Footer from '@/app/footer'
 import Navbar from '@/app/navbar'
 import Providers from '@/context/providers'
+import './globals.css'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
+const lato = Lato({
+  variable: '--font-lato',
+  weight: ['400', '700', '900'],
+  style: ['normal', 'italic'],
+  subsets: ['latin', 'latin-ext'],
+})
+
+const racingSansOne = Racing_Sans_One({
+  variable: '--font-racing-sans-one',
+  weight: '400',
+  subsets: ['latin', 'latin-ext'],
 })
 
 const geistMono = Geist_Mono({
@@ -28,7 +36,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} flex min-h-dvh flex-col antialiased`}
+        className={`${lato.variable} ${racingSansOne.variable} ${geistMono.variable} flex min-h-dvh flex-col antialiased`}
       >
         <Providers>
           <Navbar />

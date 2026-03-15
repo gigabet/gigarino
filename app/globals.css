@@ -1,31 +1,67 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: var(--color-neutral-900);
+  --foreground: var(--color-neutral-300);
+  --brand: var(--color-lime-400);
+  --brand-contrast: var(--color-black);
+  --accent: var(--color-fuchsia-500);
+  --accent-contrast: var(--color-white);
+  --warning: var(--color-amber-400);
+  --warning-contrast: var(--color-black);
+  --danger: var(--color-rose-500);
+  --danger-contrast: var(--color-white);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-lato);
+  --font-display: var(--font-racing-sans-one);
   --font-mono: var(--font-geist-mono);
+
+  --color-brand: var(--brand);
+  --color-brand-fg: var(--brand-contrast);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-contrast);
+  --color-warning: var(--warning);
+  --color-warning-fg: var(--warning-contrast);
+  --color-danger: var(--danger);
+  --color-danger-fg: var(--danger-contrast);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: var(--color-neutral-900);
+    --foreground: var(--color-neutral-300);
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply font-sans bg-background text-foreground;
+}
+
+@layer components {
+  .btn-brand-main {
+    @apply bg-brand border-brand text-brand-fg outline-brand shadow-brand -skew-x-10 border-2 px-4 py-2 text-sm font-semibold tracking-wider uppercase outline-offset-2 transition-shadow ease-in hover:shadow-[0_0_24px] focus:outline-2;
+  }
+  .btn-brand-main > span {
+    @apply flex skew-x-10;
+  }
+
+  .btn-brand-outline {
+    @apply text-brand border-brand outline-brand shadow-brand hover:text-brand-fg hover:bg-brand -skew-x-10 border-2 bg-transparent px-4 py-2 text-sm font-semibold tracking-wider uppercase outline-offset-2 focus:outline-2;
+  }
+  .btn-brand-outline > span {
+    @apply flex skew-x-10;
+  }
 }
 
 @layer utilities {
+.animate-speed-lines {
+  animation: speed-lines 1s linear infinite;
+}
+
 /* Hide scrollbar for Chrome, Safari, and Opera */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
@@ -39,7 +75,7 @@ body {
 
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: var(--color-gray-500) transparent;
+  scrollbar-color: var(--color-neutral-500) transparent;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -51,7 +87,17 @@ body {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: var(--color-gray-500);
+  background-color: var(--color-neutral-500);
   border-radius: 50%;
 }
+}
+
+@keyframes speed-lines {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+      background-position: 100px 0;
+  }
 }

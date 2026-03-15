@@ -24,7 +24,7 @@ export default async function Casino() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <main className='bg-gray-900 text-gray-300'>
+      <main>
         <CategoryTabs categories={categories} />
         <HeroBanner />
         <div className='mx-auto max-w-(--breakpoint-2xl)'>
@@ -41,7 +41,10 @@ export default async function Casino() {
           {/* Promo Banners */}
           <div className='space-y-4 px-8 py-6'>
             {/* <PromoBanner title='Exchange your Points for Rewards!' ctaText='SHOP NOW' /> */}
-            <PromoBanner title='Special Bonus Offer!' ctaText='CLAIM NOW' />
+            <PromoBanner
+              title='Special Bonus Offer'
+              ctaText='Limited time offer - Claim your exclusive reward now'
+            />
           </div>
 
           {/* Exclusive Games Section */}
