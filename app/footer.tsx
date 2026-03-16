@@ -98,11 +98,11 @@ export default function Footer() {
 
         <div className='flex flex-wrap justify-center gap-6 px-4 py-6'>
           <div className='flex items-center gap-2 rounded-lg bg-neutral-900 px-4 py-2'>
-            <ShieldCheckIcon className='text-brand size-5' />
+            <ShieldCheckIcon className='text-accent size-5' />
             <span className='text-sm text-neutral-400'>Secure and Licensed</span>
           </div>
           <div className='flex items-center gap-2 rounded-lg bg-neutral-900 px-4 py-2'>
-            <ZapIcon className='text-brand size-5' />
+            <ZapIcon className='text-accent size-5' />
             <span className='text-sm text-neutral-400'>Fast Payouts</span>
           </div>
         </div>

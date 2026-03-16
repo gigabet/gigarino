@@ -23,10 +23,12 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
-import { getGameQuery, providersQuery } from '@/app/context'
+import { getGameDemo, getGameQuery, providersQuery } from '@/app/context'
 import Logo from '@/components/logo'
+import { isLoadingOverlayState } from '@/context/providers'
+import type { Game, GameProvider } from '@/types'
 
 const navLinks = [
   { label: 'Casino', href: '/', icon: CoinsIcon },
@@ -307,7 +309,7 @@ function RichSearch() {
       {isSearchOpen && (
         <div className='absolute top-full right-0 left-0 mt-2 overflow-hidden rounded-xl border border-neutral-700 bg-neutral-800 shadow-2xl'>
           {/* Search Content */}
-          <div className='max-h-120 overflow-auto p-4'>
+          <div className='custom-scrollbar max-h-120 overflow-auto p-4'>
             {searchQuery ? (
               // Search Results
               <SearchResults query={debouncedQuery} />
@@ -365,7 +367,6 @@ function RichSearch() {
 function SearchResults(props: { query: string }) {
   const games = useSearchGames(`?search=${encodeURI(props.query)}`)
   const providers = useSearchProviders(props.query)
-  const setSearchOpen = useSetAtom(searchOpenState)
 
   return (
     <div className='space-y-3'>
@@ -375,48 +376,72 @@ function SearchResults(props: { query: string }) {
           <h3 className='px-2 text-xs tracking-wider text-neutral-500 uppercase'>Providers</h3>
         )}
         {providers.map(provider => (
-          <Link
-            key={provider.providerSlug}
-            href={`/casino/providers/${provider.providerSlug}/`}
-            className='flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-neutral-700'
-            onClick={() => setSearchOpen(false)}
-          >
-            <div className='overflow-hidden rounded-lg'>
-              <Image
-                src={`/images/providers/${provider.providerSlug}.png`}
-                alt={provider.name}
-                width={66}
-                height={30}
-              />
-            </div>
-            <div>
-              <p className='text-sm text-neutral-300'>{provider.name}</p>
-              <p className='text-xs text-neutral-500'>{provider.gamesCount} Games</p>
-            </div>
-          </Link>
+          <SearchResultProvider key={provider.providerSlug} {...provider} />
         ))}
 
         <h3 className='px-2 text-xs tracking-wider text-neutral-500 uppercase'>
           {games.length} Games
         </h3>
         {games.map(game => (
-          <Link
-            key={game.uuid}
-            href='#!'
-            className='flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-neutral-700'
-            onClick={() => setSearchOpen(false)}
-          >
-            <div className='overflow-hidden rounded-lg'>
-              <Image src={game.image} alt={game.name} width={64} height={40} />
-            </div>
-            <div>
-              <p className='text-sm text-neutral-300'>{game.name}</p>
-              <p className='text-xs text-neutral-500'>{game.providerName}</p>
-            </div>
-          </Link>
+          <SearchResultCasinoGame key={game.uuid} {...game} />
         ))}
       </div>
     </div>
+  )
+}
+
+function SearchResultProvider(props: GameProvider) {
+  const setSearchOpen = useSetAtom(searchOpenState)
+
+  return (
+    <Link
+      href={`/casino/providers/${props.providerSlug}/`}
+      className='flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-neutral-700'
+      onClick={() => setSearchOpen(false)}
+    >
+      <div className='overflow-hidden rounded-lg'>
+        <Image
+          src={`/images/providers/${props.providerSlug}.png`}
+          alt={props.name}
+          width={66}
+          height={30}
+        />
+      </div>
+      <div>
+        <p className='text-sm text-neutral-300'>{props.name}</p>
+        <p className='text-xs text-neutral-500'>{props.gamesCount} Games</p>
+      </div>
+    </Link>
+  )
+}
+
+function SearchResultCasinoGame(props: Game) {
+  const setSearchOpen = useSetAtom(searchOpenState)
+  const router = useRouter()
+  const setLoading = useSetAtom(isLoadingOverlayState)
+
+  const handleClick = async () => {
+    setLoading(true)
+    setSearchOpen(false)
+    const url = await getGameDemo(props.uuid)
+    router.push(url)
+  }
+
+  return (
+    <button
+      key={props.uuid}
+      type='button'
+      className='flex w-full cursor-pointer items-center gap-3 rounded-lg p-2 transition-colors hover:bg-neutral-700'
+      onClick={handleClick}
+    >
+      <div className='overflow-hidden rounded-lg'>
+        <Image src={props.image} alt={props.name} width={64} height={40} />
+      </div>
+      <div className='text-left'>
+        <p className='text-sm text-neutral-300'>{props.name}</p>
+        <p className='text-xs text-neutral-500'>{props.providerName}</p>
+      </div>
+    </button>
   )
 }
 

@@ -10,11 +10,8 @@ export default function CategoryTabs(props: { categories: typeof categories }) {
   const pathname = usePathname()
 
   return (
-    <section className='bg-background sticky top-20 z-20 border-y border-neutral-800 lg:top-36.25'>
-      <div
-        className='no-scrollbar mx-auto flex h-12 max-w-(--breakpoint-2xl) items-center gap-2 overflow-x-auto px-4 py-3'
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-      >
+    <section className='bg-background top-20 z-20 border-y border-neutral-800 lg:top-36.25'>
+      <div className='custom-scrollbar mx-auto flex h-12 max-w-(--breakpoint-2xl) items-center gap-2 overflow-x-auto overflow-y-hidden px-4 py-3'>
         {entries(props.categories).map(([label, category]) => (
           <Link
             key={label}

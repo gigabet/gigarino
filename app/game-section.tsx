@@ -1,10 +1,12 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
+import { cx } from 'class-variance-authority'
 import { useSetAtom } from 'jotai'
 import {
   ChevronLeft,
   ChevronRight,
+  ChevronRightIcon,
   // CirclePlus,
   // Flame,
   // GalleryHorizontalEnd,
@@ -47,7 +49,7 @@ export default function GameSection({ title, category }: GameSectionProps) {
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
-      const scrollAmount = 320
+      const scrollAmount = 640
       scrollRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
         behavior: 'smooth',
@@ -64,20 +66,21 @@ export default function GameSection({ title, category }: GameSectionProps) {
   // const Icon = icons[category.icon]
 
   return (
-    <section className='py-6'>
+    <section className='pt-6 pb-2 sm:pt-10 sm:pb-6'>
       {/* Section Header */}
       <div className='mb-4 flex items-center justify-between px-8'>
         <div className='flex items-center gap-2'>
           {category.slug === 'live-casino' && (
             <div className='bg-danger size-3 animate-pulse rounded-full'></div>
           )}
-          <h2 className='font-display text-xl text-white sm:text-2xl lg:text-3xl'>{title}</h2>
+          <h2 className='font-display text-2xl text-white lg:text-3xl'>{title}</h2>
         </div>
         <Link
           href={`/casino/${category.slug}`}
           className='flex items-center gap-1 text-sm text-neutral-500 transition-colors hover:text-neutral-300'
         >
           <span>See all ({data?.total})</span>
+          <ChevronRightIcon className='size-4' />
         </Link>
       </div>
 
@@ -87,24 +90,29 @@ export default function GameSection({ title, category }: GameSectionProps) {
         <button
           type='button'
           onClick={() => scroll('left')}
-          className='absolute top-1/2 left-2 z-10 flex h-10 w-10 -translate-y-3/4 items-center justify-center rounded-full bg-neutral-800/90 text-neutral-300 shadow-lg transition-colors hover:bg-neutral-700'
+          className={cx(
+            'hover:bg-brand hover:text-brand-fg absolute top-1/2 left-2 z-10 hidden h-10 w-10 -translate-y-1/1 items-center justify-center rounded-full bg-neutral-800/90 text-neutral-300 shadow-lg transition-colors',
+            !!games?.length && games.length > 6 && 'xl:flex'
+          )}
         >
           <ChevronLeft size={20} />
         </button>
         <button
           type='button'
           onClick={() => scroll('right')}
-          className='absolute top-1/2 right-2 z-10 flex h-10 w-10 -translate-y-3/4 items-center justify-center rounded-full bg-neutral-800/90 text-neutral-300 shadow-lg transition-colors hover:bg-neutral-700'
+          className={cx(
+            'hover:bg-brand hover:text-brand-fg absolute top-1/2 right-2 z-10 hidden h-10 w-10 -translate-y-1/1 items-center justify-center rounded-full bg-neutral-800/90 text-neutral-300 shadow-lg transition-colors',
+            !!games?.length && games.length > 6 && 'xl:flex'
+          )}
         >
           <ChevronRight size={20} />
         </button>
 
         {/* Games Container */}
-        <div className='w-full overflow-hidden px-8 pb-2'>
+        <div className='w-full px-8 pb-2'>
           <div
             ref={scrollRef}
-            className='no-scrollbar @container flex gap-4 overflow-x-auto'
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            className='custom-scrollbar @container flex gap-4 overflow-x-auto pb-4 xl:overflow-hidden'
           >
             {games?.map(game => (
               <CasinoGame key={game.uuid} {...game} />
@@ -129,7 +137,7 @@ export function CasinoGame(props: Game) {
   return (
     <button
       type='button'
-      className='group w-[calc(50cqi-1rem)] shrink-0 cursor-pointer sm:w-[calc(33.33cqi-1rem)] md:w-[calc(25cqi-1rem)] lg:w-[calc(20cqi-1rem)] xl:w-[calc(16.67cqi-1rem)]'
+      className='group w-[calc(50cqi-0.5rem)] shrink-0 cursor-pointer sm:w-[calc(33.33cqi-0.667rem)] md:w-[calc(25cqi-0.75rem)] lg:w-[calc(20cqi-0.8rem)] xl:w-[calc(16.67cqi-0.833rem)]'
       onClick={handleClick}
     >
       {/* Game Card */}
