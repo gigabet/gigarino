@@ -8,9 +8,9 @@ import { isEmpty } from 'lodash'
 import {
   ClockIcon,
   CoinsIcon,
+  Gamepad2Icon,
   GiftIcon,
   GlobeIcon,
-  ListOrderedIcon,
   LogInIcon,
   MenuIcon,
   RadioIcon,
@@ -35,7 +35,7 @@ const navLinks = [
   { label: 'Live Casino', href: '/casino/live-casino', icon: RadioIcon },
   { label: 'Sports', href: '#!', icon: VolleyballIcon },
   { label: 'In Play', href: '#!', icon: TvMinimalPlayIcon },
-  { label: 'Virtual Sports', href: '#!', icon: ListOrderedIcon },
+  { label: 'Virtual Sports', href: '#!', icon: Gamepad2Icon },
   { label: 'Bonus', href: '#!', icon: GiftIcon },
 ] as const
 
