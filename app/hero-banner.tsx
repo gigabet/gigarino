@@ -1,66 +1,191 @@
-import { ShieldCheckIcon, ZapIcon } from 'lucide-react'
-import Link from 'next/link'
+'use client'
+
+import { cx } from 'class-variance-authority'
+import { ChevronRightIcon, ShieldCheckIcon, ZapIcon } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 
 export default function HeroBanner() {
+  const [isVisible, setIsVisible] = useState(false)
+  const heroRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    setIsVisible(true)
+  }, [])
+
+  const [pos, setPos] = useState({ x: 0, y: 0 })
+  const lastMouse = useRef({ x: 0, y: 0 })
+
+  const handleMove = (e: React.MouseEvent) => {
+    lastMouse.current = { x: e.clientX, y: e.clientY }
+
+    const rect = heroRef.current?.getBoundingClientRect()
+    if (!rect) return
+
+    setPos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    })
+  }
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const rect = heroRef.current?.getBoundingClientRect()
+      if (!rect) return
+
+      setPos({
+        x: lastMouse.current.x - rect.left,
+        y: lastMouse.current.y - rect.top,
+      })
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
+
   return (
-    <section className='relative overflow-hidden bg-neutral-900'>
-      {/* Banner Content */}
-      <div className='relative h-70 sm:h-80 lg:h-95'>
-        {/* Background Pattern */}
-        <div className='absolute inset-0 bg-linear-to-br from-neutral-800 via-neutral-900 to-neutral-950'>
-          {/* Decorative Elements */}
-          <div className='absolute top-10 left-10 size-32 rounded-full bg-neutral-600/20 blur-3xl' />
-          <div className='absolute right-10 bottom-10 size-48 rounded-full bg-neutral-500/10 blur-3xl' />
+    // biome-ignore lint/a11y/noStaticElementInteractions: cosmetic only
+    <section
+      ref={heroRef}
+      onMouseMove={handleMove}
+      onPointerMove={handleMove}
+      className='group relative flex h-[90dvh] max-h-200 items-center justify-center overflow-hidden'
+    >
+      <div className='absolute inset-0'>
+        <div className='absolute inset-0 bg-linear-to-b via-black to-black' />
+        <div
+          className='absolute inset-0 opacity-60 transition-all duration-700 ease-out'
+          style={{
+            background: `radial-gradient(600px at 40.9031% 43.0162%, rgba(209, 243, 102, 0.15), transparent 40%)`,
+          }}
+        />
+        <div
+          className='absolute top-1/2 left-1/2 h-200 w-200 -translate-x-1/2 -translate-y-1/2 opacity-30'
+          style={{
+            background: `radial-gradient(circle, rgba(209, 243, 102, 0.3) 0%, rgba(127, 92, 255, 0.1) 40%, transparent 70%)`,
+            filter: `blur(60px)`,
+          }}
+        />
+        <div className='bg-primary/10 animate-float absolute top-20 left-10 h-32 w-32 rounded-full blur-3xl'></div>
+        <div
+          className='bg-purple-accent/10 animate-float absolute right-10 bottom-20 h-40 w-40 rounded-full blur-3xl'
+          style={{ animationDelay: '1s' }}
+        />
+        <div
+          className='bg-primary/5 animate-float absolute top-1/3 right-1/4 h-24 w-24 rounded-full blur-2xl'
+          style={{ animationDelay: '2s' }}
+        />
+        <div
+          className='absolute inset-0 opacity-[0.03]'
+          style={{
+            backgroundImage: `linear-gradient(rgba(209, 243, 102, 0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(209, 243, 102, 0.5) 1px, transparent 1px)`,
+            backgroundSize: '50px 50px',
+          }}
+        />
+
+        {/* Spotlight */}
+        <div
+          className='from-primary/15 pointer-events-none absolute size-100 -translate-1/2 rounded-full bg-radial to-transparent opacity-0 blur-3xl transition-opacity duration-200 group-hover:opacity-100'
+          style={{
+            left: pos.x,
+            top: pos.y,
+          }}
+        />
+
+        <div className='absolute inset-0 overflow-hidden'>
           <div
-            className='absolute inset-0'
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23B8FF2C' fill-opacity='0.04'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            }}
+            className='via-primary/30 absolute top-20/100 -left-1/1 h-px w-full bg-linear-to-r from-transparent to-transparent'
+            style={{ animation: '3s linear 0s infinite normal none running shimmer' }}
+          />
+          <div
+            className='via-primary/30 absolute top-35/100 -left-1/1 h-px w-full bg-linear-to-r from-transparent to-transparent'
+            style={{ animation: '3s linear 0s infinite normal none running shimmer' }}
+          />
+          <div
+            className='via-primary/30 absolute top-50/100 -left-1/1 h-px w-full bg-linear-to-r from-transparent to-transparent'
+            style={{ animation: '3s linear 0s infinite normal none running shimmer' }}
+          />
+          <div
+            className='via-primary/30 absolute top-65/100 -left-1/1 h-px w-full bg-linear-to-r from-transparent to-transparent'
+            style={{ animation: '3s linear 0s infinite normal none running shimmer' }}
+          />
+          <div
+            className='via-primary/30 absolute top-80/100 -left-1/1 h-px w-full bg-linear-to-r from-transparent to-transparent'
+            style={{ animation: '3s linear 0s infinite normal none running shimmer' }}
           />
         </div>
-
-        {/* Content */}
-        <div className='relative flex h-full flex-col items-center justify-center px-4 text-center'>
-          {/* Badge */}
-          <div className='mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-neutral-900/80 px-4 py-2'>
-            <span className='bg-brand h-2 w-2 animate-pulse rounded-full'></span>
-            <span className='font-mono text-xs tracking-widest text-neutral-400 uppercase'>
-              Welcome Offer
-            </span>
+      </div>
+      <div className='relative mx-auto max-w-4xl px-4 text-center'>
+        <div
+          className={cx(
+            'bg-primary/10 border-primary/30 mb-6 inline-flex items-center gap-2 rounded-full border px-4 py-2 transition-all duration-700',
+            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+          )}
+        >
+          <span className='text-primary text-xs font-medium tracking-wider uppercase'>
+            Welcome Offer
+          </span>
+        </div>
+        <h1
+          className={cx(
+            'font-display mb-4 text-5xl font-bold transition-all delay-100 duration-700 sm:text-6xl lg:text-7xl xl:text-8xl',
+            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+          )}
+        >
+          <span className='text-white'>Turbo</span>{' '}
+          <span className='gradient-text-primary text-glow'>Boost</span>
+        </h1>
+        <p
+          className={cx(
+            'mb-8 text-lg text-gray-300 transition-all delay-200 duration-700 sm:text-xl lg:text-2xl',
+            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+          )}
+        >
+          <span className='text-primary font-semibold'>100% up to €50</span>
+          <span className='mx-2 text-gray-500'>+</span>
+          <span className='font-medium text-white'>200 FS</span>
+          <span className='mx-2 text-gray-500'>+</span>
+          <span className='text-purple-accent font-medium'>1 Bonus Item</span>
+        </p>
+        <div
+          className={cx(
+            'transition-all delay-300 duration-700',
+            isVisible ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-8 scale-95 opacity-0'
+          )}
+        >
+          <button
+            type='button'
+            className='group/button bg-primary hover:shadow-glow-lg relative inline-flex items-center gap-3 overflow-hidden rounded-full px-10 py-4 text-lg font-bold text-black transition-all duration-300 hover:scale-105'
+          >
+            <div className='from-primary to-primary absolute inset-0 bg-linear-to-r via-white/30 opacity-0 transition-opacity duration-500 group-hover/button:opacity-100'></div>
+            <div className='absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/40 to-transparent transition-transform duration-1000 group-hover/button:translate-x-full'></div>
+            <span className='relative'>JOIN NOW</span>
+            <ChevronRightIcon className='relative size-5 transition-transform group-hover/button:translate-x-1' />
+          </button>
+        </div>
+        <div
+          className={cx(
+            'mt-10 flex flex-wrap items-center justify-center gap-6 transition-all delay-400 duration-700',
+            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+          )}
+        >
+          <div className='flex items-center gap-2 text-gray-400'>
+            <div className='bg-primary/10 flex h-8 w-8 items-center justify-center rounded-full'>
+              <ShieldCheckIcon className='text-primary size-4' />
+            </div>
+            <span className='text-sm'>Secure &amp; Licensed</span>
           </div>
-
-          {/* Title */}
-          <h1 className='font-display mb-3 text-2xl text-white sm:text-3xl lg:text-6xl'>
-            Turbo Boost
-          </h1>
-
-          {/* Subtitle */}
-          <p className='mb-6 text-lg text-neutral-300 sm:text-xl lg:text-2xl'>
-            100% up to <span className='text-brand font-semibold'>€50</span> +{' '}
-            <span className='text-brand font-semibold'>200 FS</span> +{' '}
-            <span className='text-brand font-semibold'>1 Bonus Item</span>
-          </p>
-
-          {/* CTA Button */}
-          <Link href='/' className='btn-brand-main transition-all hover:scale-110 lg:px-6 lg:py-3'>
-            <span>Join now</span>
-          </Link>
-
-          {/* Blurbs */}
-          <div className='mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-neutral-300'>
-            <div className='flex items-center gap-2'>
-              <ShieldCheckIcon className='text-accent size-5' />
-              <span>Secure &amp; Licensed</span>
+          <div className='flex items-center gap-2 text-gray-400'>
+            <div className='bg-primary/10 flex h-8 w-8 items-center justify-center rounded-full'>
+              <ZapIcon className='text-primary size-4' />
             </div>
-            <div className='flex items-center gap-2'>
-              <ZapIcon className='text-accent size-5' />
-              <span>Fast Payouts</span>
-            </div>
+            <span className='text-sm'>Fast Payouts</span>
           </div>
         </div>
       </div>
-      <div className='via-brand h-2 w-full bg-linear-to-r from-transparent to-transparent' />
-      {/* bg-linear-[90deg,transparent_0%,var(--color-brand)_33%,var(--color-accent)_67%,transparent_100%]' /> */}
+      <div className='absolute right-0 bottom-0 left-0 h-32 bg-linear-to-t from-black to-transparent' />
     </section>
   )
 }

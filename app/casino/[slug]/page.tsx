@@ -1,7 +1,7 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
 import { entries } from 'lodash'
+import GameList from '@/app/casino/[slug]/game-list'
 import { categories, getGameQuery } from '@/app/context'
-import GameList from '@/app/game-list'
 
 export default async function GamesByCategory(props: { params: Promise<{ slug: string }> }) {
   const { slug } = await props.params
@@ -16,16 +16,14 @@ export default async function GamesByCategory(props: { params: Promise<{ slug: s
 
   if (!label || !category)
     return (
-      <div className='mx-auto max-w-(--breakpoint-2xl)'>
+      <div className='mx-auto max-w-360'>
         <div className='px-8 py-6 text-xl font-bold text-neutral-700'>No games</div>
       </div>
     )
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <div className='mx-auto max-w-(--breakpoint-2xl)'>
-        <GameList title={label} query={category.query} />
-      </div>
+      <GameList key={label} title={label} query={category.query} />
     </HydrationBoundary>
   )
 }

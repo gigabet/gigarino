@@ -5,48 +5,24 @@ interface LogoProps {
   subtitle?: boolean
   size?: 'sm' | 'md' | 'lg'
 }
-export default function Logo(props: LogoProps = { variant: 'dark', size: 'md' }) {
+export default function Logo({ size = 'md', subtitle }: LogoProps) {
   return (
-    <div className='flex cursor-default flex-col gap-0.5 select-none'>
+    <div className='flex flex-col items-center gap-2 select-none'>
       <h1
-        className={cx('font-display leading-none', {
-          'text-2xl sm:text-3xl': props.size === 'sm',
-          'text-3xl sm:text-4xl': props.size === 'md' || !props.size,
-          'text-4xl sm:text-5xl': props.size === 'lg',
+        className={cx('font-display font-bold tracking-wider', {
+          'text-3xl lg:text-3xl': size === 'md',
+          'text-4xl lg:text-4xl': size === 'lg',
         })}
       >
-        <span className='text-brand text-shadow-brand text-shadow-[0_0_24px]'>GIGA</span>
-        <span
-          className={cx(
-            props.variant === 'light'
-              ? 'text-black'
-              : 'text-white text-shadow-[0_0_24px] text-shadow-white'
-          )}
-        >
+        <span className='text-primary text-shadow-primary group-hover:animate-pulse-glow-primary transition-all text-shadow-none'>
+          GIGA
+        </span>
+        <span className='group-hover:animate-pulse-glow-white text-white transition-all text-shadow-none text-shadow-white'>
           RINO
         </span>
       </h1>
-      <div className='flex'>
-        <div className='bg-brand shadow-brand h-0.75 w-full flex-8 -skew-x-10 shadow-[0_0_24px] sm:h-1' />
-        <div className='h-0.75 w-full flex-1 -skew-x-10 sm:h-1' />
-        <div className='bg-accent shadow-accent h-0.75 w-full flex-8 -skew-x-10 shadow-[0_0_24px] sm:h-1' />
-        <div className='h-0.75 w-full flex-1 -skew-x-10 sm:h-1' />
-        <div
-          className={cx(
-            'h-1 w-full flex-2 -skew-x-10',
-            props.variant === 'light' ? 'bg-black' : 'bg-white shadow-[0_0_24px] shadow-white'
-          )}
-        />
-      </div>
-      {props.subtitle && (
-        <p
-          className={cx('pt-1 font-semibold text-white/80 uppercase italic', {
-            'text-xs tracking-[0.13em]': props.size !== 'lg',
-            'text-xs tracking-[0.18em] sm:tracking-[0.25em]': props.size === 'lg',
-          })}
-        >
-          High Energy Gaming
-        </p>
+      {subtitle && (
+        <p className='text-sm tracking-[0.3em] text-gray-500 uppercase'>High Energy Gaming</p>
       )}
     </div>
   )

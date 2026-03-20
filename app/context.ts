@@ -19,7 +19,7 @@ export const categories = {
     query: '?type=roulette',
   },
   'All Games': { icon: 'GalleryHorizontalEnd', slug: 'all', query: '?limit=24' },
-} as const
+}
 
 export const getGameQuery = (query: string) => {
   return async ({ pageParam }: { pageParam?: unknown }) => {

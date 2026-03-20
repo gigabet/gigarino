@@ -2,11 +2,10 @@
 
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
 import { values } from 'lodash'
-import CategoryTabs from '@/app/category-tabs'
+import CategorySection from '@/app/category-section'
 import { categories, getGameQuery } from '@/app/context'
 import GameSection from '@/app/game-section'
 import HeroBanner from '@/app/hero-banner'
-import PromoBanner from '@/app/promo-banner'
 
 export default async function Casino() {
   const queryClient = new QueryClient()
@@ -25,43 +24,41 @@ export default async function Casino() {
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <main>
-        <CategoryTabs categories={categories} />
+        {/* <CategoryTabs categories={categories} /> */}
         <HeroBanner />
-        <div className='mx-auto max-w-(--breakpoint-2xl)'>
-          <GameSection title='Top Games' category={categories['Top Games']} />
 
-          {/* New Games Section */}
-          <GameSection title='New Releases' category={categories['New Releases']} />
+        <GameSection title='Top Games' category={categories['Top Games']}>
+          <div className='absolute inset-0 h-full bg-linear-to-b from-black via-transparent to-transparent' />
+        </GameSection>
 
-          <GameSection title='Mobile Games' category={categories['Mobile Games']} />
+        <GameSection title='New Releases' category={categories['New Releases']} />
 
-          {/* Sports Section
+        <CategorySection categories={categories} />
+
+        {/* <GameSection title='Classic' category={categories['Classic']} />
+
+        <GameSection title='Live Casino' category={categories['Live Casino']} />
+
+        <GameSection title='All Games' category={categories['All Games']} /> */}
+
+        {/* Sports Section
       <SportsSection /> */}
 
-          {/* Promo Banners */}
-          <div className='space-y-4 px-8 py-6'>
-            {/* <PromoBanner title='Exchange your Points for Rewards!' ctaText='SHOP NOW' /> */}
-            <PromoBanner
-              title='Special Bonus Offer'
-              ctaText='Limited time offer - Claim your exclusive reward now'
-            />
-          </div>
+        {/* Promo Banners */}
+        {/* <div className='space-y-4 px-8 py-6'>
+          <PromoBanner
+          title='Special Bonus Offer'
+          ctaText='Limited time offer - Claim your exclusive reward now'
+          />
+          </div> */}
 
-          {/* Exclusive Games Section */}
-          <GameSection title='Free Spins (ingame)' category={categories['Free Spins (ingame)']} />
+        {/* Exclusive Games Section */}
+        {/* <GameSection title='Free Spins (ingame)' category={categories['Free Spins (ingame)']} />
+          <GameSection title='Mobile Games' category={categories['Mobile Games']} />
 
-          <GameSection title='Autoplay' category={categories['Autoplay']} />
+        <GameSection title='Autoplay' category={categories['Autoplay']} />
 
-          <GameSection title='Bonus Buy' category={categories['Bonus Buy']} />
-
-          <GameSection title='Classic' category={categories['Classic']} />
-
-          {/* Live Casino Section */}
-          <GameSection title='Live Casino' category={categories['Live Casino']} />
-
-          {/* All Games Section */}
-          <GameSection title='All Games' category={categories['All Games']} />
-        </div>
+        <GameSection title='Bonus Buy' category={categories['Bonus Buy']} />*/}
       </main>
     </HydrationBoundary>
   )

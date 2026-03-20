@@ -1,45 +1,69 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
-import Image from 'next/image'
-import Link from 'next/link'
+import { cx } from 'class-variance-authority'
+import { useEffect, useRef, useState } from 'react'
 import { providersQuery } from '@/app/context'
+import { ProviderCard } from '@/app/provider-section'
 
-export default function ProviderList() {
+export default function GameList() {
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [])
+
   const { data } = useQuery({
     queryKey: ['providers'],
     queryFn: providersQuery,
   })
 
   return (
-    <div className='mx-auto max-w-(--breakpoint-2xl) px-8 py-6'>
-      <h2 className='font-display mb-4 text-xl text-white sm:text-2xl lg:text-3xl'>Providers</h2>
-      <div className='flex flex-wrap gap-4'>
-        {data?.map(prov => (
-          <Link
-            key={prov.providerSlug}
-            href={`/casino/providers/${prov.providerSlug}`}
-            className='group w-40 shrink-0 sm:w-60'
-          >
-            <div className='relative mb-2 aspect-22/10 overflow-hidden rounded-xl bg-black/20 px-2'>
-              {/* Provider Image */}
-              <div className='relative h-full w-full'>
-                <Image
-                  src={`/images/providers/${prov.providerSlug}.png`}
-                  alt={prov.name}
-                  // width={360}
-                  // height={164}
-                  // objectPosition='50% 50%'
-                  fill
-                  objectFit='contain'
-                />
-              </div>
-              {/* Hover Overlay */}
-              <div className='absolute inset-0 bg-neutral-900/0 transition-colors group-hover:bg-neutral-900/30' />
+    <section ref={sectionRef} className={cx('relative pt-8 pb-16 sm:pb-20')}>
+      <div className='mx-auto max-w-360 px-6 lg:px-8'>
+        {/* Section Header */}
+        <div
+          className={cx(
+            'mb-6 flex items-center justify-between transition-all duration-700',
+            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+          )}
+        >
+          <div className='flex items-center gap-2'>
+            <h2 className='font-display text-2xl font-bold sm:text-3xl'>Providers</h2>
+          </div>
+        </div>
+
+        {/* Games Container */}
+        <div className='grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4'>
+          {data?.map((provider, index) => (
+            <div
+              key={provider.id}
+              className={cx(
+                'duration-700',
+                isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+              )}
+              style={{ transitionDelay: `${index * 0.15}s` }}
+            >
+              <ProviderCard {...{ provider }} />
             </div>
-          </Link>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   )
 }
