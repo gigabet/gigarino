@@ -14,7 +14,6 @@ import {
   RadioIcon,
   SearchIcon,
   SparklesIcon,
-  TrendingUpIcon,
   TvMinimalPlayIcon,
   VolleyballIcon,
   XCircleIcon,
