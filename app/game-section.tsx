@@ -226,7 +226,3 @@ export function GameCard({ game }: { game: Game }) {
     </button>
   )
 }
-
-export function CasinoGame(props: Game) {
-  return <GameCard game={props} />
-}

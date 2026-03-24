@@ -3,7 +3,7 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
 import { values } from 'lodash'
 import CategorySection from '@/app/category-section'
-import { categories, getGameQuery } from '@/app/context'
+import { categories, getGameQuery, providersQuery } from '@/app/context'
 import GameSection from '@/app/game-section'
 import HeroBanner from '@/app/hero-banner'
 
@@ -20,6 +20,11 @@ export default async function Casino() {
         })
     )
   )
+
+  queryClient.prefetchQuery({
+    queryKey: ['providers'],
+    queryFn: providersQuery,
+  })
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

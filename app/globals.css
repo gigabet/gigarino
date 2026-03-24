@@ -214,7 +214,7 @@ layer(base);
   background-image: linear-gradient(135deg, #d1f366 0%, #7f5cff 100%);
 }
 
-@utility gradient-text-lime {
+@utility gradient-text-primary {
   @apply bg-clip-text text-transparent;
   background-image: linear-gradient(135deg, #d1f366 0%, #a3e635 100%);
 }
