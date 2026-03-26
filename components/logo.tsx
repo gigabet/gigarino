@@ -4,11 +4,12 @@ interface LogoProps {
   variant?: 'dark' | 'light'
   subtitle?: boolean
   size?: 'sm' | 'md' | 'lg'
+  Component?: keyof React.JSX.IntrinsicElements
 }
-export default function Logo({ size = 'md', subtitle }: LogoProps) {
+export default function Logo({ size = 'md', subtitle, Component = 'h1' }: LogoProps) {
   return (
-    <div className='flex flex-col items-center gap-2 select-none'>
-      <h1
+    <div className='inline-flex flex-col items-center gap-2 select-none'>
+      <Component
         className={cx('font-display font-bold tracking-wider', {
           'text-3xl lg:text-3xl': size === 'md',
           'text-4xl lg:text-4xl': size === 'lg',
@@ -20,7 +21,7 @@ export default function Logo({ size = 'md', subtitle }: LogoProps) {
         <span className='group-hover:animate-pulse-glow-white text-white transition-all text-shadow-none text-shadow-white'>
           RINO
         </span>
-      </h1>
+      </Component>
       {subtitle && (
         <p className='text-sm tracking-[0.3em] text-gray-500 uppercase'>High Energy Gaming</p>
       )}

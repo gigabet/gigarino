@@ -1,4 +1,4 @@
-import CategoryTabs from '@/app/category-tabs'
+import CategoryTabs from '@/app/casino/category-tabs'
 import { categories } from '@/app/context'
 
 export default function CasinoLayout({

@@ -116,12 +116,12 @@ export default function Navbar() {
               >
                 Register
               </button>
-              <button
-                type='button'
-                className='bg-primary hover:shadow-glow flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-black uppercase transition-all'
+              <Link
+                href='/login'
+                className='bg-primary hover:shadow-glow flex cursor-default items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-black uppercase transition-all'
               >
                 <span className='tracking-wide'>Log in</span>
-              </button>
+              </Link>
 
               {/* Mobile Menu Toggle */}
               <button
