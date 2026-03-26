@@ -1,6 +1,5 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
 import Bowser from 'bowser'
 import { AlertCircleIcon, EyeIcon, EyeOffIcon, Loader2Icon, LockIcon, MailIcon } from 'lucide-react'
 import { motion } from 'motion/react'
@@ -23,13 +22,6 @@ export default function LoginForm() {
   })
   const [showPassword, setShowPassword] = useState(false)
 
-  const { data: ipAddress } = useQuery({
-    queryKey: ['ip'],
-    queryFn: async () => {
-      const res = await fetch('https://api64.ipify.org')
-      return await res.text()
-    },
-  })
   const { userAgent } = navigator
   const device = Bowser.parse(
     navigator.userAgent,
@@ -120,12 +112,12 @@ export default function LoginForm() {
             <div className='relative'>
               <MailIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
               <Input
+                className='pl-10'
                 id='identifier'
                 name='identifier'
                 type='text'
                 defaultValue={formData.identifier}
                 placeholder='Enter your username or email'
-                className='border-white/10 bg-[#141414] pl-10 text-white placeholder:text-gray-600 focus:border-[#c8f06a] focus:ring-[#c8f06a]/20'
                 required
               />
             </div>
@@ -144,12 +136,12 @@ export default function LoginForm() {
             <div className='relative'>
               <LockIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
               <Input
+                className='px-10'
                 id='password'
                 name='password'
                 type={showPassword ? 'text' : 'password'}
                 defaultValue={formData.password}
                 placeholder='Enter your password'
-                className='border-white/10 bg-[#141414] pr-10 pl-10 text-white placeholder:text-gray-600 focus:border-[#c8f06a] focus:ring-[#c8f06a]/20'
                 required
               />
               <button
@@ -184,7 +176,6 @@ export default function LoginForm() {
             </Link>
           </motion.div>
 
-          <input type='hidden' name='ipAddress' value={ipAddress} />
           <input type='hidden' name='userAgent' value={userAgent} />
           <input type='hidden' name='device' value={device} />
 

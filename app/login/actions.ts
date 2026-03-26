@@ -1,6 +1,7 @@
 'use server'
 
 import { isArray } from 'lodash'
+import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 export async function login(
@@ -18,6 +19,14 @@ export async function login(
     rememberMe: formData.get('rememberMe') === 'on',
   }
 
+  console.log('Login attempt:', {
+    ...data,
+    ipAddress: await getClientIp(),
+    userAgent: formData.get('userAgent') as string,
+    device: formData.get('device') as string,
+    supervisorId: process.env.SUPERVISOR_ID,
+  })
+
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/players/login`, {
     method: 'POST',
     headers: {
@@ -25,7 +34,7 @@ export async function login(
     },
     body: JSON.stringify({
       ...data,
-      ipAddress: formData.get('ipAddress') as string,
+      ipAddress: await getClientIp(),
       userAgent: formData.get('userAgent') as string,
       device: formData.get('device') as string,
       supervisorId: process.env.SUPERVISOR_ID,
@@ -44,4 +53,29 @@ export async function login(
   } else {
     redirect('/?logged=true')
   }
+}
+
+async function getClientIp() {
+  const h = await headers()
+
+  // Standard proxy headers (production)
+  const forwardedFor = h.get('x-forwarded-for')
+  const realIp = h.get('x-real-ip')
+
+  let ip = forwardedFor?.split(',')[0]?.trim() || realIp || ''
+
+  // If local dev, fall back to external lookup
+  if (!ip || ip === '::1' || ip === '127.0.0.1') {
+    try {
+      const res = await fetch('https://api4.ipify.org?format=json', {
+        cache: 'no-store',
+      })
+      const data = await res.json()
+      ip = data.ip
+    } catch {
+      ip = ''
+    }
+  }
+
+  return ip
 }
