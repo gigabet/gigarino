@@ -159,7 +159,8 @@ export function ProviderCard({ provider }: { provider: GameProvider }) {
             src={`/images/providers/${provider.providerSlug}.png`}
             alt={provider.name}
             fill
-            objectFit='contain'
+            sizes='(max-width: 1024px) 50vw, 25vw'
+            style={{ objectFit: 'contain' }}
             className='h-full w-full scale-100 object-cover transition-transform duration-500 group-hover:scale-108'
           />
 

@@ -177,6 +177,7 @@ export function GameCard({ game }: { game: Game }) {
             src={game.image}
             alt={game.name}
             fill
+            sizes='(max-width: 1024px) 50vw, 25vw'
             className='h-full w-full scale-100 object-cover transition-transform duration-500 group-hover:scale-108'
           />
 

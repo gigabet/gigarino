@@ -1,3 +1,23 @@
+export interface User {
+  id: string
+  email: string
+  username: string
+  displayName: string
+  preferredCurrency: string
+  language: string
+  status: string
+  kycStatus: string
+  lastLoginAt: string
+  registeredAt: string
+}
+
+export interface Wallet {
+  id: string
+  currency: string
+  balance: string
+  isActive: boolean
+}
+
 export interface Game {
   id: string
   uuid: string

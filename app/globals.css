@@ -2,6 +2,7 @@
 layer(base);
 
 @import 'tailwindcss';
+@plugin "tailwindcss-animate";
 
 /* @plugin 'tailwindcss-animate'; */
 
@@ -44,16 +45,16 @@ layer(base);
   --color-sidebar-border: hsl(var(--sidebar-border));
   --color-sidebar-ring: hsl(var(--sidebar-ring));
 
-  --color-lime-50: #f7fee7;
-  --color-lime-100: #ecfccb;
-  --color-lime-200: #d9f99d;
-  --color-lime-300: #d1f366;
-  --color-lime-400: #a3e635;
-  --color-lime-500: #84cc16;
-  --color-lime-600: #65a30d;
-  --color-lime-700: #4d7c0f;
-  --color-lime-800: #3f6212;
-  --color-lime-900: #365314;
+  --color-primary-50: #f7fee7;
+  --color-primary-100: #ecfccb;
+  --color-primary-200: #d9f99d;
+  --color-primary-300: #d1f366;
+  --color-primary-400: #a3e635;
+  --color-primary-500: #84cc16;
+  --color-primary-600: #65a30d;
+  --color-primary-700: #4d7c0f;
+  --color-primary-800: #3f6212;
+  --color-primary-900: #365314;
   --color-lime: #d1f366;
 
   --color-purple-accent: #7f5cff;
@@ -228,7 +229,7 @@ layer(base);
 }
 
 @utility btn-primary {
-  @apply relative overflow-hidden bg-lime text-black font-semibold px-8 py-3 rounded-full transition-all duration-300;
+  @apply relative overflow-hidden bg-primary text-black font-semibold px-8 py-3 rounded-full transition-all duration-300;
 
   &:hover {
     @apply shadow-glow-lg scale-105;
@@ -384,7 +385,6 @@ layer(base);
   }
   html {
     scroll-behavior: smooth;
-    scrollbar-gutter: stable;
   }
   body {
     @apply bg-dark text-white font-sans antialiased min-h-dvh;

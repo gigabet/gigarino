@@ -1,7 +1,7 @@
 'use server'
 
 import { isArray } from 'lodash'
-import { headers } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 export async function login(
@@ -18,6 +18,7 @@ export async function login(
     password: formData.get('password') as string,
     rememberMe: formData.get('rememberMe') === 'on',
   }
+  const cookieStore = await cookies()
 
   console.log('Login attempt:', {
     ...data,
@@ -51,7 +52,15 @@ export async function login(
         : errorData.message || 'Login failed.',
     }
   } else {
-    redirect('/?logged=true')
+    cookieStore.set({
+      name: 'token',
+      value: (await res.json()).token,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: data.rememberMe ? 60 * 60 * 24 * 30 : undefined, // 30 days if rememberMe, otherwise session cookie
+    })
+    redirect('/')
   }
 }
 

@@ -2,9 +2,10 @@ import type { Metadata } from 'next'
 import { Geist_Mono, Poppins, Rajdhani } from 'next/font/google'
 import Footer from '@/app/footer'
 import Navbar from '@/app/navbar'
-import Providers from '@/context/providers'
-import './globals.css'
 import ParticleBackground from '@/components/particle-background'
+import Providers from '@/context/providers'
+import { getUser, getUserWallet } from '@/lib/auth'
+import './globals.css'
 
 const poppins = Poppins({
   variable: '--font-poppins',
@@ -29,11 +30,14 @@ export const metadata: Metadata = {
   description: 'Online betting platform',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const user = await getUser()
+  const wallet = user?.preferredCurrency ? await getUserWallet(user.preferredCurrency) : null
+
   return (
     <html lang='en' data-scroll-behavior='smooth'>
       <body
@@ -68,7 +72,7 @@ export default function RootLayout({
         <ParticleBackground />
 
         <Providers>
-          <Navbar />
+          <Navbar user={user} wallet={wallet} />
           {children}
           <Footer />
         </Providers>

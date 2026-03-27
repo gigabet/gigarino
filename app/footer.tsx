@@ -63,7 +63,7 @@ const paymentMethods = [
 
 export default function Footer() {
   return (
-    <footer className='relative border-none border-white/5 pt-16 pb-8'>
+    <footer className='relative border-none border-white/5 pt-16 pb-28 lg:pb-8'>
       {/* Background with subtle pattern */}
       <div className='from-dark-100 pointer-events-none absolute inset-0 bg-linear-to-t to-transparent' />
       <div className='absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(209,243,102,0.03),transparent_50%)]' />

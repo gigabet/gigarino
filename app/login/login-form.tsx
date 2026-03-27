@@ -90,10 +90,10 @@ export default function LoginForm() {
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.5 }}
-            className='mb-6 flex items-center gap-3 rounded-lg border border-lime-500/30 bg-lime-500/10 p-4'
+            className='border-primary-500/30 bg-primary-500/10 mb-6 flex items-center gap-3 rounded-lg border p-4'
           >
-            <AlertCircleIcon className='text-lime size-5 shrink-0' />
-            <p className='text-lime text-sm'>Registration successful!</p>
+            <AlertCircleIcon className='text-primary size-5 shrink-0' />
+            <p className='text-primary text-sm'>Registration successful!</p>
           </motion.div>
         </Activity>
 

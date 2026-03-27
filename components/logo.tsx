@@ -11,7 +11,7 @@ export default function Logo({ size = 'md', subtitle, Component = 'h1' }: LogoPr
     <div className='inline-flex flex-col items-center gap-2 select-none'>
       <Component
         className={cx('font-display font-bold tracking-wider', {
-          'text-3xl lg:text-3xl': size === 'md',
+          'text-[1.67rem] sm:text-3xl': size === 'md',
           'text-4xl lg:text-4xl': size === 'lg',
         })}
       >
