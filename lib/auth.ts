@@ -1,7 +1,7 @@
 'use server'
 
 import { cookies } from 'next/headers'
-import type { User } from '@/types'
+import type { User, Wallet } from '@/types'
 
 export async function getToken() {
   const cookieStore = await cookies()
@@ -38,7 +38,7 @@ export async function getUserWallet(currency: string) {
 
   if (!res.ok) return null
 
-  return await res.json()
+  return (await res.json()) as Wallet
 }
 
 export async function deleteToken() {
