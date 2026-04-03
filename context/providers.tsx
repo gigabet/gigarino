@@ -4,6 +4,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { cx } from 'class-variance-authority'
 import { atom, useAtomValue } from 'jotai'
 import { BarLoader } from 'react-spinners'
+import type { User, Wallet } from '@/types'
 
 function makeQueryClient() {
   return new QueryClient({
@@ -33,7 +34,10 @@ function getQueryClient() {
   }
 }
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+export default function Providers({
+  children,
+  ...props
+}: { children: React.ReactNode } & UserContext) {
   // NOTE: Avoid useState when initializing the query client if you don't
   //       have a suspense boundary between this and the code that may
   //       suspend because React will throw away the client on the initial
@@ -42,15 +46,35 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Loading />
+      <LoadingOverlay />
+      {/* <UserProvider {...props}>{children}</UserProvider> */}
       {children}
-      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   )
 }
 
+type UserContext = { user: User | null; wallet: Wallet | null }
+// const UserContext = createContext<UserContext>({
+//   user: null,
+//   wallet: null,
+// })
+
+// export function useUser() {
+//   return useContext(UserContext)
+// }
+
+// function UserProvider({
+//   children,
+//   ...props
+// }: {
+//   children: React.ReactNode
+// } & UserContext) {
+//   return <UserContext.Provider value={props}>{children}</UserContext.Provider>
+// }
+
 export const isLoadingOverlayState = atom(false)
-function Loading() {
+function LoadingOverlay() {
   const isLoading = useAtomValue(isLoadingOverlayState)
 
   return (

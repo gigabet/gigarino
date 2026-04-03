@@ -37,7 +37,6 @@ export default function LoginForm() {
 
     if (isRegistered) {
       setRegistered(true)
-
       // remove query param without adding history entry
       router.replace('/login')
     }
@@ -73,14 +72,14 @@ export default function LoginForm() {
         </div>
 
         {/* Error Message */}
-        <Activity mode={formData.error ? 'visible' : 'hidden'}>
+        <Activity mode={formData.error || searchParams.get('error') ? 'visible' : 'hidden'}>
           <motion.div
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
             className='mb-6 flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4'
           >
             <AlertCircleIcon className='size-5 shrink-0 text-red-400' />
-            <p className='text-sm text-red-400'>{formData.error}</p>
+            <p className='text-sm text-red-400'>{formData.error || searchParams.get('error')}</p>
           </motion.div>
         </Activity>
 
@@ -178,6 +177,7 @@ export default function LoginForm() {
 
           <input type='hidden' name='userAgent' value={userAgent} />
           <input type='hidden' name='device' value={device} />
+          <input type='hidden' name='from' value={searchParams.get('from') ?? '/'} />
 
           {/* Submit Button */}
           <motion.div

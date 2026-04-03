@@ -3,23 +3,26 @@ import { XIcon } from 'lucide-react'
 import { Dialog as DialogPrimitive } from 'radix-ui'
 import type * as React from 'react'
 
-function Root({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
+export function Root({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
   return <DialogPrimitive.Root data-slot='dialog' {...props} />
 }
 
-function Trigger({ ...props }: React.ComponentProps<typeof DialogPrimitive.Trigger>) {
+export function Trigger({ ...props }: React.ComponentProps<typeof DialogPrimitive.Trigger>) {
   return <DialogPrimitive.Trigger data-slot='dialog-trigger' {...props} />
 }
 
-function Portal({ ...props }: React.ComponentProps<typeof DialogPrimitive.Portal>) {
+export function Portal({ ...props }: React.ComponentProps<typeof DialogPrimitive.Portal>) {
   return <DialogPrimitive.Portal data-slot='dialog-portal' {...props} />
 }
 
-function Close({ ...props }: React.ComponentProps<typeof DialogPrimitive.Close>) {
+export function Close({ ...props }: React.ComponentProps<typeof DialogPrimitive.Close>) {
   return <DialogPrimitive.Close data-slot='dialog-close' {...props} />
 }
 
-function Overlay({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Overlay>) {
+export function Overlay({
+  className,
+  ...props
+}: React.ComponentProps<typeof DialogPrimitive.Overlay>) {
   return (
     <DialogPrimitive.Overlay
       data-slot='dialog-overlay'
@@ -32,7 +35,7 @@ function Overlay({ className, ...props }: React.ComponentProps<typeof DialogPrim
   )
 }
 
-function Content({
+export function Content({
   className,
   children,
   showCloseButton = true,
@@ -66,7 +69,7 @@ function Content({
   )
 }
 
-function Header({ className, ...props }: React.ComponentProps<'div'>) {
+export function Header({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot='dialog-header'
@@ -76,7 +79,7 @@ function Header({ className, ...props }: React.ComponentProps<'div'>) {
   )
 }
 
-function Footer({ className, ...props }: React.ComponentProps<'div'>) {
+export function Footer({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot='dialog-footer'
@@ -86,7 +89,7 @@ function Footer({ className, ...props }: React.ComponentProps<'div'>) {
   )
 }
 
-function Title({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Title>) {
+export function Title({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Title>) {
   return (
     <DialogPrimitive.Title
       data-slot='dialog-title'
@@ -96,7 +99,7 @@ function Title({ className, ...props }: React.ComponentProps<typeof DialogPrimit
   )
 }
 
-function Description({
+export function Description({
   className,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Description>) {
@@ -108,5 +111,3 @@ function Description({
     />
   )
 }
-
-export { Root, Close, Content, Description, Footer, Header, Overlay, Portal, Title, Trigger }

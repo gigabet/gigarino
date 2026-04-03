@@ -18,6 +18,17 @@ export interface Wallet {
   isActive: boolean
 }
 
+export interface Transaction {
+  id: string
+  walletId: string
+  type: 'CREDIT' | 'DEBIT'
+  amount: string
+  balanceBefore: string
+  balanceAfter: string
+  description: string | null
+  createdAt: string
+}
+
 export interface Game {
   id: string
   uuid: string

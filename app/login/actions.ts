@@ -60,7 +60,7 @@ export async function login(
       sameSite: 'lax',
       maxAge: data.rememberMe ? 60 * 60 * 24 * 30 : undefined, // 30 days if rememberMe, otherwise session cookie
     })
-    redirect('/')
+    redirect((formData.get('from') as string) || '/')
   }
 }
 
