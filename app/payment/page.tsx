@@ -79,7 +79,7 @@ export default async function Payment() {
           <Header />
 
           <div className='grid grid-cols-1 gap-8 lg:grid-cols-3'>
-            <div className='space-y-6'>
+            <div className='flex flex-col gap-6 md:flex-row lg:block lg:space-y-6'>
               <BalanceCard
                 balance={formatBalance(Number(wallet?.balance) || 0, user.preferredCurrency)}
               />

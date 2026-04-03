@@ -9,7 +9,7 @@ export default function QuickStats() {
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className='space-y-4 rounded-2xl border border-white/5 bg-black/20 p-6'
+      className='flex-1 space-y-4 rounded-2xl border border-white/5 bg-black/20 p-6'
     >
       <h3 className='text-sm font-semibold tracking-wider text-gray-400 uppercase'>Quick Stats</h3>
 
