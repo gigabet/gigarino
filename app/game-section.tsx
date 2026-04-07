@@ -164,22 +164,31 @@ export function GameCard({ game }: { game: Game }) {
   return (
     <button
       type='button'
-      onClick={handleClick}
+      onClick={game.image ? handleClick : undefined}
       ref={cardRef}
-      className='perspective-1000 group w-full shrink-0 select-none'
+      className={cx(
+        'perspective-1000 group w-full shrink-0 select-none',
+        !game.image && 'pointer-events-none opacity-50'
+      )}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
       <div className='relative scale-100 overflow-hidden rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.3)] transition-all duration-300 group-hover:scale-104 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.5),0_0_30px_rgba(209,243,102,0.2)]'>
         {/* Image - 16:10 aspect ratio */}
         <div className='relative aspect-16/10 overflow-hidden'>
-          <Image
-            src={game.image}
-            alt={game.name}
-            fill
-            sizes='(max-width: 1024px) 50vw, 25vw'
-            className='h-full w-full scale-100 object-cover transition-transform duration-500 group-hover:scale-108'
-          />
+          {game.image ? (
+            <Image
+              src={game.image}
+              alt={game.name}
+              fill
+              sizes='(max-width: 1024px) 50vw, 25vw'
+              className='h-full w-full scale-100 object-cover transition-transform duration-500 group-hover:scale-108'
+            />
+          ) : (
+            <div className='flex h-full w-full scale-100 items-center justify-center object-cover transition-transform duration-500 group-hover:scale-108'>
+              <span className='pb-10'>Game unavailable.</span>
+            </div>
+          )}
 
           {/* Gradient overlay */}
           <div className='absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent opacity-50 transition-opacity duration-300 group-hover:opacity-90' />
