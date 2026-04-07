@@ -40,8 +40,8 @@ Before you proceed, make sure the casino backend is running on <http://localhost
 NEXT_PUBLIC_API_URL=http://localhost:3001
 NEXT_PUBLIC_CURRENCY=EUR
 
-SUPERVISOR_ID=1296ee43-29c1-485a-8ccd-b16c9b63e9fa
-BRANCH_ID=21d03b4a-391e-4c6c-98b0-3186729d94ba
+SUPERVISOR_ID=11111111-1111-1111-1111-111111111111
+BRANCH_ID=33333333-3333-3333-3333-333333333333
 "@ | Set-Content .env.development
 ```
 
