@@ -65,7 +65,7 @@ export default async function Payment() {
 
   const queryClient = new QueryClient()
   queryClient.prefetchInfiniteQuery({
-    queryKey: ['transactions'],
+    queryKey: ['transactions', user.id],
     initialPageParam: null,
     queryFn: transactionsQuery,
   })
@@ -89,7 +89,7 @@ export default async function Payment() {
             <DepositWithdrawal />
           </div>
 
-          <TransactionHistory />
+          <TransactionHistory id={user.id} />
         </div>
       </main>
       <Activity mode={!wallet ? 'visible' : 'hidden'}>

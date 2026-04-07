@@ -1,3 +1,4 @@
+import { getToken } from '@/lib/auth'
 import type { Transaction } from '@/types'
 
 export const transactionsQuery = async ({ pageParam }: { pageParam: string | null }) => {
@@ -6,7 +7,14 @@ export const transactionsQuery = async ({ pageParam }: { pageParam: string | nul
       `${process.env.NEXT_PUBLIC_API_URL}/api/v1/wallets/transactions?cursor=${pageParam ?? ''}`
     )
 
-    const res = await fetch(url.toString())
+    const token = await getToken()
+    if (!token) throw new Error('You must be logged in')
+
+    const res = await fetch(url.toString(), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
 
     const data = (await res.json()) as {
       data: Transaction[]
