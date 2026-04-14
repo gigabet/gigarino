@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Geist_Mono, Poppins, Rajdhani } from 'next/font/google'
+import { JetBrains_Mono, Poppins, Rajdhani } from 'next/font/google'
 import Footer from '@/app/footer'
 import Navbar from '@/app/navbar'
 import ParticleBackground from '@/components/particle-background'
@@ -20,7 +20,7 @@ const rajdhani = Rajdhani({
   subsets: ['latin', 'latin-ext'],
 })
 
-const geistMono = Geist_Mono({
+const geistMono = JetBrains_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
 })

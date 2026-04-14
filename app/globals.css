@@ -2,7 +2,7 @@
 layer(base);
 
 @import 'tailwindcss';
-@plugin "tailwindcss-animate";
+@plugin 'tailwindcss-animate';
 
 /* @plugin 'tailwindcss-animate'; */
 
@@ -125,7 +125,7 @@ layer(base);
       text-shadow: 0 0 20px rgba(209, 243, 102, 0.8);
     }
     50% {
-      text-shadow: 0 0 24px rgba(209, 243, 102, 1.0);
+      text-shadow: 0 0 24px rgba(209, 243, 102, 1);
     }
   }
   @keyframes pulse-glow-white {
@@ -134,7 +134,7 @@ layer(base);
       text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
     }
     50% {
-      text-shadow: 0 0 24px rgba(255, 255, 255, 1.0);
+      text-shadow: 0 0 24px rgba(255, 255, 255, 1);
     }
   }
   @keyframes float {
@@ -221,15 +221,15 @@ layer(base);
 }
 
 @utility glass {
-  @apply backdrop-blur-xl bg-white/5 border border-white/10;
+  @apply border border-white/10 bg-white/5 backdrop-blur-xl;
 }
 
 @utility glass-dark {
-  @apply backdrop-blur-xl bg-black/40 border border-white/5;
+  @apply border border-white/5 bg-black/40 backdrop-blur-xl;
 }
 
 @utility btn-primary {
-  @apply relative overflow-hidden bg-primary text-black font-semibold px-8 py-3 rounded-full transition-all duration-300;
+  @apply bg-primary relative overflow-hidden rounded-full px-8 py-3 font-semibold text-black transition-all duration-300;
 
   &:hover {
     @apply shadow-glow-lg scale-105;
@@ -237,7 +237,7 @@ layer(base);
 
   &::before {
     content: '';
-    @apply absolute inset-0 bg-linear-to-r from-transparent via-white/30 to-transparent -translate-x-full;
+    @apply absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/30 to-transparent;
     transition: transform 0.6s;
   }
 
@@ -250,7 +250,7 @@ layer(base);
   @apply transition-all duration-300;
 
   &:hover {
-    @apply scale-105 shadow-glow;
+    @apply shadow-glow scale-105;
   }
 }
 
@@ -290,7 +290,7 @@ layer(base);
 
   &::before {
     content: '';
-    @apply absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 z-10;
+    @apply absolute inset-0 z-10 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300;
   }
 
   &:hover::before {
@@ -303,7 +303,7 @@ layer(base);
 }
 
 @utility game-card-overlay {
-  @apply absolute inset-0 flex items-center justify-center opacity-0 transition-all duration-300 z-20;
+  @apply absolute inset-0 z-20 flex items-center justify-center opacity-0 transition-all duration-300;
 
   .game-card:hover & {
     @apply opacity-100;
@@ -321,7 +321,7 @@ layer(base);
 }
 
 @utility noise-overlay {
-  @apply fixed inset-0 pointer-events-none z-50 opacity-[0.03];
+  @apply pointer-events-none fixed inset-0 z-50 opacity-[0.03];
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }
 
@@ -387,7 +387,7 @@ layer(base);
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-dark text-white font-sans antialiased min-h-dvh;
+    @apply bg-dark min-h-dvh font-sans text-white antialiased;
   }
 }
 

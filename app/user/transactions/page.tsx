@@ -1,14 +1,16 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
+import { redirect } from 'next/navigation'
 import { Activity } from 'react'
+import { transactionsQuery } from '@/app/user/context'
 import Header from '@/app/user/header'
-import { transactionsQuery } from '@/app/user/wallet/context'
-import TransactionHistory from '@/app/user/wallet/transaction-history'
+import TransactionHistory from '@/app/user/transactions/transaction-history'
 import WalletError from '@/app/user/wallet-error'
 import { getUser, getUserWallet } from '@/lib/auth'
 
 export default async function Transactions() {
   const user = await getUser()
-  if (!user) return null
+  if (!user) redirect(`/login?error=You must be logged in&from=/user/wallet`, 'replace')
+
   const wallet = await getUserWallet(user.preferredCurrency)
 
   const queryClient = new QueryClient()

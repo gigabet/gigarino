@@ -16,7 +16,7 @@ export default function UserSidebar(props: { user: User | null }) {
 
   return (
     <motion.aside
-      className='sticky top-32 hidden w-60 flex-col overflow-hidden rounded-2xl border border-white/5 bg-black/20 text-sm leading-relaxed min-[1440px]:flex'
+      className='sticky top-32 hidden max-w-60 min-w-60 flex-col overflow-hidden rounded-2xl border border-white/5 bg-black/20 text-sm leading-relaxed min-[1440px]:flex'
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5 }}

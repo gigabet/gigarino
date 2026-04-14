@@ -1,18 +1,20 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
+import { redirect } from 'next/navigation'
 import { Activity } from 'react'
+import { transactionsQuery } from '@/app/user/context'
 import Header from '@/app/user/header'
 import BalanceCard from '@/app/user/wallet/balance-card'
-import { transactionsQuery } from '@/app/user/wallet/context'
 import DepositWithdrawal from '@/app/user/wallet/deposit-withdrawal'
 import QuickStats from '@/app/user/wallet/quick-stats'
-import TransactionHistory from '@/app/user/wallet/transaction-history'
+import TransactionsPreview from '@/app/user/wallet/transactions-preview'
 import WalletError from '@/app/user/wallet-error'
 import { getUser, getUserWallet } from '@/lib/auth'
 import { formatBalance } from '@/lib/utils'
 
 export default async function Wallet() {
   const user = await getUser()
-  if (!user) return null
+  if (!user) redirect(`/login?error=You must be logged in&from=/user/wallet`, 'replace')
+
   const wallet = await getUserWallet(user.preferredCurrency)
 
   const queryClient = new QueryClient()
@@ -40,7 +42,7 @@ export default async function Wallet() {
           <DepositWithdrawal />
         </div>
 
-        <TransactionHistory id={user.id} />
+        <TransactionsPreview id={user.id} />
       </main>
       <Activity mode={!wallet ? 'visible' : 'hidden'}>
         <WalletError />
