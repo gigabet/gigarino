@@ -11,49 +11,6 @@ import WalletError from '@/app/user/wallet/wallet-error'
 import { getUser, getUserWallet, logout } from '@/lib/auth'
 import { formatBalance } from '@/lib/utils'
 
-// const mockTransactions: Transaction[] = [
-//   {
-//     id: '1',
-//     date: '2024-03-20',
-//     type: 'deposit',
-//     method: 'Credit Card',
-//     amount: 100,
-//     status: 'completed',
-//   },
-//   {
-//     id: '2',
-//     date: '2024-03-18',
-//     type: 'withdrawal',
-//     method: 'Bank Transfer',
-//     amount: 250,
-//     status: 'completed',
-//   },
-//   {
-//     id: '3',
-//     date: '2024-03-15',
-//     type: 'deposit',
-//     method: 'PayPal',
-//     amount: 50,
-//     status: 'completed',
-//   },
-//   {
-//     id: '4',
-//     date: '2024-03-12',
-//     type: 'deposit',
-//     method: 'Crypto',
-//     amount: 200,
-//     status: 'pending',
-//   },
-//   {
-//     id: '5',
-//     date: '2024-03-10',
-//     type: 'withdrawal',
-//     method: 'PayPal',
-//     amount: 100,
-//     status: 'completed',
-//   },
-// ]
-
 export default async function Wallet() {
   const user = await getUser()
   if (!user) {
