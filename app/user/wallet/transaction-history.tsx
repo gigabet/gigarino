@@ -1,9 +1,10 @@
 'use client'
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { format } from 'date-fns'
+import { map } from 'lodash'
 import { ChevronRightIcon, HistoryIcon, MinusIcon, PlusIcon } from 'lucide-react'
 import { motion } from 'motion/react'
-import { transactionsQuery } from '@/app/payment/context'
+import { transactionsQuery } from '@/app/user/wallet/context'
 import { Button } from '@/components/ui/button'
 
 export default function TransactionHistory(props: { id: string }) {
@@ -22,7 +23,7 @@ export default function TransactionHistory(props: { id: string }) {
       transition={{ duration: 0.5, delay: 0.4 }}
       className='mt-8'
     >
-      <div className='rounded-2xl border border-white/10 bg-[#141414] p-6'>
+      <div className='bg-dark/40 rounded-2xl border border-white/10 p-6'>
         <div className='mb-6 flex items-center justify-between'>
           <h3 className='flex items-center gap-2 text-lg font-bold text-white'>
             <HistoryIcon className='text-primary h-5 w-5' />
@@ -49,14 +50,14 @@ export default function TransactionHistory(props: { id: string }) {
               </tr>
             </thead>
             <tbody>
-              {data?.pages.map(page =>
-                page.data.map(tx => (
+              {map(data?.pages, page =>
+                map(page.data, tx => (
                   <tr
                     key={tx.id}
                     className='border-b border-white/5 transition-colors hover:bg-white/5'
                   >
                     <td className='px-4 py-4 font-mono text-sm text-gray-300'>
-                      {format(tx.createdAt, 'dd MMM y')}
+                      {format(tx.createdAt, 'dd MMM y, HH:mm')}
                     </td>
                     <td className='px-4 py-4'>
                       <div

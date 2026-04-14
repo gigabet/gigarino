@@ -1,12 +1,12 @@
 import { cookies } from 'next/headers'
 import { type NextRequest, NextResponse } from 'next/server'
 
-const protectedRoutes = ['/payment', '/profile', '/transactions']
+const protectedRoutes = ['/user']
 // const entryRoutes = ['/login', '/register']
 
 export default async function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname
-  const isProtectedRoute = protectedRoutes.includes(path)
+  const isProtectedRoute = protectedRoutes.some(route => path.startsWith(route))
   // const isEntryRoute = entryRoutes.includes(path)
 
   const token = (await cookies()).get('token')?.value

@@ -118,22 +118,29 @@ export default function Navbar(props: { user: User | null; wallet: Wallet | null
                         <p className='text-xs text-gray-400'>{props.user.email}</p>
                       </div>
                       <DropdownMenu.Item
-                        onClick={() => router.push('/payment')}
+                        onClick={() => router.push('/user/account')}
+                        className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'
+                      >
+                        <UserIcon className='mr-2 size-4' />
+                        Account
+                      </DropdownMenu.Item>
+                      <DropdownMenu.Item
+                        onClick={() => router.push('/user/wallet')}
                         className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'
                       >
                         <WalletIcon className='mr-2 size-4' />
                         Wallet
                       </DropdownMenu.Item>
+                      <DropdownMenu.Item className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'>
+                        <CreditCardIcon className='mr-2 size-4' />
+                        Transactions
+                      </DropdownMenu.Item>
                       <DropdownMenu.Item
-                        onClick={() => router.push('/bonus')}
+                        onClick={() => router.push('/user/bonuses')}
                         className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'
                       >
                         <GiftIcon className='mr-2 size-4' />
                         Bonuses
-                      </DropdownMenu.Item>
-                      <DropdownMenu.Item className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'>
-                        <CreditCardIcon className='mr-2 size-4' />
-                        Transactions
                       </DropdownMenu.Item>
                       <DropdownMenu.Separator className='bg-white/10' />
                       <DropdownMenu.Item
@@ -165,20 +172,10 @@ export default function Navbar(props: { user: User | null; wallet: Wallet | null
                   </Link>
                 </>
               )}
-
-              {/* Mobile Menu Toggle */}
-              {/* <button
-                type='button'
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className='p-2 text-white lg:hidden'
-              >
-                {isMobileMenuOpen ? <XIcon className='size-6' /> : <MenuIcon className='size-6' />}
-              </button> */}
             </div>
           </div>
         </div>
       </header>
-      {/* Mobile Menu */}
       <MobileMenu />
       <BottomBar links={navLinks} />
     </>
