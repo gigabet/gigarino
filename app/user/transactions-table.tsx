@@ -51,7 +51,7 @@ export default function TransactionsTable(props: { id: string; infinite?: boolea
           {map(
             data?.pages,
             (page, pageNo) =>
-              (pageNo === 0 || (props.infinite && pageNo > 1)) &&
+              (pageNo === 0 || props.infinite) &&
               map(page.data, tx => (
                 <tr
                   key={tx.id}
@@ -73,9 +73,9 @@ export default function TransactionsTable(props: { id: string; infinite?: boolea
                       }`}
                     >
                       {tx.type === 'CREDIT' ? (
-                        <PlusIcon className='h-4 w-4 shrink-0' />
+                        <PlusIcon className='size-4 shrink-0' />
                       ) : (
-                        <MinusIcon className='h-4 w-4 shrink-0' />
+                        <MinusIcon className='size-4 shrink-0' />
                       )}
                       {tx.type.charAt(0) + tx.type.slice(1).toLowerCase()}
                     </div>
