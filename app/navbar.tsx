@@ -34,6 +34,7 @@ const navLinks = [
   // { label: 'Bonus', href: '#!', icon: GiftIcon },
 ]
 const navbarMobileMenuState = atom(false)
+export const NAVBAR_HEIGHT = 'h-20'
 
 export default function Navbar(props: { user: User | null; wallet: Wallet | null }) {
   const router = useRouter()
@@ -45,7 +46,7 @@ export default function Navbar(props: { user: User | null; wallet: Wallet | null
       <header className='bg-dark/90 sticky top-0 right-0 left-0 z-50 border-b border-white/5 backdrop-blur-xl transition-all duration-500'>
         <div className='mx-auto max-w-360 px-6 lg:px-8'>
           {/* Top Bar */}
-          <div className='flex h-20 items-center justify-between py-3'>
+          <div className={cx(NAVBAR_HEIGHT, 'flex items-center justify-between py-3')}>
             {/* Left Section */}
             <div className='flex items-center gap-4'>
               <Link href='/' className='group'>
@@ -216,7 +217,7 @@ function MobileMenu() {
               }`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
-              <link.icon className='h-5 w-5' />
+              <link.icon className='size-5' />
               {link.label}
             </Link>
           ))}

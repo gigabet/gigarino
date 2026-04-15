@@ -13,7 +13,7 @@ import { formatBalance } from '@/lib/utils'
 
 export default async function Wallet() {
   const user = await getUser()
-  if (!user) redirect(`/login?error=You must be logged in&from=/user/wallet`, 'replace')
+  if (!user) redirect('/login?error=You must be logged in&from=/user/wallet', 'replace')
 
   const wallet = await getUserWallet(user.preferredCurrency)
 
@@ -28,7 +28,7 @@ export default async function Wallet() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <main className='z-1 min-h-screen grow'>
+      <main className='grow'>
         <Header title='Wallet' subtitle='Manage your funds, deposits, and withdrawals' />
 
         <div className='grid grid-cols-1 gap-8 lg:grid-cols-3'>

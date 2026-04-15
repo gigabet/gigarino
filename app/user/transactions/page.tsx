@@ -9,7 +9,7 @@ import { getUser, getUserWallet } from '@/lib/auth'
 
 export default async function Transactions() {
   const user = await getUser()
-  if (!user) redirect(`/login?error=You must be logged in&from=/user/wallet`, 'replace')
+  if (!user) redirect('/login?error=You must be logged in&from=/user/transactions', 'replace')
 
   const wallet = await getUserWallet(user.preferredCurrency)
 
@@ -22,7 +22,7 @@ export default async function Transactions() {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <main className='z-1 min-h-screen grow'>
+      <main className='grow'>
         <Header title='Transactions' subtitle='View all your transactions' />
         <TransactionHistory id={user.id} />
       </main>

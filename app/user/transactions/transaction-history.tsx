@@ -6,7 +6,7 @@ import TransactionsTable from '@/app/user/transactions-table'
 export default function TransactionHistory(props: { id: string }) {
   return (
     <motion.div
-      className='bg-dark/40 mt-8 max-w-full rounded-2xl border border-white/10 p-6'
+      className='bg-dark/40 mt-8 max-w-full rounded-2xl border border-white/5 p-6'
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
