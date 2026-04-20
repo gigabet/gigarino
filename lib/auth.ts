@@ -1,7 +1,7 @@
 'use server'
 
 import { cookies } from 'next/headers'
-import type { User, Wallet } from '@/types'
+import type { ApiResponse, User, Wallet } from '@/types'
 
 export async function getToken() {
   const cookieStore = await cookies()
@@ -23,7 +23,8 @@ export async function getUser() {
     // TODO: explicitly handle player status (e.g. banned, pending KYC, etc.)
     if (!res.ok) return null
 
-    return (await res.json()) as User
+    const { data } = (await res.json()) as ApiResponse<User>
+    return data
   } catch (error) {
     console.error('Error fetching user:', error)
     return null
@@ -45,7 +46,8 @@ export async function getUserWallet(currency: string) {
 
     if (!res.ok) return null
 
-    return (await res.json()) as Wallet
+    const { data } = (await res.json()) as ApiResponse<Wallet>
+    return data
   } catch (error) {
     console.error('Error fetching user wallet:', error)
     return null

@@ -1,6 +1,7 @@
 'use server'
 
 import { isArray } from 'lodash'
+import type { ErrorResponse } from '@/types'
 
 export async function forgotPassword(
   _state: {
@@ -31,7 +32,7 @@ export async function forgotPassword(
   })
 
   if (!res.ok) {
-    const errorData = await res.json()
+    const errorData = (await res.json()) as ErrorResponse
     console.log(errorData)
     return {
       ...data,

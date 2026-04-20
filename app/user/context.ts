@@ -1,5 +1,5 @@
 import { getToken } from '@/lib/auth'
-import type { Transaction } from '@/types'
+import type { ApiResponse, Transaction } from '@/types'
 
 export const transactionsQuery = async ({ pageParam }: { pageParam: string | null }) => {
   try {
@@ -16,10 +16,10 @@ export const transactionsQuery = async ({ pageParam }: { pageParam: string | nul
       },
     })
 
-    const data = (await res.json()) as {
+    const { data } = (await res.json()) as ApiResponse<{
       data: Transaction[]
       nextCursor: string | null
-    }
+    }>
     return data
   } catch (error) {
     console.error(error)

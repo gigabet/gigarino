@@ -1,6 +1,7 @@
 'use server'
 
 import { isArray } from 'lodash'
+import type { ErrorResponse } from '@/types'
 
 export async function resetPassword(
   _state: {
@@ -53,7 +54,7 @@ export async function resetPassword(
   })
 
   if (!res.ok) {
-    const errorData = await res.json()
+    const errorData = (await res.json()) as ErrorResponse
     console.log(errorData)
     return {
       ...data,

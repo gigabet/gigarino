@@ -1,4 +1,4 @@
-import type { GamesResponse, ProvidersResponse } from '@/types'
+import type { ApiResponse, GamesResponse, ProvidersResponse } from '@/types'
 
 export const categories = {
   Providers: { icon: 'StoreIcon', slug: 'providers', query: '' },
@@ -32,7 +32,7 @@ export const getGameQuery = (query: string) => {
 
       const res = await fetch(url.toString())
 
-      const data = (await res.json()) as GamesResponse
+      const { data } = (await res.json()) as ApiResponse<GamesResponse>
       return data
     } catch (error) {
       console.error(error)
@@ -52,7 +52,7 @@ export const providersQuery = async (): Promise<ProvidersResponse | []> => {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/games/providers`)
 
-    const data = (await res.json()) as ProvidersResponse
+    const { data } = (await res.json()) as ApiResponse<ProvidersResponse>
     return data
   } catch (error) {
     console.error(error)
@@ -74,7 +74,7 @@ export const getGameDemo = async (gameUuid: string) => {
         device: 'mobile',
       }),
     })
-    const data = (await res.json()) as { url: string; sessionId: string }
+    const { data } = (await res.json()) as ApiResponse<{ url: string; sessionId: string }>
     return data.url
   } catch (error) {
     console.error(error)

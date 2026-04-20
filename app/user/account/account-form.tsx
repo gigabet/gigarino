@@ -11,29 +11,31 @@ import {
 } from 'lucide-react'
 import { motion } from 'motion/react'
 import Form from 'next/form'
-import Link from 'next/link'
 import { Activity, useActionState, useRef, useState } from 'react'
-import { register } from '@/app/register/actions'
-import { Checkbox } from '@/components/ui/checkbox'
+import { changeDetails } from '@/app/user/account/actions'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
-export default function RegistrationForm() {
+export default function AccountForm(props: {
+  email: string
+  username: string
+  displayName: string
+}) {
   const formRef = useRef<HTMLFormElement>(null)
   const initialState = {
     error: null as string | null,
-    username: '',
-    email: '',
+    username: props.username,
+    displayName: props.displayName,
+    email: props.email,
     password: '',
   }
-  const [prevState, action, isPending] = useActionState(register, initialState)
+  const [prevState, action, isPending] = useActionState(changeDetails, initialState)
   const language = navigator.language
 
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [password, setPassword] = useState(prevState.password)
+  const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [confirmAge, setConfirmAge] = useState(false)
 
   const getPasswordStrength = (password: string) => {
     let strength = 0
@@ -54,27 +56,7 @@ export default function RegistrationForm() {
       className='relative w-full max-w-lg'
     >
       {/* Card */}
-      <div className='min-[32rem]:glass-dark border-0 p-8 min-[32rem]:rounded-2xl min-[32rem]:border min-[32rem]:shadow-2xl'>
-        {/* Header */}
-        <div className='mb-8 text-center'>
-          <motion.h1
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className='font-display mb-2 text-3xl font-bold text-white'
-          >
-            Create Account
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className='text-gray-400'
-          >
-            Join Gigarino for exclusive bonuses
-          </motion.p>
-        </div>
-
+      <div className='rounded-2xl border border-white/5 bg-black/20 p-8 shadow-2xl'>
         {/* Error Message */}
         <Activity mode={prevState.error ? 'visible' : 'hidden'}>
           <motion.div
@@ -93,7 +75,7 @@ export default function RegistrationForm() {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
+            transition={{ delay: 0.1 }}
             className='space-y-2'
           >
             <Label htmlFor='username' className='text-sm font-medium text-gray-300'>
@@ -108,7 +90,29 @@ export default function RegistrationForm() {
                 defaultValue={prevState.username}
                 placeholder='Choose a username'
                 className='pl-10'
-                required
+              />
+            </div>
+          </motion.div>
+
+          {/* Display Name Field */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.1 }}
+            className='space-y-2'
+          >
+            <Label htmlFor='displayName' className='text-sm font-medium text-gray-300'>
+              Display name
+            </Label>
+            <div className='relative'>
+              <UserIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
+              <Input
+                id='displayName'
+                name='displayName'
+                type='text'
+                defaultValue={prevState.displayName}
+                placeholder='Choose a display name'
+                className='pl-10'
               />
             </div>
           </motion.div>
@@ -117,7 +121,7 @@ export default function RegistrationForm() {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.35 }}
+            transition={{ delay: 0.2 }}
             className='space-y-2'
           >
             <Label htmlFor='email' className='text-sm font-medium text-gray-300'>
@@ -132,7 +136,6 @@ export default function RegistrationForm() {
                 defaultValue={prevState.email}
                 placeholder='Enter your email'
                 className='pl-10'
-                required
               />
             </div>
           </motion.div>
@@ -141,11 +144,11 @@ export default function RegistrationForm() {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: 0.3 }}
             className='relative space-y-2'
           >
             <Label htmlFor='password' className='text-sm font-medium text-gray-300'>
-              Password
+              New password
             </Label>
             <div className='relative'>
               <LockIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
@@ -157,7 +160,6 @@ export default function RegistrationForm() {
                 onChange={e => setPassword(e.target.value)}
                 placeholder='Create a password'
                 className='px-10'
-                required
               />
               <button
                 type='button'
@@ -192,11 +194,11 @@ export default function RegistrationForm() {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.45 }}
+            transition={{ delay: 0.4 }}
             className='space-y-2'
           >
             <Label htmlFor='confirmPassword' className='text-sm font-medium text-gray-300'>
-              Confirm Password
+              Confirm new password
             </Label>
             <div className='relative'>
               <LockIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
@@ -207,7 +209,6 @@ export default function RegistrationForm() {
                 onChange={e => setConfirmPassword(e.target.value)}
                 placeholder='Confirm your password'
                 className='px-10'
-                required
               />
               <button
                 type='button'
@@ -225,26 +226,6 @@ export default function RegistrationForm() {
 
           <input type='hidden' id='language' name='language' value={language} />
 
-          {/* Checkboxes */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.55 }}
-            className='space-y-3'
-          >
-            <div className='flex items-start space-x-3'>
-              <Checkbox
-                id='age'
-                checked={confirmAge}
-                onCheckedChange={checked => setConfirmAge(checked as boolean)}
-                className='mt-1'
-              />
-              <Label htmlFor='age' className='cursor-pointer text-sm leading-relaxed text-gray-400'>
-                I confirm I am 18+ years old and agree to the responsible gaming terms
-              </Label>
-            </div>
-          </motion.div>
-
           {/* Submit Button */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -253,48 +234,20 @@ export default function RegistrationForm() {
           >
             <button
               type='submit'
-              disabled={
-                isPending || !confirmAge || password !== confirmPassword || passwordStrength < 3
-              }
-              className='bg-primary enabled:hover:shadow-glow disabled:bg-muted disabled:text-muted-foreground flex w-full cursor-default items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-black uppercase transition-all disabled:cursor-not-allowed'
-              title={
-                !confirmAge
-                  ? 'Please confirm your age'
-                  : password !== confirmPassword
-                    ? 'Passwords must match'
-                    : passwordStrength < 3
-                      ? 'Password is too weak'
-                      : undefined
-              }
+              disabled={isPending}
+              className='bg-primary enabled:hover:shadow-glow flex w-full cursor-default items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-black uppercase transition-all'
             >
               {isPending ? (
                 <>
                   <Loader2Icon className='mr-2 size-5 animate-spin' />
-                  Creating account...
+                  Changing Details...
                 </>
               ) : (
-                'Create Account'
+                'Change Details'
               )}
             </button>
           </motion.div>
         </Form>
-
-        {/* Login Link */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.7 }}
-          className='mt-6 text-center text-sm text-gray-400'
-        >
-          Already have an account?{' '}
-          <Link
-            href='/login'
-            className='text-primary group relative font-medium transition-colors hover:text-white'
-          >
-            Log in
-            <span className='bg-primary absolute -bottom-0.5 left-0 h-px w-0 transition-all duration-300 group-hover:w-full' />
-          </Link>
-        </motion.p>
       </div>
     </motion.div>
   )

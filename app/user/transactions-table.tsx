@@ -29,12 +29,12 @@ export default function TransactionsTable(props: { id: string; infinite?: boolea
         <thead className='hidden md:table-header-group'>
           <tr className='border-b border-white/10'>
             {/* Date - shrink */}
-            <th className='w-48 px-4 py-3 text-left text-sm font-medium whitespace-nowrap text-gray-400'>
+            <th className='w-52 px-4 py-3 text-left text-sm font-medium whitespace-nowrap text-gray-400'>
               Date
             </th>
 
             {/* Type - shrink */}
-            <th className='w-28 px-4 py-3 text-left text-sm font-medium whitespace-nowrap text-gray-400'>
+            <th className='w-32 px-4 py-3 text-left text-sm font-medium whitespace-nowrap text-gray-400'>
               Type
             </th>
 
@@ -94,7 +94,7 @@ export default function TransactionsTable(props: { id: string; infinite?: boolea
                     )}
                   >
                     {tx.type === 'CREDIT' ? '+' : '-'}
-                    {tx.amount}
+                    {Number(tx.amount).toFixed(2)}
                   </td>
                 </tr>
               ))

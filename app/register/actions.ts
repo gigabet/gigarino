@@ -2,6 +2,7 @@
 
 import { isArray } from 'lodash'
 import { redirect } from 'next/navigation'
+import type { ErrorResponse } from '@/types'
 
 export async function register(
   _prevState: {
@@ -49,7 +50,7 @@ export async function register(
   })
 
   if (!res.ok) {
-    const errorData = await res.json()
+    const errorData = (await res.json()) as ErrorResponse
     return {
       ...data,
       error: isArray(errorData.message)

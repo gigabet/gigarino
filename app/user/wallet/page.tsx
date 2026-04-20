@@ -39,7 +39,7 @@ export default async function Wallet() {
             <QuickStats />
           </div>
 
-          <DepositWithdrawal />
+          <DepositWithdrawal balance={Number(wallet?.balance) || 0} />
         </div>
 
         <TransactionsPreview id={user.id} />

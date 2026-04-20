@@ -3,6 +3,7 @@
 import { isArray } from 'lodash'
 import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
+import type { ErrorResponse } from '@/types'
 
 export async function login(
   _state: {
@@ -28,22 +29,31 @@ export async function login(
     supervisorId: process.env.SUPERVISOR_ID,
   })
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/players/login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
+  let res: Response
+  try {
+    res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/players/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ...data,
+        ipAddress: await getClientIp(),
+        userAgent: formData.get('userAgent') as string,
+        device: formData.get('device') as string,
+        supervisorId: process.env.SUPERVISOR_ID,
+      }),
+    })
+  } catch (error) {
+    console.error('Login error:', error)
+    return {
       ...data,
-      ipAddress: await getClientIp(),
-      userAgent: formData.get('userAgent') as string,
-      device: formData.get('device') as string,
-      supervisorId: process.env.SUPERVISOR_ID,
-    }),
-  })
+      error: 'Error connecting to server.',
+    }
+  }
 
   if (!res.ok) {
-    const errorData = await res.json()
+    const errorData = (await res.json()) as ErrorResponse
     console.log(errorData)
     return {
       ...data,
@@ -54,7 +64,7 @@ export async function login(
   } else {
     cookieStore.set({
       name: 'token',
-      value: (await res.json()).token,
+      value: (await res.json()).data.token,
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',

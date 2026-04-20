@@ -1,3 +1,15 @@
+export interface ApiResponse<T> {
+  statusCode: number
+  message: string
+  data: T
+}
+
+export interface ErrorResponse {
+  statusCode: number
+  message: string | string[]
+  error: string
+}
+
 export interface User {
   id: string
   email: string
