@@ -1,8 +1,13 @@
 'use client'
+import { last } from 'lodash'
 import { WalletIcon } from 'lucide-react'
 import { motion } from 'motion/react'
+import { useBalanceUpdates } from '@/context/hooks'
+import { formatBalance } from '@/lib/utils'
 
-export default function BalanceCard(props: { balance: string }) {
+export default function BalanceCard(props: { balance: string; token: string }) {
+  const { data } = useBalanceUpdates(props.token)
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
@@ -16,7 +21,12 @@ export default function BalanceCard(props: { balance: string }) {
         </div>
         <span className='text-gray-400'>Available Balance</span>
       </div>
-      <div className='mb-2 text-4xl font-bold text-white'>{props.balance}</div>
+      <div className='mb-2 text-4xl font-bold text-white'>
+        {(data?.length ?? 0) > 0
+          ? // biome-ignore lint/style/noNonNullAssertion: data cannot be null if this condition is true
+            formatBalance(Number(last(data)!.data.balance))
+          : props.balance}
+      </div>
     </motion.div>
   )
 }

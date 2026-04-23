@@ -31,10 +31,11 @@ export async function getUser() {
   }
 }
 
-// TODO: try catch
-export async function getUserWallet(currency: string) {
+export async function getUserWallet() {
   const token = await getToken()
   if (!token) return null
+
+  const currency = process.env.NEXT_APP_CURRENCY ?? 'EUR'
 
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/wallets/${currency}`, {

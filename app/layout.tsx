@@ -4,7 +4,7 @@ import Footer from '@/app/footer'
 import Navbar from '@/app/navbar'
 import ParticleBackground from '@/components/particle-background'
 import Providers from '@/context/providers'
-import { getUser, getUserWallet } from '@/lib/auth'
+import { getToken, getUser, getUserWallet } from '@/lib/auth'
 import './globals.css'
 
 const poppins = Poppins({
@@ -35,8 +35,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const token = await getToken()
   const user = await getUser()
-  const wallet = user?.preferredCurrency ? await getUserWallet(user.preferredCurrency) : null
+  const wallet = await getUserWallet()
 
   return (
     <html lang='en' data-scroll-behavior='smooth'>
@@ -72,7 +73,7 @@ export default async function RootLayout({
         <ParticleBackground />
 
         <Providers user={user} wallet={wallet}>
-          <Navbar user={user} wallet={wallet} />
+          <Navbar user={user} wallet={wallet} token={token} />
           {children}
           <Footer />
         </Providers>

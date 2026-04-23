@@ -291,6 +291,7 @@ function WithdrawForm(props: { balance: number }) {
         <div className='relative'>
           <Input
             type='number'
+            name='amount'
             placeholder='Enter amount'
             value={amount}
             onChange={e => setAmount(e.target.value)}
@@ -347,8 +348,8 @@ function WithdrawForm(props: { balance: number }) {
         <div className='from-primary to-primary absolute inset-0 bg-linear-to-r via-white/30 opacity-0 transition-opacity duration-500 group-hover/button:opacity-100' />
         <div className='absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/40 to-transparent transition-transform duration-1000 group-hover/button:translate-x-full' />
         {isPending ? (
-          <div className='relative'>
-            <Loader2Icon className='mr-2 size-5 animate-spin' />
+          <div className='relative flex gap-2'>
+            <Loader2Icon className='size-5 animate-spin' />
             Processing...
           </div>
         ) : (

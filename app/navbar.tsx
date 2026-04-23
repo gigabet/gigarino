@@ -2,6 +2,7 @@
 
 import { cx } from 'class-variance-authority'
 import { atom, useAtom } from 'jotai'
+import { last } from 'lodash'
 import {
   ChevronDownIcon,
   CoinsIcon,
@@ -21,6 +22,7 @@ import BottomBar from '@/app/bottom-bar'
 import Search from '@/app/search'
 import Logo from '@/components/logo'
 import * as DropdownMenu from '@/components/ui/dropdown-menu'
+import { useBalanceUpdates } from '@/context/hooks'
 import { logout } from '@/lib/auth'
 import { formatBalance } from '@/lib/utils'
 import type { User, Wallet } from '@/types'
@@ -36,10 +38,13 @@ const navLinks = [
 const navbarMobileMenuState = atom(false)
 export const NAVBAR_HEIGHT = 'h-20'
 
-export default function Navbar(props: { user: User | null; wallet: Wallet | null }) {
+export default function Navbar(props: {
+  user: User | null
+  wallet: Wallet | null
+  token: string | undefined
+}) {
   const router = useRouter()
   const pathname = usePathname()
-  // const [isMobileMenuOpen, setIsMobileMenuOpen] = useAtom(navbarMobileMenuState)
 
   return (
     <>
@@ -87,17 +92,8 @@ export default function Navbar(props: { user: User | null; wallet: Wallet | null
 
               {!!props.user && !!props.wallet && (
                 <>
-                  {/* Balance Display */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className='border-primary-500/30 bg-primary-500/10 flex items-center gap-2 rounded-full border px-3 py-1.5'
-                  >
-                    {/* <WalletIcon className='text-primary hidden size-4 sm:block' /> */}
-                    <span className='text-primary text-xs font-semibold sm:text-sm'>
-                      {formatBalance(Number(props.wallet.balance), props.user.preferredCurrency)}
-                    </span>
-                  </motion.div>
+                  {/** biome-ignore lint/style/noNonNullAssertion: can't be null if wallet is non-null */}
+                  <BalanceDisplay token={props.token!} wallet={props.wallet} />
                   <DropdownMenu.Root>
                     <DropdownMenu.Trigger asChild>
                       <button
@@ -180,6 +176,24 @@ export default function Navbar(props: { user: User | null; wallet: Wallet | null
       <MobileMenu />
       <BottomBar links={navLinks} />
     </>
+  )
+}
+
+function BalanceDisplay(props: { token: string; wallet: Wallet }) {
+  const { data } = useBalanceUpdates(String(props.token))
+  const balance = last(data)?.data.balance ?? props.wallet.balance
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className='border-primary-500/30 bg-primary-500/10 flex items-center gap-2 rounded-full border px-3 py-1.5'
+    >
+      {/* <WalletIcon className='text-primary hidden size-4 sm:block' /> */}
+      <span className='text-primary text-xs font-semibold sm:text-sm'>
+        {formatBalance(Number(balance))}
+      </span>
+    </motion.div>
   )
 }
 

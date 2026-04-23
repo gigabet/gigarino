@@ -41,6 +41,16 @@ export interface Transaction {
   createdAt: string
 }
 
+export interface BalanceUpdate {
+  playerId: string
+  currency: string
+  balance: string
+  change: string
+  type: 'CREDIT' | 'DEBIT'
+  reason: string
+  timestamp: string
+}
+
 export interface Game {
   id: string
   uuid: string
