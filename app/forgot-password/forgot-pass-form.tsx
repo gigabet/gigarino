@@ -12,8 +12,8 @@ import { Label } from '@/components/ui/label'
 export default function ForgotPassForm() {
   const [state, action, isPending] = useActionState(forgotPassword, {
     email: '',
-    error: null,
-    step: 'email',
+    error: '',
+    step: 'email' as const,
   })
 
   return (
