@@ -1,3 +1,15 @@
+import type { PlayerProfileDto, WalletBalanceDto, WalletTransactionDto } from '@/types'
+
+export * from '@/api/generated'
+
+export type ReplaceKey<T, K extends keyof T, NewType> = {
+  [P in keyof T]: P extends K ? NewType : T[P]
+}
+
+export type ReplaceKeys<T, R extends Partial<Record<keyof T, unknown>>> = {
+  [P in keyof T]: P extends keyof R ? R[P] : T[P]
+}
+
 export interface ApiResponse<T> {
   statusCode: number
   message: string
@@ -10,36 +22,11 @@ export interface ErrorResponse {
   error: string
 }
 
-export interface User {
-  id: string
-  email: string
-  username: string
-  displayName: string
-  preferredCurrency: string
-  language: string
-  status: string
-  kycStatus: string
-  lastLoginAt: string
-  registeredAt: string
-}
+export type User = PlayerProfileDto
 
-export interface Wallet {
-  id: string
-  currency: string
-  balance: string
-  isActive: boolean
-}
+export type Wallet = WalletBalanceDto
 
-export interface Transaction {
-  id: string
-  walletId: string
-  type: 'CREDIT' | 'DEBIT'
-  amount: string
-  balanceBefore: string
-  balanceAfter: string
-  description: string | null
-  createdAt: string
-}
+export type Transaction = WalletTransactionDto
 
 export interface BalanceUpdate {
   playerId: string

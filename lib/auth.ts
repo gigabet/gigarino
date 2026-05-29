@@ -31,19 +31,22 @@ export async function getUser() {
   }
 }
 
-export async function getUserWallet() {
+export async function getUserWallet(currency?: string) {
   const token = await getToken()
   if (!token) return null
 
-  const currency = process.env.NEXT_APP_CURRENCY ?? 'EUR'
+  const selectedCurrency = currency ?? process.env.NEXT_APP_CURRENCY ?? 'EUR'
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/wallets/${currency}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      cache: 'no-store',
-    })
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/wallets/${selectedCurrency}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        cache: 'no-store',
+      }
+    )
 
     if (!res.ok) return null
 

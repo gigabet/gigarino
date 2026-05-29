@@ -2,7 +2,7 @@
 
 import { isArray } from 'lodash'
 import { redirect } from 'next/navigation'
-import type { ErrorResponse } from '@/types'
+import type { ErrorResponse, RegisterDto } from '@/types'
 
 export async function register(
   _prevState: {
@@ -46,7 +46,8 @@ export async function register(
       supervisorId: process.env.SUPERVISOR_ID,
       branchId: process.env.BRANCH_ID,
       displayName: data.username,
-    }),
+      country: process.env.NEXT_PUBLIC_COUNTRY_CODE ?? 'IR',
+    } as RegisterDto),
   })
 
   if (!res.ok) {

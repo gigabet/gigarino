@@ -1,5 +1,5 @@
 import { getToken } from '@/lib/auth'
-import type { ApiResponse, Transaction } from '@/types'
+import type { ApiResponse, AvailablePromotionListDto, Transaction } from '@/types'
 
 export const transactionsQuery = async ({ pageParam }: { pageParam: string | null }) => {
   try {
@@ -28,5 +28,27 @@ export const transactionsQuery = async ({ pageParam }: { pageParam: string | nul
       data: [],
       nextCursor: null,
     }
+  }
+}
+
+export const bonusesQuery = async () => {
+  try {
+    const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/promotions/available`)
+
+    const token = await getToken()
+    if (!token) throw new Error('You must be logged in')
+
+    const res = await fetch(url.toString(), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    const { data } = (await res.json()) as ApiResponse<AvailablePromotionListDto>
+    return data.data
+  } catch (error) {
+    console.error(error)
+
+    return []
   }
 }
