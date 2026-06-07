@@ -4,9 +4,10 @@ import { useQuery } from '@tanstack/react-query'
 import { cx } from 'class-variance-authority'
 import { take } from 'lodash'
 import { ChevronRightIcon } from 'lucide-react'
+import { motion } from 'motion/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { providersQuery } from '@/app/context'
 import type { GameProvider } from '@/types'
 
@@ -29,25 +30,6 @@ export default function ProviderSection(
   } & React.JSX.IntrinsicElements['section']
 ) {
   const sectionRef = useRef<HTMLDivElement>(null)
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.1 }
-    )
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-
-    return () => observer.disconnect()
-  }, [])
 
   const { data } = useQuery({
     queryKey: ['providers'],
@@ -67,11 +49,12 @@ export default function ProviderSection(
       <div className={!props.noHeader ? 'mx-auto max-w-360 px-6 lg:px-8' : ''}>
         {/* Section Header */}
         {!props.noHeader && (
-          <div
-            className={cx(
-              'mb-10 flex items-center justify-between transition-all duration-700',
-              isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-            )}
+          <motion.div
+            initial={{ opacity: 0, y: 32, z: 1 }}
+            whileInView={{ opacity: 1, y: 0, z: 1 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className='mb-10 flex items-center justify-between'
           >
             <h2 className='font-display text-2xl font-bold sm:text-3xl'>Providers</h2>
             <Link
@@ -81,22 +64,21 @@ export default function ProviderSection(
               <span>See all ({data?.length})</span>
               <ChevronRightIcon className='size-4 transition-transform group-hover:translate-x-1' />
             </Link>
-          </div>
+          </motion.div>
         )}
 
         {/* Providers Container */}
         <div className='grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4'>
           {providers?.map((provider, index) => (
-            <div
+            <motion.div
               key={provider.id}
-              className={cx(
-                'duration-700',
-                isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-              )}
-              style={{ transitionDelay: `${index * 0.15}s` }}
+              initial={{ opacity: 0, y: 32, z: 1 }}
+              whileInView={{ opacity: 1, y: 0, z: 1 }}
+              transition={{ duration: 0.5, delay: index * 0.05 }}
+              viewport={{ once: true }}
             >
               <ProviderCard provider={provider} />
-            </div>
+            </motion.div>
           ))}
         </div>
 

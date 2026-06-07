@@ -2,7 +2,8 @@
 
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { cx } from 'class-variance-authority'
-import { useEffect, useRef, useState } from 'react'
+import { motion } from 'motion/react'
+import { useEffect, useRef } from 'react'
 import { useInView } from 'react-intersection-observer'
 import { getGameQuery } from '@/app/context'
 import { GameCard } from '@/app/game-section'
@@ -14,25 +15,6 @@ interface GameListProps {
 
 export default function GameList({ title, query }: GameListProps) {
   const sectionRef = useRef<HTMLDivElement>(null)
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.1 }
-    )
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-
-    return () => observer.disconnect()
-  }, [])
 
   const { ref, inView } = useInView()
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage } = useInfiniteQuery({
@@ -53,31 +35,33 @@ export default function GameList({ title, query }: GameListProps) {
     <section ref={sectionRef} className={cx('relative pt-8 pb-16 sm:pb-20')}>
       <div className='mx-auto max-w-360 px-6 lg:px-8'>
         {/* Section Header */}
-        <div
-          className={cx(
-            'mb-6 flex items-center justify-between transition-all duration-700',
-            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-          )}
+        <motion.div
+          initial={{ opacity: 0, y: 32 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className={cx('mb-6 flex items-center justify-between')}
         >
           <div className='flex items-center gap-2'>
             <h2 className='font-display text-2xl font-bold sm:text-3xl'>{title}</h2>
           </div>
-        </div>
+        </motion.div>
 
         {/* Games Container */}
         <div className='grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4'>
           {data?.pages.map((page, pageNo) =>
             page.items.map((game, index) => (
-              <div
+              <motion.div
                 key={game.uuid}
-                className={cx(
-                  'duration-700',
-                  isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-                )}
-                style={{ transitionDelay: `${(pageNo * 24 + index) * 0.15}s` }}
+                initial={{ opacity: 0, y: 32 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.7,
+                  ease: [0.16, 1, 0.3, 1],
+                  delay: (pageNo * 24 + index) * 0.05,
+                }}
               >
                 <GameCard game={game} />
-              </div>
+              </motion.div>
             ))
           )}
         </div>

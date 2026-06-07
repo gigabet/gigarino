@@ -4,7 +4,8 @@ import { useQuery } from '@tanstack/react-query'
 import { cx } from 'class-variance-authority'
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { entries } from 'lodash'
-import { useEffect, useRef, useState } from 'react'
+import { motion } from 'motion/react'
+import { useRef } from 'react'
 import { type categories, getGameQuery, providersQuery } from '@/app/context'
 import GameSection from '@/app/game-section'
 import ProviderSection from '@/app/provider-section'
@@ -14,48 +15,31 @@ const categorySectionTabState = atom<keyof typeof categories>('Providers')
 export default function CategorySection(props: { categories: typeof categories }) {
   const tab = useAtomValue(categorySectionTabState)
   const sectionRef = useRef<HTMLDivElement>(null)
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.1 }
-    )
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-
-    return () => observer.disconnect()
-  }, [])
 
   return (
     <section ref={sectionRef} className='relative py-12 sm:py-20'>
       <div className='absolute inset-0 h-full border-y border-white/5 bg-black/30' />
       <div className='mx-auto max-w-360 px-6 lg:px-8'>
-        <div
-          className={cx(
-            'mb-4 transition-all duration-700',
-            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-          )}
+        <motion.div
+          initial={{ opacity: 0, y: 32, z: 1 }}
+          whileInView={{ opacity: 1, y: 0, z: 1 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+          className='mb-4'
         >
           <h2 className='font-display text-2xl font-bold sm:text-3xl'>Game Categories</h2>
-        </div>
-        <div
-          className={cx(
-            'flex min-h-20 max-w-360 flex-wrap items-center gap-2 py-2 transition-all delay-100 duration-700',
-            isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-          )}
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 32, z: 1 }}
+          whileInView={{ opacity: 1, y: 0, z: 1 }}
+          transition={{ duration: 0.7, delay: 0.1 }}
+          viewport={{ once: true }}
+          className='flex min-h-20 max-w-360 flex-wrap items-center gap-2 py-2'
         >
           {entries(props.categories).map(([label, category]) => (
             <Tab key={label} {...{ label, ...category }} />
           ))}
-        </div>
+        </motion.div>
         {tab === 'Providers' ? (
           <ProviderSection noHeader />
         ) : (

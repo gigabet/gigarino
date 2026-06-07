@@ -5,10 +5,11 @@ import { cx } from 'class-variance-authority'
 import { useSetAtom } from 'jotai'
 import { take } from 'lodash'
 import { ChevronRightIcon, PlayIcon } from 'lucide-react'
+import { motion } from 'motion/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { type categories, getGameDemo, getGameQuery } from '@/app/context'
 import { isLoadingOverlayState } from '@/context/providers'
 import type { Game } from '@/types'
@@ -38,25 +39,6 @@ export default function GameSection({
   ...props
 }: GameSectionProps & React.JSX.IntrinsicElements['section']) {
   const sectionRef = useRef<HTMLDivElement>(null)
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.1 }
-    )
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current)
-    }
-
-    return () => observer.disconnect()
-  }, [])
 
   const { data } = useQuery({
     queryKey: ['games', category.query],
@@ -76,11 +58,12 @@ export default function GameSection({
       <div className={!props.noHeader ? 'mx-auto max-w-360 px-6 lg:px-8' : ''}>
         {/* Section Header */}
         {!props.noHeader && (
-          <div
-            className={cx(
-              'mb-10 flex items-center justify-between transition-all duration-700',
-              isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-            )}
+          <motion.div
+            initial={{ opacity: 0, y: 32, z: 1 }}
+            whileInView={{ opacity: 1, y: 0, z: 1 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className='mb-10 flex items-center justify-between'
           >
             <div className='flex items-center gap-2'>
               {category.slug === 'live-casino' && (
@@ -95,22 +78,21 @@ export default function GameSection({
               <span>See all ({data?.total})</span>
               <ChevronRightIcon className='size-4 transition-transform group-hover:translate-x-1' />
             </Link>
-          </div>
+          </motion.div>
         )}
 
         {/* Games Container */}
         <div className='grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4 @sm:grid-cols-3 @sm:gap-5'>
           {games?.map((game, index) => (
-            <div
+            <motion.div
               key={game.uuid}
-              className={cx(
-                'duration-700',
-                isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
-              )}
-              style={{ transitionDelay: `${index * 0.15}s` }}
+              initial={{ opacity: 0, y: 32, z: 1 }}
+              whileInView={{ opacity: 1, y: 0, z: 1 }}
+              transition={{ duration: 0.5, delay: index * 0.05 }}
+              viewport={{ once: true }}
             >
               <GameCard game={game} />
-            </div>
+            </motion.div>
           ))}
         </div>
 
