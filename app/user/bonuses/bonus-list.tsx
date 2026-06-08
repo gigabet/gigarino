@@ -2,30 +2,55 @@
 import { useQuery } from '@tanstack/react-query'
 import { motion } from 'motion/react'
 import { TbGiftOff } from 'react-icons/tb'
-import { bonusesQuery } from '@/app/user/context'
+import Offer from '@/app/user/bonuses/offer'
+import { bonusesQuery, claimedBonusesQuery } from '@/app/user/context'
 import type { User } from '@/types'
 
 export default function BonusList(props: { user: User }) {
-  const { data } = useQuery({
+  const { data: bonuses } = useQuery({
     queryKey: ['bonuses', props.user.id],
     queryFn: bonusesQuery,
   })
+  const { data: claimed } = useQuery({
+    queryKey: ['claimed_bonuses', props.user.id],
+    queryFn: claimedBonusesQuery,
+  })
+
+  if (!bonuses?.length && !claimed?.length)
+    return (
+      <motion.div
+        className='text-muted-foreground flex flex-col items-center gap-4 text-3xl font-bold'
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+      >
+        <TbGiftOff className='size-40 stroke-[0.8]' />
+        <div>No bonuses</div>
+      </motion.div>
+    )
 
   return (
     <motion.div
-      className='text-muted-foreground flex flex-col items-center gap-4 text-3xl font-bold'
+      className='@container/offers'
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5, delay: 0.3 }}
     >
-      {!data?.length ? (
-        <>
-          <TbGiftOff className='size-40 stroke-[0.8]' />
-          <div>No bonuses</div>
-        </>
-      ) : (
-        data.map(bonus => <pre key={bonus.id}>{JSON.stringify(bonus)}</pre>)
-      )}
+      <div className='grid grid-cols-1 gap-6 @min-xl/offers:grid-cols-2 @min-3xl/offers:grid-cols-3'>
+        {claimed?.map(bonus => (
+          <pre
+            key={bonus.id}
+            className='aspect-video overflow-x-clip overflow-y-auto bg-black/30 p-3 font-mono text-xs wrap-break-word'
+          >
+            {JSON.stringify(bonus, null, 2)}
+          </pre>
+        ))}
+      </div>
+      <div className='grid grid-cols-1 gap-6 @min-xl/offers:grid-cols-2 @min-3xl/offers:grid-cols-3'>
+        {bonuses?.map(bonus => (
+          <Offer key={bonus.id} {...bonus} user={props.user} />
+        ))}
+      </div>
     </motion.div>
   )
 }

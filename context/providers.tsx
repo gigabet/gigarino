@@ -1,5 +1,5 @@
 'use client'
-import { isServer, QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { environmentManager, QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { cx } from 'class-variance-authority'
 import { atom, useAtomValue } from 'jotai'
@@ -21,7 +21,7 @@ function makeQueryClient() {
 let browserQueryClient: QueryClient | undefined
 
 function getQueryClient() {
-  if (isServer) {
+  if (environmentManager.isServer()) {
     // Server: always make a new query client
     return makeQueryClient()
   } else {
@@ -34,10 +34,7 @@ function getQueryClient() {
   }
 }
 
-export default function Providers({
-  children,
-  ...props
-}: { children: React.ReactNode } & UserContext) {
+export default function Providers({ children }: { children: React.ReactNode } & UserContext) {
   // NOTE: Avoid useState when initializing the query client if you don't
   //       have a suspense boundary between this and the code that may
   //       suspend because React will throw away the client on the initial

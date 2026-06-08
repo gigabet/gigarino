@@ -1,4 +1,12 @@
-import type { PlayerProfileDto, WalletBalanceDto, WalletTransactionDto } from '@/types'
+import type {
+  AvailablePromotionDto,
+  DepositMatchRulesDto,
+  FreespinGrantRulesDto,
+  LossCashbackRulesDto,
+  PlayerProfileDto,
+  WalletBalanceDto,
+  WalletTransactionDto,
+} from '@/types'
 
 export * from '@/api/generated'
 
@@ -78,3 +86,18 @@ export interface Tag {
   gamesCount: number
 }
 export type TagsResponse = Tag[]
+
+export type DepositMatchPromotion = ReplaceKeys<
+  AvailablePromotionDto,
+  { type: 'DEPOSIT_MATCH'; rules: DepositMatchRulesDto }
+>
+
+export type FreespinGrantPromotion = ReplaceKeys<
+  AvailablePromotionDto,
+  { type: 'FREESPIN_GRANT'; rules: FreespinGrantRulesDto }
+>
+
+export type LossCashbackPromotion = ReplaceKeys<
+  AvailablePromotionDto,
+  { type: 'LOSS_CASHBACK'; rules: LossCashbackRulesDto }
+>

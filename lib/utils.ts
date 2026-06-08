@@ -1,3 +1,10 @@
+import { type ClassValue, clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+
 export const formatBalance = (
   balance: number,
   currency: string = process.env.NEXT_APP_CURRENCY ?? 'EUR'
