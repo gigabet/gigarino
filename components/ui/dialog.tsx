@@ -1,7 +1,7 @@
-import { cx } from 'class-variance-authority'
 import { XIcon } from 'lucide-react'
 import { Dialog as DialogPrimitive } from 'radix-ui'
 import type * as React from 'react'
+import { cn } from '@/lib/utils'
 
 export function Root({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
   return <DialogPrimitive.Root data-slot='dialog' {...props} />
@@ -26,7 +26,7 @@ export function Overlay({
   return (
     <DialogPrimitive.Overlay
       data-slot='dialog-overlay'
-      className={cx(
+      className={cn(
         'fixed inset-0 z-50 bg-black/50 transition-all duration-1000 data-[state=closed]:opacity-0 data-[state=closed]:backdrop-blur-none data-[state=open]:opacity-100 data-[state=open]:backdrop-blur-xs',
         className
       )}
@@ -48,7 +48,7 @@ export function Content({
       <Overlay />
       <DialogPrimitive.Content
         data-slot='dialog-content'
-        className={cx(
+        className={cn(
           'glass-dark data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 flex w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] flex-col gap-4 rounded-lg border p-6 shadow-lg outline-hidden duration-200 sm:max-w-lg',
           className
         )}
@@ -73,7 +73,7 @@ export function Header({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot='dialog-header'
-      className={cx('flex flex-col gap-2 text-center sm:text-left', className)}
+      className={cn('flex flex-col gap-2 text-center sm:text-left', className)}
       {...props}
     />
   )
@@ -83,7 +83,7 @@ export function Footer({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot='dialog-footer'
-      className={cx('flex flex-col-reverse gap-2 sm:flex-row sm:justify-end', className)}
+      className={cn('flex flex-col-reverse gap-2 sm:flex-row sm:justify-end', className)}
       {...props}
     />
   )
@@ -93,7 +93,7 @@ export function Title({ className, ...props }: React.ComponentProps<typeof Dialo
   return (
     <DialogPrimitive.Title
       data-slot='dialog-title'
-      className={cx('text-lg leading-none font-semibold', className)}
+      className={cn('text-lg leading-none font-semibold', className)}
       {...props}
     />
   )
@@ -106,7 +106,7 @@ export function Description({
   return (
     <DialogPrimitive.Description
       data-slot='dialog-description'
-      className={cx('text-muted-foreground text-sm', className)}
+      className={cn('text-muted-foreground text-sm', className)}
       {...props}
     />
   )
