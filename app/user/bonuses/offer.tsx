@@ -412,52 +412,6 @@ const getDesc = (
             </div>
           )}
         </>
-        // ),
-        //   <div className=''>
-        //     <h2 className='text-accent mb-2 text-sm font-bold tracking-wider uppercase'>
-        //       Bonus Details
-        //     </h2>
-        //     <Card className='mb-6 bg-black'>
-        //       <CardContent>
-        //         <ul className='text-card-foreground/60 space-y-3 text-sm'>
-        //           <li>
-        //             Reclaim {offer.rules.cashbackPct}% of your {offer.name.match(/(Slot|Sport)/)?.[1]}{' '}
-        //             losses in the last {offer.rules.window.duration}{' '}
-        //             {offer.rules.window.unit.toLowerCase()} as bonus credit
-        //             {offer.rules.caps.maxBonusPerPlayerLifetime &&
-        //               `, up to ${formatBalance(Number(offer.rules.caps.maxBonusPerPlayerLifetime))}`}
-        //             .
-        //           </li>
-        //         </ul>
-        //       </CardContent>
-        //     </Card>
-        //     <h2 className='text-accent mb-2 text-sm font-bold tracking-wider uppercase'>
-        //       Wagering Requirements
-        //     </h2>
-        //     <Card className='mb-6 bg-black'>
-        //       <CardContent>
-        //         <ul className='text-card-foreground/60 space-y-3 text-sm'>
-        //           {offer.rules.wagering.bonusMultiplier && (
-        //             <li>
-        //               Bonus multiplier:{' '}
-        //               <span className='text-primary'>
-        //                 &times;{offer.rules.wagering.bonusMultiplier.toFixed(2)}
-        //               </span>
-        //             </li>
-        //           )}
-        //           {offer.rules.wagering.principalMultiplier && (
-        //             <li>
-        //               Principal multiplier:{' '}
-        //               <span className='text-primary'>
-        //                 &times;
-        //                 {offer.rules.wagering.principalMultiplier.toFixed(2)}
-        //               </span>
-        //             </li>
-        //           )}
-        //         </ul>
-        //       </CardContent>
-        //     </Card>
-        //   </div>
       ),
     }
   if (offer.type === 'DEPOSIT_MATCH' && offer.slug.includes('-casino-welcome-bonus-'))
