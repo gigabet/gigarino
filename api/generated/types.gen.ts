@@ -335,6 +335,10 @@ export type PromotionResponseDto = {
     metadata?: {
         [key: string]: unknown;
     } | null;
+    /**
+     * Public URL path of the uploaded promotion image (e.g. `/uploads/promotions/<uuid>.jpg`), or null when no image is set. Served by the platform; the frontend prefixes it with the API host.
+     */
+    imageUrl: string | null;
     createdBy: string | null;
     createdAt: string;
     updatedAt: string;
@@ -916,6 +920,10 @@ export type AvailablePromotionDto = {
      * True if this promotion auto-applies on its trigger (player does not need to claim manually).
      */
     autoApplyOnTrigger: boolean;
+    /**
+     * Public URL path of the promotion image, or null when not set. Prefix with the API host on the client.
+     */
+    imageUrl: string | null;
 };
 
 export type AvailablePromotionListDto = {
@@ -944,6 +952,19 @@ export type PlayerClaimResponseDto = {
     resolved: {
         [key: string]: unknown;
     };
+    /**
+     * Snapshot of the promotion this claim is for (name, image, rules, validity). Embedded so a claim row can be rendered standalone — no second fetch needed. `null` only when the promotion has been archived since the claim was made.
+     */
+    promotion: AvailablePromotionDto | null;
+};
+
+export type PromotionFeedItemDto = {
+    promotion: AvailablePromotionDto;
+    claim: PlayerClaimResponseDto | null;
+};
+
+export type PromotionFeedListDto = {
+    data: Array<PromotionFeedItemDto>;
 };
 
 export type PlayerClaimListDto = {
@@ -2019,6 +2040,10 @@ export type UpdateSupervisorDto = {
     features?: {
         [key: string]: unknown;
     };
+    /**
+     * When true, BRANCH_MANAGER admins under this supervisor may author branch-scoped promotions of their own. The supervisor retains the ability to pause or archive those promotions.
+     */
+    allowBranchAuthoredPromotions?: boolean;
 };
 
 export type SuspendDto = {
@@ -2495,6 +2520,19 @@ export type UpdatePlatformSettingsDto = {
 export type PlatformOperationResultDto = {
     success: boolean;
     message: string;
+};
+
+export type PublicBranchDto = {
+    id: string;
+    name: string;
+    /**
+     * ISO 3166-1 alpha-2
+     */
+    country: string;
+    /**
+     * ISO 4217 — inherited from the branch's supervisor.
+     */
+    currency: string;
 };
 
 export type PaymentSummaryDto = {
@@ -3419,6 +3457,48 @@ export type PromotionsActivateResponses = {
 
 export type PromotionsActivateResponse = PromotionsActivateResponses[keyof PromotionsActivateResponses];
 
+export type PromotionsClearImageData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/admin/promotions/{id}/image';
+};
+
+export type PromotionsClearImageResponses = {
+    /**
+     * Success
+     */
+    200: ApiResponseDto & {
+        data?: PromotionResponseDto;
+    };
+};
+
+export type PromotionsClearImageResponse = PromotionsClearImageResponses[keyof PromotionsClearImageResponses];
+
+export type PromotionsSetImageData = {
+    body: {
+        file?: Blob | File;
+    };
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/admin/promotions/{id}/image';
+};
+
+export type PromotionsSetImageResponses = {
+    /**
+     * Success
+     */
+    200: ApiResponseDto & {
+        data?: PromotionResponseDto;
+    };
+};
+
+export type PromotionsSetImageResponse = PromotionsSetImageResponses[keyof PromotionsSetImageResponses];
+
 export type PromotionsUpdateDepositMatchRulesData = {
     body: UpdateDepositMatchRulesDto;
     path: {
@@ -3598,6 +3678,24 @@ export type PlayerPromotionsListAvailableResponses = {
 };
 
 export type PlayerPromotionsListAvailableResponse = PlayerPromotionsListAvailableResponses[keyof PlayerPromotionsListAvailableResponses];
+
+export type PlayerPromotionsListFeedData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/v1/promotions/feed';
+};
+
+export type PlayerPromotionsListFeedResponses = {
+    /**
+     * Success
+     */
+    200: ApiResponseDto & {
+        data?: PromotionFeedListDto;
+    };
+};
+
+export type PlayerPromotionsListFeedResponse = PlayerPromotionsListFeedResponses[keyof PlayerPromotionsListFeedResponses];
 
 export type PlayerPromotionsListMyClaimsData = {
     body?: never;
@@ -5531,6 +5629,26 @@ export type PlatformSettingsResetCatalogResponses = {
 };
 
 export type PlatformSettingsResetCatalogResponse = PlatformSettingsResetCatalogResponses[keyof PlatformSettingsResetCatalogResponses];
+
+export type PublicBranchesGetPublicBranchData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/v1/public/branches/{id}';
+};
+
+export type PublicBranchesGetPublicBranchResponses = {
+    /**
+     * Success
+     */
+    200: ApiResponseDto & {
+        data?: PublicBranchDto;
+    };
+};
+
+export type PublicBranchesGetPublicBranchResponse = PublicBranchesGetPublicBranchResponses[keyof PublicBranchesGetPublicBranchResponses];
 
 export type BalanceEventsBalanceStreamData = {
     body?: never;

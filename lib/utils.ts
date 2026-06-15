@@ -9,11 +9,34 @@ export const formatBalance = (
   balance: number,
   currency: string = process.env.NEXT_APP_CURRENCY ?? 'EUR'
 ) =>
-  new Intl.NumberFormat('en-US', {
+  new Intl.NumberFormat(navigator.language, {
     style: 'currency',
     currency,
     minimumFractionDigits: 2,
   }).format(balance)
+
+export const formatBalanceBasic = (
+  balance: number,
+  currency: string = process.env.NEXT_APP_CURRENCY ?? 'EUR'
+) =>
+  new Intl.NumberFormat(navigator.language, {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: 0,
+  }).format(balance)
+
+export function addToDate(isoDate: string, amount: number, unit: 'HOURS' | 'DAYS'): Date {
+  const date = new Date(isoDate)
+
+  if (Number.isNaN(date.getTime())) {
+    throw new Error(`Invalid ISO date: ${isoDate}`)
+  }
+
+  const timeMs = date.getTime()
+  const milliseconds = unit === 'HOURS' ? amount * 60 * 60 * 1000 : amount * 24 * 60 * 60 * 1000
+
+  return new Date(timeMs + milliseconds)
+}
 
 interface StreamUpdate<T> {
   id: string

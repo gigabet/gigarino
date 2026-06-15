@@ -7,6 +7,8 @@ import type {
   LossCashbackPromotion,
   PlayerClaimListDto,
   PlayerClaimResponseDto,
+  PromotionFeedListDto,
+  ReplaceKey,
   Transaction,
 } from '@/types'
 
@@ -37,6 +39,35 @@ export const transactionsQuery = async ({ pageParam }: { pageParam: string | nul
       data: [],
       nextCursor: null,
     }
+  }
+}
+
+export const feedQuery = async () => {
+  try {
+    const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/promotions/feed`)
+
+    const token = await getToken()
+    if (!token) throw new Error('You must be logged in')
+
+    const res = await fetch(url.toString(), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    const { data } = (await res.json()) as ApiResponse<PromotionFeedListDto>
+    return data.data as {
+      promotion: DepositMatchPromotion | FreespinGrantPromotion | LossCashbackPromotion
+      claim: ReplaceKey<
+        PlayerClaimResponseDto,
+        'promotion',
+        DepositMatchPromotion | FreespinGrantPromotion | LossCashbackPromotion
+      > | null
+    }[]
+  } catch (error) {
+    console.error(error)
+
+    return []
   }
 }
 

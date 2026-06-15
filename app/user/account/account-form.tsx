@@ -19,7 +19,7 @@ import { Label } from '@/components/ui/label'
 export default function AccountForm(props: {
   email: string
   username: string
-  displayName: string
+  displayName?: string
 }) {
   const formRef = useRef<HTMLFormElement>(null)
   const initialState = {
