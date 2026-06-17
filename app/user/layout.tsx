@@ -7,6 +7,8 @@ const PT = 'pt-12'
 export default async function AccountLayout({ children }: React.PropsWithChildren) {
   const user = await getUser()
 
+  // TODO: Error handling
+
   return (
     <div
       className={cx(

@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/a11y/useSemanticElements: no */
 'use client'
 
 import { cva, type VariantProps } from 'class-variance-authority'
@@ -59,6 +60,7 @@ function InputGroupAddon({
   ...props
 }: React.ComponentProps<'div'> & VariantProps<typeof inputGroupAddonVariants>) {
   return (
+    // biome-ignore lint/a11y/useKeyWithClickEvents: can't
     <div
       role='group'
       data-slot='input-group-addon'

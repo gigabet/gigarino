@@ -2,7 +2,7 @@ export const changeDetails = async (
   _state: {
     error: string | null
     username: string
-    displayName: string
+    displayName?: string
     email: string
     password: string
   },

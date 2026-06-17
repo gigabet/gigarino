@@ -1,7 +1,7 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
 import { redirect } from 'next/navigation'
 import BonusList from '@/app/user/bonuses/bonus-list'
-import { bonusesQuery, claimedBonusesQuery } from '@/app/user/context'
+import { feedQuery } from '@/app/user/context'
 import Header from '@/app/user/header'
 import { getUser } from '@/lib/auth'
 
@@ -11,12 +11,8 @@ export default async function Bonuses() {
 
   const queryClient = new QueryClient()
   queryClient.prefetchQuery({
-    queryKey: ['bonuses', user.id],
-    queryFn: bonusesQuery,
-  })
-  queryClient.prefetchQuery({
-    queryKey: ['claimed_bonuses', user.id],
-    queryFn: claimedBonusesQuery,
+    queryKey: ['promotions_feed', user.id],
+    queryFn: feedQuery,
   })
 
   return (

@@ -128,7 +128,10 @@ export default function Navbar(props: {
                         <WalletIcon className='mr-2 size-4' />
                         Wallet
                       </DropdownMenu.Item>
-                      <DropdownMenu.Item className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'>
+                      <DropdownMenu.Item
+                        onClick={() => router.push('/user/transactions')}
+                        className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'
+                      >
                         <CreditCardIcon className='mr-2 size-4' />
                         Transactions
                       </DropdownMenu.Item>

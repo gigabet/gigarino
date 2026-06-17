@@ -1,12 +1,6 @@
 import { Command as CommandPrimitive } from 'cmdk'
 import { SearchIcon } from 'lucide-react'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { Content, Description, Header, Root, Title } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
 
 function Command({ className, ...props }: React.ComponentProps<typeof CommandPrimitive>) {
@@ -29,27 +23,24 @@ function CommandDialog({
   className,
   showCloseButton = true,
   ...props
-}: React.ComponentProps<typeof Dialog> & {
+}: React.ComponentProps<typeof Root> & {
   title?: string
   description?: string
   className?: string
   showCloseButton?: boolean
 }) {
   return (
-    <Dialog {...props}>
-      <DialogHeader className='sr-only'>
-        <DialogTitle>{title}</DialogTitle>
-        <DialogDescription>{description}</DialogDescription>
-      </DialogHeader>
-      <DialogContent
-        className={cn('overflow-hidden p-0', className)}
-        showCloseButton={showCloseButton}
-      >
+    <Root {...props}>
+      <Header className='sr-only'>
+        <Title>{title}</Title>
+        <Description>{description}</Description>
+      </Header>
+      <Content className={cn('overflow-hidden p-0', className)} showCloseButton={showCloseButton}>
         <Command className='**:[[cmdk-group-heading]]:text-muted-foreground data-[slot=command-input-wrapper]:**:h-12 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5 **:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:font-medium **:[[cmdk-group]]:px-2 **:[[cmdk-input]]:h-12 **:[[cmdk-item]]:px-2 **:[[cmdk-item]]:py-3'>
           {children}
         </Command>
-      </DialogContent>
-    </Dialog>
+      </Content>
+    </Root>
   )
 }
 
@@ -76,7 +67,7 @@ function CommandList({ className, ...props }: React.ComponentProps<typeof Comman
   return (
     <CommandPrimitive.List
       data-slot='command-list'
-      className={cn('max-h-[300px] scroll-py-1 overflow-x-hidden overflow-y-auto', className)}
+      className={cn('max-h-75 scroll-py-1 overflow-x-hidden overflow-y-auto', className)}
       {...props}
     />
   )
