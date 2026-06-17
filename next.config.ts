@@ -1,5 +1,7 @@
 import type { NextConfig } from 'next'
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
+
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
@@ -7,7 +9,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/uploads/:path*',
-        destination: 'http://localhost:3001/uploads/:path*',
+        destination: `${BACKEND_URL}/uploads/:path*`,
       },
     ]
   },
