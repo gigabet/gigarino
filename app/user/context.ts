@@ -1,8 +1,10 @@
+import { isArray } from 'lodash'
 import { getToken } from '@/lib/auth'
 import type {
   ApiResponse,
   AvailablePromotionListDto,
   DepositMatchPromotion,
+  ErrorResponse,
   FreespinGrantPromotion,
   LossCashbackPromotion,
   PlayerClaimListDto,
@@ -55,8 +57,19 @@ export const feedQuery = async () => {
       },
     })
 
+    if (!res.ok) {
+      const errorData = (await res.json()) as ErrorResponse
+      throw new Error(
+        isArray(errorData.message)
+          ? errorData.message[0]
+          : errorData.message || 'Failed to fetch promotion feed',
+        { cause: errorData.error }
+      )
+    }
+
     const { data } = (await res.json()) as ApiResponse<PromotionFeedListDto>
-    return data.data as {
+
+    return (data?.data ?? []) as {
       promotion: DepositMatchPromotion | FreespinGrantPromotion | LossCashbackPromotion
       claim: ReplaceKey<
         PlayerClaimResponseDto,
