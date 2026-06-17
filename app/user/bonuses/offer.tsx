@@ -39,8 +39,14 @@ export default function Offer({ claim, ...props }: OfferProps) {
     <Dialog.Root open={open} onOpenChange={() => setOpen(!open)}>
       <Dialog.Trigger asChild>
         <Card
-          data-claimed={!!claim || undefined}
-          className='group bg-dark-200 data-claimed:border-accent data-claimed:shadow-accent @container cursor-pointer gap-0 overflow-clip p-0 transition-transform duration-300 hover:scale-103 data-claimed:shadow-[0_0_6px]'
+          // data-claimed={claim?.status}
+          // className='group bg-dark-200 data-[claimed=PENDING_TRIGGER]:border-accent data-[claimed=ACTIVE]:border-primary data-[claimed=PENDING_TRIGGER]:shadow-accent data-[claimed=ACTIVE]:shadow-primary @container cursor-pointer gap-0 overflow-clip p-0 transition-transform duration-300 hover:scale-103 data-claimed:shadow-[0_0_6px]'
+          className={cn(
+            'group bg-dark-200 @container cursor-pointer gap-0 overflow-clip p-0 transition-transform duration-300 hover:scale-103 data-claimed:shadow-[0_0_6px]',
+            claim?.status === 'PENDING_TRIGGER' && 'border-accent shadow-accent shadow-[0_0_6px]',
+            claim?.status === 'ACTIVE' && 'border-primary shadow-primary shadow-[0_0_6px]',
+            claim?.status === 'EXPIRED' && 'grayscale'
+          )}
         >
           <CardContent className='relative isolate p-0'>
             <div className='relative aspect-8/9 w-1/2 overflow-hidden'>
@@ -73,8 +79,14 @@ export default function Offer({ claim, ...props }: OfferProps) {
         </Card>
       </Dialog.Trigger>
       <Dialog.Content
-        data-claimed={!!claim || undefined}
-        className='data-claimed:border-accent data-claimed:shadow-accent w-full! max-w-3xl! gap-0 overflow-hidden p-0 data-claimed:shadow-[0_0_24px]'
+        className={cn(
+          'data-claimed:border-accent data-claimed:shadow-accent w-full! max-w-3xl! gap-0 overflow-hidden p-0',
+          claim?.status === 'PENDING_TRIGGER' &&
+            'border-accent/70 shadow-accent/70 shadow-[0_0_24px]',
+          claim?.status === 'ACTIVE' && 'border-primary/60 shadow-primary/50 shadow-[0_0_24px]',
+          claim?.status === 'EXPIRED' && 'grayscale'
+        )}
+        aria-describedby={undefined}
       >
         <Dialog.Header className='relative'>
           <Dialog.Title className='bg-dark-200 px-6 py-4 text-center'>{props.name}</Dialog.Title>
@@ -182,8 +194,11 @@ const getDesc = (
         </div>
       ),
     }
-  if (offer.type === 'LOSS_CASHBACK')
-    //&& offer.slug.includes('-slot-cashback-'))
+  if (offer.type === 'LOSS_CASHBACK') {
+    const date = claim
+      ? addToDate(claim.claimedAt, offer.rules.window.duration, offer.rules.window.unit)
+      : new Date(0)
+
     return {
       summary: (
         <>
@@ -218,10 +233,9 @@ const getDesc = (
                 'bg-accent text-accent-foreground pointer-events-none text-xs font-semibold uppercase'
               )}
             >
-              {formatDistanceToNowStrict(
-                addToDate(claim.claimedAt, offer.rules.window.duration, offer.rules.window.unit)
-              )}{' '}
-              left
+              {Date.parse(date.toISOString()) < Date.now()
+                ? 'Expired'
+                : `${formatDistanceToNowStrict(date)} left`}
             </div>
           )}
 
@@ -331,13 +345,7 @@ const getDesc = (
                     Time remaining
                   </span>
                   <span className='text-foreground text-lg leading-tight font-semibold'>
-                    {formatDistanceToNowStrict(
-                      addToDate(
-                        claim.claimedAt,
-                        offer.rules.window.duration,
-                        offer.rules.window.unit
-                      )
-                    )}
+                    {formatDistanceToNowStrict(date)}
                   </span>
                 </div>
               </div>
@@ -414,6 +422,7 @@ const getDesc = (
         </>
       ),
     }
+  }
   if (offer.type === 'DEPOSIT_MATCH' && offer.slug.includes('-casino-welcome-bonus-'))
     return {
       summary: (
