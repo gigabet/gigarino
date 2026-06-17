@@ -13,7 +13,12 @@ export async function login(
     rememberMe: boolean
   },
   formData: FormData
-) {
+): Promise<{
+  identifier: string
+  password: string
+  error: string | null
+  rememberMe: boolean
+}> {
   const data = {
     identifier: formData.get('identifier') as string,
     password: formData.get('password') as string,
