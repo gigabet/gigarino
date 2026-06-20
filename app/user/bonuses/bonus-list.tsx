@@ -2,6 +2,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { AlertCircleIcon } from 'lucide-react'
 import { motion } from 'motion/react'
+import { useRouter } from 'next/navigation'
 import { Activity } from 'react'
 import { ErrorBoundary, getErrorMessage } from 'react-error-boundary'
 import { TbGiftOff } from 'react-icons/tb'
@@ -15,8 +16,9 @@ export default function BonusList(props: { user: User }) {
     queryKey: ['promotions_feed', props.user.id],
     queryFn: feedQuery,
   })
-
+  const router = useRouter()
   // TODO: less friction; in case of Unauthorised, perhaps show login popup
+  // TODO: loading state so it doesn't simply display "no bonuses" while fetching
 
   if (!bonuses?.length)
     return (
@@ -47,7 +49,7 @@ export default function BonusList(props: { user: User }) {
                 <AlertCircleIcon className='size-5 shrink-0' />
                 <p className='text-sm'>{error?.message || 'Something went wrong.'}</p>
               </div>
-              <Button variant='outline' onClick={() => window.location.reload()}>
+              <Button variant='outline' onClick={() => router.refresh()}>
                 Retry
               </Button>
             </motion.div>
@@ -80,7 +82,7 @@ export default function BonusList(props: { user: User }) {
             <AlertCircleIcon className='size-5 shrink-0' />
             <p className='text-sm'>{error?.message || 'Something went wrong.'}</p>
           </div>
-          <Button variant='outline' onClick={() => window.location.reload()}>
+          <Button variant='outline' onClick={() => router.refresh()}>
             Retry
           </Button>
         </motion.div>
