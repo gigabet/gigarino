@@ -45,43 +45,43 @@ export const transactionsQuery = async ({ pageParam }: { pageParam: string | nul
 }
 
 export const feedQuery = async () => {
-  try {
-    const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/promotions/feed`)
+  // try {
+  const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/promotions/feed`)
 
-    const token = await getToken()
-    if (!token) throw new Error('You must be logged in')
+  const token = await getToken()
+  if (!token) throw new Error('You must be logged in')
 
-    const res = await fetch(url.toString(), {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+  const res = await fetch(url.toString(), {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
 
-    if (!res.ok) {
-      const errorData = (await res.json()) as ErrorResponse
-      throw new Error(
-        isArray(errorData.message)
-          ? errorData.message[0]
-          : errorData.message || 'Failed to fetch promotion feed',
-        { cause: errorData.error }
-      )
-    }
-
-    const { data } = (await res.json()) as ApiResponse<PromotionFeedListDto>
-
-    return (data?.data ?? []) as {
-      promotion: DepositMatchPromotion | FreespinGrantPromotion | LossCashbackPromotion
-      claim: ReplaceKey<
-        PlayerClaimResponseDto,
-        'promotion',
-        DepositMatchPromotion | FreespinGrantPromotion | LossCashbackPromotion
-      > | null
-    }[]
-  } catch (error) {
-    console.error(error)
-
-    return []
+  if (!res.ok) {
+    const errorData = (await res.json()) as ErrorResponse
+    throw new Error(
+      isArray(errorData.message)
+        ? errorData.message[0]
+        : errorData.message || 'Failed to fetch promotion feed',
+      { cause: errorData.error }
+    )
   }
+
+  const { data } = (await res.json()) as ApiResponse<PromotionFeedListDto>
+
+  return (data?.data ?? []) as {
+    promotion: DepositMatchPromotion | FreespinGrantPromotion | LossCashbackPromotion
+    claim: ReplaceKey<
+      PlayerClaimResponseDto,
+      'promotion',
+      DepositMatchPromotion | FreespinGrantPromotion | LossCashbackPromotion
+    > | null
+  }[]
+  // } catch (error) {
+  //   console.error(error)
+
+  //   return []
+  // }
 }
 
 export const bonusesQuery = async () => {

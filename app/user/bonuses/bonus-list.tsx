@@ -1,11 +1,13 @@
 'use client'
 import { useQuery } from '@tanstack/react-query'
+import { AlertCircleIcon } from 'lucide-react'
 import { motion } from 'motion/react'
-import { useRouter } from 'next/navigation'
+import { Activity } from 'react'
 import { ErrorBoundary, getErrorMessage } from 'react-error-boundary'
 import { TbGiftOff } from 'react-icons/tb'
 import Offer from '@/app/user/bonuses/offer'
 import { feedQuery } from '@/app/user/context'
+import { Button } from '@/components/ui/button'
 import type { User } from '@/types'
 
 export default function BonusList(props: { user: User }) {
@@ -14,12 +16,7 @@ export default function BonusList(props: { user: User }) {
     queryFn: feedQuery,
   })
 
-  const router = useRouter()
-  if (error) {
-    alert(JSON.stringify(error))
-    if (error.cause === 'Unauthorized')
-      router.replace(`/login?error=${error.message ?? 'You must be logged in'}&from=/user/bonuses`)
-  }
+  // TODO: less friction; in case of Unauthorised, perhaps show login popup
 
   if (!bonuses?.length)
     return (
@@ -40,6 +37,21 @@ export default function BonusList(props: { user: User }) {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
+          <Activity mode={error ? 'visible' : 'hidden'}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className='mb-6 flex items-center gap-3 self-start rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-red-400'
+            >
+              <div className='flex items-center gap-3'>
+                <AlertCircleIcon className='size-5 shrink-0' />
+                <p className='text-sm'>{error?.message || 'Something went wrong.'}</p>
+              </div>
+              <Button variant='outline' onClick={() => window.location.reload()}>
+                Retry
+              </Button>
+            </motion.div>
+          </Activity>
           <TbGiftOff className='size-40 stroke-[0.8]' />
           <div>No bonuses</div>
         </motion.div>
@@ -58,6 +70,21 @@ export default function BonusList(props: { user: User }) {
         </div>
       )}
     >
+      <Activity mode={error ? 'visible' : 'hidden'}>
+        <motion.div
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className='mb-6 flex items-center gap-3 self-start rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-red-400'
+        >
+          <div className='flex items-center gap-3'>
+            <AlertCircleIcon className='size-5 shrink-0' />
+            <p className='text-sm'>{error?.message || 'Something went wrong.'}</p>
+          </div>
+          <Button variant='outline' onClick={() => window.location.reload()}>
+            Retry
+          </Button>
+        </motion.div>
+      </Activity>
       <motion.div
         className='@container/offers'
         initial={{ opacity: 0 }}
