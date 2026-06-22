@@ -345,7 +345,9 @@ const getDesc = (
                     Time remaining
                   </span>
                   <span className='text-foreground text-lg leading-tight font-semibold'>
-                    {formatDistanceToNowStrict(date)}
+                    {Date.parse(date.toISOString()) < Date.now()
+                      ? 'Expired'
+                      : `${formatDistanceToNowStrict(date)} left`}
                   </span>
                 </div>
               </div>
