@@ -4,6 +4,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { cx } from 'class-variance-authority'
 import { atom, useAtomValue } from 'jotai'
 import { BarLoader } from 'react-spinners'
+import { Toaster } from '@/components/ui/sonner'
 import { RelayProvider } from '@/relay/relay-provider'
 import type { User, Wallet } from '@/types'
 
@@ -48,6 +49,7 @@ export default function Providers({ children }: { children: React.ReactNode } & 
         <LoadingOverlay />
         {/* <UserProvider {...props}>{children}</UserProvider> */}
         {children}
+        <Toaster position='top-center' />
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </RelayProvider>
