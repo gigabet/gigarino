@@ -103,7 +103,7 @@ export default function Offer({ claim, ...props }: OfferProps) {
           </div>
           <div className='w-full flex-3 px-6 py-4'>
             {getDesc(props, claim).body}
-
+            {/* TODO: fail to claim error */}
             {!claim && (
               <>
                 <Button

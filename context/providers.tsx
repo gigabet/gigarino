@@ -4,6 +4,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { cx } from 'class-variance-authority'
 import { atom, useAtomValue } from 'jotai'
 import { BarLoader } from 'react-spinners'
+import { RelayProvider } from '@/relay/relay-provider'
 import type { User, Wallet } from '@/types'
 
 function makeQueryClient() {
@@ -42,12 +43,14 @@ export default function Providers({ children }: { children: React.ReactNode } & 
   const queryClient = getQueryClient()
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <LoadingOverlay />
-      {/* <UserProvider {...props}>{children}</UserProvider> */}
-      {children}
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <RelayProvider>
+      <QueryClientProvider client={queryClient}>
+        <LoadingOverlay />
+        {/* <UserProvider {...props}>{children}</UserProvider> */}
+        {children}
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </RelayProvider>
   )
 }
 
