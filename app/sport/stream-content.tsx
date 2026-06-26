@@ -8,7 +8,7 @@ export default function StreamContent(props: { queryRef: StreamContent_$key }) {
   const data = useFragment(
     graphql`
       fragment StreamContent_ on Query {
-        streamableContent @stream(initialCount: 1) {
+        streamableContent @stream(initialCount: 0) {
           value
         }
       }

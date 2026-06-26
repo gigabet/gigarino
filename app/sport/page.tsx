@@ -11,7 +11,7 @@ export default async function Page() {
     graphql`
       query pageQuery {
         mainContent
-        ...StreamContent_
+        ...StreamContent_ @defer
         ...SideContent_ @defer
       }
     `,

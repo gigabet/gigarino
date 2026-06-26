@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a8e75ef0a3dc57ca76bee32da53c1028>>
+ * @generated SignedSource<<581e4a7253f1ca3be511b4f52124c3e5>>
  * @lightSyntaxTransform
  */
 
@@ -36,9 +36,14 @@ return {
     "selections": [
       (v0/*:: as any*/),
       {
-        "args": null,
-        "kind": "FragmentSpread",
-        "name": "StreamContent_"
+        "kind": "Defer",
+        "selections": [
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "StreamContent_"
+          }
+        ]
       },
       {
         "kind": "Defer",
@@ -63,26 +68,33 @@ return {
       (v0/*:: as any*/),
       {
         "if": null,
-        "kind": "Stream",
-        "label": "StreamContent_$stream$streamableContent",
+        "kind": "Defer",
+        "label": "pageQuery$defer$StreamContent_",
         "selections": [
           {
-            "alias": null,
-            "args": null,
-            "concreteType": "WrappedString",
-            "kind": "LinkedField",
-            "name": "streamableContent",
-            "plural": true,
+            "if": null,
+            "kind": "Stream",
+            "label": "StreamContent_$stream$streamableContent",
             "selections": [
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "value",
+                "concreteType": "WrappedString",
+                "kind": "LinkedField",
+                "name": "streamableContent",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "value",
+                    "storageKey": null
+                  }
+                ],
                 "storageKey": null
               }
-            ],
-            "storageKey": null
+            ]
           }
         ]
       },
@@ -103,16 +115,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4978e87f5f5cb89313dc1e2e6a1bfbd8",
+    "cacheID": "a4a1cc0ec42bbe90845931c7de0d979b",
     "id": null,
     "metadata": {},
     "name": "pageQuery",
     "operationKind": "query",
-    "text": "query pageQuery {\n  mainContent\n  ...StreamContent_\n  ...SideContent_ @defer(label: \"pageQuery$defer$SideContent_\")\n}\n\nfragment SideContent_ on Query {\n  lazyContent\n}\n\nfragment StreamContent_ on Query {\n  streamableContent @stream(label: \"StreamContent_$stream$streamableContent\", initialCount: 1) {\n    value\n  }\n}\n"
+    "text": "query pageQuery {\n  mainContent\n  ...StreamContent_ @defer(label: \"pageQuery$defer$StreamContent_\")\n  ...SideContent_ @defer(label: \"pageQuery$defer$SideContent_\")\n}\n\nfragment SideContent_ on Query {\n  lazyContent\n}\n\nfragment StreamContent_ on Query {\n  streamableContent @stream(label: \"StreamContent_$stream$streamableContent\", initialCount: 0) {\n    value\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "6d1aa1bd4013398a1da19b29e645d499";
+(node as any).hash = "8aa832ff02a460eda9db88ad73eaeb5b";
 
 export default node;
