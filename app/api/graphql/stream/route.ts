@@ -9,7 +9,7 @@ import { schema } from '@/app/api/graphql/schema'
 const { handleRequest } = createYoga({
   schema,
   plugins: [useDeferStream(), useGraphQLSSE()],
-  graphqlEndpoint: '/api/graphql',
+  graphqlEndpoint: '/api/graphql/stream',
   fetchAPI: { Response },
 })
 
