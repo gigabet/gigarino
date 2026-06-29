@@ -5,6 +5,7 @@ import type { PreloadedQueryRef } from 'react-relay/rsc_EXPERIMENTAL'
 import { useQueryFromServer } from 'react-relay/rsc-client_EXPERIMENTAL'
 import SideContent from '@/app/sport/side-content'
 import StreamContent from '@/app/sport/stream-content'
+import SubscriptionContent from '@/app/sport/subscription-content'
 import type {
   pageQuery,
   pageQuery$data,
@@ -12,12 +13,11 @@ import type {
 } from './__generated__/pageQuery.graphql'
 import pageQueryNode from './__generated__/pageQuery.graphql'
 
-export default function MainContent({
-  preloaded,
-}: {
+export default function MainContent(props: {
   preloaded: PreloadedQueryRef<pageQuery$variables, pageQuery$data>
 }) {
-  const data = useQueryFromServer<pageQuery>(pageQueryNode, preloaded)
+  const data = useQueryFromServer<pageQuery>(pageQueryNode, props.preloaded)
+
   return (
     <div>
       <h1>{data.mainContent}</h1>
@@ -27,6 +27,7 @@ export default function MainContent({
       <Suspense fallback={<div className='text-yellow-500'>Loading stream...</div>}>
         <StreamContent queryRef={data} />
       </Suspense>
+      <SubscriptionContent queryRef={data.countdown} />
     </div>
   )
 }

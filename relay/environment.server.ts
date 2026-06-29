@@ -10,6 +10,7 @@ function createFreshEnvironment() {
   return new Environment({
     network: Network.create(fetchOrSubscribe, fetchOrSubscribe),
     store: new Store(new RecordSource()),
+    isServer: true,
   })
 }
 

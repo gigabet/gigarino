@@ -1,5 +1,6 @@
 // app/api/graphql/route.ts
 
+import { readFileSync } from 'node:fs'
 import { useDeferStream } from '@graphql-yoga/plugin-defer-stream'
 import { useGraphQLSSE } from '@graphql-yoga/plugin-graphql-sse'
 import { createSchema, createYoga, Repeater } from 'graphql-yoga'
@@ -8,36 +9,7 @@ interface NextContext {
   params: Promise<Record<string, string>>
 }
 
-const typeDefs = /* GraphQL */ `
-  schema {
-    query: Query
-    subscription: Subscription
-  }
-
-  type WrappedString {
-    value: String!
-  }
-
-  type Query {
-    mainContent: String!
-    lazyContent: String!
-    streamableContent: [WrappedString!]!
-  }
-
-  type Subscription {
-    countdown(from: Int!): Int!
-  }
-
-  directive @defer(
-    "If this argument label has a value other than null, it will be passed on to the result of this defer directive. This label is intended to give client applications a way to identify to which fragment a deferred result belongs to."
-    label: String
-    "Deferred when true."
-    if: Boolean
-  ) on FRAGMENT_SPREAD | INLINE_FRAGMENT
-
-  # @stream directive
-  directive @stream(label: String, initialCount: Int = 0, if: Boolean) on FIELD
-`
+const typeDefs = readFileSync(new URL('@/relay/schema.graphql', import.meta.url), 'utf-8')
 
 // Resolvers
 const resolvers = {
@@ -71,19 +43,24 @@ const resolvers = {
           clearInterval(interval)
         })
       }),
+    countdown: (_: unknown, { from }: { from: number }) => ({
+      id: `countdown:${from}`,
+      value: from,
+    }),
   },
   Subscription: {
     countdown: {
       subscribe: (_: NextContext, { from }: { from: number }) =>
-        new Repeater(async (push, stop) => {
+        new Repeater<{ id: string; value: number }>(async (push, stop) => {
           let current = from
           while (current >= 0) {
             await new Promise(resolve => setTimeout(resolve, 1000))
-            push(current--)
+            push({ id: `countdown:${from}`, value: current })
+            current--
           }
           stop()
         }),
-      resolve: (payload: number) => payload,
+      resolve: (payload: { id: string; value: number }) => payload,
     },
   },
 }

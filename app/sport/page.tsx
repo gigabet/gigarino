@@ -9,13 +9,18 @@ export default async function Page() {
   const serverEnv = getServerEnvironment()
   const preloaded = serverEnv.serverPreloadQuery<pageQuery>(
     graphql`
-      query pageQuery {
+      query pageQuery($from: Int!) {
         mainContent
         ...StreamContent_ @defer
         ...SideContent_ @defer
+
+        countdown(from: $from) {
+          id
+          ...CountdownTick_tick
+        }
       }
     `,
-    {}
+    { from: 10 }
   )
 
   return (

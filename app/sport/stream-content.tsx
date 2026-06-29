@@ -16,5 +16,5 @@ export default function StreamContent(props: { queryRef: StreamContent_$key }) {
     props.queryRef
   )
 
-  return <p>{data.streamableContent.map(e => e.value)}</p>
+  return <p suppressHydrationWarning>{data.streamableContent.map(e => e.value).join(', ')}</p>
 }
