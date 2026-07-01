@@ -30,6 +30,8 @@ export interface ErrorResponse {
   error: string
 }
 
+export type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
+
 export type User = PlayerProfileDto
 
 export type Wallet = WalletBalanceDto

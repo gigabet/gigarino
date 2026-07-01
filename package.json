@@ -10,6 +10,13 @@
     "format": "biome format --write",
     "relay": "relay-compiler --watch"
   },
+  "graphql": {
+    "schema": [
+      "./relay/schema.graphql",
+      "./node_modules/relay-compiler/relay-extensions.graphql"
+    ],
+    "documents": "**/*.{graphql,js,ts,jsx,tsx}"
+  },
   "dependencies": {
     "@graphql-yoga/plugin-defer-stream": "^3.21.2",
     "@graphql-yoga/plugin-graphql-sse": "^3.21.2",

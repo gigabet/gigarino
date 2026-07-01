@@ -3,24 +3,58 @@ schema {
   subscription: Subscription
 }
 
-type WrappedString {
-  value: String!
+interface Node {
+  id: ID!
 }
 
-type CountdownTick {
+type Odds implements Node {
   id: ID!
-  value: Int!
+  home: Float!
+  draw: Float!
+  away: Float!
+  updatedAt: String!
+}
+
+type Event implements Node {
+  id: ID!
+  name: String!
+  league: String!
+  startTime: String!
+  odds: Odds!
+}
+
+"Standard Relay connection wrapper for cursor pagination."
+type EventEdge {
+  cursor: String!
+  node: Event!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type EventConnection {
+  edges: [EventEdge!]!
+  pageInfo: PageInfo!
 }
 
 type Query {
-  mainContent: String!
-  lazyContent: String!
-  streamableContent: [WrappedString!]!
-  countdown(from: Int!): CountdownTick! # so you can query an initial tick
+  "Required by Relay for the Node interface — used for record refetching/GC."
+  node(id: ID!): Node
+
+  "Cursor-paginated list, e.g. for the initial Virtuoso feed + infinite scroll."
+  events(first: Int, after: String, last: Int, before: String): EventConnection!
+
+  "Batched re-fetch for the refetch-batcher: one round trip for many ids."
+  eventsByIds(ids: [ID!]!): [Event!]!
 }
 
 type Subscription {
-  countdown(from: Int!): CountdownTick!
+  "Live odds updates for a single event, opened ~2s after a row settles."
+  eventOdds(eventId: ID!): Odds!
 }
 
 "The `@defer` directive may be provided for fragment spreads and inline fragments to inform the executor to delay the execution of the current fragment to indicate deprioritization of the current fragment. A query with `@defer` directive will cause the request to potentially return multiple responses, where non-deferred data is delivered in the initial response and data deferred is delivered in a subsequent response. `@include` and `@skip` take precedence over `@defer`."
@@ -31,5 +65,4 @@ directive @defer(
   if: Boolean
 ) on FRAGMENT_SPREAD | INLINE_FRAGMENT
 
-# @stream directive
 directive @stream(label: String, initialCount: Int = 0, if: Boolean) on FIELD

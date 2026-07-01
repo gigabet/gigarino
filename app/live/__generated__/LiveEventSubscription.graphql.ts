@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f8d1724d64512438a7ec46f2ab645a2a>>
+ * @generated SignedSource<<e5370a25724ff76a4cbb8947ff410f5c>>
  * @lightSyntaxTransform
  */
 
@@ -8,18 +8,20 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type CountdownSubscription$variables = {
-  from: number;
+export type LiveEventSubscription$variables = {
+  eventId: string;
 };
-export type CountdownSubscription$data = {
-  readonly countdown: {
+export type LiveEventSubscription$data = {
+  readonly eventOdds: {
+    readonly away: number;
+    readonly draw: number;
+    readonly home: number;
     readonly id: string;
-    readonly value: number;
   };
 };
-export type CountdownSubscription = {
-  response: CountdownSubscription$data;
-  variables: CountdownSubscription$variables;
+export type LiveEventSubscription = {
+  response: LiveEventSubscription$data;
+  variables: LiveEventSubscription$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -27,7 +29,7 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "from"
+    "name": "eventId"
   }
 ],
 v1 = [
@@ -36,13 +38,13 @@ v1 = [
     "args": [
       {
         "kind": "Variable",
-        "name": "from",
-        "variableName": "from"
+        "name": "eventId",
+        "variableName": "eventId"
       }
     ],
-    "concreteType": "CountdownTick",
+    "concreteType": "Odds",
     "kind": "LinkedField",
-    "name": "countdown",
+    "name": "eventOdds",
     "plural": false,
     "selections": [
       {
@@ -56,7 +58,21 @@ v1 = [
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "value",
+        "name": "home",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "draw",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "away",
         "storageKey": null
       }
     ],
@@ -68,7 +84,7 @@ return {
     "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "CountdownSubscription",
+    "name": "LiveEventSubscription",
     "selections": (v1/*:: as any*/),
     "type": "Subscription",
     "abstractKey": null
@@ -77,20 +93,20 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
-    "name": "CountdownSubscription",
+    "name": "LiveEventSubscription",
     "selections": (v1/*:: as any*/)
   },
   "params": {
-    "cacheID": "4440aef427b5e08b70148f23191cab32",
+    "cacheID": "42b835566b5857b85f960667fd8d79a9",
     "id": null,
     "metadata": {},
-    "name": "CountdownSubscription",
+    "name": "LiveEventSubscription",
     "operationKind": "subscription",
-    "text": "subscription CountdownSubscription(\n  $from: Int!\n) {\n  countdown(from: $from) {\n    id\n    value\n  }\n}\n"
+    "text": "subscription LiveEventSubscription(\n  $eventId: ID!\n) {\n  eventOdds(eventId: $eventId) {\n    id\n    home\n    draw\n    away\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "46136c29942a9625145875b939403de0";
+(node as any).hash = "d64eb59b52c45ec0237f318c082bab82";
 
 export default node;

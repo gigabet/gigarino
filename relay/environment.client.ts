@@ -13,8 +13,7 @@ import {
 } from 'relay-runtime'
 
 const subscriptionsClient = createClient({
-  url: 'http://localhost:3000/api/graphql/stream',
-  singleConnection: true,
+  url: 'http://localhost:3000/api/graphql',
 })
 
 interface SpecIncrementalChunk extends GraphQLResponseWithData {
