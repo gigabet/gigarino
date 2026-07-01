@@ -94,15 +94,3 @@ export default function Page() {
     </main>
   )
 }
-
-const Skellie = (props: { size?: number }) => (
-  <div>
-    {new Array(props.size ?? 15).fill(15).map((_, i) => (
-      <Skeleton
-        // biome-ignore lint/suspicious/noArrayIndexKey: idc
-        key={i}
-        className='mb-2 h-27.5 w-full min-w-120 rounded-lg'
-      />
-    ))}
-  </div>
-)
