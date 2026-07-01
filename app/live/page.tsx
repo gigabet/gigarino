@@ -25,43 +25,6 @@ export default function Page() {
     query EventsQuery($first: Int!, $last: Int, $before: String, $after: String) {
       ...LiveEventList_query
     }
-
-    fragment LiveEventList_query on Query @refetchable(queryName: "LiveEventListPaginationQuery") {
-      events(first: $first, last: $last, before: $before, after: $after)
-        @connection(key: "LiveEventList_events") {
-        edges {
-          cursor
-          node {
-            ...Event_event
-          }
-          cursor
-        }
-        pageInfo {
-          startCursor
-          hasPreviousPage
-          hasNextPage
-          endCursor
-        }
-      }
-    }
-
-    fragment Event_event on Event {
-      id
-      league
-      name
-      startTime
-      ...Event_odds
-    }
-
-    fragment Event_odds on Event {
-      id
-      odds {
-        id
-        home
-        away
-        draw
-      }
-    }
   `)
 
   useEffect(() => {

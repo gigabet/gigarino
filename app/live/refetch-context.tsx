@@ -1,4 +1,3 @@
-// relay/RefetchBatcherContext.tsx
 'use client'
 
 import { createContext, useContext, useMemo } from 'react'
@@ -27,8 +26,7 @@ export function createRefetchBatcher(environment: Environment) {
 
     if (ids.length === 0) return
 
-    // fetchQuery writes results into the store as a side effect;
-    // every mounted row's useFragment picks the update up automatically.
+    // write update into the store; row's useFragment picks the update up automatically
     fetchQuery(environment, batchQuery, { ids }, { fetchPolicy: 'store-or-network' }).subscribe({
       error: (err: Error) => console.error('[refetch-batcher] batch failed', err),
     })
@@ -42,7 +40,7 @@ export function createRefetchBatcher(environment: Environment) {
     cancel(itemId: string) {
       pending.delete(itemId)
     },
-    // call on unmount of the whole list if you want to abandon a pending batch
+    // call on unmount of the whole list to abandon a pending batch
     dispose() {
       if (timer) clearTimeout(timer)
       pending = new Set()

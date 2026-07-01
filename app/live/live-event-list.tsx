@@ -1,10 +1,9 @@
 'use client'
 
 import { useCallback, useRef, useState } from 'react'
-import { type PreloadedQuery, usePaginationFragment, usePreloadedQuery } from 'react-relay'
+import { graphql, type PreloadedQuery, usePaginationFragment, usePreloadedQuery } from 'react-relay'
 import { Virtuoso } from 'react-virtuoso'
 import type { EventsQuery } from '@/app/live/__generated__/EventsQuery.graphql'
-import EventsQueryNode from '@/app/live/__generated__/EventsQuery.graphql'
 import LiveEventList_queryNode, {
   type LiveEventList_query$key,
 } from '@/app/live/__generated__/LiveEventList_query.graphql'
@@ -13,17 +12,39 @@ import { Skeleton } from '@/components/ui/skeleton'
 
 const POSITION_DEBOUNCE_MS = 300
 const PAGE_SIZE = 15
-// Large headroom so backward pagination never needs the offset to go negative.
-// Purely an internal Virtuoso offset, not a backing array — costs nothing.
+// so virtuoso never accidentally goes negative
 const INITIAL_FIRST_ITEM_INDEX = 100_000
 
+const LiveEventList_query = graphql`
+  fragment LiveEventList_query on Query @refetchable(queryName: "LiveEventListPaginationQuery") {
+    events(first: $first, last: $last, before: $before, after: $after)
+      @connection(key: "LiveEventList_events") {
+      edges {
+        cursor
+        node {
+          ...Event_event
+        }
+        cursor
+      }
+      pageInfo {
+        startCursor
+        hasPreviousPage
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+`
+
 export default function LiveEventList(props: { preloaded: PreloadedQuery<EventsQuery> }) {
-  const queryData = usePreloadedQuery<EventsQuery>(EventsQueryNode, props.preloaded)
+  const queryData = usePreloadedQuery<EventsQuery>(LiveEventList_query, props.preloaded)
   const { data, loadNext, loadPrevious, hasNext, hasPrevious, isLoadingNext, isLoadingPrevious } =
     usePaginationFragment<EventsQuery, LiveEventList_query$key>(LiveEventList_queryNode, queryData)
 
   const edges = data.events.edges
   const [firstItemIndex, setFirstItemIndex] = useState(INITIAL_FIRST_ITEM_INDEX)
+
+  // virtuoso doesn't understand cursors, so we need a cursor <-> index adapter
   const edgeCountBeforeLoad = useRef(edges.length)
   const loadDirection = useRef<'next' | 'previous' | null>(null)
 
@@ -35,9 +56,7 @@ export default function LiveEventList(props: { preloaded: PreloadedQuery<EventsQ
       onComplete: () => {
         if (loadDirection.current !== 'previous') return
         const prependedCount = edges.length - edgeCountBeforeLoad.current
-        // Guard against onComplete firing with stale `edges` closure: only
-        // trust a positive delta, otherwise re-derive from data length is
-        // unreliable here, so just no-op rather than risk a bad jump.
+        // in case we lost some events at the front in the meantime
         if (prependedCount > 0) {
           setFirstItemIndex(i => i - prependedCount)
         }
@@ -59,7 +78,8 @@ export default function LiveEventList(props: { preloaded: PreloadedQuery<EventsQ
   const positionTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [initialIndex, setInitialIndex] = useState(0)
 
-  const updatePositionInUrl = useCallback(
+  // incredibly important – virtuoso doesn't fire updates otherwise
+  const updatePosition = useCallback(
     (virtualStartIndex: number) => {
       const arrayIndex = virtualStartIndex - firstItemIndex
       const cursor = edges[arrayIndex]?.cursor
@@ -73,6 +93,7 @@ export default function LiveEventList(props: { preloaded: PreloadedQuery<EventsQ
     [edges, firstItemIndex]
   )
 
+  // never return a completely blank jank
   if (!edges.length) return <Skellie size={15} />
 
   return (
@@ -84,7 +105,8 @@ export default function LiveEventList(props: { preloaded: PreloadedQuery<EventsQ
       itemContent={(_virtualIndex, edge) => <LiveEvent eventRef={edge.node} />}
       startReached={handleStartReached}
       endReached={handleEndReached}
-      rangeChanged={({ startIndex }) => updatePositionInUrl(startIndex)}
+      overscan={5}
+      rangeChanged={({ startIndex }) => updatePosition(startIndex)}
     />
   )
 }

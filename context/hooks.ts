@@ -1,6 +1,6 @@
 'use client'
 import { experimental_streamedQuery, useQuery } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createSSEStream } from '@/lib/utils'
 import type { BalanceUpdate } from '@/types'
 
@@ -33,4 +33,27 @@ export function useBalanceUpdates(token: string) {
       refetchMode: 'replace',
     }),
   })
+}
+
+export const useUpDown = (value: number) => {
+  const [prevValue, setPrevValue] = useState(value)
+  const [upDown, setUpDown] = useState<'up' | 'down' | ''>('')
+  const highlight = useRef(0)
+
+  useEffect(() => {
+    if (Number(prevValue) > Number(value)) {
+      clearTimeout(highlight.current)
+      setUpDown('down')
+    } else if (Number(prevValue) < Number(value)) {
+      clearTimeout(highlight.current)
+      setUpDown('up')
+    }
+    setPrevValue(value)
+    highlight.current = window.setTimeout(() => setUpDown(''), 1500)
+    return () => {
+      clearTimeout(highlight.current)
+    }
+  }, [prevValue, value])
+
+  return upDown
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { entries } from 'lodash'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   type Disposable,
   graphql,
@@ -9,12 +9,23 @@ import {
   useFragment,
   useRelayEnvironment,
 } from 'react-relay'
-import Event_odds, { type Event_odds$key } from '@/app/live/__generated__/Event_odds.graphql'
+import type { Event_odds$key } from '@/app/live/__generated__/Event_odds.graphql'
 import type { LiveEventSubscription } from '@/app/live/__generated__/LiveEventSubscription.graphql'
+import { useUpDown } from '@/context/hooks'
 import { cn } from '@/lib/utils'
 
 const SUBSCRIBE_DELAY_MS = 2000
-
+const Event_odds = graphql`
+  fragment Event_odds on Event {
+    id
+    odds {
+      id
+      home
+      away
+      draw
+    }
+  }
+`
 const subscription = graphql`
   subscription LiveEventSubscription($eventId: ID!) {
     eventOdds(eventId: $eventId) {
@@ -25,29 +36,6 @@ const subscription = graphql`
     }
   }
 `
-
-const useUpDown = (value: number) => {
-  const [prevValue, setPrevValue] = useState(value)
-  const [upDown, setUpDown] = useState<'up' | 'down' | ''>('')
-  const highlight = useRef(0)
-
-  useEffect(() => {
-    if (Number(prevValue) > Number(value)) {
-      clearTimeout(highlight.current)
-      setUpDown('down')
-    } else if (Number(prevValue) < Number(value)) {
-      clearTimeout(highlight.current)
-      setUpDown('up')
-    }
-    setPrevValue(value)
-    highlight.current = window.setTimeout(() => setUpDown(''), 1500)
-    return () => {
-      clearTimeout(highlight.current)
-    }
-  }, [prevValue, value])
-
-  return upDown
-}
 
 export default function Odds(props: { queryRef: Event_odds$key }) {
   const data = useFragment(Event_odds, props.queryRef)

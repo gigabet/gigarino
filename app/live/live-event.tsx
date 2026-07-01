@@ -2,13 +2,24 @@
 
 import { format } from 'date-fns'
 import { useEffect, useRef } from 'react'
-import { useFragment } from 'react-relay'
-import Event_event, { type Event_event$key } from '@/app/live/__generated__/Event_event.graphql'
+import { graphql, useFragment } from 'react-relay'
+import type { Event_event$key } from '@/app/live/__generated__/Event_event.graphql'
 import Odds from '@/app/live/odds'
 import { useRefetchBatcher } from '@/app/live/refetch-context'
 
 export default function LiveEvent({ eventRef }: { eventRef: Event_event$key }) {
-  const event = useFragment(Event_event, eventRef)
+  const event = useFragment(
+    graphql`
+      fragment Event_event on Event {
+        id
+        league
+        name
+        startTime
+        ...Event_odds
+      }
+    `,
+    eventRef
+  )
   const batcher = useRefetchBatcher()
   const hasReappeared = useRef(false)
 
