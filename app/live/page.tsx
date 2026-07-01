@@ -1,15 +1,14 @@
+import { Suspense } from 'react'
 import { graphql } from 'relay-runtime'
 import type { EventsQuery } from '@/app/live/__generated__/EventsQuery.graphql'
 import LiveEventList from '@/app/live/live-event-list'
 import { RefetchBatcherProvider } from '@/app/live/refetch-context'
+import { Skeleton } from '@/components/ui/skeleton'
 import { getServerEnvironment } from '@/relay/environment.server'
-import type { SearchParams } from '@/types'
 
-export const dynamic = 'force-dynamic'
+export const dynamic = 'force-static'
 
-export default async function Page(props: { searchParams: SearchParams }) {
-  const index = Number((await props.searchParams).index ?? 0)
-
+export default async function Page() {
   const serverEnv = getServerEnvironment()
   const preloaded = serverEnv.serverPreloadQuery<EventsQuery>(
     graphql`
@@ -55,14 +54,28 @@ export default async function Page(props: { searchParams: SearchParams }) {
         }
       }
     `,
-    { first: 15 + index }
+    { first: 15 }
   )
 
   return (
-    <main className='relative z-1 mx-auto flex w-full max-w-360 items-start gap-12 px-4 py-12 pb-24 sm:px-6 lg:px-8'>
+    <main className='relative z-1 mx-auto flex min-h-screen w-full max-w-360 items-start gap-12 px-4 py-12 pb-24 sm:px-6 lg:px-8'>
       <RefetchBatcherProvider>
-        <LiveEventList preloaded={preloaded} initialIndex={index} />
+        <Suspense fallback={<Skellie size={15} />}>
+          <LiveEventList preloaded={preloaded} />
+        </Suspense>
       </RefetchBatcherProvider>
     </main>
   )
 }
+
+const Skellie = (props: { size?: number }) => (
+  <div>
+    {new Array(props.size ?? 15).fill(15).map((_, i) => (
+      <Skeleton
+        // biome-ignore lint/suspicious/noArrayIndexKey: idc
+        key={i}
+        className='mb-2 h-27.5 w-full min-w-120 rounded-lg'
+      />
+    ))}
+  </div>
+)

@@ -16,6 +16,7 @@ import LiveEventList_queryNode, {
   type LiveEventList_query$key,
 } from '@/app/live/__generated__/LiveEventList_query.graphql'
 import LiveEvent from '@/app/live/live-event'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const POSITION_DEBOUNCE_MS = 300
 const PAGE_SIZE = 15
@@ -25,8 +26,23 @@ const INITIAL_FIRST_ITEM_INDEX = 100_000
 
 export default function LiveEventList(props: {
   preloaded: PreloadedQueryRef<EventsQuery$variables, EventsQuery$data>
-  initialIndex: number
 }) {
+  useEffect(() => {
+    // prevent browser from restoring scroll position to avoid jumping
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual'
+    }
+
+    window.scrollTo(0, 0)
+
+    // re-enable normal behavior on other pages
+    return () => {
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'auto'
+      }
+    }
+  }, [])
+
   const queryData = useQueryFromServer<EventsQuery>(EventsQueryNode, props.preloaded)
   const { data, loadNext, loadPrevious, hasNext, hasPrevious, isLoadingNext, isLoadingPrevious } =
     usePaginationFragment<EventsQuery, LiveEventList_query$key>(LiveEventList_queryNode, queryData)
@@ -66,9 +82,7 @@ export default function LiveEventList(props: {
   }, [hasNext, isLoadingNext, isLoadingPrevious, loadNext])
 
   const positionTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const [initialIndex, setInitialIndex] = useState(0)
 
   const updatePositionInUrl = useCallback(
     (virtualStartIndex: number) => {
@@ -78,18 +92,18 @@ export default function LiveEventList(props: {
 
       if (positionTimer.current) clearTimeout(positionTimer.current)
       positionTimer.current = setTimeout(() => {
-        const params = new URLSearchParams(searchParams.toString())
-        params.set('index', String(arrayIndex))
-        router.replace(`${pathname}?${params.toString()}`, { scroll: false })
+        setInitialIndex(arrayIndex)
       }, POSITION_DEBOUNCE_MS)
     },
-    [edges, firstItemIndex, pathname, router, searchParams]
+    [edges, firstItemIndex]
   )
+
+  if (!edges.length) return <Skellie size={15} />
 
   return (
     <Virtuoso
       useWindowScroll
-      initialTopMostItemIndex={props.initialIndex}
+      initialTopMostItemIndex={initialIndex}
       firstItemIndex={firstItemIndex}
       data={edges}
       itemContent={(_virtualIndex, edge) => <LiveEvent eventRef={edge.node} />}
@@ -99,3 +113,15 @@ export default function LiveEventList(props: {
     />
   )
 }
+
+const Skellie = (props: { size?: number }) => (
+  <div>
+    {new Array(props.size ?? 15).fill(15).map((_, i) => (
+      <Skeleton
+        // biome-ignore lint/suspicious/noArrayIndexKey: idc
+        key={i}
+        className='mb-2 h-27.5 w-full min-w-120 rounded-lg'
+      />
+    ))}
+  </div>
+)
