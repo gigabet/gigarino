@@ -4,9 +4,8 @@ import { useCallback, useRef, useState } from 'react'
 import { graphql, type PreloadedQuery, usePaginationFragment, usePreloadedQuery } from 'react-relay'
 import { Virtuoso } from 'react-virtuoso'
 import type { EventsQuery } from '@/app/live/__generated__/EventsQuery.graphql'
-import LiveEventList_queryNode, {
-  type LiveEventList_query$key,
-} from '@/app/live/__generated__/LiveEventList_query.graphql'
+import EventsQueryNode from '@/app/live/__generated__/EventsQuery.graphql'
+import type { LiveEventList_query$key } from '@/app/live/__generated__/LiveEventList_query.graphql'
 import LiveEvent from '@/app/live/live-event'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -37,9 +36,9 @@ const LiveEventList_query = graphql`
 `
 
 export default function LiveEventList(props: { preloaded: PreloadedQuery<EventsQuery> }) {
-  const queryData = usePreloadedQuery<EventsQuery>(LiveEventList_query, props.preloaded)
+  const queryData = usePreloadedQuery<EventsQuery>(EventsQueryNode, props.preloaded)
   const { data, loadNext, loadPrevious, hasNext, hasPrevious, isLoadingNext, isLoadingPrevious } =
-    usePaginationFragment<EventsQuery, LiveEventList_query$key>(LiveEventList_queryNode, queryData)
+    usePaginationFragment<EventsQuery, LiveEventList_query$key>(LiveEventList_query, queryData)
 
   const edges = data.events.edges
   const [firstItemIndex, setFirstItemIndex] = useState(INITIAL_FIRST_ITEM_INDEX)

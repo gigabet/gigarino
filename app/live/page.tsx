@@ -20,6 +20,7 @@ const Skellie = (props: { size?: number }) => (
   </div>
 )
 
+// TODO: error handling
 export default function Page() {
   const [preloaded, loadQuery] = useQueryLoader<EventsQuery>(graphql`
     query EventsQuery($first: Int!, $last: Int, $before: String, $after: String) {
