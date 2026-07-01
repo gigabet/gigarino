@@ -381,9 +381,9 @@ layer(base);
   * {
     @apply border-border;
   }
-  html {
+  /* html {
     scroll-behavior: smooth;
-  }
+  } */
   body {
     @apply bg-dark min-h-dvh font-sans text-white antialiased;
   }

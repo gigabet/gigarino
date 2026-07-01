@@ -1,16 +1,9 @@
 'use client'
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { usePaginationFragment } from 'react-relay'
-import type { PreloadedQueryRef } from 'react-relay/rsc_EXPERIMENTAL'
-import { useQueryFromServer } from 'react-relay/rsc-client_EXPERIMENTAL'
+import { useCallback, useRef, useState } from 'react'
+import { type PreloadedQuery, usePaginationFragment, usePreloadedQuery } from 'react-relay'
 import { Virtuoso } from 'react-virtuoso'
-import type {
-  EventsQuery,
-  EventsQuery$data,
-  EventsQuery$variables,
-} from '@/app/live/__generated__/EventsQuery.graphql'
+import type { EventsQuery } from '@/app/live/__generated__/EventsQuery.graphql'
 import EventsQueryNode from '@/app/live/__generated__/EventsQuery.graphql'
 import LiveEventList_queryNode, {
   type LiveEventList_query$key,
@@ -23,11 +16,8 @@ const PAGE_SIZE = 15
 // Purely an internal Virtuoso offset, not a backing array — costs nothing.
 const INITIAL_FIRST_ITEM_INDEX = 100_000
 
-export default function LiveEventList(props: {
-  preloaded: PreloadedQueryRef<EventsQuery$variables, EventsQuery$data>
-  initialIndex: number
-}) {
-  const queryData = useQueryFromServer<EventsQuery>(EventsQueryNode, props.preloaded)
+export default function LiveEventList(props: { preloaded: PreloadedQuery<EventsQuery> }) {
+  const queryData = usePreloadedQuery<EventsQuery>(EventsQueryNode, props.preloaded)
   const { data, loadNext, loadPrevious, hasNext, hasPrevious, isLoadingNext, isLoadingPrevious } =
     usePaginationFragment<EventsQuery, LiveEventList_query$key>(LiveEventList_queryNode, queryData)
 
@@ -66,9 +56,7 @@ export default function LiveEventList(props: {
   }, [hasNext, isLoadingNext, isLoadingPrevious, loadNext])
 
   const positionTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const [initialIndex, setInitialIndex] = useState(0)
 
   const updatePositionInUrl = useCallback(
     (virtualStartIndex: number) => {
@@ -78,18 +66,16 @@ export default function LiveEventList(props: {
 
       if (positionTimer.current) clearTimeout(positionTimer.current)
       positionTimer.current = setTimeout(() => {
-        const params = new URLSearchParams(searchParams.toString())
-        params.set('index', String(arrayIndex))
-        router.replace(`${pathname}?${params.toString()}`, { scroll: false })
+        setInitialIndex(arrayIndex)
       }, POSITION_DEBOUNCE_MS)
     },
-    [edges, firstItemIndex, pathname, router, searchParams]
+    [edges, firstItemIndex]
   )
 
   return (
     <Virtuoso
       useWindowScroll
-      initialTopMostItemIndex={props.initialIndex}
+      initialTopMostItemIndex={initialIndex}
       firstItemIndex={firstItemIndex}
       data={edges}
       itemContent={(_virtualIndex, edge) => <LiveEvent eventRef={edge.node} />}
