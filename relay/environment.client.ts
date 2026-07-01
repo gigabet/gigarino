@@ -13,7 +13,7 @@ import {
 } from 'relay-runtime'
 
 const subscriptionsClient = createClient({
-  url: 'http://localhost:3000/api/graphql/stream',
+  url: '/api/graphql/stream',
   singleConnection: true,
 })
 
