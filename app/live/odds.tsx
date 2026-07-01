@@ -2,9 +2,16 @@
 
 import { entries } from 'lodash'
 import { useEffect, useRef, useState } from 'react'
-import { graphql, requestSubscription, useFragment, useRelayEnvironment } from 'react-relay'
+import {
+  type Disposable,
+  graphql,
+  requestSubscription,
+  useFragment,
+  useRelayEnvironment,
+} from 'react-relay'
 import Event_odds, { type Event_odds$key } from '@/app/live/__generated__/Event_odds.graphql'
 import type { LiveEventSubscription } from '@/app/live/__generated__/LiveEventSubscription.graphql'
+import { cn } from '@/lib/utils'
 
 const SUBSCRIBE_DELAY_MS = 2000
 
@@ -21,7 +28,7 @@ const subscription = graphql`
 
 const useUpDown = (value: number) => {
   const [prevValue, setPrevValue] = useState(value)
-  const [upDown, setUpDown] = useState<'up' | 'down' | null>(null)
+  const [upDown, setUpDown] = useState<'up' | 'down' | ''>('')
   const highlight = useRef(0)
 
   useEffect(() => {
@@ -33,7 +40,7 @@ const useUpDown = (value: number) => {
       setUpDown('up')
     }
     setPrevValue(value)
-    highlight.current = window.setTimeout(() => setUpDown(null), 4000)
+    highlight.current = window.setTimeout(() => setUpDown(''), 1500)
     return () => {
       clearTimeout(highlight.current)
     }
@@ -45,32 +52,30 @@ const useUpDown = (value: number) => {
 export default function Odds(props: { queryRef: Event_odds$key }) {
   const data = useFragment(Event_odds, props.queryRef)
   const environment = useRelayEnvironment()
+  const [live, setLive] = useState(false)
 
-  // requestSubscription, not useSubscription — we need real start/stop
-  // control (delay + cleanup on unmount), and useSubscription has no
-  // `skip`/`shouldSkip` config option to support that.
+  // delayed subscriptions
   useEffect(() => {
-    let disposable: { dispose: () => void } | null = null
+    let disposable: Disposable | null = null
 
     const startTimer = window.setTimeout(() => {
       disposable = requestSubscription<LiveEventSubscription>(environment, {
         subscription,
         variables: { eventId: data.id },
         onError: err => console.error('[odds subscription] error', err),
-        // No onNext/updater needed: with `Odds` implementing Node and the
-        // fragment selecting `id`, the payload normalizes straight into
-        // the existing store record and useFragment re-renders on its own.
       })
+      setLive(true)
     }, SUBSCRIBE_DELAY_MS)
 
     return () => {
+      if (disposable) disposable.dispose()
+      setLive(false)
       clearTimeout(startTimer)
-      disposable?.dispose()
     }
   }, [environment, data.id])
 
   return (
-    <div className='flex gap-1'>
+    <div className={cn('flex gap-1', live && 'bg-destructive/15')}>
       {entries(data.odds).map(([label, odd]) => {
         if (label === 'id') return null
         return <Odd key={label} label={label} odd={odd as number} />

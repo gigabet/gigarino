@@ -1,7 +1,7 @@
 'use client'
 
 import { format } from 'date-fns'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useFragment } from 'react-relay'
 import Event_event, { type Event_event$key } from '@/app/live/__generated__/Event_event.graphql'
 import Odds from '@/app/live/odds'
@@ -10,9 +10,11 @@ import { useRefetchBatcher } from '@/app/live/refetch-context'
 export default function LiveEvent({ eventRef }: { eventRef: Event_event$key }) {
   const event = useFragment(Event_event, eventRef)
   const batcher = useRefetchBatcher()
+  const hasReappeared = useRef(false)
 
   useEffect(() => {
-    batcher.request(event.id)
+    if (hasReappeared.current === true) batcher.request(event.id)
+    else hasReappeared.current = true
     return () => batcher.cancel(event.id)
   }, [event.id, batcher])
 

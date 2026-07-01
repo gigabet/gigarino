@@ -1,16 +1,9 @@
 'use client'
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { usePaginationFragment } from 'react-relay'
-import type { PreloadedQueryRef } from 'react-relay/rsc_EXPERIMENTAL'
-import { useQueryFromServer } from 'react-relay/rsc-client_EXPERIMENTAL'
+import { useCallback, useRef, useState } from 'react'
+import { type PreloadedQuery, usePaginationFragment, usePreloadedQuery } from 'react-relay'
 import { Virtuoso } from 'react-virtuoso'
-import type {
-  EventsQuery,
-  EventsQuery$data,
-  EventsQuery$variables,
-} from '@/app/live/__generated__/EventsQuery.graphql'
+import type { EventsQuery } from '@/app/live/__generated__/EventsQuery.graphql'
 import EventsQueryNode from '@/app/live/__generated__/EventsQuery.graphql'
 import LiveEventList_queryNode, {
   type LiveEventList_query$key,
@@ -24,26 +17,8 @@ const PAGE_SIZE = 15
 // Purely an internal Virtuoso offset, not a backing array — costs nothing.
 const INITIAL_FIRST_ITEM_INDEX = 100_000
 
-export default function LiveEventList(props: {
-  preloaded: PreloadedQueryRef<EventsQuery$variables, EventsQuery$data>
-}) {
-  useEffect(() => {
-    // prevent browser from restoring scroll position to avoid jumping
-    if ('scrollRestoration' in history) {
-      history.scrollRestoration = 'manual'
-    }
-
-    window.scrollTo(0, 0)
-
-    // re-enable normal behavior on other pages
-    return () => {
-      if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'auto'
-      }
-    }
-  }, [])
-
-  const queryData = useQueryFromServer<EventsQuery>(EventsQueryNode, props.preloaded)
+export default function LiveEventList(props: { preloaded: PreloadedQuery<EventsQuery> }) {
+  const queryData = usePreloadedQuery<EventsQuery>(EventsQueryNode, props.preloaded)
   const { data, loadNext, loadPrevious, hasNext, hasPrevious, isLoadingNext, isLoadingPrevious } =
     usePaginationFragment<EventsQuery, LiveEventList_query$key>(LiveEventList_queryNode, queryData)
 

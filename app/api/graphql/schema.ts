@@ -98,7 +98,7 @@ function simulateOddsTicks(eventId: string) {
         updatedAt: new Date().toISOString(),
       }
       push(event.odds)
-    }, 1500)
+    }, 5000)
 
     await stop.then(() => {
       console.log(`[odds:${eventId}] unsubscribed`)

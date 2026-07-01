@@ -5,7 +5,7 @@ import { createContext, useContext, useMemo } from 'react'
 import { useRelayEnvironment } from 'react-relay'
 import { type Environment, fetchQuery, graphql } from 'relay-runtime'
 
-const BATCH_WINDOW_MS = 300
+const BATCH_WINDOW_MS = 2000
 
 const batchQuery = graphql`
   query RefetchBatcherQuery($ids: [ID!]!) {
@@ -29,7 +29,7 @@ export function createRefetchBatcher(environment: Environment) {
 
     // fetchQuery writes results into the store as a side effect;
     // every mounted row's useFragment picks the update up automatically.
-    fetchQuery(environment, batchQuery, { ids }).subscribe({
+    fetchQuery(environment, batchQuery, { ids }, { fetchPolicy: 'store-or-network' }).subscribe({
       error: (err: Error) => console.error('[refetch-batcher] batch failed', err),
     })
   }

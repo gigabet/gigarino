@@ -17,6 +17,12 @@ const subscriptionsClient = createClient({
   singleConnection: true,
 })
 
+// if (typeof window !== 'undefined') {
+//   window.addEventListener('beforeunload', () => {
+//     subscriptionsClient.dispose()
+//   })
+// }
+
 interface SpecIncrementalChunk extends GraphQLResponseWithData {
   items?: PayloadData[]
 }
