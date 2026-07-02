@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useRef, useState } from 'react'
+import { useCallback } from 'react'
 import { graphql, type PreloadedQuery, usePaginationFragment, usePreloadedQuery } from 'react-relay'
 import { Virtuoso } from 'react-virtuoso'
 import type { EventsQuery } from '@/app/live/__generated__/EventsQuery.graphql'
@@ -9,10 +9,7 @@ import type { LiveEventList_query$key } from '@/app/live/__generated__/LiveEvent
 import LiveEvent from '@/app/live/live-event'
 import { Skeleton } from '@/components/ui/skeleton'
 
-const POSITION_DEBOUNCE_MS = 300
 const PAGE_SIZE = 15
-// so virtuoso never accidentally goes negative
-const INITIAL_FIRST_ITEM_INDEX = 100_000
 
 const LiveEventList_query = graphql`
   fragment LiveEventList_query on Query @refetchable(queryName: "LiveEventListPaginationQuery") {
@@ -37,60 +34,17 @@ const LiveEventList_query = graphql`
 
 export default function LiveEventList(props: { preloaded: PreloadedQuery<EventsQuery> }) {
   const queryData = usePreloadedQuery<EventsQuery>(EventsQueryNode, props.preloaded)
-  const { data, loadNext, loadPrevious, hasNext, hasPrevious, isLoadingNext, isLoadingPrevious } =
-    usePaginationFragment<EventsQuery, LiveEventList_query$key>(LiveEventList_query, queryData)
+  const { data, loadNext, hasNext, isLoadingNext } = usePaginationFragment<
+    EventsQuery,
+    LiveEventList_query$key
+  >(LiveEventList_query, queryData)
 
   const edges = data.events.edges
-  const [firstItemIndex, setFirstItemIndex] = useState(INITIAL_FIRST_ITEM_INDEX)
-
-  // virtuoso doesn't understand cursors, so we need a cursor <-> index adapter
-  const edgeCountBeforeLoad = useRef(edges.length)
-  const loadDirection = useRef<'next' | 'previous' | null>(null)
-
-  const handleStartReached = useCallback(() => {
-    if (!hasPrevious || isLoadingPrevious || isLoadingNext) return
-    loadDirection.current = 'previous'
-    edgeCountBeforeLoad.current = edges.length
-    loadPrevious(PAGE_SIZE, {
-      onComplete: () => {
-        if (loadDirection.current !== 'previous') return
-        const prependedCount = edges.length - edgeCountBeforeLoad.current
-        // in case we lost some events at the front in the meantime
-        if (prependedCount > 0) {
-          setFirstItemIndex(i => i - prependedCount)
-        }
-        loadDirection.current = null
-      },
-    })
-  }, [hasPrevious, isLoadingPrevious, isLoadingNext, loadPrevious, edges.length])
 
   const handleEndReached = useCallback(() => {
-    if (!hasNext || isLoadingNext || isLoadingPrevious) return
-    loadDirection.current = 'next'
-    loadNext(PAGE_SIZE, {
-      onComplete: () => {
-        loadDirection.current = null
-      },
-    })
-  }, [hasNext, isLoadingNext, isLoadingPrevious, loadNext])
-
-  const positionTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const [initialIndex, setInitialIndex] = useState(0)
-
-  // incredibly important – virtuoso doesn't fire updates otherwise
-  const updatePosition = useCallback(
-    (virtualStartIndex: number) => {
-      const arrayIndex = virtualStartIndex - firstItemIndex
-      const cursor = edges[arrayIndex]?.cursor
-      if (!cursor) return
-
-      if (positionTimer.current) clearTimeout(positionTimer.current)
-      positionTimer.current = setTimeout(() => {
-        setInitialIndex(arrayIndex)
-      }, POSITION_DEBOUNCE_MS)
-    },
-    [edges, firstItemIndex]
-  )
+    if (!hasNext || isLoadingNext) return
+    loadNext(PAGE_SIZE)
+  }, [hasNext, isLoadingNext, loadNext])
 
   // never return a completely blank jank
   if (!edges.length) return <Skellie size={15} />
@@ -98,14 +52,10 @@ export default function LiveEventList(props: { preloaded: PreloadedQuery<EventsQ
   return (
     <Virtuoso
       useWindowScroll
-      initialTopMostItemIndex={initialIndex}
-      firstItemIndex={firstItemIndex}
       data={edges}
       itemContent={(_virtualIndex, edge) => <LiveEvent eventRef={edge.node} />}
-      startReached={handleStartReached}
       endReached={handleEndReached}
       overscan={5}
-      rangeChanged={({ startIndex }) => updatePosition(startIndex)}
     />
   )
 }
