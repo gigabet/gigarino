@@ -1,32 +1,42 @@
+"The `@defer` directive may be provided for fragment spreads and inline fragments to inform the executor to delay the execution of the current fragment to indicate deprioritization of the current fragment. A query with `@defer` directive will cause the request to potentially return multiple responses, where non-deferred data is delivered in the initial response and data deferred is delivered in a subsequent response. `@include` and `@skip` take precedence over `@defer`."
+directive @defer(
+  "If this argument label has a value other than null, it will be passed on to the result of this defer directive. This label is intended to give client applications a way to identify to which fragment a deferred result belongs to."
+  label: String
+  "Deferred when true."
+  if: Boolean
+) on FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+"The `@stream` directive may be provided for list fields to inform the executor to delay the execution of the current list field to indicate deprioritization of the current list field. A query with `@stream` directive will cause the request to potentially return multiple responses, where non-streamed data is delivered in the initial response and data streamed is delivered in a subsequent response."
+directive @stream(label: String, initialCount: Int = 0, if: Boolean) on FIELD
+
 schema {
   query: Query
-  subscription: Subscription
 }
 
+type Query {
+  "Required by Relay for the Node interface — used for record refetching/GC."
+  node(id: ID!): Node
+  event(id: ID!): Event
+  prematchEvents(
+    first: Int
+    after: String
+    last: Int
+    before: String
+    "Filter for events starting within a certain time range. Can be a relative time filter (e.g. TODAY) or a number of hours from now"
+    from: TimeFilter = ALL
+    "Sport slug (defaults to all sports)"
+    sport: String
+    "League slug (defaults to all leagues)"
+    league: String
+  ): PrematchEventConnection!
+  sports: [Sport!]!
+  topLeagues(first: Int): [League!]!
+  topPrematchEvents(first: Int): [PrematchEvent!]!
+}
+
+"Used by Relay to normalize and cache data."
 interface Node {
   id: ID!
-}
-
-type Odds implements Node {
-  id: ID!
-  home: Float!
-  draw: Float!
-  away: Float!
-  updatedAt: String!
-}
-
-type Event implements Node {
-  id: ID!
-  name: String!
-  league: String!
-  startTime: String!
-  odds: Odds!
-}
-
-"Standard Relay connection wrapper for cursor pagination."
-type EventEdge {
-  cursor: String!
-  node: Event!
 }
 
 type PageInfo {
@@ -36,33 +46,224 @@ type PageInfo {
   endCursor: String
 }
 
-type EventConnection {
-  edges: [EventEdge!]!
+enum TimeFilter {
+  ALL
+  "Within the next 3 hours, or longer if there are too few events"
+  LAST_MINUTE
+  "Until midnight of the current day in the user's timezone"
+  TODAY
+  WITHIN_48_HOURS
+}
+
+interface Event implements Node {
+  id: ID!
+  sport: Sport!
+  country: Country
+  league: League
+  home: Team!
+  away: Team!
+  "This is the total available odds for the event, not the total number of markets. For example, a 1X2 market has up to 3 odds"
+  oddsCount: Int
+  "Groups similar markets together in single view; also used to filter markets. In the previous version we used strings like mc_0000_all, mc_0010_main, etc. for sorting reasons."
+  marketCategories: [MarketCategory!]
+  markets(
+    first: Int
+    after: String
+    last: Int
+    before: String
+    category: MarketCategory
+  ): MarketConnection!
+}
+
+type PrematchEvent implements Event {
+  id: ID!
+  sport: Sport!
+  country: Country
+  league: League
+  startTime: DateTimeISO
+  home: Team!
+  away: Team!
+  "This is the total available odds for the event, not the total number of markets. For example, a 1X2 market has up to 3 odds"
+  oddsCount: Int
+  "Groups similar markets together in single view; also used to filter markets. In the previous version we used strings in a specific format like mc_0000_all, mc_0010_main, etc. for sorting reasons."
+  marketCategories: [MarketCategory!]
+  markets(
+    first: Int
+    after: String
+    last: Int
+    before: String
+    category: MarketCategory = MAIN
+  ): MarketConnection!
+}
+
+"Represents a date and time in ISO 8601 format, e.g. 2023-01-01T12:00:00Z. This is a string scalar type."
+scalar DateTimeISO
+
+"Groups similar markets together in single view; also used to filter markets. In the previous version we used strings in a specific format like mc_0000_all, mc_0010_main, etc. for sorting reasons."
+enum MarketCategory {
+  ALL
+  MAIN
+  GOALS
+  "First half, 2nd set, etc. – anything that isn't full time or ordinary time"
+  PERIODS
+  CARDS
+  CORNERS
+  PENALTIES
+  PLAYERS
+  SPECIAL
+}
+
+type PrematchEventEdge {
+  cursor: String!
+  node: PrematchEvent!
+}
+
+type PrematchEventConnection {
+  edges: [PrematchEventEdge!]!
   pageInfo: PageInfo!
 }
 
-type Query {
-  "Required by Relay for the Node interface — used for record refetching/GC."
-  node(id: ID!): Node
+type Sport implements Node {
+  id: ID!
+  name: String!
+  slug: String!
+  eventCount: Int
+}
 
+type Country implements Node {
+  id: ID!
+  name: String!
+  code: String
+  eventCount: Int
+}
+
+type League implements Node {
+  id: ID!
+  slug: String!
+  name: String!
+  country: Country
+  iconUrl: String
+  eventCount: Int
+}
+
+type Team implements Node {
+  id: ID!
+  name: String!
+  iconUrl: String
+}
+
+type MarketConnection {
+  edges: [MarketEdge!]!
+  pageInfo: PageInfo!
+}
+
+type MarketEdge {
+  cursor: String!
+  node: Market!
+}
+
+type Market implements Node {
+  id: ID!
+  "This is unique per event, but not globally unique, e.g. soccer_1x2_ord"
+  marketId: ID!
+  "Human readable label, e.g. Match Winner, Over/Under, Handicap, etc."
+  label: String
+  "For special markets like Over/Under or Handicap, this is the line value (e.g. 2.5, 1:0)."
+  clarifier: String
+  "Stage of the game that the market covers, e.g. Full Time, Ordinary Time, or X Period (1st Half, 2nd Half, etc.)"
+  stage: MarketStage
+  "The period of the stage, e.g. 1 for 1st Half, 2 for 2nd Half, etc."
+  stagePeriod: Int
+  "For listview markets, controls market selection in the dropdown menus"
+  group: MarketGroup
+  "Groups similar markets together in single view; also used to filter markets"
+  marketCategories: [MarketCategory!]
+  odds: [Odd!]
+}
+
+"For listview markets, controls market selection in the dropdown menus"
+enum MarketGroup {
+  BASIC
+  OVER_UNDER
+  "First/Second Half, Period, Set, Quarter, etc."
+  WINNER_OF_STAGE
+  REST_OF_GAME
+  NEXT_GOAL
+  BOTH_TO_SCORE
+  DOUBLE_CHANCE
+  EVEN_ODD
+  HANDICAP
+  "Rest of the game over/under"
+  ROG_OVER_UNDER
+  HALF_MOST_GOALS
+}
+
+"Stage of the game that the market covers, e.g. Full Time, Ordinary Time, or X Period (1st Half, 2nd Half, etc.)"
+enum MarketStage {
+  FULL_TIME
+  ORDINARY_TIME
+  X_PERIOD
+}
+
+##################################################################################################
+##################################################################################################
+##################################################################################################
+##################################################################################################
+##################################################################################################
+##################################################################################################
+##################################################################################################
+##################################################################################################
+##################################################################################################
+##################################################################################################
+##################################################################################################
+
+type Odd implements Node {
+  id: ID!
+  "This is unique per odd, but not globally unique, e.g. odd_soccer_1x2_ord_1"
+  oddId: ID!
+  "Human readable tag, e.g. 1, X, 2, Over, Under, etc."
+  tag: String
+  "Tracks the odd's order in the market"
+  position: Int
+  value: Float
+}
+
+type MockOdds implements Node {
+  id: ID!
+  home: Float!
+  draw: Float!
+  away: Float!
+  updatedAt: DateTimeISO!
+}
+
+type MockEvent implements Node {
+  id: ID!
+  name: String!
+  league: String!
+  startTime: DateTimeISO!
+  odds: MockOdds!
+}
+
+"Standard Relay connection wrapper for cursor pagination."
+type MockEventEdge {
+  cursor: String!
+  node: MockEvent!
+}
+
+type MockEventConnection {
+  edges: [MockEventEdge!]!
+  pageInfo: PageInfo!
+}
+
+extend type Query {
   "Cursor-paginated list, e.g. for the initial Virtuoso feed + infinite scroll."
-  events(first: Int, after: String, last: Int, before: String): EventConnection!
+  mockEvents(first: Int, after: String, last: Int, before: String): MockEventConnection!
 
   "Batched re-fetch for the refetch-batcher: one round trip for many ids."
-  eventsByIds(ids: [ID!]!): [Event!]!
+  mockEventsByIds(ids: [ID!]!): [MockEvent!]!
 }
 
 type Subscription {
   "Live odds updates for a single event, opened ~2s after a row settles."
-  eventOdds(eventId: ID!): Odds!
+  mockEventOdds(eventId: ID!): MockOdds!
 }
-
-"The `@defer` directive may be provided for fragment spreads and inline fragments to inform the executor to delay the execution of the current fragment to indicate deprioritization of the current fragment. A query with `@defer` directive will cause the request to potentially return multiple responses, where non-deferred data is delivered in the initial response and data deferred is delivered in a subsequent response. `@include` and `@skip` take precedence over `@defer`."
-directive @defer(
-  "If this argument label has a value other than null, it will be passed on to the result of this defer directive. This label is intended to give client applications a way to identify to which fragment a deferred result belongs to."
-  label: String
-  "Deferred when true."
-  if: Boolean
-) on FRAGMENT_SPREAD | INLINE_FRAGMENT
-
-directive @stream(label: String, initialCount: Int = 0, if: Boolean) on FIELD

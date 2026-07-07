@@ -10,7 +10,7 @@ export default async function AccountLayout({ children }: React.PropsWithChildre
   return (
     <div
       className={cx(
-        'relative z-1 mx-auto flex w-full max-w-360 items-start gap-12 px-4 pb-24 sm:px-6 lg:px-8',
+        'relative z-1 mx-auto flex w-full max-w-480 items-start gap-12 px-4 pb-24 sm:px-6 lg:px-8',
         PT
       )}
     >

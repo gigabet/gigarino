@@ -8,9 +8,8 @@ const BATCH_WINDOW_MS = 2000
 
 const batchQuery = graphql`
   query RefetchBatcherQuery($ids: [ID!]!) {
-    eventsByIds(ids: $ids) {
-      id
-      ...Event_event
+    mockEventsByIds(ids: $ids) {
+      ...liveEvent_Event
     }
   }
 `

@@ -14,6 +14,7 @@ const { handleRequest } = createYoga({
   schema: schema,
   plugins: [useDeferStream(), useGraphQLSSE()],
   graphqlEndpoint: '/api/graphql/stream',
+  graphiql: true,
   fetchAPI: { Response },
 })
 

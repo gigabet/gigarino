@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<02cd01ede710c9a5145ef14a90889cb9>>
+ * @generated SignedSource<<2ff36205b1d809111398bd5a64a8760f>>
  * @lightSyntaxTransform
  */
 
@@ -10,11 +10,10 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type LiveEventList_query$data = {
-  readonly events: {
+  readonly mockEvents: {
     readonly edges: ReadonlyArray<{
-      readonly cursor: string;
       readonly node: {
-        readonly " $fragmentSpreads": FragmentRefs<"Event_event">;
+        readonly " $fragmentSpreads": FragmentRefs<"liveEvent_Event">;
       };
     }>;
     readonly pageInfo: {
@@ -35,7 +34,7 @@ import LiveEventListPaginationQuery_graphql from './LiveEventListPaginationQuery
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "events"
+  "mockEvents"
 ];
 return {
   "argumentDefinitions": [
@@ -85,46 +84,91 @@ return {
   "name": "LiveEventList_query",
   "selections": [
     {
-      "alias": "events",
-      "args": null,
-      "concreteType": "EventConnection",
-      "kind": "LinkedField",
-      "name": "__LiveEventList_events_connection",
-      "plural": false,
+      "kind": "ClientExtension",
       "selections": [
         {
-          "alias": null,
+          "alias": "mockEvents",
           "args": null,
-          "concreteType": "EventEdge",
+          "concreteType": "MockEventConnection",
           "kind": "LinkedField",
-          "name": "edges",
-          "plural": true,
+          "name": "__liveEventList_mockEvents_connection",
+          "plural": false,
           "selections": [
             {
               "alias": null,
               "args": null,
-              "kind": "ScalarField",
-              "name": "cursor",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "Event",
+              "concreteType": "MockEventEdge",
               "kind": "LinkedField",
-              "name": "node",
-              "plural": false,
+              "name": "edges",
+              "plural": true,
               "selections": [
                 {
+                  "alias": null,
                   "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "Event_event"
+                  "concreteType": "MockEvent",
+                  "kind": "LinkedField",
+                  "name": "node",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "args": null,
+                      "kind": "FragmentSpread",
+                      "name": "liveEvent_Event"
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "__typename",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
                 },
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "__typename",
+                  "name": "cursor",
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "PageInfo",
+              "kind": "LinkedField",
+              "name": "pageInfo",
+              "plural": false,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "startCursor",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "hasPreviousPage",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "hasNextPage",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "endCursor",
                   "storageKey": null
                 }
               ],
@@ -132,48 +176,8 @@ return {
             }
           ],
           "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "PageInfo",
-          "kind": "LinkedField",
-          "name": "pageInfo",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "startCursor",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "hasPreviousPage",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "hasNextPage",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "endCursor",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
         }
-      ],
-      "storageKey": null
+      ]
     }
   ],
   "type": "Query",
@@ -181,6 +185,6 @@ return {
 };
 })();
 
-(node as any).hash = "2db1e3ce97b3c9bdd827b3fbe97e5ad1";
+(node as any).hash = "4945143f3d1dabfd7c733a12ca4d74ad";
 
 export default node;

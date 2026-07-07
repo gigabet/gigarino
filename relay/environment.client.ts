@@ -97,6 +97,7 @@ export function fetchOrSubscribe(operation: RequestParameters, variables: Variab
       },
       {
         next: (result: SpecMultipartEnvelope) => {
+          console.log(result)
           const payloads = normalizePayloads(result)
 
           if (payloads.length === 0) {

@@ -18,7 +18,7 @@ export default function BottomBar(props: {
 
   return (
     <div className='glass-dark fixed bottom-0 left-0 z-50 h-20 w-full lg:hidden [body[data-scroll-locked]_&]:pr-2'>
-      <nav className='mx-auto flex h-full w-full max-w-360 items-center justify-between px-6 lg:px-8'>
+      <nav className='mx-auto flex h-full w-full max-w-480 items-center justify-between px-6 lg:px-8'>
         {props.links.map(link => (
           <Link
             key={link.label}

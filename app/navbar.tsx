@@ -31,7 +31,7 @@ const navLinks = [
   { label: 'Casino', href: '/', icon: CoinsIcon },
   { label: 'Live Casino', href: '/casino/live-casino', icon: RadioIcon },
   { label: 'Sports', href: '/sport', icon: VolleyballIcon },
-  { label: 'In Play', href: '/live', icon: TvMinimalPlayIcon },
+  { label: 'In Play', href: '/live/all', icon: TvMinimalPlayIcon },
   // { label: 'Virtual Sports', href: '#!', icon: Gamepad2Icon },
   // { label: 'Bonus', href: '#!', icon: GiftIcon },
 ]
@@ -49,7 +49,7 @@ export default function Navbar(props: {
   return (
     <>
       <header className='bg-dark/90 sticky top-0 right-0 left-0 z-50 border-b border-white/5 backdrop-blur-xl transition-all duration-500'>
-        <div className='mx-auto max-w-360 px-6 lg:px-8'>
+        <div className='mx-auto max-w-480 px-6 lg:px-8'>
           {/* Top Bar */}
           <div className={cx(NAVBAR_HEIGHT, 'flex items-center justify-between py-3')}>
             {/* Left Section */}
@@ -70,14 +70,20 @@ export default function Navbar(props: {
                       href={link.href}
                       className={cx(
                         'group/nav relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300',
-                        pathname === link.href ? 'text-primary' : 'text-gray-400 hover:text-white'
+                        pathname === link.href ||
+                          (pathname.startsWith('/live/') && link.href.startsWith('/live/'))
+                          ? 'text-primary'
+                          : 'text-gray-400 hover:text-white'
                       )}
                     >
                       <span>{link.label}</span>
                       <span
                         className={cx(
                           'bg-primary absolute bottom-0 left-1/2 h-0.5 w-0 -translate-x-1/2 transition-all duration-300',
-                          pathname === link.href ? 'w-3/4' : 'group-hover/nav:w-3/4'
+                          pathname === link.href ||
+                            (pathname.startsWith('/live/') && link.href.startsWith('/live/'))
+                            ? 'w-3/4'
+                            : 'group-hover/nav:w-3/4'
                         )}
                       />
                     </Link>

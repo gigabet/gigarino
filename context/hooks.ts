@@ -57,3 +57,23 @@ export const useUpDown = (value: number) => {
 
   return upDown
 }
+
+export const useDelta = (value: number) => {
+  const [prevValue, setPrevValue] = useState(value)
+  const [delta, setDelta] = useState(0)
+  const highlight = useRef(0)
+
+  useEffect(() => {
+    if (prevValue !== value) {
+      setDelta(value - prevValue)
+      clearTimeout(highlight.current)
+    }
+    setPrevValue(value)
+    highlight.current = window.setTimeout(() => setDelta(0), 1500)
+    return () => {
+      clearTimeout(highlight.current)
+    }
+  }, [prevValue, value])
+
+  return delta
+}

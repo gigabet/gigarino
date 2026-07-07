@@ -2,9 +2,9 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 import { redirect } from 'next/navigation'
 import { Activity } from 'react'
 import { transactionsQuery } from '@/app/user/context'
-import Header from '@/app/user/header'
 import TransactionHistory from '@/app/user/transactions/transaction-history'
 import WalletError from '@/app/user/wallet-error'
+import Header from '@/header'
 import { getUser, getUserWallet } from '@/lib/auth'
 
 export default async function Transactions() {

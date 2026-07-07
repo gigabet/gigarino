@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c0efc497c5028e42541e57041f6260ff>>
+ * @generated SignedSource<<6f37d71dd0735e46d6ee5e87b1f8ca10>>
  * @lightSyntaxTransform
  */
 
@@ -98,64 +98,30 @@ return {
     "name": "LiveEventListPaginationQuery",
     "selections": [
       {
-        "alias": null,
-        "args": (v1/*:: as any*/),
-        "concreteType": "EventConnection",
-        "kind": "LinkedField",
-        "name": "events",
-        "plural": false,
+        "kind": "ClientExtension",
         "selections": [
           {
             "alias": null,
-            "args": null,
-            "concreteType": "EventEdge",
+            "args": (v1/*:: as any*/),
+            "concreteType": "MockEventConnection",
             "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
+            "name": "mockEvents",
+            "plural": false,
             "selections": [
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "cursor",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Event",
+                "concreteType": "MockEventEdge",
                 "kind": "LinkedField",
-                "name": "node",
-                "plural": false,
+                "name": "edges",
+                "plural": true,
                 "selections": [
-                  (v2/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
-                    "kind": "ScalarField",
-                    "name": "league",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "name",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "startTime",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Odds",
+                    "concreteType": "MockEvent",
                     "kind": "LinkedField",
-                    "name": "odds",
+                    "name": "node",
                     "plural": false,
                     "selections": [
                       (v2/*:: as any*/),
@@ -163,21 +129,61 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "home",
+                        "name": "league",
                         "storageKey": null
                       },
                       {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "away",
+                        "name": "name",
                         "storageKey": null
                       },
                       {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "draw",
+                        "name": "startTime",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "MockOdds",
+                        "kind": "LinkedField",
+                        "name": "odds",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "home",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "away",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "draw",
+                            "storageKey": null
+                          },
+                          (v2/*:: as any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "__typename",
                         "storageKey": null
                       }
                     ],
@@ -187,7 +193,46 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "__typename",
+                    "name": "cursor",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PageInfo",
+                "kind": "LinkedField",
+                "name": "pageInfo",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "startCursor",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "hasPreviousPage",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "hasNextPage",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "endCursor",
                     "storageKey": null
                   }
                 ],
@@ -198,68 +243,28 @@ return {
           },
           {
             "alias": null,
-            "args": null,
-            "concreteType": "PageInfo",
-            "kind": "LinkedField",
-            "name": "pageInfo",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "startCursor",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "hasPreviousPage",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "hasNextPage",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "endCursor",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
+            "args": (v1/*:: as any*/),
+            "filters": null,
+            "handle": "connection",
+            "key": "liveEventList_mockEvents",
+            "kind": "LinkedHandle",
+            "name": "mockEvents"
           }
-        ],
-        "storageKey": null
-      },
-      {
-        "alias": null,
-        "args": (v1/*:: as any*/),
-        "filters": null,
-        "handle": "connection",
-        "key": "LiveEventList_events",
-        "kind": "LinkedHandle",
-        "name": "events"
+        ]
       }
     ]
   },
   "params": {
-    "cacheID": "fe65b70c0eed4d6298a2336c305f7f0d",
+    "cacheID": "b856e45d11b6f0117c2f081aaf387136",
     "id": null,
     "metadata": {},
     "name": "LiveEventListPaginationQuery",
     "operationKind": "query",
-    "text": "query LiveEventListPaginationQuery(\n  $after: String\n  $before: String\n  $first: Int\n  $last: Int\n) {\n  ...LiveEventList_query\n}\n\nfragment Event_event on Event {\n  id\n  league\n  name\n  startTime\n  ...Event_odds\n}\n\nfragment Event_odds on Event {\n  id\n  odds {\n    id\n    home\n    away\n    draw\n  }\n}\n\nfragment LiveEventList_query on Query {\n  events(first: $first, last: $last, before: $before, after: $after) {\n    edges {\n      cursor\n      node {\n        ...Event_event\n        id\n        __typename\n      }\n    }\n    pageInfo {\n      startCursor\n      hasPreviousPage\n      hasNextPage\n      endCursor\n    }\n  }\n}\n"
+    "text": null
   }
 };
 })();
 
-(node as any).hash = "2db1e3ce97b3c9bdd827b3fbe97e5ad1";
+(node as any).hash = "4945143f3d1dabfd7c733a12ca4d74ad";
 
 export default node;

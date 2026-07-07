@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8103bb265a8e8b8e4102e1bbdb721834>>
+ * @generated SignedSource<<fcf4d8224aedec36e93b239389a5e898>>
  * @lightSyntaxTransform
  */
 
@@ -9,24 +9,26 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type Event_event$data = {
+export type liveEvent_Event$data = {
   readonly id: string;
   readonly league: string;
   readonly name: string;
+  readonly odds: {
+    readonly " $fragmentSpreads": FragmentRefs<"odds_MockOdds">;
+  };
   readonly startTime: string;
-  readonly " $fragmentSpreads": FragmentRefs<"Event_odds">;
-  readonly " $fragmentType": "Event_event";
+  readonly " $fragmentType": "liveEvent_Event";
 };
-export type Event_event$key = {
-  readonly " $data"?: Event_event$data;
-  readonly " $fragmentSpreads": FragmentRefs<"Event_event">;
+export type liveEvent_Event$key = {
+  readonly " $data"?: liveEvent_Event$data;
+  readonly " $fragmentSpreads": FragmentRefs<"liveEvent_Event">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "Event_event",
+  "name": "liveEvent_Event",
   "selections": [
     {
       "alias": null,
@@ -57,15 +59,26 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
       "args": null,
-      "kind": "FragmentSpread",
-      "name": "Event_odds"
+      "concreteType": "MockOdds",
+      "kind": "LinkedField",
+      "name": "odds",
+      "plural": false,
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "odds_MockOdds"
+        }
+      ],
+      "storageKey": null
     }
   ],
-  "type": "Event",
+  "type": "MockEvent",
   "abstractKey": null
 };
 
-(node as any).hash = "fdbd467500364c68912407f07fc3494c";
+(node as any).hash = "60a2f491b9c8971b807412bd5ea637e4";
 
 export default node;

@@ -5,8 +5,20 @@
 
 import { readFileSync } from 'node:fs'
 import { createSchema, Repeater } from 'graphql-yoga'
-import { type EventData, events, eventsById, oddsIdForEvent } from '@/app/api/graphql/mock-data'
+import {
+  eventsById,
+  type MockEventData,
+  mockEvents,
+  oddsIdForEvent,
+} from '@/app/api/graphql/mock-data'
 
+// const schemaSource = readFileSync(new URL('@/relay/schema.graphql', import.meta.url), 'utf-8')
+// const mocksSource = readFileSync(
+//   new URL('@/relay/extensions/mocks.graphql', import.meta.url),
+//   'utf-8'
+// )
+
+// const typeDefs = mergeTypeDefs([schemaSource, mocksSource])
 const typeDefs = readFileSync(new URL('@/relay/schema.graphql', import.meta.url), 'utf-8')
 
 // --- Cursor pagination -----------------------------------------------------
@@ -36,11 +48,14 @@ function paginate(args: {
   if (last != null && before != null) {
     const beforeIndex = fromCursor(before)
     const startIndex = Math.max(0, beforeIndex - last)
-    const slice = events.slice(startIndex, beforeIndex)
+    const slice = mockEvents.slice(startIndex, beforeIndex)
     return {
-      edges: slice.map((node, i) => ({ cursor: toCursor(startIndex + i), node })),
+      edges: slice.map((node, i) => ({
+        cursor: toCursor(startIndex + i),
+        node,
+      })),
       pageInfo: {
-        hasNextPage: beforeIndex < events.length,
+        hasNextPage: beforeIndex < mockEvents.length,
         hasPreviousPage: startIndex > 0,
         startCursor: slice.length > 0 ? toCursor(startIndex) : null,
         endCursor: slice.length > 0 ? toCursor(beforeIndex - 1) : null,
@@ -51,7 +66,7 @@ function paginate(args: {
   // Forward page (default): `first` items after `after`.
   const pageSize = first ?? 15
   const startIndex = after ? fromCursor(after) + 1 : 0
-  const slice = events.slice(startIndex, startIndex + pageSize)
+  const slice = mockEvents.slice(startIndex, startIndex + pageSize)
 
   return {
     edges: slice.map((node, i) => ({
@@ -59,7 +74,7 @@ function paginate(args: {
       node,
     })),
     pageInfo: {
-      hasNextPage: startIndex + pageSize < events.length,
+      hasNextPage: startIndex + pageSize < mockEvents.length,
       hasPreviousPage: startIndex > 0,
       startCursor: slice.length > 0 ? toCursor(startIndex) : null,
       endCursor: slice.length > 0 ? toCursor(startIndex + slice.length - 1) : null,
@@ -72,8 +87,8 @@ function paginate(args: {
 // through whatever the NestJS service exposes (single SQL `WHERE id IN (...)`
 // or a Redis MGET), not N sequential lookups.
 
-function getEventsByIds(ids: readonly string[]): EventData[] {
-  return ids.map(id => eventsById.get(id)).filter((event): event is EventData => Boolean(event))
+function getEventsByIds(ids: readonly string[]): MockEventData[] {
+  return ids.map(id => eventsById.get(id)).filter((event): event is MockEventData => Boolean(event))
 }
 
 // --- Live odds simulation ---------------------------------------------
@@ -82,7 +97,7 @@ function getEventsByIds(ids: readonly string[]): EventData[] {
 // query/refetch sees the latest values even without the subscription.
 
 function simulateOddsTicks(eventId: string) {
-  return new Repeater<EventData['odds']>(async (push, stop) => {
+  return new Repeater<MockEventData['odds']>(async (push, stop) => {
     const event = eventsById.get(eventId)
     if (!event) return stop()
 
@@ -114,16 +129,17 @@ function simulateOddsTicks(eventId: string) {
 // Ids are prefixed per type ("event-0", "Odds:event-0") so we can route
 // node(id) to the right backing store without a separate type registry.
 
-function resolveNode(
-  id: string
-): { __typename: 'Event' | 'Odds'; data: EventData | EventData['odds'] } | null {
+function resolveNode(id: string): {
+  __typename: 'MockEvent' | 'MockOdds'
+  data: MockEventData | MockEventData['odds']
+} | null {
   if (id.startsWith('Odds:')) {
     const eventId = id.slice('Odds:'.length)
     const event = eventsById.get(eventId)
-    return event ? { __typename: 'Odds', data: event.odds } : null
+    return event ? { __typename: 'MockOdds', data: event.odds } : null
   }
   const event = eventsById.get(id)
-  return event ? { __typename: 'Event', data: event } : null
+  return event ? { __typename: 'MockEvent', data: event } : null
 }
 
 const resolvers = {
@@ -136,7 +152,7 @@ const resolvers = {
       if (!resolved) return null
       return { __typename: resolved.__typename, ...resolved.data }
     },
-    events: (
+    mockEvents: (
       _: unknown,
       args: {
         first?: number | null
@@ -144,13 +160,17 @@ const resolvers = {
         last?: number | null
         before?: string | null
       }
-    ) => paginate(args),
-    eventsByIds: (_: unknown, { ids }: { ids: string[] }) => getEventsByIds(ids),
+    ) => {
+      console.log('[mockEvents] args', args)
+      console.log('[mockEvents] result', paginate(args))
+      return paginate(args)
+    },
+    mockEventsByIds: (_: unknown, { ids }: { ids: string[] }) => getEventsByIds(ids),
   },
   Subscription: {
-    eventOdds: {
+    mockEventOdds: {
       subscribe: (_: unknown, { eventId }: { eventId: string }) => simulateOddsTicks(eventId),
-      resolve: (payload: EventData['odds']) => payload,
+      resolve: (payload: MockEventData['odds']) => payload,
     },
   },
 }

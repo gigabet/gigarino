@@ -3,24 +3,23 @@
 import { useCallback } from 'react'
 import { graphql, type PreloadedQuery, usePaginationFragment, usePreloadedQuery } from 'react-relay'
 import { Virtuoso } from 'react-virtuoso'
-import type { EventsQuery } from '@/app/live/__generated__/EventsQuery.graphql'
-import EventsQueryNode from '@/app/live/__generated__/EventsQuery.graphql'
-import type { LiveEventList_query$key } from '@/app/live/__generated__/LiveEventList_query.graphql'
-import LiveEvent from '@/app/live/live-event'
+import type { LiveEventList_query$key } from '@/app/live/[sport]/__generated__/LiveEventList_query.graphql'
+import MockEventsQueryNode, {
+  type MockEventsQuery,
+} from '@/app/live/[sport]/__generated__/MockEventsQuery.graphql'
+import LiveEvent from '@/app/live/[sport]/live-event'
 import { Skeleton } from '@/components/ui/skeleton'
 
 const PAGE_SIZE = 15
 
 const LiveEventList_query = graphql`
   fragment LiveEventList_query on Query @refetchable(queryName: "LiveEventListPaginationQuery") {
-    events(first: $first, last: $last, before: $before, after: $after)
-      @connection(key: "LiveEventList_events") {
+    mockEvents(first: $first, last: $last, before: $before, after: $after)
+      @connection(key: "liveEventList_mockEvents") {
       edges {
-        cursor
         node {
-          ...Event_event
+          ...liveEvent_Event
         }
-        cursor
       }
       pageInfo {
         startCursor
@@ -32,14 +31,16 @@ const LiveEventList_query = graphql`
   }
 `
 
-export default function LiveEventList(props: { preloaded: PreloadedQuery<EventsQuery> }) {
-  const queryData = usePreloadedQuery<EventsQuery>(EventsQueryNode, props.preloaded)
+export default function LiveEventList(props: { preloaded: PreloadedQuery<MockEventsQuery> }) {
+  const queryData = usePreloadedQuery<MockEventsQuery>(MockEventsQueryNode, props.preloaded)
   const { data, loadNext, hasNext, isLoadingNext } = usePaginationFragment<
-    EventsQuery,
+    MockEventsQuery,
     LiveEventList_query$key
   >(LiveEventList_query, queryData)
 
-  const edges = data.events.edges
+  const edges = data?.mockEvents?.edges ?? []
+
+  console.log(data)
 
   const handleEndReached = useCallback(() => {
     if (!hasNext || isLoadingNext) return

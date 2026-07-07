@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import AccountForm from '@/app/user/account/account-form'
-import Header from '@/app/user/header'
+import Header from '@/header'
 import { getUser } from '@/lib/auth'
 
 export default async function Account() {

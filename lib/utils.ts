@@ -50,12 +50,12 @@ export function createSSEStream<T>(
 ): AsyncIterable<StreamUpdate<T>> {
   return {
     [Symbol.asyncIterator](): AsyncIterator<StreamUpdate<T>> {
-      const eventSource = new EventSource(url)
+      const eventSource = new MockEventSource(url)
       const queue: StreamUpdate<T>[] = []
       let resolveNext: ((value: IteratorResult<StreamUpdate<T>>) => void) | null = null
       let done = false
 
-      // Close EventSource when fetch is aborted
+      // Close MockEventSource when fetch is aborted
       signal.addEventListener('abort', () => {
         done = true
         eventSource.close()

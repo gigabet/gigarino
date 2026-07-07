@@ -4,7 +4,7 @@
 // Swap this module out wholesale once the NestJS service exists — nothing
 // else (resolvers, batching, subscriptions) should need to change shape.
 
-export interface OddsData {
+export interface MockOddsData {
   id: string
   home: number
   draw: number
@@ -12,12 +12,12 @@ export interface OddsData {
   updatedAt: string
 }
 
-export interface EventData {
+export interface MockEventData {
   id: string
   name: string
   league: string
   startTime: string
-  odds: OddsData
+  odds: MockOddsData
 }
 
 const LEAGUES = ['Premier League', 'La Liga', 'Serie A', 'Bundesliga', 'Ligue 1']
@@ -50,7 +50,7 @@ export function oddsIdForEvent(eventId: string): string {
   return `Odds:${eventId}`
 }
 
-function randomOdds(seed: number, eventId: string): OddsData {
+function randomOdds(seed: number, eventId: string): MockOddsData {
   return {
     id: oddsIdForEvent(eventId),
     home: Number((1.5 + seededRandom(seed) * 3).toFixed(2)),
@@ -64,7 +64,7 @@ function randomOdds(seed: number, eventId: string): OddsData {
 const EVENT_COUNT = 140 // "a hundred-ish on weekends"
 const BASE_START_TIME = Date.UTC(2026, 0, 1, 12, 0, 0) // fixed anchor, not Date.now()
 
-export const events: EventData[] = Array.from({ length: EVENT_COUNT }, (_, i) => {
+export const mockEvents: MockEventData[] = Array.from({ length: EVENT_COUNT }, (_, i) => {
   const home = TEAMS[i % TEAMS.length]
   const away = TEAMS[(i + 5) % TEAMS.length]
   const id = `event-${i}`
@@ -77,4 +77,4 @@ export const events: EventData[] = Array.from({ length: EVENT_COUNT }, (_, i) =>
   }
 })
 
-export const eventsById = new Map(events.map(e => [e.id, e]))
+export const eventsById = new Map(mockEvents.map(e => [e.id, e]))
