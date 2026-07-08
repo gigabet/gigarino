@@ -1,3 +1,4 @@
+import { TriangleAlert } from 'lucide-react'
 import LeagueStrip from '@/app/live/[sport]/league-strip'
 import LiveSportPage from '@/app/live/[sport]/page'
 import SportsSelection from '@/app/live/[sport]/sports-selection'
@@ -9,6 +10,9 @@ export default async function LiveLayout() {
       <div className='col-span-2 flex flex-col gap-4'>
         <SportsSelection />
         <LeagueStrip />
+        <h1 className='text-destructive mx-auto flex items-center gap-2 text-center text-3xl'>
+          <TriangleAlert /> NOT FINISHED — IGNORE THIS PAGE <TriangleAlert />
+        </h1>
         <LiveSportPage />
       </div>
       <aside>Betslip</aside>
