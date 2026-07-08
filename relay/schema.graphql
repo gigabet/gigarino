@@ -32,6 +32,12 @@ type Query {
   sports: [Sport!]!
   topLeagues(first: Int): [League!]!
   topPrematchEvents(first: Int): [PrematchEvent!]!
+
+  "Cursor-paginated list, e.g. for the initial Virtuoso feed + infinite scroll."
+  mockEvents(first: Int, after: String, last: Int, before: String): MockEventConnection!
+
+  "Batched re-fetch for the refetch-batcher: one round trip for many ids."
+  mockEventsByIds(ids: [ID!]!): [MockEvent!]!
 }
 
 "Used by Relay to normalize and cache data."
@@ -75,7 +81,7 @@ interface Event implements Node {
   ): MarketConnection!
 }
 
-type PrematchEvent implements Event {
+type PrematchEvent implements Event & Node {
   id: ID!
   sport: Sport!
   country: Country
@@ -253,14 +259,6 @@ type MockEventEdge {
 type MockEventConnection {
   edges: [MockEventEdge!]!
   pageInfo: PageInfo!
-}
-
-extend type Query {
-  "Cursor-paginated list, e.g. for the initial Virtuoso feed + infinite scroll."
-  mockEvents(first: Int, after: String, last: Int, before: String): MockEventConnection!
-
-  "Batched re-fetch for the refetch-batcher: one round trip for many ids."
-  mockEventsByIds(ids: [ID!]!): [MockEvent!]!
 }
 
 type Subscription {

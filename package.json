@@ -13,10 +13,9 @@
   "graphql": {
     "schema": [
       "./relay/schema.graphql",
-      "./relay/extensions/mocks.graphql",
       "./node_modules/relay-compiler/relay-extensions.graphql"
     ],
-    "documents": "**/*.{graphql}"
+    "documents": "**/*.{graphql,js,ts,jsx,tsx}"
   },
   "dependencies": {
     "@graphql-tools/load-files": "^7.0.1",

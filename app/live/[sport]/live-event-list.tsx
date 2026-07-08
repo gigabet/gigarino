@@ -38,9 +38,7 @@ export default function LiveEventList(props: { preloaded: PreloadedQuery<MockEve
     LiveEventList_query$key
   >(LiveEventList_query, queryData)
 
-  const edges = data?.mockEvents?.edges ?? []
-
-  console.log(data)
+  const edges = data.mockEvents.edges
 
   const handleEndReached = useCallback(() => {
     if (!hasNext || isLoadingNext) return

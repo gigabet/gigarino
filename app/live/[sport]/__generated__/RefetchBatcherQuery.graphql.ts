@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<32f2b1b9158f79844f904b451e6fa336>>
+ * @generated SignedSource<<fafa161de4bfb8f6b6cb3d1ad2ddb168>>
  * @lightSyntaxTransform
  */
 
@@ -52,25 +52,20 @@ return {
     "name": "RefetchBatcherQuery",
     "selections": [
       {
-        "kind": "ClientExtension",
+        "alias": null,
+        "args": (v1/*:: as any*/),
+        "concreteType": "MockEvent",
+        "kind": "LinkedField",
+        "name": "mockEventsByIds",
+        "plural": true,
         "selections": [
           {
-            "alias": null,
-            "args": (v1/*:: as any*/),
-            "concreteType": "MockEvent",
-            "kind": "LinkedField",
-            "name": "mockEventsByIds",
-            "plural": true,
-            "selections": [
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "liveEvent_Event"
-              }
-            ],
-            "storageKey": null
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "liveEvent_Event"
           }
-        ]
+        ],
+        "storageKey": null
       }
     ],
     "type": "Query",
@@ -83,85 +78,80 @@ return {
     "name": "RefetchBatcherQuery",
     "selections": [
       {
-        "kind": "ClientExtension",
+        "alias": null,
+        "args": (v1/*:: as any*/),
+        "concreteType": "MockEvent",
+        "kind": "LinkedField",
+        "name": "mockEventsByIds",
+        "plural": true,
         "selections": [
+          (v2/*:: as any*/),
           {
             "alias": null,
-            "args": (v1/*:: as any*/),
-            "concreteType": "MockEvent",
+            "args": null,
+            "kind": "ScalarField",
+            "name": "league",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "name",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "startTime",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "MockOdds",
             "kind": "LinkedField",
-            "name": "mockEventsByIds",
-            "plural": true,
+            "name": "odds",
+            "plural": false,
             "selections": [
-              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "league",
+                "name": "home",
                 "storageKey": null
               },
               {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "name",
+                "name": "away",
                 "storageKey": null
               },
               {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "startTime",
+                "name": "draw",
                 "storageKey": null
               },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "MockOdds",
-                "kind": "LinkedField",
-                "name": "odds",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "home",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "away",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "draw",
-                    "storageKey": null
-                  },
-                  (v2/*:: as any*/)
-                ],
-                "storageKey": null
-              }
+              (v2/*:: as any*/)
             ],
             "storageKey": null
           }
-        ]
+        ],
+        "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "147758be0b2296cf710fa999986e6f89",
+    "cacheID": "fc6506eb90d22cfa317d163a86e8252f",
     "id": null,
     "metadata": {},
     "name": "RefetchBatcherQuery",
     "operationKind": "query",
-    "text": null
+    "text": "query RefetchBatcherQuery(\n  $ids: [ID!]!\n) {\n  mockEventsByIds(ids: $ids) {\n    ...liveEvent_Event\n    id\n  }\n}\n\nfragment liveEvent_Event on MockEvent {\n  id\n  league\n  name\n  startTime\n  odds {\n    ...odds_MockOdds\n    id\n  }\n}\n\nfragment odds_MockOdds on MockOdds {\n  home\n  away\n  draw\n}\n"
   }
 };
 })();
