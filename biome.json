@@ -13,8 +13,7 @@
       "!.next",
       "!dist",
       "!build",
-      ".env",
-      "**/__generated__/**",
+      "!**/__generated__",
       "!**/*.graphql.ts"
     ]
   },
@@ -31,7 +30,6 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
       "suspicious": {
         "noUnknownAtRules": "off"
       }
