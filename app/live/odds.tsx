@@ -4,7 +4,7 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { Toggle } from 'radix-ui'
 import { graphql, useFragment } from 'react-relay'
-import type { odds_MockOdds$key } from '@/app/live/[[...slug]]/__generated__/odds_MockOdds.graphql'
+import type { odds_MockOdds$key } from '@/app/live/__generated__/odds_MockOdds.graphql'
 // import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { useDelta } from '@/context/hooks'
 import { cn } from '@/lib/utils'

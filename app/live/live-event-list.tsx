@@ -3,7 +3,7 @@
 import { useCallback } from 'react'
 import { graphql, type PreloadedQuery, usePaginationFragment, usePreloadedQuery } from 'react-relay'
 import { Virtuoso } from 'react-virtuoso'
-import type { LiveEventList_query$key } from '@/app/live/[[...slug]]/__generated__/LiveEventList_query.graphql'
+import type { LiveEventList_query$key } from '@/app/live/__generated__/LiveEventList_query.graphql'
 import MockEventsQueryNode, {
   type MockEventsQuery,
 } from '@/app/live/[[...slug]]/__generated__/MockEventsQuery.graphql'
