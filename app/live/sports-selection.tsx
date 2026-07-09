@@ -15,7 +15,6 @@ import {
 import { cn } from '@/lib/utils'
 
 const SPORTS = {
-  all: CheckCheck,
   soccer: GiSoccerBall,
   tennis: GiTennisBall,
   basketball: GiBasketballBall,
@@ -28,6 +27,26 @@ export default function SportsSelection() {
   const pathname = usePathname()
   return (
     <nav className='flex items-center gap-6 border-b'>
+      <Link
+        href='/live'
+        className={cn(
+          'group/nav relative h-8 text-sm font-medium capitalize transition-all duration-300',
+          pathname === '/live'
+            ? 'text-foreground [&>div>svg]:text-primary [&>div>svg]:drop-shadow-[0_0_8px]'
+            : 'text-muted-foreground'
+        )}
+      >
+        <div className='group-hover/nav:text-foreground flex items-center gap-2'>
+          <CheckCheck className='drop-shadow-primary size-5 transition-all duration-300' />{' '}
+          <span className='transition-all duration-300'>All</span>
+        </div>
+        <div
+          className={cn(
+            'bg-primary absolute bottom-0 left-1/2 h-0.5 w-0 -translate-x-1/2 transition-all duration-300',
+            pathname === '/live' ? 'w-full' : 'group-hover/nav:w-full'
+          )}
+        />
+      </Link>
       {entries(SPORTS).map(([sport, Icon]) => (
         <Link
           key={sport}

@@ -3,11 +3,11 @@
 import { useCallback } from 'react'
 import { graphql, type PreloadedQuery, usePaginationFragment, usePreloadedQuery } from 'react-relay'
 import { Virtuoso } from 'react-virtuoso'
-import type { LiveEventList_query$key } from '@/app/live/[sport]/__generated__/LiveEventList_query.graphql'
+import type { LiveEventList_query$key } from '@/app/live/[[...slug]]/__generated__/LiveEventList_query.graphql'
 import MockEventsQueryNode, {
   type MockEventsQuery,
-} from '@/app/live/[sport]/__generated__/MockEventsQuery.graphql'
-import LiveEvent from '@/app/live/[sport]/live-event'
+} from '@/app/live/[[...slug]]/__generated__/MockEventsQuery.graphql'
+import LiveEvent from '@/app/live/live-event'
 import { Skeleton } from '@/components/ui/skeleton'
 
 const PAGE_SIZE = 15

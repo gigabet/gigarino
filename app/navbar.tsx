@@ -31,7 +31,7 @@ const navLinks = [
   { label: 'Casino', href: '/', icon: CoinsIcon },
   { label: 'Live Casino', href: '/casino/live-casino', icon: RadioIcon },
   { label: 'Sports', href: '/sport', icon: VolleyballIcon },
-  { label: 'In Play', href: '/live/all', icon: TvMinimalPlayIcon },
+  { label: 'In Play', href: '/live', icon: TvMinimalPlayIcon },
   // { label: 'Virtual Sports', href: '#!', icon: Gamepad2Icon },
   // { label: 'Bonus', href: '#!', icon: GiftIcon },
 ]
@@ -71,7 +71,8 @@ export default function Navbar(props: {
                       className={cx(
                         'group/nav relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300',
                         pathname === link.href ||
-                          (pathname.startsWith('/live/') && link.href.startsWith('/live/'))
+                          (pathname.startsWith('/live') && link.href.startsWith('/live')) ||
+                          (pathname.startsWith('/sport') && link.href.startsWith('/sport'))
                           ? 'text-primary'
                           : 'text-gray-400 hover:text-white'
                       )}
@@ -81,7 +82,8 @@ export default function Navbar(props: {
                         className={cx(
                           'bg-primary absolute bottom-0 left-1/2 h-0.5 w-0 -translate-x-1/2 transition-all duration-300',
                           pathname === link.href ||
-                            (pathname.startsWith('/live/') && link.href.startsWith('/live/'))
+                            (pathname.startsWith('/live') && link.href.startsWith('/live')) ||
+                            (pathname.startsWith('/sport') && link.href.startsWith('/sport'))
                             ? 'w-3/4'
                             : 'group-hover/nav:w-3/4'
                         )}

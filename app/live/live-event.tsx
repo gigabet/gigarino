@@ -4,9 +4,9 @@ import { format } from 'date-fns'
 import { useEffect, useRef } from 'react'
 import { IoStatsChart } from 'react-icons/io5'
 import { graphql, useFragment } from 'react-relay'
-import type { liveEvent_Event$key } from '@/app/live/[sport]/__generated__/liveEvent_Event.graphql'
-import Odds from '@/app/live/[sport]/odds'
-import { useRefetchBatcher } from '@/app/live/[sport]/refetch-context'
+import type { liveEvent_Event$key } from '@/app/live/[[...slug]]/__generated__/liveEvent_Event.graphql'
+import Odds from '@/app/live/odds'
+import { useRefetchBatcher } from '@/app/live/refetch-context'
 import { Button } from '@/components/ui/button'
 
 export default function LiveEvent({ eventRef }: { eventRef: liveEvent_Event$key }) {

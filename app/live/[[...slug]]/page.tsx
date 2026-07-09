@@ -3,9 +3,9 @@
 import { Suspense, useEffect } from 'react'
 import { useQueryLoader } from 'react-relay'
 import { graphql } from 'relay-runtime'
-import type { MockEventsQuery } from '@/app/live/[sport]/__generated__/MockEventsQuery.graphql'
-import LiveEventList from '@/app/live/[sport]/live-event-list'
-import { RefetchBatcherProvider } from '@/app/live/[sport]/refetch-context'
+import type { MockEventsQuery } from '@/app/live/[[...slug]]/__generated__/MockEventsQuery.graphql'
+import LiveEventList from '@/app/live/live-event-list'
+import { RefetchBatcherProvider } from '@/app/live/refetch-context'
 import { Skeleton } from '@/components/ui/skeleton'
 
 const Skellie = (props: { size?: number }) => (

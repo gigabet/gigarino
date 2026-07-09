@@ -7,7 +7,7 @@ import tseslint from 'typescript-eslint'
 export default defineConfig([
   {
     files: ['**/*.{ts,tsx}'],
-    ignores: ['**/__generated__/**'],
+    ignores: ['**/__generated__/**', 'node_modules/**'],
     plugins: { relay },
     languageOptions: {
       parser: tseslint.parser,
