@@ -31,7 +31,7 @@ const navLinks = [
   { label: 'Casino', href: '/', icon: CoinsIcon },
   { label: 'Live Casino', href: '/casino/live-casino', icon: RadioIcon },
   { label: 'Sports', href: '/sport', icon: VolleyballIcon },
-  { label: 'In Play', href: '/live', icon: TvMinimalPlayIcon },
+  { label: 'In Play', href: '#!', icon: TvMinimalPlayIcon },
   // { label: 'Virtual Sports', href: '#!', icon: Gamepad2Icon },
   // { label: 'Bonus', href: '#!', icon: GiftIcon },
 ]

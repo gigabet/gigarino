@@ -2,7 +2,7 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 import { redirect } from 'next/navigation'
 import BonusList from '@/app/user/bonuses/bonus-list'
 import { feedQuery } from '@/app/user/context'
-import Header from '@/header'
+import Header from '@/app/user/header'
 import { getUser } from '@/lib/auth'
 
 export default async function Bonuses() {

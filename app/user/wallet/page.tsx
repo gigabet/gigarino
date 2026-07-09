@@ -2,12 +2,12 @@ import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query
 import { redirect } from 'next/navigation'
 import { Activity } from 'react'
 import { transactionsQuery } from '@/app/user/context'
+import Header from '@/app/user/header'
 import BalanceCard from '@/app/user/wallet/balance-card'
 import DepositWithdrawal from '@/app/user/wallet/deposit-withdrawal'
 import QuickStats from '@/app/user/wallet/quick-stats'
 import TransactionsPreview from '@/app/user/wallet/transactions-preview'
 import WalletError from '@/app/user/wallet-error'
-import Header from '@/header'
 import { getToken, getUser, getUserWallet } from '@/lib/auth'
 import { formatBalance } from '@/lib/utils'
 

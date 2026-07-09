@@ -50,7 +50,7 @@ export function createSSEStream<T>(
 ): AsyncIterable<StreamUpdate<T>> {
   return {
     [Symbol.asyncIterator](): AsyncIterator<StreamUpdate<T>> {
-      const eventSource = new MockEventSource(url)
+      const eventSource = new EventSource(url)
       const queue: StreamUpdate<T>[] = []
       let resolveNext: ((value: IteratorResult<StreamUpdate<T>>) => void) | null = null
       let done = false
