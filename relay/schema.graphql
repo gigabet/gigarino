@@ -11,6 +11,12 @@ directive @stream(label: String, initialCount: Int = 0, if: Boolean) on FIELD
 
 schema {
   query: Query
+  subscription: Subscription
+}
+
+type Subscription {
+  "DNI – For mocks only."
+  mockEventOdds(eventId: ID!): MockOdds!
 }
 
 type Query {
@@ -26,17 +32,16 @@ type Query {
     from: TimeFilter = ALL
     "Sport slug (defaults to all sports)"
     sport: String
-    "League slug (defaults to all leagues)"
-    league: String
+    "List of league slugs (defaults to all leagues)"
+    league: [String]
   ): PrematchEventConnection!
   sports: [Sport!]!
   topLeagues(first: Int): [League!]!
   topPrematchEvents(first: Int): [PrematchEvent!]!
 
-  "Cursor-paginated list, e.g. for the initial Virtuoso feed + infinite scroll."
+  "DNI – For mocks only."
   mockEvents(first: Int, after: String, last: Int, before: String): MockEventConnection!
-
-  "Batched re-fetch for the refetch-batcher: one round trip for many ids."
+  "DNI – For mocks only."
   mockEventsByIds(ids: [ID!]!): [MockEvent!]!
 }
 
@@ -45,6 +50,7 @@ interface Node {
   id: ID!
 }
 
+"Relay cursor pagination."
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
@@ -81,6 +87,7 @@ interface Event implements Node {
   ): MarketConnection!
 }
 
+"Prematch events don't have a live score or playtime, but have `startTime` instead."
 type PrematchEvent implements Event & Node {
   id: ID!
   sport: Sport!
@@ -104,20 +111,6 @@ type PrematchEvent implements Event & Node {
 
 "Represents a date and time in ISO 8601 format, e.g. 2023-01-01T12:00:00Z. This is a string scalar type."
 scalar DateTimeISO
-
-"Groups similar markets together in single view; also used to filter markets. In the previous version we used strings in a specific format like mc_0000_all, mc_0010_main, etc. for sorting reasons."
-enum MarketCategory {
-  ALL
-  MAIN
-  GOALS
-  "First half, 2nd set, etc. – anything that isn't full time or ordinary time"
-  PERIODS
-  CARDS
-  CORNERS
-  PENALTIES
-  PLAYERS
-  SPECIAL
-}
 
 type PrematchEventEdge {
   cursor: String!
@@ -187,6 +180,20 @@ type Market implements Node {
   odds: [Odd!]
 }
 
+"Groups similar markets together in single view; also used to filter markets. In the previous version we used strings in a specific format like mc_0000_all, mc_0010_main, etc. for sorting reasons."
+enum MarketCategory {
+  ALL
+  MAIN
+  GOALS
+  "First half, 2nd set, etc. – anything that isn't full time or ordinary time"
+  PERIODS
+  CARDS
+  CORNERS
+  PENALTIES
+  PLAYERS
+  SPECIAL
+}
+
 "For listview markets, controls market selection in the dropdown menus"
 enum MarketGroup {
   BASIC
@@ -211,21 +218,9 @@ enum MarketStage {
   X_PERIOD
 }
 
-##################################################################################################
-##################################################################################################
-##################################################################################################
-##################################################################################################
-##################################################################################################
-##################################################################################################
-##################################################################################################
-##################################################################################################
-##################################################################################################
-##################################################################################################
-##################################################################################################
-
 type Odd implements Node {
   id: ID!
-  "This is unique per odd, but not globally unique, e.g. odd_soccer_1x2_ord_1"
+  "This is unique per event, but not globally unique, e.g. odd_soccer_1x2_ord_1"
   oddId: ID!
   "Human readable tag, e.g. 1, X, 2, Over, Under, etc."
   tag: String
@@ -234,6 +229,19 @@ type Odd implements Node {
   value: Float
 }
 
+##################################################################################################
+##################################################################################################
+##################################################################################################
+##################################################################################################
+##################################################################################################
+##################################################################################################
+##################################################################################################
+##################################################################################################
+##################################################################################################
+##################################################################################################
+##################################################################################################
+
+"DNI – For mocks only."
 type MockOdds implements Node {
   id: ID!
   home: Float!
@@ -242,6 +250,7 @@ type MockOdds implements Node {
   updatedAt: DateTimeISO!
 }
 
+"DNI – For mocks only."
 type MockEvent implements Node {
   id: ID!
   name: String!
@@ -250,18 +259,14 @@ type MockEvent implements Node {
   odds: MockOdds!
 }
 
-"Standard Relay connection wrapper for cursor pagination."
+"DNI – For mocks only."
 type MockEventEdge {
   cursor: String!
   node: MockEvent!
 }
 
+"DNI – For mocks only."
 type MockEventConnection {
   edges: [MockEventEdge!]!
   pageInfo: PageInfo!
-}
-
-type Subscription {
-  "Live odds updates for a single event, opened ~2s after a row settles."
-  mockEventOdds(eventId: ID!): MockOdds!
 }
