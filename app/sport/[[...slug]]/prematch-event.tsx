@@ -1,5 +1,5 @@
 import { format } from 'date-fns'
-import { ImageIcon } from 'lucide-react'
+import { ChartNoAxesColumnIcon, ImageIcon } from 'lucide-react'
 import { Toggle } from 'radix-ui'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -36,13 +36,18 @@ export default function PrematchEvent() {
 
       <div className='@container/markets ml-auto flex grow items-center justify-end gap-4'>
         <Market />
-        <Market className='@max-md/markets:hidden' />
-        <Market className='@max-2xl/markets:hidden' />
-        <Market className='@max-4xl/markets:hidden' />
+        <Market className='hidden @md/markets:flex' />
+        <Market className='hidden @2xl/markets:flex' />
+        <Market className='hidden @4xl/markets:flex' />
       </div>
 
-      <div>
-        <Button variant='ghost'>+126</Button>
+      <div className='flex w-24 justify-end'>
+        <Button variant='ghost' size='sm'>
+          +126
+        </Button>
+        <Button variant='ghost' size='icon-sm' className='rounded-full'>
+          <ChartNoAxesColumnIcon />
+        </Button>
       </div>
     </div>
   )
@@ -51,23 +56,29 @@ export default function PrematchEvent() {
 function Market({ className = '' }: { className?: string }) {
   return (
     <div className={cn('flex h-15 max-w-60 min-w-50 grow gap-1', className)}>
-      <Toggle.Root className='group hover:bg-primary/10 hover:border-primary/20 shadow-primary/60 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-1 flex-col items-center justify-center gap-1 rounded-lg border border-white/5 bg-black/20 transition transition-all data-[state=on]:shadow-[0_0_12px]'>
-        <span className='group-data-[state=on]:text-foreground text-secondary text-xs'>1</span>
-        <span className='group-data-[state=on]:text-primary text-foreground text-sm font-semibold'>
+      <Toggle.Root className='group hover:bg-primary/5 hover:border-primary/20 shadow-primary/60 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-1 flex-col items-center justify-center gap-1 rounded-lg border border-white/5 bg-black/20 transition transition-all data-[state=on]:shadow-[0_0_12px]'>
+        <span className='group-data-[state=on]:text-foreground text-shadow-foreground text-secondary text-xs group-data-[state=on]:text-shadow-[0_0_8px]'>
+          1
+        </span>
+        <span className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'>
           {(1 + Math.random() * 4).toFixed(2)}
         </span>
       </Toggle.Root>
 
-      <Toggle.Root className='group hover:bg-primary/10 hover:border-primary/20 shadow-primary/60 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-1 flex-col items-center justify-center gap-1 rounded-lg border border-white/5 bg-black/20 transition transition-all data-[state=on]:shadow-[0_0_12px]'>
-        <span className='group-data-[state=on]:text-foreground text-secondary text-xs'>X</span>
-        <span className='group-data-[state=on]:text-primary text-foreground text-sm font-semibold'>
+      <Toggle.Root className='group hover:bg-primary/5 hover:border-primary/20 shadow-primary/60 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-1 flex-col items-center justify-center gap-1 rounded-lg border border-white/5 bg-black/20 transition transition-all data-[state=on]:shadow-[0_0_12px]'>
+        <span className='group-data-[state=on]:text-foreground text-shadow-foreground text-secondary text-xs group-data-[state=on]:text-shadow-[0_0_8px]'>
+          X
+        </span>
+        <span className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'>
           {(1 + Math.random() * 4).toFixed(2)}
         </span>
       </Toggle.Root>
 
-      <Toggle.Root className='group hover:bg-primary/10 hover:border-primary/20 shadow-primary/60 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-1 flex-col items-center justify-center gap-1 rounded-lg border border-white/5 bg-black/20 transition transition-all data-[state=on]:shadow-[0_0_12px]'>
-        <span className='group-data-[state=on]:text-foreground text-secondary text-xs'>2</span>
-        <span className='group-data-[state=on]:text-primary text-foreground text-sm font-semibold'>
+      <Toggle.Root className='group hover:bg-primary/5 hover:border-primary/20 shadow-primary/60 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-1 flex-col items-center justify-center gap-1 rounded-lg border border-white/5 bg-black/20 transition transition-all data-[state=on]:shadow-[0_0_12px]'>
+        <span className='group-data-[state=on]:text-foreground text-shadow-foreground text-secondary text-xs group-data-[state=on]:text-shadow-[0_0_8px]'>
+          2
+        </span>
+        <span className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'>
           {(1 + Math.random() * 4).toFixed(2)}
         </span>
       </Toggle.Root>
