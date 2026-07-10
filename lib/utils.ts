@@ -1,4 +1,5 @@
 import { type ClassValue, clsx } from 'clsx'
+import { type DateArg, format, isThisWeek, isToday, isTomorrow, isYesterday } from 'date-fns'
 import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
@@ -98,4 +99,12 @@ export function createSSEStream<T>(
       }
     },
   }
+}
+
+export function getRelativeDayLabel(date: DateArg<Date>) {
+  if (isToday(date)) return 'Today'
+  if (isTomorrow(date)) return 'Tomorrow'
+  if (isYesterday(date)) return 'Yesterday'
+  if (isThisWeek(date)) return format(date, 'EEEE') // "Monday"
+  return format(date, 'd MMM')
 }
