@@ -1,7 +1,7 @@
 {
   "src": "./",
   "language": "typescript",
-  "schema": "./relay/schema.graphql",
+  "schema": "./relay/schema.gql",
   "customScalarTypes": {
     "DateTimeISO": "string"
   },

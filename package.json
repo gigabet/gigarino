@@ -12,7 +12,7 @@
   },
   "graphql": {
     "schema": [
-      "./relay/schema.graphql",
+      "./relay/schema.gql",
       "./node_modules/relay-compiler/relay-extensions.graphql"
     ],
     "documents": "**/*.{graphql,js,ts,jsx,tsx}"

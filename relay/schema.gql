@@ -2,6 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""De-prioritise a fragment, delivering it in a follow-up payload."""
+directive @defer(if: Boolean = true, label: String) on FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+"""Stream list items incrementally instead of waiting for the full list."""
+directive @stream(if: Boolean = true, initialCount: Int = 0, label: String) on FIELD
+
 enum BetItemStatus {
   LOST
   PENDING
@@ -14,9 +20,7 @@ type BetRejection {
   code: BetRejectionCode!
   message: String!
 
-  """
-  Populated only for PRICE_CHANGED.
-  """
+  """Populated only for PRICE_CHANGED."""
   priceChanges: [PriceChange!]!
 }
 
@@ -38,15 +42,11 @@ enum BetRejectionCode {
 Geographic / regulatory grouping under a sport (e.g. "England", "Spain", "International", "ATP").
 """
 type Category implements Node {
-  """
-  ISO 3166-1 alpha-2 for country-based categories; null otherwise.
-  """
+  """ISO 3166-1 alpha-2 for country-based categories; null otherwise."""
   countryCode: String
   id: ID!
 
-  """
-  Stable slug within the sport: `england`, `spain`, `atp`, `nba`.
-  """
+  """Stable slug within the sport: `england`, `spain`, `atp`, `nba`."""
   key: String!
   name: String!
   sport: Sport!
@@ -54,44 +54,38 @@ type Category implements Node {
 }
 
 """
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.This scalar is serialized to a string in ISO 8601 format and parsed from a string in ISO 8601 format.
+"""
+scalar DateTimeISO
+
+"""
 Arbitrary-precision decimal represented as a JSON string. Never a JS number to prevent float drift.
 """
 scalar Decimal
 
 """
-A specific match / fixture that players can bet on.
+A bettable fixture. Concrete types: PrematchEvent (and LiveEvent when in-play lands).
 """
-type Event implements Node {
+interface Event implements Node {
   awayCompetitor: String!
   awayScore: Int
   category: Category!
   homeCompetitor: String!
 
-  """
-  Null until scores start reporting.
-  """
+  """Null until scores start reporting."""
   homeScore: Int
   id: ID!
-
-  """
-  Markets published for this event. Small set in v1 (prematch only) — typically 1X2, over/under 2.5, both-teams-to-score for football.
-  """
   markets: [Market!]!
   sport: Sport!
-  stage: EventStage!
 
-  """
-  UTC ISO 8601 timestamp of kick-off.
-  """
-  startTime: String!
+  """Kick-off (UTC)."""
+  startTime: DateTimeISO!
   status: EventStatus!
   tournament: Tournament!
   tradingStatus: TradingStatus!
 }
 
-"""
-Relay-spec cursor connection over events.
-"""
+"""Relay-spec cursor connection over events."""
 type EventConnection {
   edges: [EventEdge!]!
   pageInfo: PageInfo!
@@ -102,28 +96,14 @@ type EventConnection {
   totalCount: Int!
 }
 
-"""
-One edge of an `EventConnection` — a cursored event.
-"""
+"""One edge of an `EventConnection` — a cursored event."""
 type EventEdge {
-  """
-  Opaque cursor; feed it back as `after` / `before` to page from here.
-  """
+  """Opaque cursor; feed it back as `after` / `before` to page from here."""
   cursor: String!
-  node: Event!
+  node: PrematchEvent!
 }
 
-"""
-Whether the event is pre-match or in-play.
-"""
-enum EventStage {
-  LIVE
-  PREMATCH
-}
-
-"""
-Lifecycle state of a match / fixture.
-"""
+"""Lifecycle state of a match / fixture."""
 enum EventStatus {
   ABANDONED
   CANCELLED
@@ -137,6 +117,8 @@ enum EventStatus {
 A single kind of bet available on an event (1X2, over/under 2.5, BTTS, correct score, …).
 """
 type Market implements Node {
+  """UI tab this market belongs to."""
+  group: MarketGroup!
   id: ID!
 
   """
@@ -149,8 +131,19 @@ type Market implements Node {
   status: MarketStatus!
 }
 
+"""UI grouping for markets (the market-tab set: Main, Goals, Cards, …)."""
+enum MarketGroup {
+  CARDS
+  CORNERS
+  GOALS
+  MAIN
+  PENALTIES
+  PLAYERS
+  SPECIAL
+}
+
 """
-Which segment of the match the market applies to.
+Match segment a market applies to. FULL_TIME = regulation time; INCLUDING_OVERTIME covers extra time / penalties.
 """
 enum MarketPeriod {
   FIRST_HALF
@@ -158,6 +151,7 @@ enum MarketPeriod {
   FIRST_SET
   FOURTH_PERIOD
   FULL_TIME
+  INCLUDING_OVERTIME
   SECOND_HALF
   SECOND_PERIOD
   SECOND_SET
@@ -165,9 +159,7 @@ enum MarketPeriod {
   THIRD_SET
 }
 
-"""
-Whether the market is accepting bets.
-"""
+"""Whether the market is accepting bets."""
 enum MarketStatus {
   CLOSED
   OPEN
@@ -185,47 +177,33 @@ type Mutation {
 A globally-identifiable entity refetchable via `Query.node(id)`. Ids are opaque, base64-encoded, and stable across restarts.
 """
 interface Node {
-  """
-  Opaque, globally-unique identifier (base64-encoded `Type:localId`).
-  """
+  """Opaque, globally-unique identifier (base64-encoded `Type:localId`)."""
   id: ID!
 }
 
-"""
-What to do when the live price differs from the price the player saw.
-"""
+"""What to do when the live price differs from the price the player saw."""
 enum OddsChangePolicy {
   ACCEPT_ANY
   ACCEPT_HIGHER
   REJECT
 }
 
-"""
-One outcome whose price changed in this update.
-"""
+"""One outcome whose price changed in this update."""
 type OddsOutcomeChange {
-  """
-  Global ID of the affected Market node.
-  """
+  """Global ID of the affected Market node."""
   marketId: ID!
   marketKind: String!
 
-  """
-  Global ID of the affected Outcome node.
-  """
+  """Global ID of the affected Outcome node."""
   outcomeId: ID!
   outcomeKey: String!
   outcomeName: String!
   period: MarketPeriod!
 
-  """
-  Previous odds; null when the outcome first appeared.
-  """
+  """Previous odds; null when the outcome first appeared."""
   previousPrice: Decimal
 
-  """
-  New decimal odds.
-  """
+  """New decimal odds."""
   price: Decimal!
 }
 
@@ -235,20 +213,14 @@ A batch of price changes on one event, pushed when the provider moves its odds.
 type OddsUpdate {
   changes: [OddsOutcomeChange!]!
 
-  """
-  Global ID of the affected Event node.
-  """
+  """Global ID of the affected Event node."""
   eventId: ID!
 
-  """
-  UTC ISO 8601 of the detecting poll cycle.
-  """
-  updatedAt: String!
+  """Instant the detecting poll cycle ran."""
+  updatedAt: DateTimeISO!
 }
 
-"""
-One selectable option within a market with its current price.
-"""
+"""One selectable option within a market with its current price."""
 type Outcome implements Node {
   id: ID!
 
@@ -258,16 +230,12 @@ type Outcome implements Node {
   key: String!
   name: String!
 
-  """
-  Decimal odds (e.g. "1.850").
-  """
+  """Decimal odds (e.g. "1.850")."""
   price: Decimal!
   status: OutcomeStatus!
 }
 
-"""
-Whether a specific outcome is available for betting.
-"""
+"""Whether a specific outcome is available for betting."""
 enum OutcomeStatus {
   OPEN
   REMOVED
@@ -278,24 +246,16 @@ enum OutcomeStatus {
 Metadata about a connection page, per the Relay Cursor Connections spec.
 """
 type PageInfo {
-  """
-  Cursor of the last edge in the current page.
-  """
+  """Cursor of the last edge in the current page."""
   endCursor: String
 
-  """
-  True if there are more edges after `endCursor`.
-  """
+  """True if there are more edges after `endCursor`."""
   hasNextPage: Boolean!
 
-  """
-  True if there are more edges before `startCursor`.
-  """
+  """True if there are more edges before `startCursor`."""
   hasPreviousPage: Boolean!
 
-  """
-  Cursor of the first edge in the current page.
-  """
+  """Cursor of the first edge in the current page."""
   startCursor: String
 }
 
@@ -310,9 +270,7 @@ input PlaceBetInput {
 }
 
 input PlaceBetItemInput {
-  """
-  The price the player saw when adding this selection to the betslip.
-  """
+  """The price the player saw when adding this selection to the betslip."""
   expectedPrice: String!
   outcomeId: ID!
 }
@@ -322,104 +280,105 @@ type PlaceBetPayload {
   ticket: Ticket
 }
 
-"""
-Returned on PRICE_CHANGED rejection so the client can re-quote.
-"""
+"""A fixture open for prematch betting."""
+type PrematchEvent implements Event & Node {
+  awayCompetitor: String!
+  awayScore: Int
+  category: Category!
+  homeCompetitor: String!
+
+  """Null until scores start reporting."""
+  homeScore: Int
+  id: ID!
+
+  """
+  Markets published for this event — typically match winner + totals (+ BTTS on some providers) in v1.
+  """
+  markets: [Market!]!
+  sport: Sport!
+
+  """Kick-off (UTC)."""
+  startTime: DateTimeISO!
+  status: EventStatus!
+  tournament: Tournament!
+  tradingStatus: TradingStatus!
+}
+
+"""Returned on PRICE_CHANGED rejection so the client can re-quote."""
 type PriceChange {
   currentPrice: Decimal!
   expectedPrice: Decimal!
 
-  """
-  The outcome whose price moved (as submitted).
-  """
+  """The outcome whose price moved (as submitted)."""
   outcomeId: ID!
 }
 
 type Query {
-  """
-  Fetch a single event by its global `id`.
-  """
-  event(id: ID!): Event
+  """Fetch a single event by its global `id`."""
+  event(id: ID!): PrematchEvent
 
-  """
-  Cursor-paginated event feed with optional filters.
-  """
+  """Cursor-paginated event feed with optional filters."""
   events(
     after: String
     before: String
 
-    """
-    Filter by category `key` (e.g. `england`).
-    """
+    """Filter by category `key` (e.g. `england`)."""
     category: String
 
-    """
-    Take up to N edges after `after` (default 20, max 100).
-    """
+    """Take up to N edges after `after` (default 20, max 100)."""
     first: Int
     last: Int
 
-    """
-    Filter by sport `key` (e.g. `football`).
-    """
+    """Filter by sport `key` (e.g. `football`)."""
     sport: String
 
-    """
-    Only events starting strictly after this UTC ISO 8601 timestamp.
-    """
-    startAfter: String
-    startBefore: String
+    """Only events starting strictly after this instant."""
+    startAfter: DateTimeISO
+    startBefore: DateTimeISO
 
     """
-    Filter by tournament `key` (e.g. `premier-league`).
+    Filter by tournament `key`s — multi-select (sidebar allows several at once).
     """
-    tournament: String
+    tournaments: [String!]
   ): EventConnection!
 
   """
   Batched re-fetch: one round trip for many event ids. Preserves input order, drops missing rows.
   """
-  eventsByIds(ids: [ID!]!): [Event!]!
+  eventsByIds(ids: [ID!]!): [PrematchEvent!]!
 
-  """
-  The caller's tickets, newest first (forward-only pagination).
-  """
+  """The caller's tickets, newest first (forward-only pagination)."""
   myTickets(after: String, first: Int): TicketConnection!
 
   """
-  Relay-required global lookup. Resolves an opaque global ID to the concrete node it identifies, or null when the record no longer exists.
+  Relay-required global lookup. Resolves an opaque global ID to the concrete node, or null when the record no longer exists.
   """
   node(id: ID!): Node
 
   """
-  Fetch one sport by stable `key` (`football`) or by global `id` (`Sport:football`, base64-encoded). Provide one.
+  Fetch one sport by stable `key` (`football`) or by global `id`. Provide one.
   """
   sport(id: ID, key: String): Sport
 
-  """
-  Every sport the current data provider covers.
-  """
+  """Every sport the current data provider covers."""
   sports: [Sport!]!
 
-  """
-  One of the caller's tickets.
-  """
+  """One of the caller's tickets."""
   ticket(id: ID!): Ticket
+
+  """
+  Tournaments ranked by upcoming-event volume — powers the prematch overview. Cached ~5 minutes.
+  """
+  topTournaments(first: Int, sport: String!): [Tournament!]!
 }
 
-"""
-A top-level sport (football, tennis, basketball, ice hockey, …).
-"""
+"""A top-level sport (football, tennis, basketball, ice hockey, …)."""
 type Sport implements Node {
-  """
-  Categories (countries / regions) under this sport.
-  """
+  """Categories (countries / regions) under this sport."""
   categories: [Category!]!
   id: ID!
 
-  """
-  Stable slug: `football`, `tennis`, `basketball`, `ice-hockey`.
-  """
+  """Stable slug: `football`, `tennis`, `basketball`, `ice-hockey`."""
   key: String!
   name: String!
 }
@@ -431,36 +390,24 @@ type Subscription {
   oddsUpdated(eventIds: [ID!]!): OddsUpdate!
 }
 
-"""
-A player's placed bet.
-"""
+"""A player's placed bet."""
 type Ticket {
-  acceptedAt: String
+  acceptedAt: DateTimeISO
   betType: TicketType!
+  createdAt: DateTimeISO!
 
-  """
-  UTC ISO 8601.
-  """
-  createdAt: String!
-
-  """
-  ISO 4217.
-  """
+  """ISO 4217."""
   currency: String!
 
-  """
-  Combined odds across all items.
-  """
+  """Combined odds across all items."""
   effectiveOdds: Decimal!
   id: ID!
   items: [TicketItem!]!
 
-  """
-  stake × effectiveOdds if every item wins.
-  """
+  """stake × effectiveOdds if every item wins."""
   potentialPayout: Decimal!
   rejectReason: String
-  settledAt: String
+  settledAt: DateTimeISO
   stake: Decimal!
   status: TicketStatus!
 }
@@ -476,36 +423,24 @@ type TicketEdge {
   node: Ticket!
 }
 
-"""
-One selection on a ticket, frozen at placement.
-"""
+"""One selection on a ticket, frozen at placement."""
 type TicketItem {
-  """
-  Global ID of the Event bet on.
-  """
+  """Global ID of the Event bet on."""
   eventId: ID!
 
-  """
-  Snapshot: "Home vs Away" style display name.
-  """
+  """Snapshot: "Home vs Away" style display name."""
   eventName: String!
 
-  """
-  Snapshot of kick-off time (UTC ISO 8601).
-  """
-  eventStartTime: String!
+  """Snapshot of kick-off time."""
+  eventStartTime: DateTimeISO!
   id: ID!
   marketName: String!
 
-  """
-  Global ID of the Outcome bet on.
-  """
+  """Global ID of the Outcome bet on."""
   outcomeId: ID!
   outcomeName: String!
 
-  """
-  Odds this item settles at.
-  """
+  """Odds this item settles at."""
   priceAtAcceptance: Decimal!
   status: BetItemStatus!
 }
@@ -527,45 +462,33 @@ enum TicketType {
   SYSTEM
 }
 
-"""
-A competition (Premier League, ATP Wimbledon, NBA Regular Season, …).
-"""
+"""A competition (Premier League, ATP Wimbledon, NBA Regular Season, …)."""
 type Tournament implements Node {
   category: Category!
 
-  """
-  Cursor-paginated feed of events in this tournament.
-  """
+  """Cursor-paginated feed of events in this tournament."""
   events(
     after: String
     before: String
 
-    """
-    Filter by category `key` (e.g. `england`).
-    """
+    """Filter by category `key` (e.g. `england`)."""
     category: String
 
-    """
-    Take up to N edges after `after` (default 20, max 100).
-    """
+    """Take up to N edges after `after` (default 20, max 100)."""
     first: Int
     last: Int
 
-    """
-    Filter by sport `key` (e.g. `football`).
-    """
+    """Filter by sport `key` (e.g. `football`)."""
     sport: String
 
-    """
-    Only events starting strictly after this UTC ISO 8601 timestamp.
-    """
-    startAfter: String
-    startBefore: String
+    """Only events starting strictly after this instant."""
+    startAfter: DateTimeISO
+    startBefore: DateTimeISO
 
     """
-    Filter by tournament `key` (e.g. `premier-league`).
+    Filter by tournament `key`s — multi-select (sidebar allows several at once).
     """
-    tournament: String
+    tournaments: [String!]
   ): EventConnection!
   id: ID!
 
@@ -577,9 +500,7 @@ type Tournament implements Node {
   sport: Sport!
 }
 
-"""
-Whether bets can be placed against this event right now.
-"""
+"""Whether bets can be placed against this event right now."""
 enum TradingStatus {
   CLOSED
   OPEN
