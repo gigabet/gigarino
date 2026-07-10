@@ -19,7 +19,7 @@ import {
 // )
 
 // const typeDefs = mergeTypeDefs([schemaSource, mocksSource])
-const typeDefs = readFileSync(new URL('@/relay/schema.graphql', import.meta.url), 'utf-8')
+const typeDefs = readFileSync(new URL('@/relay/schema.gql', import.meta.url), 'utf-8')
 
 // --- Cursor pagination -----------------------------------------------------
 // Cursor is just the base64-encoded array index. Fine for a mock; swap for a
