@@ -41,7 +41,75 @@ enum BetRejectionCode {
   PRICE_CHANGED
   PROVIDER_CURRENCY
   STAKE_LIMIT
+  SYSTEM_NOT_SUPPORTED
   WALLET_UNAVAILABLE
+}
+
+enum BetslipItemAvailability {
+  AVAILABLE
+  CUTOFF_PASSED
+  DUPLICATE_EVENT
+  EVENT_NOT_BETTABLE
+  NOT_FOUND
+  SUSPENDED
+}
+
+input BetslipItemInput {
+  outcomeId: ID!
+}
+
+type BetslipQuote {
+  betType: TicketType!
+
+  """
+  Why the betslip is not placeable (empty when placeable).
+  """
+  blockers: [BetRejectionCode!]!
+
+  """
+  Combined odds across available selections.
+  """
+  effectiveOdds: Decimal!
+  items: [BetslipQuoteItem!]!
+
+  """
+  True when placeBet with these selections would pass validation right now.
+  """
+  placeable: Boolean!
+
+  """
+  stake × effectiveOdds if every selection wins.
+  """
+  potentialPayout: Decimal!
+  quotedAt: DateTimeISO!
+  stake: Decimal!
+}
+
+input BetslipQuoteInput {
+  items: [BetslipItemInput!]!
+  stake: String!
+}
+
+type BetslipQuoteItem {
+  availability: BetslipItemAvailability!
+
+  """
+  Current authoritative price; null when unavailable.
+  """
+  currentPrice: Decimal
+
+  """
+  Global Event ID; null when NOT_FOUND.
+  """
+  eventId: ID
+  eventName: String
+  marketName: String
+
+  """
+  The outcome, as submitted.
+  """
+  outcomeId: ID!
+  outcomeName: String
 }
 
 """
@@ -387,6 +455,11 @@ type PriceChange {
 
 type Query {
   """
+  Authoritative betslip math for the given selections — current prices, combined odds, payout, and whether placeBet would pass right now.
+  """
+  betslipQuote(input: BetslipQuoteInput!): BetslipQuote!
+
+  """
   Fetch a single event by its global `id`.
   """
   event(id: ID!): PrematchEvent
@@ -457,9 +530,9 @@ type Query {
   ticket(id: ID!): Ticket
 
   """
-  Tournaments ranked by upcoming-event volume — powers the prematch overview. Cached ~5 minutes.
+  Top competitions. With `sport`: ranked by upcoming-event volume within that sport. Without: the cross-sport overview rail — editorially curated, falling back to interleaved per-sport rankings when nothing is curated. Cached ~5 minutes.
   """
-  topTournaments(first: Int, sport: String!): [Tournament!]!
+  topTournaments(first: Int, sport: String): [Tournament!]!
 }
 
 """
@@ -480,6 +553,11 @@ type Sport implements Node {
 }
 
 type Subscription {
+  """
+  Live betslip: emits an authoritative quote immediately, then again whenever any selected price moves. Resubscribe with new selections when the betslip changes.
+  """
+  betslipUpdated(input: BetslipQuoteInput!): BetslipQuote!
+
   """
   Pushes price changes for the given events. Subscribe with the events visible in the viewport + those in the betslip.
   """
