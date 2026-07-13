@@ -11,15 +11,16 @@ export default function PrematchEvent() {
   return (
     <div className='flex h-27 flex-nowrap items-center gap-4 rounded-2xl border-white/5 bg-black/20 px-5 py-3'>
       <time
+        suppressHydrationWarning
         dateTime={date}
-        className='text-secondary min-w-16 truncate text-center text-xs leading-relaxed'
+        className='text-secondary w-16 truncate text-center text-xs leading-relaxed'
       >
         {getRelativeDayLabel(date)}
         <br />
         {format(date, 'HH:mm')}
       </time>
       <Separator orientation='vertical' />
-      <div className='ml-1 flex min-w-40 flex-col gap-2 overflow-hidden text-sm'>
+      <div className='ml-1 flex w-60 flex-col gap-2 overflow-hidden text-sm'>
         <div className='flex items-center gap-2'>
           <div className='bg-dark-300 text-muted-foreground flex size-6 min-w-6 items-center justify-center rounded-full'>
             <ImageIcon className='size-3' />
@@ -60,7 +61,10 @@ function Market({ className = '' }: { className?: string }) {
         <span className='group-data-[state=on]:text-foreground text-shadow-foreground text-secondary text-xs group-data-[state=on]:text-shadow-[0_0_8px]'>
           1
         </span>
-        <span className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'>
+        <span
+          className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'
+          suppressHydrationWarning
+        >
           {(1 + Math.random() * 4).toFixed(2)}
         </span>
       </Toggle.Root>
@@ -69,7 +73,10 @@ function Market({ className = '' }: { className?: string }) {
         <span className='group-data-[state=on]:text-foreground text-shadow-foreground text-secondary text-xs group-data-[state=on]:text-shadow-[0_0_8px]'>
           X
         </span>
-        <span className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'>
+        <span
+          className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'
+          suppressHydrationWarning
+        >
           {(1 + Math.random() * 4).toFixed(2)}
         </span>
       </Toggle.Root>
@@ -78,7 +85,10 @@ function Market({ className = '' }: { className?: string }) {
         <span className='group-data-[state=on]:text-foreground text-shadow-foreground text-secondary text-xs group-data-[state=on]:text-shadow-[0_0_8px]'>
           2
         </span>
-        <span className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'>
+        <span
+          className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'
+          suppressHydrationWarning
+        >
           {(1 + Math.random() * 4).toFixed(2)}
         </span>
       </Toggle.Root>

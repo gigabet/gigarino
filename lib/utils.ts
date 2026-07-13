@@ -105,6 +105,6 @@ export function getRelativeDayLabel(date: DateArg<Date>) {
   if (isToday(date)) return 'Today'
   if (isTomorrow(date)) return 'Tomorrow'
   if (isYesterday(date)) return 'Yesterday'
-  if (isThisWeek(date)) return format(date, 'EEEE') // "Monday"
+  if (isThisWeek(date, { weekStartsOn: 1 })) return format(date, 'EEE')
   return format(date, 'd MMM')
 }

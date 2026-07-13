@@ -6,6 +6,7 @@ import Carousel from '@/app/sport/carousel'
 import ShortcutRow from '@/app/sport/shortcut-row'
 import Sidebar from '@/app/sport/sidebar'
 import Betslip from '@/components/betslip'
+import { cn } from '@/lib/utils'
 
 // import { getServerEnvironment } from '@/relay/environment.server'
 
@@ -30,7 +31,12 @@ export default async function SportPage(props: PageProps) {
   // )
 
   return (
-    <main className='z-1 mx-auto grid min-h-screen w-full max-w-480 grid-cols-[16rem_minmax(auto,1fr)_18.75rem] gap-8 px-4 py-6 pb-24 sm:px-6 lg:px-8'>
+    <main
+      className={cn(
+        'z-1 mx-auto grid min-h-screen w-full max-w-480 gap-8 px-4 py-6 pb-24 sm:px-6 lg:px-8',
+        'grid-cols-1 lg:grid-cols-[4rem_minmax(auto,1fr)] xl:grid-cols-[16rem_minmax(auto,1fr)] 2xl:grid-cols-[16rem_minmax(auto,1fr)_18.75rem]'
+      )}
+    >
       {/* <PromotionalBanner /> */}
       <Sidebar />
       <section className='flex min-w-0 flex-col gap-4'>
@@ -41,7 +47,9 @@ export default async function SportPage(props: PageProps) {
           <PrematchList queryRef={queryRef} />
         </Suspense> */}
       </section>
-      <Betslip />
+      <div className='hidden xl:flex'>
+        <Betslip />
+      </div>
     </main>
   )
 }
