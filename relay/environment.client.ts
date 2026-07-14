@@ -13,7 +13,7 @@ import {
 } from 'relay-runtime'
 
 const subscriptionsClient = createClient({
-  url: `${process.env.NEXT_PUBLIC_API_URL}/api/graphql/stream`,
+  url: `${process.env.NEXT_PUBLIC_GRAPHQL_URL}/graphql`,
   singleConnection: true,
 })
 

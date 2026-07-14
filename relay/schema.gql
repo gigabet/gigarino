@@ -175,9 +175,14 @@ type EventConnection {
   pageInfo: PageInfo!
 
   """
-  Total events matching the query, ignoring pagination. Useful for UI counters; skip via `first: 0` if unwanted.
+  Events matching the query within the server-side scan window (see SPORT_EVENTS_SCAN_LIMIT, default 1000) — NOT the provider-wide total. Feeds like BetsAPI carry tens of thousands of fixtures; nobody pages through them, they filter. Use this for "showing X of Y" within the browsable window, not as a catalogue size.
   """
   totalCount: Int!
+
+  """
+  True when the query matched more events than the scan window can page through — the UI should prompt a narrower filter (sport / tournament / date) rather than more scrolling.
+  """
+  truncated: Boolean!
 }
 
 """
@@ -480,6 +485,10 @@ type Query {
     Take up to N edges after `after` (default 20, max 100).
     """
     first: Int
+
+    """
+    Take up to N edges before `before` (max 100).
+    """
     last: Int
 
     """
@@ -494,7 +503,7 @@ type Query {
     startBefore: DateTimeISO
 
     """
-    Filter by tournament `key`s — multi-select (sidebar allows several at once).
+    Filter by tournament `key`s — multi-select (the sidebar allows several at once).
     """
     tournaments: [String!]
   ): EventConnection!
@@ -678,6 +687,10 @@ type Tournament implements Node {
     Take up to N edges after `after` (default 20, max 100).
     """
     first: Int
+
+    """
+    Take up to N edges before `before` (max 100).
+    """
     last: Int
 
     """
@@ -692,7 +705,7 @@ type Tournament implements Node {
     startBefore: DateTimeISO
 
     """
-    Filter by tournament `key`s — multi-select (sidebar allows several at once).
+    Filter by tournament `key`s — multi-select (the sidebar allows several at once).
     """
     tournaments: [String!]
   ): EventConnection!

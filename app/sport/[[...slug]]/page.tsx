@@ -1,14 +1,13 @@
-// import { Suspense } from 'react'
-// import { graphql } from 'relay-runtime'
-// import type { PrematchQuery } from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
+import { Suspense } from 'react'
+import { graphql } from 'relay-runtime'
+import type { PrematchQuery } from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
 import PrematchList from '@/app/sport/[[...slug]]/prematch-list'
 import Carousel from '@/app/sport/carousel'
 import ShortcutRow from '@/app/sport/shortcut-row'
 import Sidebar from '@/app/sport/sidebar'
 import Betslip from '@/components/betslip'
 import { cn } from '@/lib/utils'
-
-// import { getServerEnvironment } from '@/relay/environment.server'
+import { getServerEnvironment } from '@/relay/environment.server'
 
 interface PageProps {
   params: {
@@ -20,15 +19,25 @@ interface PageProps {
 export default async function SportPage(props: PageProps) {
   const [_filter = 'all', _sport = null, _league = null] = props.params.slug ?? []
 
-  // const serverEnv = getServerEnvironment()
-  // const queryRef = serverEnv.serverPreloadQuery<PrematchQuery>(
-  //   graphql`
-  //     query PrematchQuery {
-  //       ...PrematchList
-  //     }
-  //   `,
-  //   {}
-  // )
+  const serverEnv = getServerEnvironment()
+  const queryRef = serverEnv.serverPreloadQuery<PrematchQuery>(
+    graphql`
+      query PrematchQuery {
+        ...PrematchList
+      }
+    `,
+    {}
+  )
+
+  // const [queryRef, loadQuery] = useQueryLoader<PrematchQuery>(graphql`
+  //   query PrematchQuery {
+  //     ...PrematchList
+  //   }
+  // `)
+
+  // useEffect(() => {
+  //   loadQuery({})
+  // }, [loadQuery])
 
   return (
     <main
@@ -42,10 +51,9 @@ export default async function SportPage(props: PageProps) {
       <section className='flex min-w-0 flex-col gap-4'>
         <Carousel />
         <ShortcutRow />
-        <PrematchList />
-        {/* <Suspense fallback={'Loading...'}>
+        <Suspense fallback={'Loading...'}>
           <PrematchList queryRef={queryRef} />
-        </Suspense> */}
+        </Suspense>
       </section>
       <div className='hidden xl:flex'>
         <Betslip />
