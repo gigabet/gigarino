@@ -2,11 +2,10 @@
 
 import { ChevronDown } from 'lucide-react'
 import { Suspense } from 'react'
-import { GiSoccerBall } from 'react-icons/gi'
-import { PiCaretUpDown } from 'react-icons/pi'
 import { graphql, useFragment } from 'react-relay'
 import type { Tournament$key } from '@/app/sport/[[...slug]]/__generated__/Tournament.graphql'
 import type { TournamentEventList$key } from '@/app/sport/[[...slug]]/__generated__/TournamentEventList.graphql'
+import { ListViewMarketDropdowns } from '@/app/sport/[[...slug]]/list-view-markets'
 import PrematchEvent, { PrematchEventSkeleton } from '@/app/sport/[[...slug]]/prematch-event'
 import { SportIcon } from '@/components/sport-icon'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -38,24 +37,7 @@ export default function Tournament(props: { queryRef: Tournament$key }) {
           </span>
           <span className='truncate'>{data.name}</span>
         </h2>
-        <div className='text-foreground @container/markets ml-auto flex grow items-center justify-end gap-4'>
-          <div className='flex max-w-60 min-w-50 flex-1 items-center justify-between rounded-lg border border-white/5 bg-black/20 px-3 py-2 text-xs tracking-wide capitalize transition transition-all'>
-            <span>Match Winner</span>
-            <ChevronDown className='size-4' />
-          </div>
-          <div className='hidden max-w-60 min-w-50 flex-1 items-center justify-between rounded-lg border border-white/5 bg-black/20 px-3 py-2 text-xs tracking-wide capitalize transition transition-all @md/markets:flex'>
-            <span>double chance</span>
-            <ChevronDown className='size-4' />
-          </div>
-          <div className='hidden max-w-60 min-w-50 flex-1 items-center justify-between rounded-lg border border-white/5 bg-black/20 px-3 py-2 text-xs tracking-wide capitalize transition transition-all @2xl/markets:flex'>
-            <span>next goal</span>
-            <ChevronDown className='size-4' />
-          </div>
-          <div className='justify-betweenr hidden max-w-60 min-w-50 flex-1 items-center rounded-lg border border-white/5 bg-black/20 px-3 py-2 text-xs tracking-wide capitalize transition transition-all @4xl/markets:flex'>
-            <span>over/under</span>
-            <ChevronDown className='size-4' />
-          </div>
-        </div>
+        <ListViewMarketDropdowns />
         <div className='w-29' />
       </div>
       <Suspense fallback={<EventListSkeleton />}>

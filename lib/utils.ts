@@ -108,3 +108,9 @@ export function getRelativeDayLabel(date: DateArg<Date>) {
   if (isThisWeek(date, { weekStartsOn: 1 })) return format(date, 'EEE')
   return format(date, 'd MMM')
 }
+
+export function swap<T>(arr: T[], i: number, j: number): T[] {
+  const copy = [...arr]
+  ;[copy[i], copy[j]] = [copy[j], copy[i]]
+  return copy
+}

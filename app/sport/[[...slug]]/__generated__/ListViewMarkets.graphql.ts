@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2cd595abda00ea3d6e6b672073e9d335>>
+ * @generated SignedSource<<6621355626e770a125dc93516415172c>>
  * @lightSyntaxTransform
  */
 
@@ -12,6 +12,7 @@ import { FragmentRefs } from "relay-runtime";
 export type ListViewMarkets$data = {
   readonly markets: ReadonlyArray<{
     readonly id: string;
+    readonly kind: string;
     readonly " $fragmentSpreads": FragmentRefs<"PrematchMarket">;
   }>;
   readonly " $fragmentType": "ListViewMarkets";
@@ -43,6 +44,13 @@ const node: ReaderFragment = {
           "storageKey": null
         },
         {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "kind",
+          "storageKey": null
+        },
+        {
           "args": null,
           "kind": "FragmentSpread",
           "name": "PrematchMarket"
@@ -55,6 +63,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "89eea40297ae773fbd8f04aac0ad20d0";
+(node as any).hash = "f8a773da0316f08bb21823b7951ba83a";
 
 export default node;
