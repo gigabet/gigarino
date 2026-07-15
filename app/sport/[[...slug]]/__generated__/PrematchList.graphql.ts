@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f7fe420c6160bffc6dd1e66ac9a20c79>>
+ * @generated SignedSource<<5846846fa782a2f6c222e918921c5f06>>
  * @lightSyntaxTransform
  */
 
@@ -21,10 +21,18 @@ export type PrematchList$key = {
   readonly " $fragmentSpreads": FragmentRefs<"PrematchList">;
 };
 
+import PrematchListRefetch_graphql from './PrematchListRefetch.graphql';
+
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
-  "metadata": null,
+  "metadata": {
+    "refetch": {
+      "connection": null,
+      "fragmentPathInResult": [],
+      "operation": PrematchListRefetch_graphql
+    }
+  },
   "name": "PrematchList",
   "selections": [
     {
@@ -37,11 +45,6 @@ const node: ReaderFragment = {
               "kind": "Literal",
               "name": "first",
               "value": 4
-            },
-            {
-              "kind": "Literal",
-              "name": "sport",
-              "value": "football"
             }
           ],
           "concreteType": "Tournament",
@@ -62,7 +65,7 @@ const node: ReaderFragment = {
               "name": "Tournament"
             }
           ],
-          "storageKey": "topTournaments(first:4,sport:\"football\")"
+          "storageKey": "topTournaments(first:4)"
         }
       ]
     }
@@ -71,6 +74,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "cac9e2e26555e09553dd3e89b98c2c59";
+(node as any).hash = "69037aef10da82543cefe65eb351084f";
 
 export default node;

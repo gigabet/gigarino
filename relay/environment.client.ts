@@ -13,7 +13,7 @@ import {
 } from 'relay-runtime'
 
 const subscriptionsClient = createClient({
-  url: `${process.env.NEXT_PUBLIC_GRAPHQL_URL}/graphql`,
+  url: `${process.env.NEXT_PUBLIC_GRAPHQL_URL}/graphql/stream`,
   singleConnection: true,
 })
 
@@ -97,7 +97,7 @@ export function fetchOrSubscribe(operation: RequestParameters, variables: Variab
       },
       {
         next: (result: SpecMultipartEnvelope) => {
-          console.log(result)
+          // console.log(result)
           const payloads = normalizePayloads(result)
 
           if (payloads.length === 0) {

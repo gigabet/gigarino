@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b06e964accabb03064466a12a52e7305>>
+ * @generated SignedSource<<bb49794b60b55a7b813cbdf490c5c062>>
  * @lightSyntaxTransform
  */
 
@@ -14,6 +14,7 @@ export type TournamentEventList$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
+        readonly " $fragmentSpreads": FragmentRefs<"PrematchEvent">;
       };
     }>;
   };
@@ -45,38 +46,38 @@ const node: ReaderFragment = {
       "plural": false,
       "selections": [
         {
-          "kind": "Stream",
+          "alias": null,
+          "args": null,
+          "concreteType": "EventEdge",
+          "kind": "LinkedField",
+          "name": "edges",
+          "plural": true,
           "selections": [
             {
               "alias": null,
               "args": null,
-              "concreteType": "EventEdge",
+              "concreteType": "PrematchEvent",
               "kind": "LinkedField",
-              "name": "edges",
-              "plural": true,
+              "name": "node",
+              "plural": false,
               "selections": [
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "PrematchEvent",
-                  "kind": "LinkedField",
-                  "name": "node",
-                  "plural": false,
-                  "selections": [
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "id",
-                      "storageKey": null
-                    }
-                  ],
+                  "kind": "ScalarField",
+                  "name": "id",
                   "storageKey": null
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "PrematchEvent"
                 }
               ],
               "storageKey": null
             }
-          ]
+          ],
+          "storageKey": null
         }
       ],
       "storageKey": "events(first:4)"
@@ -86,6 +87,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "03d0bb8465d7dfe9b7e13921991b6e8a";
+(node as any).hash = "1822846eacdba7cda029408134116470";
 
 export default node;

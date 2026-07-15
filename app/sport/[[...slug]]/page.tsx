@@ -1,11 +1,12 @@
 import { Suspense } from 'react'
 import { graphql } from 'relay-runtime'
 import type { PrematchQuery } from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
-import PrematchList from '@/app/sport/[[...slug]]/prematch-list'
+import PrematchList, { PrematchListSkeleton } from '@/app/sport/[[...slug]]/prematch-list'
 import Carousel from '@/app/sport/carousel'
 import ShortcutRow from '@/app/sport/shortcut-row'
 import Sidebar from '@/app/sport/sidebar'
 import Betslip from '@/components/betslip'
+import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import { getServerEnvironment } from '@/relay/environment.server'
 
@@ -46,14 +47,13 @@ export default async function SportPage(props: PageProps) {
         'grid-cols-1 lg:grid-cols-[4rem_minmax(auto,1fr)] xl:grid-cols-[16rem_minmax(auto,1fr)] 2xl:grid-cols-[16rem_minmax(auto,1fr)_18.75rem]'
       )}
     >
-      {/* <PromotionalBanner /> */}
       <Sidebar />
       <section className='flex min-w-0 flex-col gap-4'>
         <Carousel />
         <ShortcutRow />
-        <Suspense fallback={'Loading...'}>
-          <PrematchList queryRef={queryRef} />
-        </Suspense>
+        {/* <Suspense fallback={<PrematchListSkeleton />}> */}
+        <PrematchList queryRef={queryRef} />
+        {/* </Suspense> */}
       </section>
       <div className='hidden xl:flex'>
         <Betslip />
