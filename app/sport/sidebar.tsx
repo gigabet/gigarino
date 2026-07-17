@@ -131,7 +131,7 @@ function Sport(props: { sport: SidebarSport$key }) {
       </Accordion.Trigger>
       <Accordion.Content
         data-slot='accordion-content'
-        className='data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden py-3 text-sm'
+        className='data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden py-0.5 text-sm'
       >
         <Suspense fallback={<CategorySkeleton />}>
           {queryRef && <CountryList queryRef={queryRef} />}
@@ -198,7 +198,7 @@ function CountryItem(props: { country: SidebarCountryItem$key }) {
   return (
     <Accordion.Item value={data.key}>
       <Accordion.Trigger
-        className='flex w-full items-center gap-2.5 px-4 py-2 text-sm hover:bg-white/3 data-[state=open]:bg-white/3'
+        className='flex w-full items-center gap-2.5 px-4 py-2 text-sm transition-all hover:bg-white/3 data-[state=open]:bg-white/3 data-[state=open]:pt-4'
         onMouseEnter={() => (timer.current = setTimeout(warm, HOVER_PREFETCH_DELAY_MS))}
         onMouseLeave={() => clearTimeout(timer.current)}
         onMouseDown={warm}
@@ -214,7 +214,7 @@ function CountryItem(props: { country: SidebarCountryItem$key }) {
       </Accordion.Trigger>
       <Accordion.Content
         data-slot='accordion-content'
-        className='data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden bg-white/3 px-4 pt-2 pb-4 text-sm'
+        className='data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden bg-white/3 px-4 pt-2 pb-3 text-sm'
       >
         <Suspense fallback={<TournamentListSkeleton />}>
           <Tournaments category={data} />
