@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9648ca00e1a0046c5298bc15e06e676d>>
+ * @generated SignedSource<<16677917a709a9e85fab59712bb26aa1>>
  * @lightSyntaxTransform
  */
 
@@ -14,6 +14,9 @@ export type SidebarTournaments$data = {
   readonly tournaments?: ReadonlyArray<{
     readonly key: string;
     readonly name: string;
+    readonly sport: {
+      readonly key: string;
+    };
   }>;
   readonly " $fragmentType": "SidebarTournaments";
 };
@@ -24,7 +27,15 @@ export type SidebarTournaments$key = {
 
 import SidebarTournamentsLoad_graphql from './SidebarTournamentsLoad.graphql';
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "key",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [
     {
       "defaultValue": false,
@@ -61,18 +72,24 @@ const node: ReaderFragment = {
           "name": "tournaments",
           "plural": true,
           "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "key",
-              "storageKey": null
-            },
+            (v0/*:: as any*/),
             {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
               "name": "name",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "Sport",
+              "kind": "LinkedField",
+              "name": "sport",
+              "plural": false,
+              "selections": [
+                (v0/*:: as any*/)
+              ],
               "storageKey": null
             }
           ],
@@ -91,7 +108,8 @@ const node: ReaderFragment = {
   "type": "Category",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "c30e31a1bf1763c6e398ecd77733afd7";
+(node as any).hash = "8568e75163530815a784f64680044b86";
 
 export default node;

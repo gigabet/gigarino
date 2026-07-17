@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<46902ace5ae260b5872604910ef249b0>>
+ * @generated SignedSource<<4beb1973aff0d1163c34101e2c3c848f>>
  * @lightSyntaxTransform
  */
 
@@ -46,6 +46,13 @@ v3 = {
   "args": null,
   "kind": "ScalarField",
   "name": "id",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "key",
   "storageKey": null
 };
 return {
@@ -125,18 +132,25 @@ return {
                     "name": "tournaments",
                     "plural": true,
                     "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "key",
-                        "storageKey": null
-                      },
+                      (v4/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
                         "name": "name",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Sport",
+                        "kind": "LinkedField",
+                        "name": "sport",
+                        "plural": false,
+                        "selections": [
+                          (v4/*:: as any*/),
+                          (v3/*:: as any*/)
+                        ],
                         "storageKey": null
                       },
                       (v3/*:: as any*/)
@@ -155,16 +169,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "3f19078070b2f76f0a367785ac1f6217",
+    "cacheID": "3f5b2e7784c8105967196dc29bf3b621",
     "id": null,
     "metadata": {},
     "name": "SidebarTournamentsLoad",
     "operationKind": "query",
-    "text": "query SidebarTournamentsLoad(\n  $open: Boolean = false\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...SidebarTournaments_3Qbc3L\n    id\n  }\n}\n\nfragment SidebarTournaments_3Qbc3L on Category {\n  tournaments @include(if: $open) {\n    key\n    name\n    id\n  }\n  id\n}\n"
+    "text": "query SidebarTournamentsLoad(\n  $open: Boolean = false\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...SidebarTournaments_3Qbc3L\n    id\n  }\n}\n\nfragment SidebarTournaments_3Qbc3L on Category {\n  tournaments @include(if: $open) {\n    key\n    name\n    sport {\n      key\n      id\n    }\n    id\n  }\n  id\n}\n"
   }
 };
 })();
 
-(node as any).hash = "c30e31a1bf1763c6e398ecd77733afd7";
+(node as any).hash = "8568e75163530815a784f64680044b86";
 
 export default node;

@@ -38,6 +38,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Field, FieldGroup } from '@/components/ui/field'
 import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useSelectedTournaments } from '@/context/hooks'
 
 const sportOrder = ['football', 'tennis', 'basketball', 'ice-hockey']
 
@@ -233,6 +234,9 @@ function Tournaments(props: { category: SidebarTournaments$key }) {
         tournaments @include(if: $open) {
           key
           name
+          sport {
+            key
+          }
         }
       }
     `,
@@ -246,6 +250,7 @@ function Tournaments(props: { category: SidebarTournaments$key }) {
     refetch({ open: true }, { fetchPolicy: 'store-or-network' })
   }, [refetch])
 
+  const { toggle } = useSelectedTournaments()
   if (!data?.tournaments) return null
 
   const ROW_HEIGHT = 36 // matches the Field row height incl. gap
@@ -292,7 +297,12 @@ function Tournaments(props: { category: SidebarTournaments$key }) {
             style={{ height: ROW_HEIGHT }}
             className='items-center'
           >
-            <Checkbox id={t.key} name={t.key} className='peer border-secondary ml-2' />
+            <Checkbox
+              id={t.key}
+              name={t.key}
+              className='peer border-secondary ml-2'
+              onCheckedChange={() => toggle(t.key, t.sport.key)}
+            />
             <Label
               htmlFor={t.key}
               className='text-secondary peer-data-[state=checked]:text-foreground cursor-pointer text-xs font-normal'
