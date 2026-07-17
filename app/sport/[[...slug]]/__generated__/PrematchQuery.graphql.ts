@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cfb06386cee4885f4af2360ec7c3d32f>>
+ * @generated SignedSource<<08f22ca45499c57f640882bcbf073b4f>>
  * @lightSyntaxTransform
  */
 
@@ -11,7 +11,7 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PrematchQuery$variables = Record<PropertyKey, never>;
 export type PrematchQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"PrematchList">;
+  readonly " $fragmentSpreads": FragmentRefs<"PrematchList" | "Sidebar">;
 };
 export type PrematchQuery = {
   response: PrematchQuery$data;
@@ -19,27 +19,34 @@ export type PrematchQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 4
-  }
-],
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "key",
+  "storageKey": null
+},
 v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "name",
   "storageKey": null
 },
 v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "id",
   "storageKey": null
-};
+},
+v3 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 4
+  }
+];
 return {
   "fragment": {
     "argumentDefinitions": [],
@@ -47,6 +54,11 @@ return {
     "metadata": null,
     "name": "PrematchQuery",
     "selections": [
+      {
+        "args": null,
+        "kind": "FragmentSpread",
+        "name": "Sidebar"
+      },
       {
         "args": null,
         "kind": "FragmentSpread",
@@ -65,17 +77,38 @@ return {
       {
         "if": null,
         "kind": "Stream",
+        "label": "Sidebar$stream$sports",
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Sport",
+            "kind": "LinkedField",
+            "name": "sports",
+            "plural": true,
+            "selections": [
+              (v0/*:: as any*/),
+              (v1/*:: as any*/),
+              (v2/*:: as any*/)
+            ],
+            "storageKey": null
+          }
+        ]
+      },
+      {
+        "if": null,
+        "kind": "Stream",
         "label": "PrematchList$stream$topTournaments_3z2gQm",
         "selections": [
           {
             "alias": null,
-            "args": (v0/*:: as any*/),
+            "args": (v3/*:: as any*/),
             "concreteType": "Tournament",
             "kind": "LinkedField",
             "name": "topTournaments",
             "plural": true,
             "selections": [
-              (v1/*:: as any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -84,14 +117,8 @@ return {
                 "name": "sport",
                 "plural": false,
                 "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "key",
-                    "storageKey": null
-                  },
-                  (v1/*:: as any*/)
+                  (v0/*:: as any*/),
+                  (v2/*:: as any*/)
                 ],
                 "storageKey": null
               },
@@ -110,11 +137,11 @@ return {
                     "name": "countryCode",
                     "storageKey": null
                   },
-                  (v1/*:: as any*/)
+                  (v2/*:: as any*/)
                 ],
                 "storageKey": null
               },
-              (v2/*:: as any*/),
+              (v1/*:: as any*/),
               {
                 "if": null,
                 "kind": "Defer",
@@ -122,7 +149,7 @@ return {
                 "selections": [
                   {
                     "alias": null,
-                    "args": (v0/*:: as any*/),
+                    "args": (v3/*:: as any*/),
                     "concreteType": "EventConnection",
                     "kind": "LinkedField",
                     "name": "events",
@@ -144,7 +171,7 @@ return {
                             "name": "node",
                             "plural": false,
                             "selections": [
-                              (v1/*:: as any*/),
+                              (v2/*:: as any*/),
                               {
                                 "alias": null,
                                 "args": null,
@@ -174,7 +201,7 @@ return {
                                 "name": "markets",
                                 "plural": true,
                                 "selections": [
-                                  (v1/*:: as any*/),
+                                  (v2/*:: as any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -190,8 +217,8 @@ return {
                                     "name": "outcomes",
                                     "plural": true,
                                     "selections": [
-                                      (v1/*:: as any*/),
                                       (v2/*:: as any*/),
+                                      (v1/*:: as any*/),
                                       {
                                         "alias": null,
                                         "args": null,
@@ -224,16 +251,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9e5f12291fe37deb342b400bd20bc71b",
+    "cacheID": "36a09d8473dcdf103570cd631a44de2f",
     "id": null,
     "metadata": {},
     "name": "PrematchQuery",
     "operationKind": "query",
-    "text": "query PrematchQuery {\n  ...PrematchList\n}\n\nfragment ListViewMarkets on PrematchEvent {\n  markets {\n    id\n    kind\n    ...PrematchMarket\n  }\n}\n\nfragment PrematchEvent on PrematchEvent {\n  homeCompetitor\n  awayCompetitor\n  startTime\n  ...ListViewMarkets\n}\n\nfragment PrematchList on Query {\n  topTournaments(first: 4) @stream(label: \"PrematchList$stream$topTournaments_3z2gQm\", initialCount: 1) {\n    id\n    ...Tournament\n  }\n}\n\nfragment PrematchMarket on Market {\n  outcomes {\n    id\n    name\n    price\n  }\n}\n\nfragment Tournament on Tournament {\n  sport {\n    key\n    id\n  }\n  category {\n    countryCode\n    id\n  }\n  name\n  ...TournamentEventList @defer(label: \"Tournament$defer$TournamentEventList\")\n}\n\nfragment TournamentEventList on Tournament {\n  events(first: 4) {\n    edges {\n      node {\n        id\n        ...PrematchEvent\n      }\n    }\n  }\n}\n"
+    "text": "query PrematchQuery {\n  ...Sidebar\n  ...PrematchList\n}\n\nfragment ListViewMarkets on PrematchEvent {\n  markets {\n    id\n    kind\n    ...PrematchMarket\n  }\n}\n\nfragment PrematchEvent on PrematchEvent {\n  homeCompetitor\n  awayCompetitor\n  startTime\n  ...ListViewMarkets\n}\n\nfragment PrematchList on Query {\n  topTournaments(first: 4) @stream(label: \"PrematchList$stream$topTournaments_3z2gQm\", initialCount: 1) {\n    id\n    ...Tournament\n  }\n}\n\nfragment PrematchMarket on Market {\n  outcomes {\n    id\n    name\n    price\n  }\n}\n\nfragment Sidebar on Query {\n  sports @stream(label: \"Sidebar$stream$sports\", initialCount: 1) {\n    key\n    ...SidebarSport\n    id\n  }\n}\n\nfragment SidebarSport on Sport {\n  key\n  name\n}\n\nfragment Tournament on Tournament {\n  sport {\n    key\n    id\n  }\n  category {\n    countryCode\n    id\n  }\n  name\n  ...TournamentEventList @defer(label: \"Tournament$defer$TournamentEventList\")\n}\n\nfragment TournamentEventList on Tournament {\n  events(first: 4) {\n    edges {\n      node {\n        id\n        ...PrematchEvent\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "dc8acb17da37daf2111acd3f6002e5ce";
+(node as any).hash = "07d1391d85332ae5b3f4e1d714b8a9a0";
 
 export default node;

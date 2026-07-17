@@ -96,16 +96,6 @@ export function ListViewMarketDropdowns() {
             ))}
           </SelectContent>
         </Select>
-        // <div
-        //   key={market}
-        //   className={cn(
-        //     'flex max-w-60 min-w-50 flex-1 items-center justify-between rounded-lg border border-white/5 bg-black/20 px-3 py-2 text-xs tracking-wide capitalize transition transition-all',
-        //     marketVisibility[i]
-        //   )}
-        // >
-        //   <span>{availableMarkets[market]}</span>
-        //   <ChevronDown className='size-4' />
-        // </div>
       ))}
     </div>
   )
@@ -129,6 +119,7 @@ function Market(props: { className?: string; market: PrematchMarket$key }) {
     <div className={cn('flex h-15 max-w-60 min-w-50 flex-1 grow gap-1', props.className)}>
       {data.outcomes.map(odd => (
         <Toggle.Root
+          suppressHydrationWarning
           key={odd.id}
           className='group hover:bg-primary/5 hover:border-primary/20 shadow-primary/60 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-1 flex-col items-center justify-center gap-1 rounded-lg border border-white/5 bg-black/20 transition transition-all data-[state=on]:shadow-[0_0_12px]'
         >

@@ -15,7 +15,7 @@
       "./relay/schema.gql",
       "./node_modules/relay-compiler/relay-extensions.graphql"
     ],
-    "documents": "**/*.{graphql,js,ts,jsx,tsx}"
+    "documents": "**/*.{graphql,gql,tsx}"
   },
   "dependencies": {
     "@graphql-tools/load-files": "^7.0.1",
@@ -49,6 +49,7 @@
     "radix-ui": "^1.4.3",
     "react": "19.2.4",
     "react-circle-flags": "^0.0.27",
+    "react-country-flag": "^3.1.0",
     "react-day-picker": "^10.0.1",
     "react-dom": "19.2.4",
     "react-error-boundary": "^6.1.2",

@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import { graphql } from 'relay-runtime'
 import type { PrematchQuery } from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
-import PrematchList, { PrematchListSkeleton } from '@/app/sport/[[...slug]]/prematch-list'
+import TournamentList, { PrematchListSkeleton } from '@/app/sport/[[...slug]]/tournament-list'
 import Carousel from '@/app/sport/carousel'
 import ShortcutRow from '@/app/sport/shortcut-row'
 import Sidebar from '@/app/sport/sidebar'
@@ -24,6 +24,7 @@ export default async function SportPage(props: PageProps) {
   const queryRef = serverEnv.serverPreloadQuery<PrematchQuery>(
     graphql`
       query PrematchQuery {
+        ...Sidebar
         ...PrematchList
       }
     `,
@@ -47,12 +48,12 @@ export default async function SportPage(props: PageProps) {
         'grid-cols-1 lg:grid-cols-[4rem_minmax(auto,1fr)] xl:grid-cols-[16rem_minmax(auto,1fr)] 2xl:grid-cols-[16rem_minmax(auto,1fr)_18.75rem]'
       )}
     >
-      <Sidebar />
+      <Sidebar queryRef={queryRef} />
       <section className='flex min-w-0 flex-col gap-4'>
         <Carousel />
         <ShortcutRow />
         {/* <Suspense fallback={<PrematchListSkeleton />}> */}
-        <PrematchList queryRef={queryRef} />
+        <TournamentList queryRef={queryRef} />
         {/* </Suspense> */}
       </section>
       <div className='hidden xl:flex'>

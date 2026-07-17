@@ -101,6 +101,9 @@ importers:
       react-circle-flags:
         specifier: ^0.0.27
         version: 0.0.27(react@19.2.4)
+      react-country-flag:
+        specifier: ^3.1.0
+        version: 3.1.0(react@19.2.4)
       react-day-picker:
         specifier: ^10.0.1
         version: 10.0.1(@types/react@19.2.14)(react@19.2.4)
@@ -2869,6 +2872,12 @@ packages:
     engines: {node: '>=10'}
     peerDependencies:
       react: ^16.0.0 || 17.x || 18.x || 19.x
+
+  react-country-flag@3.1.0:
+    resolution: {integrity: sha512-JWQFw1efdv9sTC+TGQvTKXQg1NKbDU2mBiAiRWcKM9F1sK+/zjhP2yGmm8YDddWyZdXVkR8Md47rPMJmo4YO5g==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16'
 
   react-day-picker@10.0.1:
     resolution: {integrity: sha512-eNh6BlwcYInWaJtRv18mXQ06Ys/H6rdTZAnTaSdOYJuTpwP1JMCHNd1FDRadA+gbeinq+psdULN5Xnowy9mV8w==}
@@ -6019,6 +6028,10 @@ snapshots:
       '@types/react-dom': 19.2.3(@types/react@19.2.14)
 
   react-circle-flags@0.0.27(react@19.2.4):
+    dependencies:
+      react: 19.2.4
+
+  react-country-flag@3.1.0(react@19.2.4):
     dependencies:
       react: 19.2.4
 

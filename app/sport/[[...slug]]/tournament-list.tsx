@@ -1,10 +1,11 @@
 'use client'
 
-import { Suspense, useEffect, useRef } from 'react'
-import { graphql, useFragment, useRefetchableFragment } from 'react-relay'
+import { useEffect } from 'react'
+import { fetchQuery, graphql, useRefetchableFragment, useRelayEnvironment } from 'react-relay'
 import type { PreloadedQueryRef } from 'react-relay/rsc_EXPERIMENTAL'
 import { useQueryFromServer } from 'react-relay/rsc-client_EXPERIMENTAL'
 import type { PrematchList$key } from '@/app/sport/[[...slug]]/__generated__/PrematchList.graphql'
+import PrematchListRefetchNode from '@/app/sport/[[...slug]]/__generated__/PrematchListRefetch.graphql'
 import type {
   PrematchQuery,
   PrematchQuery$data,
@@ -13,12 +14,14 @@ import type {
 import PrematchQueryNode from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
 import Tournament, { TournamentSkeleton } from '@/app/sport/[[...slug]]/tournament'
 
-export default function PrematchList(props: {
+export default function TournamentList(props: {
   queryRef: PreloadedQueryRef<PrematchQuery$variables, PrematchQuery$data>
 }) {
-  const preloaded = useQueryFromServer<PrematchQuery>(PrematchQueryNode, props.queryRef)
+  const preloaded = useQueryFromServer<PrematchQuery>(PrematchQueryNode, props.queryRef, {
+    staleThresholdMs: 3_000,
+  })
 
-  const [data, refetch] = useRefetchableFragment(
+  const [data] = useRefetchableFragment(
     graphql`
       fragment PrematchList on Query @refetchable(queryName: "PrematchListRefetch") {
         topTournaments(first: 4) @stream(initialCount: 1) {
@@ -30,13 +33,20 @@ export default function PrematchList(props: {
     preloaded as PrematchList$key
   )
 
-  const refetchRef = useRef(0)
+  const environment = useRelayEnvironment()
   useEffect(() => {
-    refetchRef.current = window.setInterval(refetch, 3 * 60_000)
-    return () => {
-      clearInterval(refetchRef.current)
-    }
-  }, [refetch])
+    const id = window.setInterval(() => {
+      fetchQuery(
+        environment,
+        PrematchListRefetchNode,
+        {},
+        { fetchPolicy: 'network-only' }
+      ).subscribe({
+        error: (err: Error) => console.error('[prematch-list] poll failed', err),
+      })
+    }, 3 * 60_000)
+    return () => clearInterval(id)
+  }, [environment])
 
   return (
     <div className='mt-2 space-y-8'>
