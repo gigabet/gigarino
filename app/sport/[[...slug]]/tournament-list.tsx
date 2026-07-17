@@ -35,6 +35,8 @@ export default function TournamentList(props: {
 
   const environment = useRelayEnvironment()
   useEffect(() => {
+    // updates Relay store and silently refreshes data without suspending
+    // calling the refetchable hook's method suspends, disabling the UI
     const id = window.setInterval(() => {
       fetchQuery(
         environment,
@@ -50,11 +52,9 @@ export default function TournamentList(props: {
 
   return (
     <div className='mt-2 space-y-8'>
-      {/* <Suspense fallback={<TournamentSkeleton />}> */}
       {data.topTournaments.map(tournament => (
         <Tournament key={tournament.id} queryRef={tournament} />
       ))}
-      {/* </Suspense> */}
     </div>
   )
 }
