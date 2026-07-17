@@ -37,6 +37,7 @@ import { SportIcon } from '@/components/sport-icon'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Field, FieldGroup } from '@/components/ui/field'
 import { Label } from '@/components/ui/label'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const sportOrder = ['football', 'tennis', 'basketball', 'ice-hockey']
 
@@ -132,13 +133,15 @@ function Sport(props: { sport: SidebarSport$key }) {
         data-slot='accordion-content'
         className='data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden py-3 text-sm'
       >
-        <Suspense fallback='Loading...'>{queryRef && <CountryList queryRef={queryRef} />}</Suspense>
+        <Suspense fallback={<CategorySkeleton />}>
+          {queryRef && <CountryList queryRef={queryRef} />}
+        </Suspense>
       </Accordion.Content>
     </Accordion.Item>
   )
 }
 
-const HOVER_PREFETCH_DELAY_MS = 200
+const HOVER_PREFETCH_DELAY_MS = 300
 
 function CountryList(props: { queryRef: PreloadedQuery<SidebarSportDetails> }) {
   const preloaded = usePreloadedQuery<SidebarSportDetails>(SidebarSportDetailsNode, props.queryRef)
@@ -195,7 +198,7 @@ function CountryItem(props: { country: SidebarCountryItem$key }) {
   return (
     <Accordion.Item value={data.key}>
       <Accordion.Trigger
-        className='flex w-full items-center gap-2 px-4 py-2 hover:bg-white/3 data-[state=open]:bg-white/3'
+        className='flex w-full items-center gap-2.5 px-4 py-2 text-sm hover:bg-white/3 data-[state=open]:bg-white/3'
         onMouseEnter={() => (timer.current = setTimeout(warm, HOVER_PREFETCH_DELAY_MS))}
         onMouseLeave={() => clearTimeout(timer.current)}
         onMouseDown={warm}
@@ -207,21 +210,21 @@ function CountryItem(props: { country: SidebarCountryItem$key }) {
           className='w-5 rounded-[3px]'
           style={{ width: undefined, height: undefined }}
         />{' '}
-        <span className='text-sm'>{data.name}</span>
+        <span className='text-[0.8rem] font-normal'>{data.name}</span>
       </Accordion.Trigger>
       <Accordion.Content
         data-slot='accordion-content'
         className='data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden bg-white/3 px-4 pt-2 pb-4 text-sm'
       >
-        <Suspense>
-          <Tournaments country={data} />
+        <Suspense fallback={<TournamentListSkeleton />}>
+          <Tournaments category={data} />
         </Suspense>
       </Accordion.Content>
     </Accordion.Item>
   )
 }
 
-function Tournaments(props: { country: SidebarTournaments$key }) {
+function Tournaments(props: { category: SidebarTournaments$key }) {
   const [data, refetch] = useRefetchableFragment(
     graphql`
       fragment SidebarTournaments on Category
@@ -233,7 +236,7 @@ function Tournaments(props: { country: SidebarTournaments$key }) {
         }
       }
     `,
-    props.country
+    props.category
   )
   const fetched = useRef(false)
 
@@ -243,23 +246,130 @@ function Tournaments(props: { country: SidebarTournaments$key }) {
     refetch({ open: true }, { fetchPolicy: 'store-or-network' })
   }, [refetch])
 
+  if (!data?.tournaments) return null
+
+  const ROW_HEIGHT = 36 // matches the Field row height incl. gap
+  const totalHeight = (data.tournaments.length ?? 0) * ROW_HEIGHT
+
   return (
-    <FieldGroup className='gap-5 px-1'>
-      {data.tournaments?.map(t => (
-        <Field key={t.key} orientation='horizontal'>
-          <Checkbox id={t.key} name={t.key} className='border-secondary' />
-          <Label
-            htmlFor={t.key}
-            className='text-secondary data-[state=checked]:text-primary cursor-pointer text-xs'
+    <div className='relative pl-6'>
+      {/** biome-ignore lint/a11y/noSvgWithoutTitle: not semantic */}
+      <svg
+        className='pointer-events-none absolute top-0 left-0'
+        width={20}
+        height={totalHeight}
+        viewBox={`0 0 20 ${totalHeight}`}
+      >
+        {/* spine, stops at the last tick, not the container's full height */}
+        <line
+          x1={6}
+          y1={0}
+          x2={6}
+          y2={(data.tournaments.length - 0.5) * ROW_HEIGHT}
+          stroke='currentColor'
+          strokeWidth={1}
+          className='text-secondary/20'
+        />
+        {data.tournaments.map((t, i) => (
+          <line
+            key={t.key}
+            x1={6}
+            y1={(i + 0.5) * ROW_HEIGHT}
+            x2={20}
+            y2={(i + 0.5) * ROW_HEIGHT}
+            stroke='currentColor'
+            strokeWidth={1}
+            className='text-secondary/20'
+          />
+        ))}
+      </svg>
+
+      <FieldGroup className='gap-0 py-0.5'>
+        {data.tournaments.map(t => (
+          <Field
+            key={t.key}
+            orientation='horizontal'
+            style={{ height: ROW_HEIGHT }}
+            className='items-center'
           >
-            {t.name}
-          </Label>
-        </Field>
-      ))}
-    </FieldGroup>
+            <Checkbox id={t.key} name={t.key} className='peer border-secondary ml-2' />
+            <Label
+              htmlFor={t.key}
+              className='text-secondary peer-data-[state=checked]:text-foreground cursor-pointer text-xs font-normal'
+            >
+              {t.name}
+            </Label>
+          </Field>
+        ))}
+      </FieldGroup>
+    </div>
   )
 }
 
 function CategorySkeleton() {
-  return <div className='bg-dark-200 h-12 animate-pulse rounded-xl' />
+  return (
+    <div className='space-y-0.5'>
+      {new Array(6).fill(6).map((_, i) => (
+        <div
+          // biome-ignore lint/suspicious/noArrayIndexKey: identical elements
+          key={i}
+          className='flex w-full items-center gap-2 px-4 py-2 hover:bg-white/3 data-[state=open]:bg-white/3'
+        >
+          <Skeleton className='h-4 w-5 rounded-[3px]' /> <Skeleton className='h-4 w-25' />
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function TournamentListSkeleton() {
+  const ROW_HEIGHT = 36 // matches the Field row height incl. gap
+  const totalHeight = 6 * ROW_HEIGHT
+  const els = new Array(2).fill(2)
+
+  return (
+    <div className='relative pl-6'>
+      {/** biome-ignore lint/a11y/noSvgWithoutTitle: not semantic */}
+      <svg
+        className='pointer-events-none absolute top-0 left-0'
+        width={20}
+        height={totalHeight}
+        viewBox={`0 0 20 ${totalHeight}`}
+      >
+        {/* spine, stops at the last tick, not the container's full height */}
+        <line
+          x1={6}
+          y1={0}
+          x2={6}
+          y2={(6 - 0.5) * ROW_HEIGHT}
+          stroke='currentColor'
+          strokeWidth={1}
+          className='text-secondary/20'
+        />
+        {els.map((_, i) => (
+          <line
+            // biome-ignore lint/suspicious/noArrayIndexKey: ...
+            key={i}
+            x1={6}
+            y1={(i + 0.5) * ROW_HEIGHT}
+            x2={20}
+            y2={(i + 0.5) * ROW_HEIGHT}
+            stroke='currentColor'
+            strokeWidth={1}
+            className='text-secondary/20'
+          />
+        ))}
+      </svg>
+
+      <FieldGroup className='gap-0 py-0.5'>
+        {els.map((_, i) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: ...
+          <div key={i} style={{ height: ROW_HEIGHT }} className='flex items-center gap-3'>
+            <Skeleton className='ml-2 size-4 rounded-xs' />
+            <Skeleton className='h-4 w-30' />
+          </div>
+        ))}
+      </FieldGroup>
+    </div>
+  )
 }
