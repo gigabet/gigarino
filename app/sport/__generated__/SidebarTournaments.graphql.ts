@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<16677917a709a9e85fab59712bb26aa1>>
+ * @generated SignedSource<<b33c8886d2b46be3ecf0810a7a982a61>>
  * @lightSyntaxTransform
  */
 
@@ -12,11 +12,9 @@ import { FragmentRefs } from "relay-runtime";
 export type SidebarTournaments$data = {
   readonly id: string;
   readonly tournaments?: ReadonlyArray<{
+    readonly id: string;
     readonly key: string;
     readonly name: string;
-    readonly sport: {
-      readonly key: string;
-    };
   }>;
   readonly " $fragmentType": "SidebarTournaments";
 };
@@ -32,7 +30,7 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "key",
+  "name": "id",
   "storageKey": null
 };
 return {
@@ -77,19 +75,14 @@ return {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "name",
+              "name": "key",
               "storageKey": null
             },
             {
               "alias": null,
               "args": null,
-              "concreteType": "Sport",
-              "kind": "LinkedField",
-              "name": "sport",
-              "plural": false,
-              "selections": [
-                (v0/*:: as any*/)
-              ],
+              "kind": "ScalarField",
+              "name": "name",
               "storageKey": null
             }
           ],
@@ -97,19 +90,13 @@ return {
         }
       ]
     },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    }
+    (v0/*:: as any*/)
   ],
   "type": "Category",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "8568e75163530815a784f64680044b86";
+(node as any).hash = "74fbea9d2c5cdb17af3172f53b055340";
 
 export default node;

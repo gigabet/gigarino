@@ -31,11 +31,13 @@ type BetRejection {
 }
 
 enum BetRejectionCode {
+  CASHOUT_UNAVAILABLE
   CUTOFF_PASSED
   DUPLICATE_EVENT
   EVENT_NOT_BETTABLE
   INSUFFICIENT_FUNDS
   INTERNAL_ERROR
+  LIABILITY_LIMIT
   ODDS_LIMIT
   OUTCOME_NOT_AVAILABLE
   PRICE_CHANGED
@@ -110,6 +112,25 @@ type BetslipQuoteItem {
   """
   outcomeId: ID!
   outcomeName: String
+}
+
+type CashoutPayload {
+  amount: Decimal
+  rejectionCode: BetRejectionCode
+  rejectionMessage: String
+  ticket: Ticket
+}
+
+type CashoutQuote {
+  """
+  Zero when unavailable.
+  """
+  amount: Decimal!
+  available: Boolean!
+  currency: String!
+  message: String
+  reason: BetRejectionCode
+  ticketId: ID!
 }
 
 """
@@ -197,7 +218,7 @@ type EventEdge {
 }
 
 """
-Lifecycle state of a match / fixture.
+Lifecycle state of a fixture.
 """
 enum EventStatus {
   ABANDONED
@@ -219,9 +240,14 @@ type Market implements Node {
   id: ID!
 
   """
-  Stable kind identifier: `match_winner`, `over_under_2_5`, `both_teams_to_score`, `correct_score`, `handicap_asian`, …
+  Family kind (never carries the line): `match_winner`, `over_under`, `both_teams_to_score`, `draw_no_bet`, `correct_score`, …
   """
   kind: String!
+
+  """
+  Line / handicap for lined markets (e.g. `2.5` for over/under goals); null otherwise. Distinct lines are distinct markets.
+  """
+  line: Decimal
   name: String!
   outcomes: [Outcome!]!
   period: MarketPeriod!
@@ -269,17 +295,22 @@ enum MarketStatus {
 
 type Mutation {
   """
+  Sell an open ticket back to the book at the current quote.
+  """
+  cashout(ticketId: ID!): CashoutPayload!
+
+  """
   Place a bet. Business rejections (price change, limits, insufficient funds) come back typed on `rejection`; only transport/auth failures surface as GraphQL errors.
   """
   placeBet(input: PlaceBetInput!): PlaceBetPayload!
 }
 
 """
-A globally-identifiable entity refetchable via `Query.node(id)`. Ids are opaque, base64-encoded, and stable across restarts.
+An entity refetchable by its opaque global ID via `Query.node`.
 """
 interface Node {
   """
-  Opaque, globally-unique identifier (base64-encoded `Type:localId`).
+  Opaque global identifier (base64 `Type:localId`).
   """
   id: ID!
 }
@@ -297,6 +328,11 @@ enum OddsChangePolicy {
 One outcome whose price changed in this update.
 """
 type OddsOutcomeChange {
+  """
+  Line/handicap for lined markets (over/under); null otherwise.
+  """
+  line: Decimal
+
   """
   Global ID of the affected Market node.
   """
@@ -465,6 +501,11 @@ type Query {
   betslipQuote(input: BetslipQuoteInput!): BetslipQuote!
 
   """
+  What the book would pay right now to buy this ticket back.
+  """
+  cashoutQuote(ticketId: ID!): CashoutQuote!
+
+  """
   Fetch a single event by its global `id`.
   """
   event(id: ID!): PrematchEvent
@@ -542,6 +583,11 @@ type Query {
   Top competitions. With `sport`: ranked by upcoming-event volume within that sport. Without: the cross-sport overview rail — editorially curated, falling back to interleaved per-sport rankings when nothing is curated. Cached ~5 minutes.
   """
   topTournaments(first: Int, sport: String): [Tournament!]!
+
+  """
+  The selected tournaments (by global id), each with its own paginated `events` connection — so a multi-tournament view renders one group per tournament instead of one flat, interleaved feed. Preserves input order; drops ids that no longer resolve.
+  """
+  tournaments(ids: [ID!]!): [Tournament!]!
 }
 
 """

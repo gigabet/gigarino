@@ -18,7 +18,8 @@ interface PageProps {
 }
 
 export default async function SportPage(props: PageProps) {
-  const [_filter = 'all', _sport = null, _league = null] = props.params.slug ?? []
+  const [_filter = 'all', tournamentsSegment = null] = props.params.slug ?? []
+  const initialTournaments = tournamentsSegment?.split(',').filter(Boolean) ?? []
 
   const serverEnv = getServerEnvironment()
   const queryRef = serverEnv.serverPreloadQuery<PrematchQuery>(

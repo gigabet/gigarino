@@ -2,6 +2,7 @@
 
 import { sortBy } from 'lodash'
 import { SearchIcon } from 'lucide-react'
+import Link from 'next/link'
 import { Accordion } from 'radix-ui'
 import { Suspense, useEffect, useRef } from 'react'
 import ReactCountryFlag from 'react-country-flag'
@@ -84,6 +85,15 @@ export default function Sidebar(props: {
           collapsible
           className='flex flex-col gap-2'
         >
+          <div className='bg-dark-200 overflow-hidden rounded-xl'>
+            <Link
+              href='/sport'
+              className='flex w-full items-center gap-2 px-4 py-3 hover:bg-white/4 data-[state=open]:bg-white/4'
+            >
+              <SportIcon sport='highlights' className='size-5' />{' '}
+              <span className='mr-auto text-sm'>Highlights</span>
+            </Link>
+          </div>
           {orderedSports.map(sport => (
             <Sport key={sport.key} sport={sport} />
           ))}
@@ -232,11 +242,9 @@ function Tournaments(props: { category: SidebarTournaments$key }) {
       @argumentDefinitions(open: { type: "Boolean", defaultValue: false })
       @refetchable(queryName: "SidebarTournamentsLoad") {
         tournaments @include(if: $open) {
+          id
           key
           name
-          sport {
-            key
-          }
         }
       }
     `,
@@ -250,7 +258,7 @@ function Tournaments(props: { category: SidebarTournaments$key }) {
     refetch({ open: true }, { fetchPolicy: 'store-or-network' })
   }, [refetch])
 
-  const { toggle } = useSelectedTournaments()
+  const { toggle, selected } = useSelectedTournaments()
   if (!data?.tournaments) return null
 
   const ROW_HEIGHT = 36 // matches the Field row height incl. gap
@@ -300,8 +308,9 @@ function Tournaments(props: { category: SidebarTournaments$key }) {
             <Checkbox
               id={t.key}
               name={t.key}
+              defaultChecked={selected.some(e => e === t.id)}
               className='peer border-secondary ml-2'
-              onCheckedChange={() => toggle(t.key, t.sport.key)}
+              onCheckedChange={() => toggle(t.id)}
             />
             <Label
               htmlFor={t.key}
