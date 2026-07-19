@@ -17,6 +17,7 @@ import {
   useRelayEnvironment,
 } from 'react-relay'
 import type { PrematchLayoutQuery } from '@/app/sport/__generated__/PrematchLayoutQuery.graphql'
+import PrematchLayoutQueryNode from '@/app/sport/__generated__/PrematchLayoutQuery.graphql'
 import type { Sidebar$key } from '@/app/sport/__generated__/Sidebar.graphql'
 import type { SidebarCountryItem$key } from '@/app/sport/__generated__/SidebarCountryItem.graphql'
 import type { SidebarCountryList$key } from '@/app/sport/__generated__/SidebarCountryList.graphql'
@@ -28,7 +29,6 @@ import type { SidebarTournaments$key } from '@/app/sport/__generated__/SidebarTo
 import SidebarTournamentsLoadNode, {
   type SidebarTournamentsLoad,
 } from '@/app/sport/__generated__/SidebarTournamentsLoad.graphql'
-import PrematchQueryNode from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
 import { SportIcon } from '@/components/sport-icon'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Field, FieldGroup } from '@/components/ui/field'
@@ -39,7 +39,7 @@ import { useSelectedTournaments } from '@/context/hooks'
 const sportOrder = ['football', 'tennis', 'basketball', 'ice-hockey']
 
 export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayoutQuery> }) {
-  const preloaded = usePreloadedQuery<PrematchLayoutQuery>(PrematchQueryNode, props.queryRef)
+  const preloaded = usePreloadedQuery<PrematchLayoutQuery>(PrematchLayoutQueryNode, props.queryRef)
 
   const data = useFragment<Sidebar$key>(
     graphql`
@@ -332,7 +332,7 @@ function Tournaments(props: { category: SidebarTournaments$key }) {
               id={t.key}
               name={t.key}
               className='peer border-secondary ml-2'
-              checked={selected.some(e => e === t.id)}
+              checked={selected.includes(t.id)}
               onCheckedChange={() => toggle(t.id)}
             />
             <Label

@@ -80,25 +80,26 @@ export const useDelta = (value: number) => {
   return delta
 }
 
+// hooks.ts
 export function useSelectedTournaments() {
   const router = useRouter()
-  const params = useParams<{ slug?: string[] }>()
+  const pathname = usePathname()
 
-  const selected = useMemo(() => params.slug?.[1]?.split(',').filter(Boolean) ?? [], [params.slug])
+  const segments = useMemo(() => pathname.split('/').filter(Boolean), [pathname])
+  // segments: ['sport', filter?, tournaments?]
+  const filter = segments[1] ?? 'all'
+  const selected = useMemo(() => segments[2]?.split(',').filter(Boolean) ?? [], [segments])
 
   const toggle = useCallback(
-    (key: string) => {
-      const next = selected.includes(key) ? selected.filter(k => k !== key) : [...selected, key]
+    (idOrKey: string) => {
+      const next = selected.includes(idOrKey)
+        ? selected.filter(v => v !== idOrKey)
+        : [...selected, idOrKey]
 
-      const filter = params.slug?.[0] ?? 'all'
-      const path = next.length ? `/sport/${filter}/${next.join(',')}` : `/sport/${filter}`
-
-      // A real router navigation is fine now — /sport has no server data
-      // left to re-fetch, so this costs nothing and every mounted
-      // consumer of useParams()/usePathname() picks it up automatically.
+      const path = next.length ? `/sport/${filter}/${next.join(',')}` : `/sport`
       router.replace(path, { scroll: false })
     },
-    [selected, params.slug, router]
+    [selected, filter, router]
   )
 
   return { selected, toggle }

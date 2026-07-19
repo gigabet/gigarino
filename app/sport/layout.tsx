@@ -1,25 +1,27 @@
+// app/sport/layout.tsx
+
 'use client'
 import { Suspense, useEffect, useRef } from 'react'
 import { graphql, useQueryLoader } from 'react-relay'
 import type { PrematchLayoutQuery } from '@/app/sport/__generated__/PrematchLayoutQuery.graphql'
-import { PageSkeleton } from '@/app/sport/[[...slug]]/page'
 import Sidebar, { SidebarSkeleton } from '@/app/sport/sidebar'
 import Betslip from '@/components/betslip'
 import { cn } from '@/lib/utils'
 
 export default function SportLayout({ children }: { children: React.ReactNode }) {
-  const [queryRef, loadQuery] = useQueryLoader<PrematchLayoutQuery>(graphql`
+  const [queryRef, loadQuery, disposeQuery] = useQueryLoader<PrematchLayoutQuery>(graphql`
     query PrematchLayoutQuery {
       ...Sidebar
     }
   `)
-  const initialized = useRef(false)
 
   useEffect(() => {
-    if (initialized.current) return
-    initialized.current = true
+    // Always (re)load on mount — a fresh loadQuery call replaces whatever
+    // ref existed and hands out a brand-new, definitely-not-disposed one.
+    // store-or-network makes this cheap when data's already warm.
     loadQuery({}, { fetchPolicy: 'store-or-network' })
-  }, [loadQuery])
+    return () => disposeQuery()
+  }, [loadQuery, disposeQuery])
 
   return (
     <div
@@ -31,7 +33,7 @@ export default function SportLayout({ children }: { children: React.ReactNode })
       <Suspense fallback={<SidebarSkeleton />}>
         {queryRef ? <Sidebar queryRef={queryRef} /> : <SidebarSkeleton />}
       </Suspense>
-      <Suspense fallback={<PageSkeleton />}>{children}</Suspense>
+      {children}
       <div className='hidden xl:flex'>
         <Betslip />
       </div>

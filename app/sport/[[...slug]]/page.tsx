@@ -1,10 +1,13 @@
+// app/sport/[[...slug]]/page.tsx
+
 'use client'
 
-import { Suspense, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useQueryLoader } from 'react-relay'
 import { graphql } from 'relay-runtime'
 import type { PrematchQuery } from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
-import TournamentList, { TournamentListSkeleton } from '@/app/sport/[[...slug]]/tournament-list'
+import SportPageSkeleton from '@/app/sport/[[...slug]]/loading'
+import TournamentList from '@/app/sport/[[...slug]]/tournament-list'
 import Carousel from '@/app/sport/carousel'
 import ShortcutRow from '@/app/sport/shortcut-row'
 
@@ -15,7 +18,6 @@ export default function SportPage() {
 
   const [queryRef, loadQuery] = useQueryLoader<PrematchQuery>(graphql`
     query PrematchQuery {
-      ...Sidebar
       ...PrematchList
     }
   `)
@@ -33,15 +35,5 @@ export default function SportPage() {
       </main>
     )
 
-  return <PageSkeleton />
-}
-
-export function PageSkeleton() {
-  return (
-    <main className='flex min-w-0 flex-col gap-4'>
-      <Carousel />
-      <ShortcutRow />
-      <TournamentListSkeleton />
-    </main>
-  )
+  return <SportPageSkeleton />
 }
