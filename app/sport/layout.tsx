@@ -1,7 +1,6 @@
-// app/sport/layout.tsx
-
 'use client'
-import { Suspense, useEffect, useRef } from 'react'
+
+import { Suspense, useEffect } from 'react'
 import { graphql, useQueryLoader } from 'react-relay'
 import type { PrematchLayoutQuery } from '@/app/sport/__generated__/PrematchLayoutQuery.graphql'
 import Sidebar, { SidebarSkeleton } from '@/app/sport/sidebar'

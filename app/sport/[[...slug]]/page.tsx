@@ -1,5 +1,3 @@
-// app/sport/[[...slug]]/page.tsx
-
 'use client'
 
 import { useEffect } from 'react'
@@ -16,7 +14,7 @@ export default function SportPage() {
   // const [_filter = 'all', tournamentsSegment = null] = params.slug ?? [] // only if page.tsx itself needs it
   // const initialTournaments = tournamentsSegment?.split(',').filter(Boolean) ?? []
 
-  const [queryRef, loadQuery] = useQueryLoader<PrematchQuery>(graphql`
+  const [queryRef, loadQuery, disposeQuery] = useQueryLoader<PrematchQuery>(graphql`
     query PrematchQuery {
       ...PrematchList
     }
@@ -24,7 +22,8 @@ export default function SportPage() {
 
   useEffect(() => {
     loadQuery({}, { fetchPolicy: 'store-or-network' })
-  }, [loadQuery])
+    return () => disposeQuery()
+  }, [loadQuery, disposeQuery])
 
   if (queryRef)
     return (
