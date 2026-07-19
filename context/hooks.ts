@@ -80,51 +80,26 @@ export const useDelta = (value: number) => {
   return delta
 }
 
-function parseTournamentsFromPath(pathname: string): string[] {
-  const segments = pathname.split('/').filter(Boolean) // ['sport', filter, tournaments?]
-  return segments[2]?.split(',').filter(Boolean) ?? []
-}
-
-// history.pushState/replaceState don't dispatch any event on their own —
-// popstate only fires for back/forward. So we broadcast a synthetic event
-// ourselves right after every write, and that's the only signal every
-// subscribed component needs to re-render from the new URL.
-function subscribe(callback: () => void) {
-  window.addEventListener('popstate', callback)
-  window.addEventListener('locationchange', callback)
-  return () => {
-    window.removeEventListener('popstate', callback)
-    window.removeEventListener('locationchange', callback)
-  }
-}
-
-function getSnapshot() {
-  return window.location.pathname
-}
-
-// No `window` during SSR; the real value gets picked up on the client's
-// first paint via getSnapshot, same render pass — no flash, no effect needed.
-function getServerSnapshot() {
-  return '/sport'
-}
-
 export function useSelectedTournaments() {
-  const pathname = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
-  const selected = useMemo(() => parseTournamentsFromPath(pathname), [pathname])
+  const router = useRouter()
+  const params = useParams<{ slug?: string[] }>()
 
-  const toggle = useCallback((key: string) => {
-    // read fresh from the URL at click time, not from a closed-over value —
-    // this is what makes concurrent toggles across different accordions safe
-    const current = parseTournamentsFromPath(window.location.pathname)
-    const next = current.includes(key) ? current.filter(k => k !== key) : [...current, key]
+  const selected = useMemo(() => params.slug?.[1]?.split(',').filter(Boolean) ?? [], [params.slug])
 
-    const parts = window.location.pathname.split('/').filter(Boolean)
-    const filter = parts[1] ?? 'all'
-    const nextPath = next.length ? `/sport/${filter}/${next.join(',')}` : `/sport/${filter}`
+  const toggle = useCallback(
+    (key: string) => {
+      const next = selected.includes(key) ? selected.filter(k => k !== key) : [...selected, key]
 
-    window.history.replaceState(history.state, '', nextPath)
-    window.dispatchEvent(new Event('locationchange'))
-  }, [])
+      const filter = params.slug?.[0] ?? 'all'
+      const path = next.length ? `/sport/${filter}/${next.join(',')}` : `/sport/${filter}`
+
+      // A real router navigation is fine now — /sport has no server data
+      // left to re-fetch, so this costs nothing and every mounted
+      // consumer of useParams()/usePathname() picks it up automatically.
+      router.replace(path, { scroll: false })
+    },
+    [selected, params.slug, router]
+  )
 
   return { selected, toggle }
 }

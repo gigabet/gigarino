@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<08f22ca45499c57f640882bcbf073b4f>>
+ * @generated SignedSource<<2e779dba207a4a778be7fce64d9165ce>>
  * @lightSyntaxTransform
  */
 
@@ -39,14 +39,7 @@ v2 = {
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
-},
-v3 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 4
-  }
-];
+};
 return {
   "fragment": {
     "argumentDefinitions": [],
@@ -98,11 +91,17 @@ return {
       {
         "if": null,
         "kind": "Stream",
-        "label": "PrematchList$stream$topTournaments_3z2gQm",
+        "label": "PrematchList$stream$topTournaments_2KSsfl",
         "selections": [
           {
             "alias": null,
-            "args": (v3/*:: as any*/),
+            "args": [
+              {
+                "kind": "Literal",
+                "name": "first",
+                "value": 0
+              }
+            ],
             "concreteType": "Tournament",
             "kind": "LinkedField",
             "name": "topTournaments",
@@ -149,7 +148,13 @@ return {
                 "selections": [
                   {
                     "alias": null,
-                    "args": (v3/*:: as any*/),
+                    "args": [
+                      {
+                        "kind": "Literal",
+                        "name": "first",
+                        "value": 4
+                      }
+                    ],
                     "concreteType": "EventConnection",
                     "kind": "LinkedField",
                     "name": "events",
@@ -244,19 +249,19 @@ return {
                 ]
               }
             ],
-            "storageKey": "topTournaments(first:4)"
+            "storageKey": "topTournaments(first:0)"
           }
         ]
       }
     ]
   },
   "params": {
-    "cacheID": "36a09d8473dcdf103570cd631a44de2f",
+    "cacheID": "ac2f716bcb6e693d617b359d508890e0",
     "id": null,
     "metadata": {},
     "name": "PrematchQuery",
     "operationKind": "query",
-    "text": "query PrematchQuery {\n  ...Sidebar\n  ...PrematchList\n}\n\nfragment ListViewMarkets on PrematchEvent {\n  markets {\n    id\n    kind\n    ...PrematchMarket\n  }\n}\n\nfragment PrematchEvent on PrematchEvent {\n  homeCompetitor\n  awayCompetitor\n  startTime\n  ...ListViewMarkets\n}\n\nfragment PrematchList on Query {\n  topTournaments(first: 4) @stream(label: \"PrematchList$stream$topTournaments_3z2gQm\", initialCount: 1) {\n    id\n    ...Tournament\n  }\n}\n\nfragment PrematchMarket on Market {\n  outcomes {\n    id\n    name\n    price\n  }\n}\n\nfragment Sidebar on Query {\n  sports @stream(label: \"Sidebar$stream$sports\", initialCount: 1) {\n    key\n    ...SidebarSport\n    id\n  }\n}\n\nfragment SidebarSport on Sport {\n  key\n  name\n}\n\nfragment Tournament on Tournament {\n  sport {\n    key\n    id\n  }\n  category {\n    countryCode\n    id\n  }\n  name\n  ...TournamentEventList @defer(label: \"Tournament$defer$TournamentEventList\")\n}\n\nfragment TournamentEventList on Tournament {\n  events(first: 4) {\n    edges {\n      node {\n        id\n        ...PrematchEvent\n      }\n    }\n  }\n}\n"
+    "text": "query PrematchQuery {\n  ...Sidebar\n  ...PrematchList\n}\n\nfragment ListViewMarkets on PrematchEvent {\n  markets {\n    id\n    kind\n    ...PrematchMarket\n  }\n}\n\nfragment PrematchEvent on PrematchEvent {\n  homeCompetitor\n  awayCompetitor\n  startTime\n  ...ListViewMarkets\n}\n\nfragment PrematchList on Query {\n  topTournaments(first: 0) @stream(label: \"PrematchList$stream$topTournaments_2KSsfl\", initialCount: 0) {\n    id\n    ...Tournament\n  }\n}\n\nfragment PrematchMarket on Market {\n  outcomes {\n    id\n    name\n    price\n  }\n}\n\nfragment Sidebar on Query {\n  sports @stream(label: \"Sidebar$stream$sports\", initialCount: 4) {\n    key\n    ...SidebarSport\n    id\n  }\n}\n\nfragment SidebarSport on Sport {\n  key\n  name\n}\n\nfragment Tournament on Tournament {\n  sport {\n    key\n    id\n  }\n  category {\n    countryCode\n    id\n  }\n  name\n  ...TournamentEventList @defer(label: \"Tournament$defer$TournamentEventList\")\n}\n\nfragment TournamentEventList on Tournament {\n  events(first: 4) {\n    edges {\n      node {\n        id\n        ...PrematchEvent\n      }\n    }\n  }\n}\n"
   }
 };
 })();

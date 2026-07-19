@@ -1,65 +1,47 @@
-import { Suspense } from 'react'
+'use client'
+
+import { Suspense, useEffect } from 'react'
+import { useQueryLoader } from 'react-relay'
 import { graphql } from 'relay-runtime'
 import type { PrematchQuery } from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
-import TournamentList, { PrematchListSkeleton } from '@/app/sport/[[...slug]]/tournament-list'
+import TournamentList, { TournamentListSkeleton } from '@/app/sport/[[...slug]]/tournament-list'
 import Carousel from '@/app/sport/carousel'
 import ShortcutRow from '@/app/sport/shortcut-row'
-import Sidebar from '@/app/sport/sidebar'
-import Betslip from '@/components/betslip'
-import { Skeleton } from '@/components/ui/skeleton'
-import { cn } from '@/lib/utils'
-import { getServerEnvironment } from '@/relay/environment.server'
 
-interface PageProps {
-  params: {
-    /** `/ filter / sport / league` */
-    slug?: string[] // Next.js passes undefined or [] for the bare /sport/ path
-  }
-}
+export default function SportPage() {
+  // const params = useParams<{ slug?: string[] }>()
+  // const [_filter = 'all', tournamentsSegment = null] = params.slug ?? [] // only if page.tsx itself needs it
+  // const initialTournaments = tournamentsSegment?.split(',').filter(Boolean) ?? []
 
-export default async function SportPage(props: PageProps) {
-  const [_filter = 'all', tournamentsSegment = null] = props.params.slug ?? []
-  const initialTournaments = tournamentsSegment?.split(',').filter(Boolean) ?? []
+  const [queryRef, loadQuery] = useQueryLoader<PrematchQuery>(graphql`
+    query PrematchQuery {
+      ...Sidebar
+      ...PrematchList
+    }
+  `)
 
-  const serverEnv = getServerEnvironment()
-  const queryRef = serverEnv.serverPreloadQuery<PrematchQuery>(
-    graphql`
-      query PrematchQuery {
-        ...Sidebar
-        ...PrematchList
-      }
-    `,
-    {}
-  )
+  useEffect(() => {
+    loadQuery({}, { fetchPolicy: 'store-or-network' })
+  }, [loadQuery])
 
-  // const [queryRef, loadQuery] = useQueryLoader<PrematchQuery>(graphql`
-  //   query PrematchQuery {
-  //     ...PrematchList
-  //   }
-  // `)
-
-  // useEffect(() => {
-  //   loadQuery({})
-  // }, [loadQuery])
-
-  return (
-    <main
-      className={cn(
-        'z-1 mx-auto grid min-h-screen w-full max-w-480 gap-8 px-4 py-6 pb-24 sm:px-6 lg:px-8',
-        'grid-cols-1 lg:grid-cols-[4rem_minmax(auto,1fr)] xl:grid-cols-[16rem_minmax(auto,1fr)] 2xl:grid-cols-[16rem_minmax(auto,1fr)_18.75rem]'
-      )}
-    >
-      <Sidebar queryRef={queryRef} />
-      <section className='flex min-w-0 flex-col gap-4'>
+  if (queryRef)
+    return (
+      <main className='flex min-w-0 flex-col gap-4'>
         <Carousel />
         <ShortcutRow />
-        {/* <Suspense fallback={<PrematchListSkeleton />}> */}
         <TournamentList queryRef={queryRef} />
-        {/* </Suspense> */}
-      </section>
-      <div className='hidden xl:flex'>
-        <Betslip />
-      </div>
+      </main>
+    )
+
+  return <PageSkeleton />
+}
+
+export function PageSkeleton() {
+  return (
+    <main className='flex min-w-0 flex-col gap-4'>
+      <Carousel />
+      <ShortcutRow />
+      <TournamentListSkeleton />
     </main>
   )
 }

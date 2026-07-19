@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5846846fa782a2f6c222e918921c5f06>>
+ * @generated SignedSource<<9b21a2fdd5b7c6293a08604e48f2aeb1>>
  * @lightSyntaxTransform
  */
 
@@ -44,7 +44,7 @@ const node: ReaderFragment = {
             {
               "kind": "Literal",
               "name": "first",
-              "value": 4
+              "value": 0
             }
           ],
           "concreteType": "Tournament",
@@ -65,7 +65,7 @@ const node: ReaderFragment = {
               "name": "Tournament"
             }
           ],
-          "storageKey": "topTournaments(first:4)"
+          "storageKey": "topTournaments(first:0)"
         }
       ]
     }
@@ -74,6 +74,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "69037aef10da82543cefe65eb351084f";
+(node as any).hash = "53b607f298863d8478bafd96d7409225";
 
 export default node;

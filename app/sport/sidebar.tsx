@@ -16,8 +16,7 @@ import {
   useRefetchableFragment,
   useRelayEnvironment,
 } from 'react-relay'
-import type { PreloadedQueryRef } from 'react-relay/rsc_EXPERIMENTAL'
-import { useQueryFromServer } from 'react-relay/rsc-client_EXPERIMENTAL'
+import type { PrematchLayoutQuery } from '@/app/sport/__generated__/PrematchLayoutQuery.graphql'
 import type { Sidebar$key } from '@/app/sport/__generated__/Sidebar.graphql'
 import type { SidebarCountryItem$key } from '@/app/sport/__generated__/SidebarCountryItem.graphql'
 import type { SidebarCountryList$key } from '@/app/sport/__generated__/SidebarCountryList.graphql'
@@ -29,11 +28,7 @@ import type { SidebarTournaments$key } from '@/app/sport/__generated__/SidebarTo
 import SidebarTournamentsLoadNode, {
   type SidebarTournamentsLoad,
 } from '@/app/sport/__generated__/SidebarTournamentsLoad.graphql'
-import PrematchQueryNode, {
-  type PrematchQuery,
-  type PrematchQuery$data,
-  type PrematchQuery$variables,
-} from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
+import PrematchQueryNode from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
 import { SportIcon } from '@/components/sport-icon'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Field, FieldGroup } from '@/components/ui/field'
@@ -43,23 +38,19 @@ import { useSelectedTournaments } from '@/context/hooks'
 
 const sportOrder = ['football', 'tennis', 'basketball', 'ice-hockey']
 
-export default function Sidebar(props: {
-  queryRef: PreloadedQueryRef<PrematchQuery$variables, PrematchQuery$data>
-}) {
-  const preloaded = useQueryFromServer<PrematchQuery>(PrematchQueryNode, props.queryRef, {
-    staleThresholdMs: 3 * 60_000,
-  })
+export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayoutQuery> }) {
+  const preloaded = usePreloadedQuery<PrematchLayoutQuery>(PrematchQueryNode, props.queryRef)
 
-  const data = useFragment(
+  const data = useFragment<Sidebar$key>(
     graphql`
       fragment Sidebar on Query {
-        sports @stream(initialCount: 1) {
+        sports @stream(initialCount: 4) {
           key
           ...SidebarSport
         }
       }
     `,
-    preloaded as Sidebar$key
+    preloaded
   )
 
   const orderedSports = sortBy(data.sports, sport => {
@@ -89,6 +80,7 @@ export default function Sidebar(props: {
             <Link
               href='/sport'
               className='flex w-full items-center gap-2 px-4 py-3 hover:bg-white/4 data-[state=open]:bg-white/4'
+              prefetch={true}
             >
               <SportIcon sport='highlights' className='size-5' />{' '}
               <span className='mr-auto text-sm'>Highlights</span>
@@ -98,6 +90,37 @@ export default function Sidebar(props: {
             <Sport key={sport.key} sport={sport} />
           ))}
         </Accordion.Root>
+
+        <div className='mb-2 w-full rounded-full px-4 py-3 text-center text-sm'>...</div>
+      </div>
+    </aside>
+  )
+}
+
+export function SidebarSkeleton() {
+  return (
+    <aside className='scrollbar-hide! scrollbar-thumb-dark-300 sticky top-26.25 hidden max-h-[calc(100dvh-7rem)] w-full scrollbar-thin scrollbar-track-transparent place-self-start overflow-y-auto md:block'>
+      <div className='flex w-full flex-col gap-4'>
+        <div className='flex h-10 items-center justify-center gap-4 rounded-full border bg-black/50 px-4 xl:justify-start'>
+          <SearchIcon className='size-4 shrink-0' />
+          <span className='text-muted-foreground hidden text-sm xl:inline'>search games...</span>
+        </div>
+
+        <div className='text-secondary hidden h-12 items-center justify-center rounded-xl bg-white/3 text-xs xl:flex'>
+          last minute / today / all / etc
+        </div>
+
+        <div className='flex flex-col gap-2'>
+          {new Array(5).fill(5).map((_, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: identical
+            <div key={i} className='bg-dark-200 overflow-hidden rounded-xl'>
+              <div className='flex w-full items-center gap-2 px-4 py-3 hover:bg-white/4 data-[state=open]:bg-white/4'>
+                <Skeleton className='size-5' />
+                <Skeleton className='h-4 w-20' />
+              </div>
+            </div>
+          ))}
+        </div>
 
         <div className='mb-2 w-full rounded-full px-4 py-3 text-center text-sm'>...</div>
       </div>
@@ -308,8 +331,8 @@ function Tournaments(props: { category: SidebarTournaments$key }) {
             <Checkbox
               id={t.key}
               name={t.key}
-              defaultChecked={selected.some(e => e === t.id)}
               className='peer border-secondary ml-2'
+              checked={selected.some(e => e === t.id)}
               onCheckedChange={() => toggle(t.id)}
             />
             <Label

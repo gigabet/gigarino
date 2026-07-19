@@ -1,30 +1,27 @@
 'use client'
 
 import { useEffect } from 'react'
-import { fetchQuery, graphql, useRefetchableFragment, useRelayEnvironment } from 'react-relay'
-import type { PreloadedQueryRef } from 'react-relay/rsc_EXPERIMENTAL'
-import { useQueryFromServer } from 'react-relay/rsc-client_EXPERIMENTAL'
+import {
+  fetchQuery,
+  graphql,
+  type PreloadedQuery,
+  usePreloadedQuery,
+  useRefetchableFragment,
+  useRelayEnvironment,
+} from 'react-relay'
 import type { PrematchList$key } from '@/app/sport/[[...slug]]/__generated__/PrematchList.graphql'
 import PrematchListRefetchNode from '@/app/sport/[[...slug]]/__generated__/PrematchListRefetch.graphql'
-import type {
-  PrematchQuery,
-  PrematchQuery$data,
-  PrematchQuery$variables,
-} from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
+import type { PrematchQuery } from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
 import PrematchQueryNode from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
 import Tournament, { TournamentSkeleton } from '@/app/sport/[[...slug]]/tournament'
 
-export default function TournamentList(props: {
-  queryRef: PreloadedQueryRef<PrematchQuery$variables, PrematchQuery$data>
-}) {
-  const preloaded = useQueryFromServer<PrematchQuery>(PrematchQueryNode, props.queryRef, {
-    staleThresholdMs: 3_000,
-  })
+export default function TournamentList(props: { queryRef: PreloadedQuery<PrematchQuery> }) {
+  const preloaded = usePreloadedQuery<PrematchQuery>(PrematchQueryNode, props.queryRef)
 
   const [data] = useRefetchableFragment(
     graphql`
       fragment PrematchList on Query @refetchable(queryName: "PrematchListRefetch") {
-        topTournaments(first: 4) @stream(initialCount: 1) {
+        topTournaments(first: 0) @stream(initialCount: 0) {
           id
           ...Tournament
         }
@@ -59,7 +56,7 @@ export default function TournamentList(props: {
   )
 }
 
-export function PrematchListSkeleton() {
+export function TournamentListSkeleton() {
   return (
     <div className='mt-2 space-y-8'>
       <TournamentSkeleton />
