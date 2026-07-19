@@ -16,9 +16,6 @@ export default function SportLayout({ children }: { children: React.ReactNode })
   `)
 
   useEffect(() => {
-    // Always (re)load on mount — a fresh loadQuery call replaces whatever
-    // ref existed and hands out a brand-new, definitely-not-disposed one.
-    // store-or-network makes this cheap when data's already warm.
     loadQuery({}, { fetchPolicy: 'store-or-network' })
     return () => disposeQuery()
   }, [loadQuery, disposeQuery])
@@ -33,6 +30,8 @@ export default function SportLayout({ children }: { children: React.ReactNode })
       <Suspense fallback={<SidebarSkeleton />}>
         {queryRef ? <Sidebar queryRef={queryRef} /> : <SidebarSkeleton />}
       </Suspense>
+      {/* carousel, league pills, event list */}
+      {/* (implicit suspense boundary, filled by loading.tsx) */}
       {children}
       <div className='hidden xl:flex'>
         <Betslip />
