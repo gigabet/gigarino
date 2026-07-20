@@ -5,9 +5,9 @@ import { useQueryLoader } from 'react-relay'
 import { graphql } from 'relay-runtime'
 import type { PrematchQuery } from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
 import SportPageSkeleton from '@/app/sport/[[...slug]]/loading'
+import ShortcutRow from '@/app/sport/[[...slug]]/shortcut-row'
 import TournamentList, { useTournamentKeysFromUrl } from '@/app/sport/[[...slug]]/tournament-list'
 import Carousel from '@/app/sport/carousel'
-import ShortcutRow from '@/app/sport/shortcut-row'
 
 export default function SportPage() {
   // const params = useParams<{ slug?: string[] }>()
@@ -16,6 +16,7 @@ export default function SportPage() {
 
   const [queryRef, loadQuery, disposeQuery] = useQueryLoader<PrematchQuery>(graphql`
     query PrematchQuery($filterActive: Boolean!, $tournamentKeys: [ID!]!, $eventCount: Int!) {
+      ...ShortcutRow
       ...PrematchList @arguments(filterActive: $filterActive, tournamentKeys: $tournamentKeys)
     }
   `)
@@ -37,7 +38,7 @@ export default function SportPage() {
     return (
       <main className='flex min-w-0 flex-col gap-4'>
         <Carousel />
-        <ShortcutRow />
+        <ShortcutRow queryRef={queryRef} />
         <TournamentList queryRef={queryRef} />
       </main>
     )
