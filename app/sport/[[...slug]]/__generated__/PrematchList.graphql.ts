@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9b21a2fdd5b7c6293a08604e48f2aeb1>>
+ * @generated SignedSource<<8d0ba0c4d16df0a35ded5dd02b902989>>
  * @lightSyntaxTransform
  */
 
@@ -10,7 +10,11 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PrematchList$data = {
-  readonly topTournaments: ReadonlyArray<{
+  readonly topTournaments?: ReadonlyArray<{
+    readonly id: string;
+    readonly " $fragmentSpreads": FragmentRefs<"Tournament">;
+  }>;
+  readonly tournaments?: ReadonlyArray<{
     readonly id: string;
     readonly " $fragmentSpreads": FragmentRefs<"Tournament">;
   }>;
@@ -23,8 +27,34 @@ export type PrematchList$key = {
 
 import PrematchListRefetch_graphql from './PrematchListRefetch.graphql';
 
-const node: ReaderFragment = {
-  "argumentDefinitions": [],
+const node: ReaderFragment = (function(){
+var v0 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "id",
+    "storageKey": null
+  },
+  {
+    "args": null,
+    "kind": "FragmentSpread",
+    "name": "Tournament"
+  }
+];
+return {
+  "argumentDefinitions": [
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "filterActive"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "tournamentKeys"
+    }
+  ],
   "kind": "Fragment",
   "metadata": {
     "refetch": {
@@ -36,36 +66,58 @@ const node: ReaderFragment = {
   "name": "PrematchList",
   "selections": [
     {
-      "kind": "Stream",
+      "condition": "filterActive",
+      "kind": "Condition",
+      "passingValue": false,
       "selections": [
         {
-          "alias": null,
-          "args": [
-            {
-              "kind": "Literal",
-              "name": "first",
-              "value": 0
-            }
-          ],
-          "concreteType": "Tournament",
-          "kind": "LinkedField",
-          "name": "topTournaments",
-          "plural": true,
+          "kind": "Stream",
           "selections": [
             {
               "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "id",
-              "storageKey": null
-            },
-            {
-              "args": null,
-              "kind": "FragmentSpread",
-              "name": "Tournament"
+              "args": [
+                {
+                  "kind": "Literal",
+                  "name": "first",
+                  "value": 4
+                }
+              ],
+              "concreteType": "Tournament",
+              "kind": "LinkedField",
+              "name": "topTournaments",
+              "plural": true,
+              "selections": (v0/*:: as any*/),
+              "storageKey": "topTournaments(first:4)"
             }
-          ],
-          "storageKey": "topTournaments(first:0)"
+          ]
+        }
+      ]
+    },
+    {
+      "condition": "filterActive",
+      "kind": "Condition",
+      "passingValue": true,
+      "selections": [
+        {
+          "kind": "Stream",
+          "selections": [
+            {
+              "alias": null,
+              "args": [
+                {
+                  "kind": "Variable",
+                  "name": "ids",
+                  "variableName": "tournamentKeys"
+                }
+              ],
+              "concreteType": "Tournament",
+              "kind": "LinkedField",
+              "name": "tournaments",
+              "plural": true,
+              "selections": (v0/*:: as any*/),
+              "storageKey": null
+            }
+          ]
         }
       ]
     }
@@ -73,7 +125,8 @@ const node: ReaderFragment = {
   "type": "Query",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "53b607f298863d8478bafd96d7409225";
+(node as any).hash = "e7642c1392c21ae15a2920565d25f64a";
 
 export default node;

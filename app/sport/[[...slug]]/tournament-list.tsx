@@ -15,13 +15,22 @@ import type { PrematchQuery } from '@/app/sport/[[...slug]]/__generated__/Premat
 import PrematchQueryNode from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
 import Tournament, { TournamentSkeleton } from '@/app/sport/[[...slug]]/tournament'
 
-export default function TournamentList(props: { queryRef: PreloadedQuery<PrematchQuery> }) {
+export default function TournamentList(props: {
+  queryRef: PreloadedQuery<PrematchQuery>
+  tournamentKeys: string[]
+}) {
   const preloaded = usePreloadedQuery<PrematchQuery>(PrematchQueryNode, props.queryRef)
 
   const [data] = useRefetchableFragment(
     graphql`
-      fragment PrematchList on Query @refetchable(queryName: "PrematchListRefetch") {
-        topTournaments(first: 0) @stream(initialCount: 0) {
+      fragment PrematchList on Query
+      @refetchable(queryName: "PrematchListRefetch")
+      @argumentDefinitions(filterActive: { type: "Boolean!" }, tournamentKeys: { type: "[ID!]!" }) {
+        topTournaments(first: 4) @stream(initialCount: 1) @skip(if: $filterActive) {
+          id
+          ...Tournament
+        }
+        tournaments(ids: $tournamentKeys) @stream(initialCount: 1) @include(if: $filterActive) {
           id
           ...Tournament
         }
@@ -38,18 +47,21 @@ export default function TournamentList(props: { queryRef: PreloadedQuery<Prematc
       fetchQuery(
         environment,
         PrematchListRefetchNode,
-        {},
+        { filterActive: props.tournamentKeys.length > 0, tournamentKeys: props.tournamentKeys },
         { fetchPolicy: 'network-only' }
       ).subscribe({
         error: (err: Error) => console.error('[prematch-list] poll failed', err),
       })
     }, 3 * 60_000)
     return () => clearInterval(id)
-  }, [environment])
+  }, [environment, props.tournamentKeys])
 
   return (
     <div className='mt-2 space-y-8'>
-      {data.topTournaments.map(tournament => (
+      {data?.topTournaments?.map(tournament => (
+        <Tournament key={tournament.id} queryRef={tournament} />
+      ))}
+      {data?.tournaments?.map(tournament => (
         <Tournament key={tournament.id} queryRef={tournament} />
       ))}
     </div>

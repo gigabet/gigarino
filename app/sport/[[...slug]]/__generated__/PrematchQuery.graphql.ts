@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<271890de525ab04a609b0c07bee4a4f1>>
+ * @generated SignedSource<<38b0ef2a52099f3da5c45f9eed34f740>>
  * @lightSyntaxTransform
  */
 
@@ -9,7 +9,10 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PrematchQuery$variables = Record<PropertyKey, never>;
+export type PrematchQuery$variables = {
+  filterActive: boolean;
+  tournamentKeys: ReadonlyArray<string>;
+};
 export type PrematchQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"PrematchList">;
 };
@@ -19,29 +22,202 @@ export type PrematchQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "filterActive"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "tournamentKeys"
+  }
+],
+v1 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 4
+  }
+],
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v1 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-};
+},
+v4 = [
+  (v2/*:: as any*/),
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "Sport",
+    "kind": "LinkedField",
+    "name": "sport",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "key",
+        "storageKey": null
+      },
+      (v2/*:: as any*/)
+    ],
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "Category",
+    "kind": "LinkedField",
+    "name": "category",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "countryCode",
+        "storageKey": null
+      },
+      (v2/*:: as any*/)
+    ],
+    "storageKey": null
+  },
+  (v3/*:: as any*/),
+  {
+    "if": null,
+    "kind": "Defer",
+    "label": "Tournament$defer$TournamentEventList",
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*:: as any*/),
+        "concreteType": "EventConnection",
+        "kind": "LinkedField",
+        "name": "events",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "EventEdge",
+            "kind": "LinkedField",
+            "name": "edges",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PrematchEvent",
+                "kind": "LinkedField",
+                "name": "node",
+                "plural": false,
+                "selections": [
+                  (v2/*:: as any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "homeCompetitor",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "awayCompetitor",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "startTime",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Market",
+                    "kind": "LinkedField",
+                    "name": "markets",
+                    "plural": true,
+                    "selections": [
+                      (v2/*:: as any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "kind",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Outcome",
+                        "kind": "LinkedField",
+                        "name": "outcomes",
+                        "plural": true,
+                        "selections": [
+                          (v2/*:: as any*/),
+                          (v3/*:: as any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "price",
+                            "storageKey": null
+                          }
+                        ],
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": "events(first:4)"
+      }
+    ]
+  }
+];
 return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "PrematchQuery",
     "selections": [
       {
-        "args": null,
+        "args": [
+          {
+            "kind": "Variable",
+            "name": "filterActive",
+            "variableName": "filterActive"
+          },
+          {
+            "kind": "Variable",
+            "name": "tournamentKeys",
+            "variableName": "tournamentKeys"
+          }
+        ],
         "kind": "FragmentSpread",
         "name": "PrematchList"
       }
@@ -51,194 +227,77 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
     "name": "PrematchQuery",
     "selections": [
       {
-        "if": null,
-        "kind": "Stream",
-        "label": "PrematchList$stream$topTournaments_2KSsfl",
+        "condition": "filterActive",
+        "kind": "Condition",
+        "passingValue": false,
         "selections": [
           {
-            "alias": null,
-            "args": [
-              {
-                "kind": "Literal",
-                "name": "first",
-                "value": 0
-              }
-            ],
-            "concreteType": "Tournament",
-            "kind": "LinkedField",
-            "name": "topTournaments",
-            "plural": true,
+            "if": null,
+            "kind": "Stream",
+            "label": "PrematchList$stream$topTournaments_3z2gQm",
             "selections": [
-              (v0/*:: as any*/),
               {
                 "alias": null,
-                "args": null,
-                "concreteType": "Sport",
+                "args": (v1/*:: as any*/),
+                "concreteType": "Tournament",
                 "kind": "LinkedField",
-                "name": "sport",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "key",
-                    "storageKey": null
-                  },
-                  (v0/*:: as any*/)
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Category",
-                "kind": "LinkedField",
-                "name": "category",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "countryCode",
-                    "storageKey": null
-                  },
-                  (v0/*:: as any*/)
-                ],
-                "storageKey": null
-              },
-              (v1/*:: as any*/),
-              {
-                "if": null,
-                "kind": "Defer",
-                "label": "Tournament$defer$TournamentEventList",
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": [
-                      {
-                        "kind": "Literal",
-                        "name": "first",
-                        "value": 4
-                      }
-                    ],
-                    "concreteType": "EventConnection",
-                    "kind": "LinkedField",
-                    "name": "events",
-                    "plural": false,
-                    "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "EventEdge",
-                        "kind": "LinkedField",
-                        "name": "edges",
-                        "plural": true,
-                        "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "PrematchEvent",
-                            "kind": "LinkedField",
-                            "name": "node",
-                            "plural": false,
-                            "selections": [
-                              (v0/*:: as any*/),
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "homeCompetitor",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "awayCompetitor",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "startTime",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "concreteType": "Market",
-                                "kind": "LinkedField",
-                                "name": "markets",
-                                "plural": true,
-                                "selections": [
-                                  (v0/*:: as any*/),
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "kind",
-                                    "storageKey": null
-                                  },
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "concreteType": "Outcome",
-                                    "kind": "LinkedField",
-                                    "name": "outcomes",
-                                    "plural": true,
-                                    "selections": [
-                                      (v0/*:: as any*/),
-                                      (v1/*:: as any*/),
-                                      {
-                                        "alias": null,
-                                        "args": null,
-                                        "kind": "ScalarField",
-                                        "name": "price",
-                                        "storageKey": null
-                                      }
-                                    ],
-                                    "storageKey": null
-                                  }
-                                ],
-                                "storageKey": null
-                              }
-                            ],
-                            "storageKey": null
-                          }
-                        ],
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": "events(first:4)"
-                  }
-                ]
+                "name": "topTournaments",
+                "plural": true,
+                "selections": (v4/*:: as any*/),
+                "storageKey": "topTournaments(first:4)"
               }
-            ],
-            "storageKey": "topTournaments(first:0)"
+            ]
+          }
+        ]
+      },
+      {
+        "condition": "filterActive",
+        "kind": "Condition",
+        "passingValue": true,
+        "selections": [
+          {
+            "if": null,
+            "kind": "Stream",
+            "label": "PrematchList$stream$tournaments_eEJ6e",
+            "selections": [
+              {
+                "alias": null,
+                "args": [
+                  {
+                    "kind": "Variable",
+                    "name": "ids",
+                    "variableName": "tournamentKeys"
+                  }
+                ],
+                "concreteType": "Tournament",
+                "kind": "LinkedField",
+                "name": "tournaments",
+                "plural": true,
+                "selections": (v4/*:: as any*/),
+                "storageKey": null
+              }
+            ]
           }
         ]
       }
     ]
   },
   "params": {
-    "cacheID": "636f06ba745c86ab8455a701f22dd66c",
+    "cacheID": "00350364594ae7e89cd5d4531079e8cc",
     "id": null,
     "metadata": {},
     "name": "PrematchQuery",
     "operationKind": "query",
-    "text": "query PrematchQuery {\n  ...PrematchList\n}\n\nfragment ListViewMarkets on PrematchEvent {\n  markets {\n    id\n    kind\n    ...PrematchMarket\n  }\n}\n\nfragment PrematchEvent on PrematchEvent {\n  homeCompetitor\n  awayCompetitor\n  startTime\n  ...ListViewMarkets\n}\n\nfragment PrematchList on Query {\n  topTournaments(first: 0) @stream(label: \"PrematchList$stream$topTournaments_2KSsfl\", initialCount: 0) {\n    id\n    ...Tournament\n  }\n}\n\nfragment PrematchMarket on Market {\n  outcomes {\n    id\n    name\n    price\n  }\n}\n\nfragment Tournament on Tournament {\n  sport {\n    key\n    id\n  }\n  category {\n    countryCode\n    id\n  }\n  name\n  ...TournamentEventList @defer(label: \"Tournament$defer$TournamentEventList\")\n}\n\nfragment TournamentEventList on Tournament {\n  events(first: 4) {\n    edges {\n      node {\n        id\n        ...PrematchEvent\n      }\n    }\n  }\n}\n"
+    "text": "query PrematchQuery(\n  $filterActive: Boolean!\n  $tournamentKeys: [ID!]!\n) {\n  ...PrematchList_LEF20\n}\n\nfragment ListViewMarkets on PrematchEvent {\n  markets {\n    id\n    kind\n    ...PrematchMarket\n  }\n}\n\nfragment PrematchEvent on PrematchEvent {\n  homeCompetitor\n  awayCompetitor\n  startTime\n  ...ListViewMarkets\n}\n\nfragment PrematchList_LEF20 on Query {\n  topTournaments(first: 4) @skip(if: $filterActive) @stream(label: \"PrematchList$stream$topTournaments_3z2gQm\", initialCount: 1) {\n    id\n    ...Tournament\n  }\n  tournaments(ids: $tournamentKeys) @include(if: $filterActive) @stream(label: \"PrematchList$stream$tournaments_eEJ6e\", initialCount: 1) {\n    id\n    ...Tournament\n  }\n}\n\nfragment PrematchMarket on Market {\n  outcomes {\n    id\n    name\n    price\n  }\n}\n\nfragment Tournament on Tournament {\n  sport {\n    key\n    id\n  }\n  category {\n    countryCode\n    id\n  }\n  name\n  ...TournamentEventList @defer(label: \"Tournament$defer$TournamentEventList\")\n}\n\nfragment TournamentEventList on Tournament {\n  events(first: 4) {\n    edges {\n      node {\n        id\n        ...PrematchEvent\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "dc8acb17da37daf2111acd3f6002e5ce";
+(node as any).hash = "e2ed81381a07b7da7e73f9b7e1d30cc3";
 
 export default node;
