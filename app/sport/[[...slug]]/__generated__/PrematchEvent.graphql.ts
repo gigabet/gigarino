@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7b65b96f390f1266baf8f6617a392a19>>
+ * @generated SignedSource<<f57b22c9d6b9bda29e5c52917acbd146>>
  * @lightSyntaxTransform
  */
 
@@ -49,15 +49,20 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "ListViewMarkets"
+      "kind": "Defer",
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "ListViewMarkets"
+        }
+      ]
     }
   ],
   "type": "PrematchEvent",
   "abstractKey": null
 };
 
-(node as any).hash = "baf412bd60bc0dd0292be522936b8a47";
+(node as any).hash = "f140c2198296133747a5f48b7d164b5f";
 
 export default node;

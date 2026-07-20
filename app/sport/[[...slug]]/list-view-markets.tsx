@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Skeleton } from '@/components/ui/skeleton'
 import { cn, swap } from '@/lib/utils'
 
 const marketVisibility = [
@@ -63,6 +64,16 @@ export function ListViewMarkets(props: { event: ListViewMarkets$key }) {
           />
         )
       )}
+    </div>
+  )
+}
+
+export function ListViewMarketsSkeleton() {
+  return (
+    <div className='@container/markets ml-auto flex grow items-center justify-end gap-4'>
+      {[0, 1, 2, 3].map(i => (
+        <MarketSkeleton key={i} className={marketVisibility[i]} />
+      ))}
     </div>
   )
 }
@@ -134,6 +145,16 @@ function Market(props: { className?: string; market: PrematchMarket$key }) {
           </span>
         </Toggle.Root>
       ))}
+    </div>
+  )
+}
+
+function MarketSkeleton(props: { className?: string }) {
+  return (
+    <div className={cn('flex h-15 max-w-60 min-w-50 flex-1 grow gap-1', props.className)}>
+      <Skeleton className='h-full w-full flex-1' />
+      <Skeleton className='h-full w-full flex-1' />
+      <Skeleton className='h-full w-full flex-1' />
     </div>
   )
 }

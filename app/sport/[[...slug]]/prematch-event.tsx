@@ -2,11 +2,12 @@
 import { format } from 'date-fns'
 import { ChartNoAxesColumnIcon, ImageIcon } from 'lucide-react'
 import { Toggle } from 'radix-ui'
+import { Suspense } from 'react'
 import { graphql, useFragment } from 'react-relay'
 import type { ListViewMarkets$key } from '@/app/sport/[[...slug]]/__generated__/ListViewMarkets.graphql'
 import type { PrematchEvent$key } from '@/app/sport/[[...slug]]/__generated__/PrematchEvent.graphql'
 import type { PrematchMarket$key } from '@/app/sport/[[...slug]]/__generated__/PrematchMarket.graphql'
-import { ListViewMarkets } from '@/app/sport/[[...slug]]/list-view-markets'
+import { ListViewMarkets, ListViewMarketsSkeleton } from '@/app/sport/[[...slug]]/list-view-markets'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -19,7 +20,7 @@ export default function PrematchEvent(props: { node: PrematchEvent$key }) {
         homeCompetitor
         awayCompetitor
         startTime
-        ...ListViewMarkets
+        ...ListViewMarkets @defer
       }
     `,
     props.node
@@ -52,7 +53,9 @@ export default function PrematchEvent(props: { node: PrematchEvent$key }) {
         </div>
       </div>
 
-      <ListViewMarkets event={data} />
+      <Suspense fallback={<ListViewMarketsSkeleton />}>
+        <ListViewMarkets event={data} />
+      </Suspense>
 
       <div className='flex w-24 justify-end'>
         <Button variant='ghost' size='sm'>
