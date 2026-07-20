@@ -1,7 +1,7 @@
 'use client'
 
 import { useParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useQueryLoader } from 'react-relay'
 import { graphql } from 'relay-runtime'
 import type { PrematchQuery } from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
@@ -21,7 +21,14 @@ export default function SportPage() {
     }
   `)
 
+  const initialized = useRef(false)
   useEffect(() => {
+    if (initialized.current) return
+    initialized.current = true
+    // Load once with whatever's in the URL on first mount. Subsequent
+    // tournament changes are handled entirely inside TournamentList via
+    // refetch — this queryRef is not reloaded again for the life of this
+    // page instance.
     loadQuery(
       { filterActive: tournamentKeys.length > 0, tournamentKeys },
       { fetchPolicy: 'store-or-network' }
@@ -34,7 +41,7 @@ export default function SportPage() {
       <main className='flex min-w-0 flex-col gap-4'>
         <Carousel />
         <ShortcutRow />
-        <TournamentList queryRef={queryRef} tournamentKeys={tournamentKeys} />
+        <TournamentList queryRef={queryRef} />
       </main>
     )
 

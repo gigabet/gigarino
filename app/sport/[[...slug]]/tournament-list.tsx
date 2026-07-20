@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect } from 'react'
+import { usePathname } from 'next/navigation'
+import { useEffect, useMemo, useRef, useState, useTransition } from 'react'
 import {
   fetchQuery,
   graphql,
@@ -14,14 +15,21 @@ import PrematchListRefetchNode from '@/app/sport/[[...slug]]/__generated__/Prema
 import type { PrematchQuery } from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
 import PrematchQueryNode from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
 import Tournament, { TournamentSkeleton } from '@/app/sport/[[...slug]]/tournament'
+import { cn } from '@/lib/utils'
 
-export default function TournamentList(props: {
-  queryRef: PreloadedQuery<PrematchQuery>
-  tournamentKeys: string[]
-}) {
+function useTournamentKeysFromUrl() {
+  const pathname = usePathname()
+  return useMemo(() => {
+    const segments = pathname.split('/').filter(Boolean) // ['sport', filter?, tournaments?]
+    return segments[2]?.split(',').filter(Boolean) ?? []
+  }, [pathname])
+}
+
+export default function TournamentList(props: { queryRef: PreloadedQuery<PrematchQuery> }) {
   const preloaded = usePreloadedQuery<PrematchQuery>(PrematchQueryNode, props.queryRef)
+  const tournamentKeys = useTournamentKeysFromUrl()
 
-  const [data] = useRefetchableFragment(
+  const [data, refetch] = useRefetchableFragment(
     graphql`
       fragment PrematchList on Query
       @refetchable(queryName: "PrematchListRefetch")
@@ -39,25 +47,34 @@ export default function TournamentList(props: {
     preloaded as PrematchList$key
   )
 
+  const [isPending, startTransition] = useTransition()
+
+  useEffect(() => {
+    startTransition(() => {
+      refetch(
+        { filterActive: tournamentKeys.length > 0, tournamentKeys },
+        { fetchPolicy: 'store-or-network' } // reuses store data for ids already fetched
+      )
+    })
+  }, [tournamentKeys, refetch])
+
   const environment = useRelayEnvironment()
   useEffect(() => {
-    // updates Relay store and silently refreshes data without suspending
-    // calling the refetchable hook's method suspends, disabling the UI
     const id = window.setInterval(() => {
       fetchQuery(
         environment,
         PrematchListRefetchNode,
-        { filterActive: props.tournamentKeys.length > 0, tournamentKeys: props.tournamentKeys },
+        { filterActive: tournamentKeys.length > 0, tournamentKeys },
         { fetchPolicy: 'network-only' }
       ).subscribe({
         error: (err: Error) => console.error('[prematch-list] poll failed', err),
       })
     }, 3 * 60_000)
     return () => clearInterval(id)
-  }, [environment, props.tournamentKeys])
+  }, [environment, tournamentKeys])
 
   return (
-    <div className='mt-2 space-y-8'>
+    <div className={cn('mt-2 space-y-8', isPending && 'opacity-60 transition-opacity')}>
       {data?.topTournaments?.map(tournament => (
         <Tournament key={tournament.id} queryRef={tournament} />
       ))}
