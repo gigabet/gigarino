@@ -1,6 +1,6 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useRef, useState, useTransition } from 'react'
 import {
   fetchQuery,
@@ -17,12 +17,12 @@ import PrematchQueryNode from '@/app/sport/[[...slug]]/__generated__/PrematchQue
 import Tournament, { TournamentSkeleton } from '@/app/sport/[[...slug]]/tournament'
 import { cn } from '@/lib/utils'
 
-function useTournamentKeysFromUrl() {
-  const pathname = usePathname()
-  return useMemo(() => {
-    const segments = pathname.split('/').filter(Boolean) // ['sport', filter?, tournaments?]
-    return segments[2]?.split(',').filter(Boolean) ?? []
-  }, [pathname])
+export function useTournamentKeysFromUrl() {
+  const searchParams = useSearchParams()
+  return useMemo(
+    () => searchParams.get('tournaments')?.split(',').filter(Boolean) ?? [],
+    [searchParams]
+  )
 }
 
 export default function TournamentList(props: { queryRef: PreloadedQuery<PrematchQuery> }) {
@@ -53,7 +53,7 @@ export default function TournamentList(props: { queryRef: PreloadedQuery<Prematc
     startTransition(() => {
       refetch(
         { filterActive: tournamentKeys.length > 0, tournamentKeys },
-        { fetchPolicy: 'store-or-network' } // reuses store data for ids already fetched
+        { fetchPolicy: 'store-or-network' }
       )
     })
   }, [tournamentKeys, refetch])
@@ -75,10 +75,10 @@ export default function TournamentList(props: { queryRef: PreloadedQuery<Prematc
 
   return (
     <div className={cn('mt-2 space-y-8', isPending && 'opacity-60 transition-opacity')}>
-      {data?.topTournaments?.map(tournament => (
+      {data.topTournaments?.map(tournament => (
         <Tournament key={tournament.id} queryRef={tournament} />
       ))}
-      {data?.tournaments?.map(tournament => (
+      {data.tournaments?.map(tournament => (
         <Tournament key={tournament.id} queryRef={tournament} />
       ))}
     </div>

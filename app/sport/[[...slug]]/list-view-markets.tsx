@@ -1,8 +1,7 @@
 'use client'
 
 import { atom, useAtom, useAtomValue } from 'jotai'
-import { entries, indexOf, keys } from 'lodash'
-import { ChevronDown } from 'lucide-react'
+import { entries, keys } from 'lodash'
 import { Toggle } from 'radix-ui'
 import { graphql, useFragment } from 'react-relay'
 import type { ListViewMarkets$key } from '@/app/sport/[[...slug]]/__generated__/ListViewMarkets.graphql'
@@ -10,7 +9,6 @@ import type { PrematchMarket$key } from '@/app/sport/[[...slug]]/__generated__/P
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -48,9 +46,11 @@ export function ListViewMarkets(props: { event: ListViewMarkets$key }) {
   )
 
   const selectedMarkets = useAtomValue(selectedMarketsState)
-  const findMarketByPrefix = (prefix: string) =>
-    data.markets.find(m => m.kind.startsWith(prefix)) ?? null
-  const sortedMarkets = selectedMarkets.map(findMarketByPrefix)
+
+  if (!data?.markets) return <div className='ml-auto grow' />
+
+  const marketByKind = (kind: string) => data.markets.find(m => m.kind === kind) ?? null
+  const sortedMarkets = selectedMarkets.map(marketByKind)
 
   return (
     <div className='@container/markets ml-auto flex grow items-center justify-end gap-4'>

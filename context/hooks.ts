@@ -80,26 +80,28 @@ export const useDelta = (value: number) => {
   return delta
 }
 
-// hooks.ts
 export function useSelectedTournaments() {
   const router = useRouter()
   const pathname = usePathname()
+  const searchParams = useSearchParams()
 
-  const segments = useMemo(() => pathname.split('/').filter(Boolean), [pathname])
-  // segments: ['sport', filter?, tournaments?]
-  const filter = segments[1] ?? 'all'
-  const selected = useMemo(() => segments[2]?.split(',').filter(Boolean) ?? [], [segments])
+  const selected = useMemo(
+    () => searchParams.get('tournaments')?.split(',').filter(Boolean) ?? [],
+    [searchParams]
+  )
 
   const toggle = useCallback(
-    (idOrKey: string) => {
-      const next = selected.includes(idOrKey)
-        ? selected.filter(v => v !== idOrKey)
-        : [...selected, idOrKey]
+    (id: string) => {
+      const next = selected.includes(id) ? selected.filter(v => v !== id) : [...selected, id]
 
-      const path = next.length ? `/sport/${filter}/${next.join(',')}` : `/sport`
-      router.replace(path, { scroll: false })
+      const params = new URLSearchParams(searchParams)
+      next.length ? params.set('tournaments', next.join(',')) : params.delete('tournaments')
+
+      // Search-param-only change — Next treats this as a shallow update,
+      // not a route match change, so page.tsx/layout.tsx are not remounted.
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false })
     },
-    [selected, filter, router]
+    [selected, searchParams, pathname, router]
   )
 
   return { selected, toggle }
