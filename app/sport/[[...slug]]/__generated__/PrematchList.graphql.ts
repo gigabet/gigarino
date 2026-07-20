@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8d0ba0c4d16df0a35ded5dd02b902989>>
+ * @generated SignedSource<<3b25db2d37740b3a967291c24ddfe929>>
  * @lightSyntaxTransform
  */
 
@@ -44,6 +44,10 @@ var v0 = [
 ];
 return {
   "argumentDefinitions": [
+    {
+      "kind": "RootArgument",
+      "name": "eventCount"
+    },
     {
       "defaultValue": null,
       "kind": "LocalArgument",

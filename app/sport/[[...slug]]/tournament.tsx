@@ -51,7 +51,7 @@ function EventList(props: { tournament: TournamentEventList$key }) {
   const data = useFragment(
     graphql`
       fragment TournamentEventList on Tournament {
-        events(first: 4) {
+        events(first: $eventCount) {
           edges {
             node {
               id

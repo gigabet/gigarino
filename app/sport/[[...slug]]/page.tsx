@@ -15,22 +15,23 @@ export default function SportPage() {
   // const tournamentKeys = tournamentsSegment?.split(',').filter(Boolean) ?? []
 
   const [queryRef, loadQuery, disposeQuery] = useQueryLoader<PrematchQuery>(graphql`
-    query PrematchQuery($filterActive: Boolean!, $tournamentKeys: [ID!]!) {
+    query PrematchQuery($filterActive: Boolean!, $tournamentKeys: [ID!]!, $eventCount: Int!) {
       ...PrematchList @arguments(filterActive: $filterActive, tournamentKeys: $tournamentKeys)
     }
   `)
 
   const tournamentKeys = useTournamentKeysFromUrl()
+  const filterActive = tournamentKeys.length > 0
   const initialised = useRef(false)
   useEffect(() => {
     if (initialised.current) return
     initialised.current = true
     loadQuery(
-      { filterActive: tournamentKeys.length > 0, tournamentKeys },
+      { filterActive, tournamentKeys, eventCount: filterActive ? 20 : 4 },
       { fetchPolicy: 'store-or-network' }
     )
     return () => disposeQuery()
-  }, [loadQuery, disposeQuery, tournamentKeys])
+  }, [loadQuery, disposeQuery, tournamentKeys, filterActive])
 
   if (queryRef)
     return (

@@ -28,6 +28,7 @@ export function useTournamentKeysFromUrl() {
 export default function TournamentList(props: { queryRef: PreloadedQuery<PrematchQuery> }) {
   const preloaded = usePreloadedQuery<PrematchQuery>(PrematchQueryNode, props.queryRef)
   const tournamentKeys = useTournamentKeysFromUrl()
+  const filterActive = tournamentKeys.length > 0
 
   const [data, refetch] = useRefetchableFragment(
     graphql`
@@ -52,11 +53,11 @@ export default function TournamentList(props: { queryRef: PreloadedQuery<Prematc
   useEffect(() => {
     startTransition(() => {
       refetch(
-        { filterActive: tournamentKeys.length > 0, tournamentKeys },
+        { filterActive, tournamentKeys, eventCount: filterActive ? 20 : 4 },
         { fetchPolicy: 'store-or-network' }
       )
     })
-  }, [tournamentKeys, refetch])
+  }, [tournamentKeys, refetch, filterActive])
 
   const environment = useRelayEnvironment()
   useEffect(() => {

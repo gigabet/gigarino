@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bb49794b60b55a7b813cbdf490c5c062>>
+ * @generated SignedSource<<4b2bf6ee6b088be469083f98051f4b0a>>
  * @lightSyntaxTransform
  */
 
@@ -26,7 +26,12 @@ export type TournamentEventList$key = {
 };
 
 const node: ReaderFragment = {
-  "argumentDefinitions": [],
+  "argumentDefinitions": [
+    {
+      "kind": "RootArgument",
+      "name": "eventCount"
+    }
+  ],
   "kind": "Fragment",
   "metadata": null,
   "name": "TournamentEventList",
@@ -35,9 +40,9 @@ const node: ReaderFragment = {
       "alias": null,
       "args": [
         {
-          "kind": "Literal",
+          "kind": "Variable",
           "name": "first",
-          "value": 4
+          "variableName": "eventCount"
         }
       ],
       "concreteType": "EventConnection",
@@ -80,13 +85,13 @@ const node: ReaderFragment = {
           "storageKey": null
         }
       ],
-      "storageKey": "events(first:4)"
+      "storageKey": null
     }
   ],
   "type": "Tournament",
   "abstractKey": null
 };
 
-(node as any).hash = "1822846eacdba7cda029408134116470";
+(node as any).hash = "26e9d8034d6f4a37796a0907bb2f3d70";
 
 export default node;
