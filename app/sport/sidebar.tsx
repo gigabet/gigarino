@@ -18,7 +18,7 @@ import {
 } from 'react-relay'
 import type { PrematchLayoutQuery } from '@/app/sport/__generated__/PrematchLayoutQuery.graphql'
 import PrematchLayoutQueryNode from '@/app/sport/__generated__/PrematchLayoutQuery.graphql'
-import type { Sidebar$key } from '@/app/sport/__generated__/Sidebar.graphql'
+import type { Sidebar$data, Sidebar$key } from '@/app/sport/__generated__/Sidebar.graphql'
 import type { SidebarCountryItem$key } from '@/app/sport/__generated__/SidebarCountryItem.graphql'
 import type { SidebarCountryList$key } from '@/app/sport/__generated__/SidebarCountryList.graphql'
 import type { SidebarSport$key } from '@/app/sport/__generated__/SidebarSport.graphql'
@@ -30,13 +30,29 @@ import SidebarTournamentsLoadNode, {
   type SidebarTournamentsLoad,
 } from '@/app/sport/__generated__/SidebarTournamentsLoad.graphql'
 import { SportIcon } from '@/components/sport-icon'
+import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Field, FieldGroup } from '@/components/ui/field'
 import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useSelectedTournaments } from '@/context/hooks'
 
-const sportOrder = ['football', 'tennis', 'basketball', 'ice-hockey']
+const sportOrder = [
+  'football',
+  'tennis',
+  'basketball',
+  'ice-hockey',
+  'esoccer',
+  'etennis',
+  'ebasketball',
+  'e-ice-hockey',
+]
+
+const getEventCount = (sport: Omit<Sidebar$data['sports'][number], ' $fragmentSpreads'>) =>
+  sport.categories.reduce(
+    (acc, curr) => acc + curr.tournaments.reduce((acc, curr) => acc + curr.events.totalCount, 0),
+    0
+  )
 
 export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayoutQuery> }) {
   const preloaded = usePreloadedQuery<PrematchLayoutQuery>(PrematchLayoutQueryNode, props.queryRef)
@@ -46,17 +62,29 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
       fragment Sidebar on Query {
         sports @stream(initialCount: 4) {
           key
+          categories {
+            tournaments {
+              events {
+                totalCount
+              }
+            }
+          }
           ...SidebarSport
+        }
+        sb_topTournaments: topTournaments(first: 4) @stream(initialCount: 1) {
+          events {
+            totalCount
+          }
         }
       }
     `,
     preloaded
   )
 
-  const orderedSports = sortBy(data.sports, sport => {
+  const filteredSports = sortBy(data.sports, sport => {
     const index = sportOrder.indexOf(sport.key)
-    return index === -1 ? Infinity : index // Put unknown kinds at the end
-  })
+    return index === -1 ? Infinity : index
+  }).filter(s => getEventCount(s) > 0)
 
   return (
     <aside className='scrollbar-hide! scrollbar-thumb-dark-300 sticky top-26.25 hidden max-h-[calc(100dvh-7rem)] w-full scrollbar-thin scrollbar-track-transparent place-self-start overflow-y-auto md:block'>
@@ -84,14 +112,18 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
             >
               <SportIcon sport='highlights' className='size-5' />{' '}
               <span className='mr-auto text-sm'>Highlights</span>
+              <span className='text-secondary text-xs'>
+                {data.sb_topTournaments.reduce(
+                  (acc, curr) => acc + Math.min(4, curr.events.totalCount),
+                  0
+                )}
+              </span>
             </Link>
           </div>
-          {orderedSports.map(sport => (
+          {filteredSports.map(sport => (
             <Sport key={sport.key} sport={sport} />
           ))}
         </Accordion.Root>
-
-        <div className='mb-2 w-full rounded-full px-4 py-3 text-center text-sm'>...</div>
       </div>
     </aside>
   )
@@ -111,18 +143,18 @@ export function SidebarSkeleton() {
         </div>
 
         <div className='flex flex-col gap-2'>
-          {new Array(5).fill(5).map((_, i) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: identical
-            <div key={i} className='bg-dark-200 overflow-hidden rounded-xl'>
-              <div className='flex w-full items-center gap-2 px-4 py-3 hover:bg-white/4 data-[state=open]:bg-white/4'>
-                <Skeleton className='size-5' />
-                <Skeleton className='h-4 w-20' />
+          {Array(5)
+            .fill(5)
+            .map((_, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: identical
+              <div key={i} className='bg-dark-200 overflow-hidden rounded-xl'>
+                <div className='flex w-full items-center gap-2 px-4 py-3 hover:bg-white/4 data-[state=open]:bg-white/4'>
+                  <Skeleton className='size-5' />
+                  <Skeleton className='h-4 w-20' />
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
-
-        <div className='mb-2 w-full rounded-full px-4 py-3 text-center text-sm'>...</div>
       </div>
     </aside>
   )
@@ -134,6 +166,13 @@ function Sport(props: { sport: SidebarSport$key }) {
       fragment SidebarSport on Sport {
         key
         name
+        categories {
+          tournaments {
+            events {
+              totalCount
+            }
+          }
+        }
       }
     `,
     props.sport
@@ -162,6 +201,7 @@ function Sport(props: { sport: SidebarSport$key }) {
       >
         <SportIcon sport={data.key} className='size-5' />{' '}
         <span className='mr-auto text-sm'>{data.name}</span>
+        <span className='text-secondary text-xs'>{getEventCount(data)}</span>
       </Accordion.Trigger>
       <Accordion.Content
         data-slot='accordion-content'
@@ -184,6 +224,11 @@ function CountryList(props: { queryRef: PreloadedQuery<SidebarSportDetails> }) {
       fragment SidebarCountryList on Sport {
         categories {
           key
+          tournaments {
+            events {
+              totalCount
+            }
+          }
           ...SidebarCountryItem
         }
       }
@@ -193,9 +238,11 @@ function CountryList(props: { queryRef: PreloadedQuery<SidebarSportDetails> }) {
 
   return (
     <Accordion.Root type='multiple' className='space-y-0.5'>
-      {data.categories.map(country => (
-        <CountryItem key={country.key} country={country} />
-      ))}
+      {data.categories
+        .filter(c => c.tournaments.reduce((acc, curr) => acc + curr.events.totalCount, 0) > 0)
+        .map(country => (
+          <CountryItem key={country.key} country={country} />
+        ))}
     </Accordion.Root>
   )
 }
@@ -208,6 +255,11 @@ function CountryItem(props: { country: SidebarCountryItem$key }) {
         key
         countryCode
         name
+        # tournaments {
+        #   events {
+        #     totalCount
+        #   }
+        # }
         ...SidebarTournaments
       }
     `,
@@ -244,7 +296,10 @@ function CountryItem(props: { country: SidebarCountryItem$key }) {
           className='w-5 rounded-[3px]'
           style={{ width: undefined, height: undefined }}
         />{' '}
-        <span className='text-[0.8rem] font-normal'>{data.name}</span>
+        <span className='mr-auto text-[0.8rem] font-normal'>{data.name}</span>
+        {/* <span className='text-secondary text-xs'>
+          {data.tournaments.reduce((acc, curr) => acc + curr.events.totalCount, 0)}
+        </span> */}
       </Accordion.Trigger>
       <Accordion.Content
         data-slot='accordion-content'
@@ -265,9 +320,11 @@ function Tournaments(props: { category: SidebarTournaments$key }) {
       @argumentDefinitions(open: { type: "Boolean", defaultValue: false })
       @refetchable(queryName: "SidebarTournamentsLoad") {
         tournaments @include(if: $open) {
-          id
           key
           name
+          events {
+            totalCount
+          }
         }
       }
     `,
@@ -284,8 +341,9 @@ function Tournaments(props: { category: SidebarTournaments$key }) {
   const { toggle, selected } = useSelectedTournaments()
   if (!data?.tournaments) return null
 
-  const ROW_HEIGHT = 36 // matches the Field row height incl. gap
-  const totalHeight = (data.tournaments.length ?? 0) * ROW_HEIGHT
+  const validTourns = data.tournaments.filter(t => t.events.totalCount > 0)
+  const ROW_HEIGHT = 42 // matches the Field row height incl. gap
+  const totalHeight = (validTourns.length ?? 0) * ROW_HEIGHT
 
   return (
     <div className='relative pl-6'>
@@ -301,12 +359,12 @@ function Tournaments(props: { category: SidebarTournaments$key }) {
           x1={6}
           y1={0}
           x2={6}
-          y2={(data.tournaments.length - 0.5) * ROW_HEIGHT}
+          y2={(validTourns.length - 0.5) * ROW_HEIGHT}
           stroke='currentColor'
           strokeWidth={1}
           className='text-secondary/20'
         />
-        {data.tournaments.map((t, i) => (
+        {validTourns.map((t, i) => (
           <line
             key={t.key}
             x1={6}
@@ -321,7 +379,7 @@ function Tournaments(props: { category: SidebarTournaments$key }) {
       </svg>
 
       <FieldGroup className='gap-0 py-0.5'>
-        {data.tournaments.map(t => (
+        {validTourns.map(t => (
           <Field
             key={t.key}
             orientation='horizontal'
@@ -332,14 +390,17 @@ function Tournaments(props: { category: SidebarTournaments$key }) {
               id={t.key}
               name={t.key}
               className='peer border-secondary ml-2'
-              checked={selected.includes(t.id)}
-              onCheckedChange={() => toggle(t.id)}
+              checked={selected.includes(t.key)}
+              onCheckedChange={() => toggle(t.key)}
             />
             <Label
               htmlFor={t.key}
-              className='text-secondary peer-data-[state=checked]:text-foreground cursor-pointer text-xs font-normal'
+              className='text-secondary peer-data-[state=checked]:text-foreground flex grow cursor-pointer justify-between gap-4 text-xs font-normal'
             >
-              {t.name}
+              <span className='line-clamp-2 leading-tight'>{t.name}</span>
+              <span className='bg-dark-300 rounded-lg px-2 py-1 font-mono text-[0.67rem]'>
+                {t.events.totalCount}
+              </span>
             </Label>
           </Field>
         ))}
@@ -351,23 +412,25 @@ function Tournaments(props: { category: SidebarTournaments$key }) {
 function CategorySkeleton() {
   return (
     <div className='space-y-0.5'>
-      {new Array(6).fill(6).map((_, i) => (
-        <div
-          // biome-ignore lint/suspicious/noArrayIndexKey: identical elements
-          key={i}
-          className='flex w-full items-center gap-2 px-4 py-2 hover:bg-white/3 data-[state=open]:bg-white/3'
-        >
-          <Skeleton className='h-4 w-5 rounded-[3px]' /> <Skeleton className='h-4 w-25' />
-        </div>
-      ))}
+      {Array(6)
+        .fill(6)
+        .map((_, i) => (
+          <div
+            // biome-ignore lint/suspicious/noArrayIndexKey: identical elements
+            key={i}
+            className='flex w-full items-center gap-2 px-4 py-2 hover:bg-white/3 data-[state=open]:bg-white/3'
+          >
+            <Skeleton className='h-4 w-5 rounded-[3px]' /> <Skeleton className='h-4 w-25' />
+          </div>
+        ))}
     </div>
   )
 }
 
 function TournamentListSkeleton() {
-  const ROW_HEIGHT = 36 // matches the Field row height incl. gap
-  const totalHeight = 6 * ROW_HEIGHT
-  const els = new Array(2).fill(2)
+  const ROW_HEIGHT = 42 // matches the Field row height incl. gap
+  const totalHeight = 2 * ROW_HEIGHT
+  const els = Array(2).fill(2)
 
   return (
     <div className='relative pl-6'>

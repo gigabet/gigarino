@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3b25db2d37740b3a967291c24ddfe929>>
+ * @generated SignedSource<<24f2591520b1180146c473c487f16b35>>
  * @lightSyntaxTransform
  */
 
@@ -110,7 +110,7 @@ return {
               "args": [
                 {
                   "kind": "Variable",
-                  "name": "ids",
+                  "name": "keys",
                   "variableName": "tournamentKeys"
                 }
               ],
@@ -131,6 +131,6 @@ return {
 };
 })();
 
-(node as any).hash = "e7642c1392c21ae15a2920565d25f64a";
+(node as any).hash = "f2ec6661371ec79eddc174a67c48785b";
 
 export default node;

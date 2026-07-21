@@ -34,12 +34,15 @@ export default function TournamentList(props: { queryRef: PreloadedQuery<Prematc
     graphql`
       fragment PrematchList on Query
       @refetchable(queryName: "PrematchListRefetch")
-      @argumentDefinitions(filterActive: { type: "Boolean!" }, tournamentKeys: { type: "[ID!]!" }) {
+      @argumentDefinitions(
+        filterActive: { type: "Boolean!" }
+        tournamentKeys: { type: "[String!]!" }
+      ) {
         topTournaments(first: 4) @stream(initialCount: 1) @skip(if: $filterActive) {
           id
           ...Tournament
         }
-        tournaments(ids: $tournamentKeys) @stream(initialCount: 1) @include(if: $filterActive) {
+        tournaments(keys: $tournamentKeys) @stream(initialCount: 1) @include(if: $filterActive) {
           id
           ...Tournament
         }

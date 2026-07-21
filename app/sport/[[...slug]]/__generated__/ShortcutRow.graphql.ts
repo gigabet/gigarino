@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<aed8620e9166f16001abb3b079fb7c85>>
+ * @generated SignedSource<<00f20c2dc2ee19116f813a56b10c457c>>
  * @lightSyntaxTransform
  */
 
@@ -11,7 +11,7 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ShortcutRow$data = {
   readonly scr_topTournaments: ReadonlyArray<{
-    readonly id: string;
+    readonly key: string;
     readonly name: string;
     readonly sport: {
       readonly key: string;
@@ -24,7 +24,15 @@ export type ShortcutRow$key = {
   readonly " $fragmentSpreads": FragmentRefs<"ShortcutRow">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "key",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
@@ -55,23 +63,11 @@ const node: ReaderFragment = {
               "name": "sport",
               "plural": false,
               "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "key",
-                  "storageKey": null
-                }
+                (v0/*:: as any*/)
               ],
               "storageKey": null
             },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "id",
-              "storageKey": null
-            },
+            (v0/*:: as any*/),
             {
               "alias": null,
               "args": null,
@@ -88,7 +84,8 @@ const node: ReaderFragment = {
   "type": "Query",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "4a54ed47458a00e721b14879a8fb4192";
+(node as any).hash = "d5bf894a43f5d5f13f07fae6f38c392e";
 
 export default node;

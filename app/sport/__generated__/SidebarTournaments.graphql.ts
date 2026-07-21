@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b33c8886d2b46be3ecf0810a7a982a61>>
+ * @generated SignedSource<<6066040f7f6ba464d9d32d4ac1b3e7c7>>
  * @lightSyntaxTransform
  */
 
@@ -12,7 +12,9 @@ import { FragmentRefs } from "relay-runtime";
 export type SidebarTournaments$data = {
   readonly id: string;
   readonly tournaments?: ReadonlyArray<{
-    readonly id: string;
+    readonly events: {
+      readonly totalCount: number;
+    };
     readonly key: string;
     readonly name: string;
   }>;
@@ -25,15 +27,7 @@ export type SidebarTournaments$key = {
 
 import SidebarTournamentsLoad_graphql from './SidebarTournamentsLoad.graphql';
 
-const node: ReaderFragment = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [
     {
       "defaultValue": false,
@@ -70,7 +64,6 @@ return {
           "name": "tournaments",
           "plural": true,
           "selections": [
-            (v0/*:: as any*/),
             {
               "alias": null,
               "args": null,
@@ -84,19 +77,42 @@ return {
               "kind": "ScalarField",
               "name": "name",
               "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "EventConnection",
+              "kind": "LinkedField",
+              "name": "events",
+              "plural": false,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "totalCount",
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
             }
           ],
           "storageKey": null
         }
       ]
     },
-    (v0/*:: as any*/)
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    }
   ],
   "type": "Category",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "74fbea9d2c5cdb17af3172f53b055340";
+(node as any).hash = "602b69ef6a9fd1aee0589d2737749803";
 
 export default node;

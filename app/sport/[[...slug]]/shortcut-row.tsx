@@ -1,5 +1,6 @@
 'use client'
 
+import { uniqBy } from 'lodash'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { GiSoccerBall, GiTennisBall } from 'react-icons/gi'
@@ -28,7 +29,7 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
           sport {
             key
           }
-          id
+          key
           name
         }
       }
@@ -42,16 +43,16 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
   if (!preloaded) return <ShortcutRowSkeleton />
 
   const shortcuts = [
-    ...data.scr_topTournaments.map(t => ({
+    ...uniqBy(data.scr_topTournaments, 'label').map(t => ({
       label: t.name,
       icon: <SportIcon sport={t.sport.key} className='group-data-active:text-accent-foreground' />,
       href: {
         pathname,
-        query: { tournaments: t.id },
+        query: { tournaments: t.key },
       },
-      id: t.id,
+      key: t.key,
     })),
-    ...sample.map(s => ({ ...s, icon: <s.icon />, id: null })),
+    ...sample.map(s => ({ ...s, icon: <s.icon />, key: null })),
   ]
 
   return (
@@ -61,7 +62,7 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
           <Link
             href={e.href}
             key={e.label}
-            data-active={(selected.length === 1 && selected[0] === e.id) || null}
+            data-active={(selected.length === 1 && selected[0] === e.key) || null}
             className='group bg-muted/40 hover:bg-muted data-active:bg-accent inline-flex h-10 shrink-0 items-center gap-2 rounded-full px-3.5 whitespace-nowrap transition'
           >
             {e.icon}

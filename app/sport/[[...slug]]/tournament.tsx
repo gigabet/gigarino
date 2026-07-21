@@ -1,7 +1,7 @@
 'use client'
 
-import { ChevronDown } from 'lucide-react'
 import { Suspense } from 'react'
+import ReactCountryFlag from 'react-country-flag'
 import { graphql, useFragment } from 'react-relay'
 import type { Tournament$key } from '@/app/sport/[[...slug]]/__generated__/Tournament.graphql'
 import type { TournamentEventList$key } from '@/app/sport/[[...slug]]/__generated__/TournamentEventList.graphql'
@@ -32,9 +32,12 @@ export default function Tournament(props: { queryRef: Tournament$key }) {
       <div className='text-secondary mb-4 flex items-end gap-4 border-b py-2 text-sm'>
         <h2 className='flex w-90 items-center gap-2'>
           <SportIcon sport={data.sport.key} className='size-4.5' />
-          <span className='text-uppercase flex size-6 items-center justify-center rounded-full bg-white/3 text-[0.5rem] leading-none'>
-            {data.category.countryCode ?? 'INT'}
-          </span>
+          <ReactCountryFlag
+            svg
+            countryCode={data.category.countryCode ?? 'UN'}
+            className='w-5 rounded-xs shadow-xs'
+            style={{ width: undefined, height: undefined }}
+          />
           <span className='truncate'>{data.name}</span>
         </h2>
         <ListViewMarketDropdowns />

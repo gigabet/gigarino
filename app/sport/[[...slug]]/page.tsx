@@ -15,7 +15,7 @@ export default function SportPage() {
   // const tournamentKeys = tournamentsSegment?.split(',').filter(Boolean) ?? []
 
   const [queryRef, loadQuery, disposeQuery] = useQueryLoader<PrematchQuery>(graphql`
-    query PrematchQuery($filterActive: Boolean!, $tournamentKeys: [ID!]!, $eventCount: Int!) {
+    query PrematchQuery($filterActive: Boolean!, $tournamentKeys: [String!]!, $eventCount: Int!) {
       ...ShortcutRow
       ...PrematchList @arguments(filterActive: $filterActive, tournamentKeys: $tournamentKeys)
     }

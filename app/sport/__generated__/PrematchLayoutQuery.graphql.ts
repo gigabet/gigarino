@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5d8a7ef6e491ee70c11a77d6f34d3aa7>>
+ * @generated SignedSource<<7b549d4153128d3cbf3cba77a1e78b61>>
  * @lightSyntaxTransform
  */
 
@@ -18,7 +18,36 @@ export type PrematchLayoutQuery = {
   variables: PrematchLayoutQuery$variables;
 };
 
-const node: ConcreteRequest = {
+const node: ConcreteRequest = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v1 = [
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "EventConnection",
+    "kind": "LinkedField",
+    "name": "events",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "totalCount",
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  },
+  (v0/*:: as any*/)
+];
+return {
   "fragment": {
     "argumentDefinitions": [],
     "kind": "Fragment",
@@ -63,33 +92,73 @@ const node: ConcreteRequest = {
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "name",
+                "concreteType": "Category",
+                "kind": "LinkedField",
+                "name": "categories",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Tournament",
+                    "kind": "LinkedField",
+                    "name": "tournaments",
+                    "plural": true,
+                    "selections": (v1/*:: as any*/),
+                    "storageKey": null
+                  },
+                  (v0/*:: as any*/)
+                ],
                 "storageKey": null
               },
               {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "id",
+                "name": "name",
                 "storageKey": null
-              }
+              },
+              (v0/*:: as any*/)
             ],
             "storageKey": null
+          }
+        ]
+      },
+      {
+        "if": null,
+        "kind": "Stream",
+        "label": "Sidebar$stream$sb_topTournaments_3z2gQm",
+        "selections": [
+          {
+            "alias": "sb_topTournaments",
+            "args": [
+              {
+                "kind": "Literal",
+                "name": "first",
+                "value": 4
+              }
+            ],
+            "concreteType": "Tournament",
+            "kind": "LinkedField",
+            "name": "topTournaments",
+            "plural": true,
+            "selections": (v1/*:: as any*/),
+            "storageKey": "topTournaments(first:4)"
           }
         ]
       }
     ]
   },
   "params": {
-    "cacheID": "655e5e55fa3153d9bc05eb28c4841112",
+    "cacheID": "b3a9cb0f777f44239e800be8ec4c28b2",
     "id": null,
     "metadata": {},
     "name": "PrematchLayoutQuery",
     "operationKind": "query",
-    "text": "query PrematchLayoutQuery {\n  ...Sidebar\n}\n\nfragment Sidebar on Query {\n  sports @stream(label: \"Sidebar$stream$sports\", initialCount: 4) {\n    key\n    ...SidebarSport\n    id\n  }\n}\n\nfragment SidebarSport on Sport {\n  key\n  name\n}\n"
+    "text": "query PrematchLayoutQuery {\n  ...Sidebar\n}\n\nfragment Sidebar on Query {\n  sports @stream(label: \"Sidebar$stream$sports\", initialCount: 4) {\n    key\n    categories {\n      tournaments {\n        events {\n          totalCount\n        }\n        id\n      }\n      id\n    }\n    ...SidebarSport\n    id\n  }\n  sb_topTournaments: topTournaments(first: 4) @stream(label: \"Sidebar$stream$sb_topTournaments_3z2gQm\", initialCount: 1) {\n    events {\n      totalCount\n    }\n    id\n  }\n}\n\nfragment SidebarSport on Sport {\n  key\n  name\n  categories {\n    tournaments {\n      events {\n        totalCount\n      }\n      id\n    }\n    id\n  }\n}\n"
   }
 };
+})();
 
 (node as any).hash = "6bec2eee6c5533bda511c16d9448c8a8";
 
