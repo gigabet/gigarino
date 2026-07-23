@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { useQueryLoader } from 'react-relay'
 import { graphql } from 'relay-runtime'
 import type { PrematchQuery } from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
@@ -23,10 +23,7 @@ export default function SportPage() {
 
   const tournamentKeys = useTournamentKeysFromUrl()
   const filterActive = tournamentKeys.length > 0
-  const initialised = useRef(false)
   useEffect(() => {
-    if (initialised.current) return
-    initialised.current = true
     loadQuery(
       { filterActive, tournamentKeys, eventCount: filterActive ? 20 : 4 },
       { fetchPolicy: 'store-or-network' }

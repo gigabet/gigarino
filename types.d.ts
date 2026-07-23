@@ -106,3 +106,75 @@ export type LossCashbackPromotion = ReplaceKeys<
   AvailablePromotionDto,
   { type: 'LOSS_CASHBACK'; rules: LossCashbackRulesDto }
 >
+
+export type BetItemStatus = 'LOST' | 'PENDING' | 'PUSH' | 'VOID' | 'WON'
+
+export type BetRejectionCode =
+  | 'CASHOUT_UNAVAILABLE'
+  | 'CUTOFF_PASSED'
+  | 'DUPLICATE_EVENT'
+  | 'EVENT_NOT_BETTABLE'
+  | 'INSUFFICIENT_FUNDS'
+  | 'INTERNAL_ERROR'
+  | 'LIABILITY_LIMIT'
+  | 'ODDS_LIMIT'
+  | 'OUTCOME_NOT_AVAILABLE'
+  | 'PRICE_CHANGED'
+  | 'PROVIDER_CURRENCY'
+  | 'STAKE_LIMIT'
+  | 'SYSTEM_NOT_SUPPORTED'
+  | 'WALLET_UNAVAILABLE'
+
+export type BetslipItemAvailability =
+  | 'AVAILABLE'
+  | 'CUTOFF_PASSED'
+  | 'DUPLICATE_EVENT'
+  | 'EVENT_NOT_BETTABLE'
+  | 'NOT_FOUND'
+  | 'SUSPENDED'
+
+export type EventStatus = 'ABANDONED' | 'CANCELLED' | 'ENDED' | 'LIVE' | 'POSTPONED' | 'SCHEDULED'
+
+export type LiveEventState = 'ENDED' | 'LIVE' | 'SUSPENDED'
+
+export type MarketGroup =
+  | 'CARDS'
+  | 'CORNERS'
+  | 'GOALS'
+  | 'MAIN'
+  | 'PENALTIES'
+  | 'PLAYERS'
+  | 'SPECIAL'
+
+export type MarketPeriod =
+  | 'FIRST_HALF'
+  | 'FIRST_PERIOD'
+  | 'FIRST_SET'
+  | 'FOURTH_PERIOD'
+  | 'FULL_TIME'
+  | 'INCLUDING_OVERTIME'
+  | 'SECOND_HALF'
+  | 'SECOND_PERIOD'
+  | 'SECOND_SET'
+  | 'THIRD_PERIOD'
+  | 'THIRD_SET'
+
+export type MarketStatus = 'CLOSED' | 'OPEN' | 'SUSPENDED'
+
+export type OddsChangePolicy = 'ACCEPT_ANY' | 'ACCEPT_HIGHER' | 'REJECT'
+
+export type OutcomeStatus = 'OPEN' | 'REMOVED' | 'SUSPENDED'
+
+export type TicketStatus =
+  | 'ACCEPTED'
+  | 'CASHED_OUT'
+  | 'LOST'
+  | 'PARTIALLY_CASHED_OUT'
+  | 'PENDING_ACCEPTANCE'
+  | 'REJECTED'
+  | 'VOID'
+  | 'WON'
+
+export type TicketType = 'MULTIPLE' | 'SINGLE' | 'SYSTEM'
+
+export type TradingStatus = 'CLOSED' | 'OPEN' | 'SUSPENDED'
