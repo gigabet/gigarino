@@ -100,7 +100,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
               <span className='mr-auto text-sm'>Highlights</span>
               <span className='text-secondary text-xs'>
                 {data.sb_topTournaments.reduce(
-                  (acc, curr) => acc + Math.min(4, curr.eventCount),
+                  (acc, curr) => acc + Math.min(4, curr?.eventCount ?? 0),
                   0
                 )}
               </span>
