@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7b549d4153128d3cbf3cba77a1e78b61>>
+ * @generated SignedSource<<508979fe226ed9a95203863c068d3b35>>
  * @lightSyntaxTransform
  */
 
@@ -23,30 +23,16 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "eventCount",
   "storageKey": null
 },
-v1 = [
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "EventConnection",
-    "kind": "LinkedField",
-    "name": "events",
-    "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "totalCount",
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  },
-  (v0/*:: as any*/)
-];
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": [],
@@ -89,28 +75,7 @@ return {
                 "name": "key",
                 "storageKey": null
               },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Category",
-                "kind": "LinkedField",
-                "name": "categories",
-                "plural": true,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Tournament",
-                    "kind": "LinkedField",
-                    "name": "tournaments",
-                    "plural": true,
-                    "selections": (v1/*:: as any*/),
-                    "storageKey": null
-                  },
-                  (v0/*:: as any*/)
-                ],
-                "storageKey": null
-              },
+              (v0/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -118,7 +83,7 @@ return {
                 "name": "name",
                 "storageKey": null
               },
-              (v0/*:: as any*/)
+              (v1/*:: as any*/)
             ],
             "storageKey": null
           }
@@ -142,7 +107,10 @@ return {
             "kind": "LinkedField",
             "name": "topTournaments",
             "plural": true,
-            "selections": (v1/*:: as any*/),
+            "selections": [
+              (v0/*:: as any*/),
+              (v1/*:: as any*/)
+            ],
             "storageKey": "topTournaments(first:4)"
           }
         ]
@@ -150,12 +118,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b3a9cb0f777f44239e800be8ec4c28b2",
+    "cacheID": "318da7df5061656c3bc6b86191d82c41",
     "id": null,
     "metadata": {},
     "name": "PrematchLayoutQuery",
     "operationKind": "query",
-    "text": "query PrematchLayoutQuery {\n  ...Sidebar\n}\n\nfragment Sidebar on Query {\n  sports @stream(label: \"Sidebar$stream$sports\", initialCount: 4) {\n    key\n    categories {\n      tournaments {\n        events {\n          totalCount\n        }\n        id\n      }\n      id\n    }\n    ...SidebarSport\n    id\n  }\n  sb_topTournaments: topTournaments(first: 4) @stream(label: \"Sidebar$stream$sb_topTournaments_3z2gQm\", initialCount: 1) {\n    events {\n      totalCount\n    }\n    id\n  }\n}\n\nfragment SidebarSport on Sport {\n  key\n  name\n  categories {\n    tournaments {\n      events {\n        totalCount\n      }\n      id\n    }\n    id\n  }\n}\n"
+    "text": "query PrematchLayoutQuery {\n  ...Sidebar\n}\n\nfragment Sidebar on Query {\n  sports @stream(label: \"Sidebar$stream$sports\", initialCount: 4) {\n    key\n    eventCount\n    ...SidebarSport\n    id\n  }\n  sb_topTournaments: topTournaments(first: 4) @stream(label: \"Sidebar$stream$sb_topTournaments_3z2gQm\", initialCount: 1) {\n    eventCount\n    id\n  }\n}\n\nfragment SidebarSport on Sport {\n  key\n  name\n  eventCount\n}\n"
   }
 };
 })();

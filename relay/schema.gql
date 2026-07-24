@@ -141,6 +141,46 @@ type Category implements Node {
   ISO 3166-1 alpha-2 for country-based categories; null otherwise.
   """
   countryCode: String
+
+  """
+  Bettable prematch events beneath this node. Lets the sidebar hide empty branches without walking the whole tree client-side.
+  """
+  eventCount: Int!
+  events(
+    after: String
+    before: String
+
+    """
+    Filter by category `key` (e.g. `england`).
+    """
+    category: String
+
+    """
+    Take up to N edges after `after` (default 20, max 100).
+    """
+    first: Int
+
+    """
+    Take up to N edges before `before` (max 100).
+    """
+    last: Int
+
+    """
+    Filter by sport `key` (e.g. `football`).
+    """
+    sport: String
+
+    """
+    Only events starting strictly after this instant.
+    """
+    startAfter: DateTimeISO
+    startBefore: DateTimeISO
+
+    """
+    Filter by tournament `key`s - multi-select (the sidebar allows several at once).
+    """
+    tournaments: [String!]
+  ): EventConnection!
   id: ID!
 
   """
@@ -224,6 +264,16 @@ type EventStateUpdate {
   awayScore: Int
 
   """
+  False when the clock is paused (half-time, stoppage) - freeze the displayed time.
+  """
+  clockRunning: Boolean!
+
+  """
+  Instant the match clock read 00:00 (current half kickoff) - NOT the current minute. Derive elapsed time client-side; pushing the minute would mean an update per event per second. Null for sports without a clock (e.g. tennis).
+  """
+  clockStartedAt: DateTimeISO
+
+  """
   Global ID of the affected Event node.
   """
   eventId: ID!
@@ -232,11 +282,6 @@ type EventStateUpdate {
   Null for sports we do not flatten to integers (e.g. tennis).
   """
   homeScore: Int
-
-  """
-  Match clock as the book reports it (e.g. "77:32"); null for sports without one.
-  """
-  playClock: String
   state: LiveEventState!
   updatedAt: DateTimeISO!
 }
@@ -636,6 +681,11 @@ type Sport implements Node {
   Categories (countries / regions) under this sport.
   """
   categories: [Category!]!
+
+  """
+  Bettable prematch events beneath this node. Lets the sidebar hide empty branches without walking the whole tree client-side.
+  """
+  eventCount: Int!
   id: ID!
 
   """
@@ -759,6 +809,11 @@ A competition (Premier League, ATP Wimbledon, NBA Regular Season, …).
 """
 type Tournament implements Node {
   category: Category!
+
+  """
+  Bettable prematch events beneath this node. Lets the sidebar hide empty branches without walking the whole tree client-side.
+  """
+  eventCount: Int!
 
   """
   Cursor-paginated feed of events in this tournament.

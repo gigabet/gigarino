@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4f5ad4a68b1ff0adacc6e4f962aae9d2>>
+ * @generated SignedSource<<115ca6a94b449694f90f856625523893>>
  * @lightSyntaxTransform
  */
 
@@ -13,6 +13,7 @@ export type Tournament$data = {
   readonly category: {
     readonly countryCode: string | null | undefined;
   };
+  readonly id: string;
   readonly name: string;
   readonly sport: {
     readonly key: string;
@@ -25,10 +26,29 @@ export type Tournament$key = {
   readonly " $fragmentSpreads": FragmentRefs<"Tournament">;
 };
 
+import TournamentRefetch_graphql from './TournamentRefetch.graphql';
+
 const node: ReaderFragment = {
-  "argumentDefinitions": [],
+  "argumentDefinitions": [
+    {
+      "kind": "RootArgument",
+      "name": "eventCount"
+    }
+  ],
   "kind": "Fragment",
-  "metadata": null,
+  "metadata": {
+    "refetch": {
+      "connection": null,
+      "fragmentPathInResult": [
+        "node"
+      ],
+      "operation": TournamentRefetch_graphql,
+      "identifierInfo": {
+        "identifierField": "id",
+        "identifierQueryVariableName": "id"
+      }
+    }
+  },
   "name": "Tournament",
   "selections": [
     {
@@ -83,12 +103,19 @@ const node: ReaderFragment = {
           "name": "TournamentEventList"
         }
       ]
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
     }
   ],
   "type": "Tournament",
   "abstractKey": null
 };
 
-(node as any).hash = "80b8c59a04f2c826c186a06d5985e2ad";
+(node as any).hash = "a67906f0fb782164ae8aadd27ae904cc";
 
 export default node;

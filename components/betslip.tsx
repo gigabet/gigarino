@@ -4,32 +4,17 @@ import { cx } from 'class-variance-authority'
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import {
   AlertTriangleIcon,
-  BrushCleaning,
   ChevronDownIcon,
-  ClockIcon,
   Loader2Icon,
-  OctagonAlertIcon,
   TicketIcon,
-  Trash2Icon,
+  TrendingDownIcon,
   TrendingUpIcon,
   XIcon,
 } from 'lucide-react'
-import { Accordion } from 'radix-ui'
 import { useMemo, useState } from 'react'
-import { GiTrashCan } from 'react-icons/gi'
-import { PiTicket, PiTrash, PiTrashDuotone } from 'react-icons/pi'
+import { PiTicket } from 'react-icons/pi'
 import { mockBetslipSelections } from '@/components/mock.betslip'
-import { Alert, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from '@/components/ui/empty'
-import { Input } from '@/components/ui/input'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
 import { Separator } from '@/components/ui/separator'
 import * as Tabs from '@/components/ui/tabs'
@@ -50,8 +35,17 @@ export interface BetslipSelection {
   eventId: string
   eventName: string
   marketName: string
+  /** Maps 1:1 to `BetslipQuoteItem.outcomeName` — already "Home"/"Draw"/"Away"/"Over 2.5"/etc per the API's own naming, never a team name we'd have to derive */
   outcomeName: string
-  /** Price the player saw when adding — compared against `currentPrice` for the change-badge */
+  /**
+   * Not part of `BetslipQuoteItem` — sourced separately per-eventId from the
+   * `eventStateUpdated` subscription (homeScore/awayScore) once an event
+   * goes LIVE. Always optional: the row renders identically whether this
+   * is present or not, so there's no special-casing needed once the real
+   * subscription is wired in.
+   */
+  liveScore?: { home: number; away: number }
+  /** Price the player saw when adding — compared against `currentPrice` for the change indicator */
   addedPrice: number
   currentPrice: number
   availability: BetslipItemAvailability
@@ -378,22 +372,52 @@ function Tip(props: {
         <XIcon className='size-3.5' />
       </button>
 
-      <p className='text-secondary truncate pr-6 text-xs'>{s.eventName}</p>
-
-      <div className='mt-1 flex items-center justify-between gap-2'>
-        <div className='min-w-0'>
-          <p className='truncate text-sm font-medium text-white'>{s.outcomeName}</p>
-          <p className='text-secondary truncate text-xs'>{s.marketName}</p>
+      <div className='flex items-start justify-between gap-2'>
+        <div className='min-w-0 pr-1'>
+          {/*
+            Outcome name carries the highlight — bold + primary-tinted while
+            available (same "this is your pick" signal as the selected odds
+            toggle, just via color instead of a glowbox on every row), and
+            greyed + struck through the moment it's blocked. Market sits
+            directly below at clearly-secondary-but-still-legible weight;
+            event (+ live score, inline, only when present) is the smallest
+            line — matches how every one of the reference sportsbooks
+            orders this, and needs nothing beyond outcomeName/marketName/
+            eventName, all of which are real BetslipQuoteItem fields.
+          */}
+          <p
+            className={cn(
+              'truncate text-sm font-bold',
+              blocked ? 'text-secondary line-through' : 'text-primary'
+            )}
+          >
+            {s.outcomeName}
+          </p>
+          <p className='truncate text-xs font-medium text-white/80'>{s.marketName}</p>
+          <p className='text-secondary truncate text-[0.7rem]'>
+            {s.liveScore && (
+              <span className='mr-1.5 font-bold text-red-400 uppercase'>
+                {s.liveScore.home}-{s.liveScore.away}
+              </span>
+            )}
+            {s.eventName}
+          </p>
         </div>
 
-        <div className='flex shrink-0 flex-col items-end'>
+        <div className='flex shrink-0 flex-col items-end self-center pt-0.5'>
           <span
-            className={cx('font-mono text-sm font-semibold', {
-              'text-primary': priceUp,
+            className={cx('flex items-center gap-1 font-mono text-base font-semibold', {
+              // sky/red mirror the CREDIT/DEBIT convention already used in
+              // transactions-table.tsx — kept distinct from `text-primary`
+              // (lime), which the outcome name above is now using, so the
+              // two don't collide.
+              'text-sky-400': priceUp,
               'text-red-400': priceDown,
               'text-white': !priceUp && !priceDown,
             })}
           >
+            {priceUp && <TrendingUpIcon className='size-3' />}
+            {priceDown && <TrendingDownIcon className='size-3' />}
             {s.currentPrice.toFixed(2)}
           </span>
           {(priceUp || priceDown) && (

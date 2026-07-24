@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<55cd226353cb9d95ee4f975f31293c18>>
+ * @generated SignedSource<<6c60cb2d702f1d6454b9355b9dc2d408>>
  * @lightSyntaxTransform
  */
 
@@ -11,12 +11,8 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SidebarCountryList$data = {
   readonly categories: ReadonlyArray<{
+    readonly eventCount: number;
     readonly key: string;
-    readonly tournaments: ReadonlyArray<{
-      readonly events: {
-        readonly totalCount: number;
-      };
-    }>;
     readonly " $fragmentSpreads": FragmentRefs<"SidebarCountryItem">;
   }>;
   readonly " $fragmentType": "SidebarCountryList";
@@ -50,30 +46,8 @@ const node: ReaderFragment = {
         {
           "alias": null,
           "args": null,
-          "concreteType": "Tournament",
-          "kind": "LinkedField",
-          "name": "tournaments",
-          "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "EventConnection",
-              "kind": "LinkedField",
-              "name": "events",
-              "plural": false,
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "totalCount",
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
-            }
-          ],
+          "kind": "ScalarField",
+          "name": "eventCount",
           "storageKey": null
         },
         {
@@ -89,6 +63,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "256c02d7b33841773f8c9eaab1b8fcdc";
+(node as any).hash = "498558e8eba006ed943962a150ea3f7a";
 
 export default node;

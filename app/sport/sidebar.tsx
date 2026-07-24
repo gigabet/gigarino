@@ -48,12 +48,6 @@ const sportOrder = [
   'e-ice-hockey',
 ]
 
-const getEventCount = (sport: Omit<Sidebar$data['sports'][number], ' $fragmentSpreads'>) =>
-  sport.categories.reduce(
-    (acc, curr) => acc + curr.tournaments.reduce((acc, curr) => acc + curr.events.totalCount, 0),
-    0
-  )
-
 export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayoutQuery> }) {
   const preloaded = usePreloadedQuery<PrematchLayoutQuery>(PrematchLayoutQueryNode, props.queryRef)
 
@@ -62,19 +56,11 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
       fragment Sidebar on Query {
         sports @stream(initialCount: 4) {
           key
-          categories {
-            tournaments {
-              events {
-                totalCount
-              }
-            }
-          }
+          eventCount
           ...SidebarSport
         }
         sb_topTournaments: topTournaments(first: 4) @stream(initialCount: 1) {
-          events {
-            totalCount
-          }
+          eventCount
         }
       }
     `,
@@ -84,7 +70,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
   const filteredSports = sortBy(data.sports, sport => {
     const index = sportOrder.indexOf(sport.key)
     return index === -1 ? Infinity : index
-  }).filter(s => getEventCount(s) > 0)
+  }).filter(s => s.eventCount > 0)
 
   return (
     <aside className='scrollbar-hide! scrollbar-thumb-dark-300 sticky top-26.25 hidden max-h-[calc(100dvh-7rem)] w-full scrollbar-thin scrollbar-track-transparent place-self-start overflow-y-auto md:block'>
@@ -114,7 +100,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
               <span className='mr-auto text-sm'>Highlights</span>
               <span className='text-secondary text-xs'>
                 {data.sb_topTournaments.reduce(
-                  (acc, curr) => acc + Math.min(4, curr.events.totalCount),
+                  (acc, curr) => acc + Math.min(4, curr.eventCount),
                   0
                 )}
               </span>
@@ -166,25 +152,25 @@ function Sport(props: { sport: SidebarSport$key }) {
       fragment SidebarSport on Sport {
         key
         name
-        categories {
-          tournaments {
-            events {
-              totalCount
-            }
-          }
-        }
+        eventCount
       }
     `,
     props.sport
   )
 
-  const [queryRef, loadQuery] = useQueryLoader(graphql`
+  const [queryRef, loadQuery, disposeQuery] = useQueryLoader(graphql`
     query SidebarSportDetails($key: String) {
       sport(key: $key) {
         ...SidebarCountryList
       }
     }
   `)
+
+  useEffect(() => {
+    return () => {
+      disposeQuery()
+    }
+  }, [disposeQuery])
 
   return (
     <Accordion.Item
@@ -201,7 +187,7 @@ function Sport(props: { sport: SidebarSport$key }) {
       >
         <SportIcon sport={data.key} className='size-5' />{' '}
         <span className='mr-auto text-sm'>{data.name}</span>
-        <span className='text-secondary text-xs'>{getEventCount(data)}</span>
+        <span className='text-secondary text-xs'>{data.eventCount}</span>
       </Accordion.Trigger>
       <Accordion.Content
         data-slot='accordion-content'
@@ -224,11 +210,7 @@ function CountryList(props: { queryRef: PreloadedQuery<SidebarSportDetails> }) {
       fragment SidebarCountryList on Sport {
         categories {
           key
-          tournaments {
-            events {
-              totalCount
-            }
-          }
+          eventCount
           ...SidebarCountryItem
         }
       }
@@ -239,7 +221,7 @@ function CountryList(props: { queryRef: PreloadedQuery<SidebarSportDetails> }) {
   return (
     <Accordion.Root type='multiple' className='space-y-0.5'>
       {data.categories
-        .filter(c => c.tournaments.reduce((acc, curr) => acc + curr.events.totalCount, 0) > 0)
+        .filter(c => c.eventCount > 0)
         .map(country => (
           <CountryItem key={country.key} country={country} />
         ))}
@@ -255,11 +237,6 @@ function CountryItem(props: { country: SidebarCountryItem$key }) {
         key
         countryCode
         name
-        # tournaments {
-        #   events {
-        #     totalCount
-        #   }
-        # }
         ...SidebarTournaments
       }
     `,
@@ -267,28 +244,28 @@ function CountryItem(props: { country: SidebarCountryItem$key }) {
   )
 
   const environment = useRelayEnvironment()
-  const warmed = useRef(false)
+  const hasPrefetched = useRef(false)
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
-  const warm = () => {
-    if (warmed.current) return
-    warmed.current = true
+  const prefetch = () => {
+    if (hasPrefetched.current) return
+    hasPrefetched.current = true
     fetchQuery<SidebarTournamentsLoad>(
       environment,
       SidebarTournamentsLoadNode,
       { id: data.id, open: true },
       { fetchPolicy: 'store-or-network' }
-    ).subscribe({ error: () => (warmed.current = false) })
+    ).subscribe({ error: () => (hasPrefetched.current = false) })
   }
 
   return (
     <Accordion.Item value={data.key}>
       <Accordion.Trigger
         className='flex w-full items-center gap-2.5 px-4 py-2 text-sm transition-all hover:bg-white/3 data-[state=open]:bg-white/3 data-[state=open]:pt-4'
-        onMouseEnter={() => (timer.current = setTimeout(warm, HOVER_PREFETCH_DELAY_MS))}
+        onMouseEnter={() => (timer.current = setTimeout(prefetch, HOVER_PREFETCH_DELAY_MS))}
         onMouseLeave={() => clearTimeout(timer.current)}
-        onMouseDown={warm}
-        onFocus={warm}
+        onMouseDown={prefetch}
+        onFocus={prefetch}
       >
         <ReactCountryFlag
           svg
@@ -298,7 +275,7 @@ function CountryItem(props: { country: SidebarCountryItem$key }) {
         />{' '}
         <span className='mr-auto text-[0.8rem] font-normal'>{data.name}</span>
         {/* <span className='text-secondary text-xs'>
-          {data.tournaments.reduce((acc, curr) => acc + curr.events.totalCount, 0)}
+          {data.eventCount)}
         </span> */}
       </Accordion.Trigger>
       <Accordion.Content
@@ -322,26 +299,21 @@ function Tournaments(props: { category: SidebarTournaments$key }) {
         tournaments @include(if: $open) {
           key
           name
-          events {
-            totalCount
-          }
+          eventCount
         }
       }
     `,
     props.category
   )
-  const fetched = useRef(false)
 
   useEffect(() => {
-    if (fetched.current) return
-    fetched.current = true
     refetch({ open: true }, { fetchPolicy: 'store-or-network' })
   }, [refetch])
 
   const { toggle, selected } = useSelectedTournaments()
   if (!data?.tournaments) return null
 
-  const validTourns = data.tournaments.filter(t => t.events.totalCount > 0)
+  const validTourns = data.tournaments.filter(t => t.eventCount > 0)
   const ROW_HEIGHT = 42 // matches the Field row height incl. gap
   const totalHeight = (validTourns.length ?? 0) * ROW_HEIGHT
 
@@ -399,7 +371,7 @@ function Tournaments(props: { category: SidebarTournaments$key }) {
             >
               <span className='line-clamp-2 leading-tight'>{t.name}</span>
               <span className='bg-dark-300 rounded-lg px-2 py-1 font-mono text-[0.67rem]'>
-                {t.events.totalCount}
+                {t.eventCount}
               </span>
             </Label>
           </Field>

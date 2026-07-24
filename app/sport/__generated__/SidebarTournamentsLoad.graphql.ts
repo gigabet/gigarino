@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<66d0cd8f62f893709d106dec996ca3b6>>
+ * @generated SignedSource<<c5a804bf55e0dee6f3e318b49999f50f>>
  * @lightSyntaxTransform
  */
 
@@ -142,19 +142,8 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "EventConnection",
-                        "kind": "LinkedField",
-                        "name": "events",
-                        "plural": false,
-                        "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "totalCount",
-                            "storageKey": null
-                          }
-                        ],
+                        "kind": "ScalarField",
+                        "name": "eventCount",
                         "storageKey": null
                       },
                       (v3/*:: as any*/)
@@ -173,16 +162,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "654068cd396bd19595be090598dfc966",
+    "cacheID": "f93e5695c7185d54adb5fec5b8764d84",
     "id": null,
     "metadata": {},
     "name": "SidebarTournamentsLoad",
     "operationKind": "query",
-    "text": "query SidebarTournamentsLoad(\n  $open: Boolean = false\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...SidebarTournaments_3Qbc3L\n    id\n  }\n}\n\nfragment SidebarTournaments_3Qbc3L on Category {\n  tournaments @include(if: $open) {\n    key\n    name\n    events {\n      totalCount\n    }\n    id\n  }\n  id\n}\n"
+    "text": "query SidebarTournamentsLoad(\n  $open: Boolean = false\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...SidebarTournaments_3Qbc3L\n    id\n  }\n}\n\nfragment SidebarTournaments_3Qbc3L on Category {\n  tournaments @include(if: $open) {\n    key\n    name\n    eventCount\n    id\n  }\n  id\n}\n"
   }
 };
 })();
 
-(node as any).hash = "602b69ef6a9fd1aee0589d2737749803";
+(node as any).hash = "3692fbd7974c2acef041e639bba2825f";
 
 export default node;

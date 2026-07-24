@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5ef198aff685ab7463304f84c9bfb45e>>
+ * @generated SignedSource<<99e404cdee86a7255b603d4add76b61e>>
  * @lightSyntaxTransform
  */
 
@@ -11,18 +11,10 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type Sidebar$data = {
   readonly sb_topTournaments: ReadonlyArray<{
-    readonly events: {
-      readonly totalCount: number;
-    };
+    readonly eventCount: number;
   }>;
   readonly sports: ReadonlyArray<{
-    readonly categories: ReadonlyArray<{
-      readonly tournaments: ReadonlyArray<{
-        readonly events: {
-          readonly totalCount: number;
-        };
-      }>;
-    }>;
+    readonly eventCount: number;
     readonly key: string;
     readonly " $fragmentSpreads": FragmentRefs<"SidebarSport">;
   }>;
@@ -34,26 +26,13 @@ export type Sidebar$key = {
 };
 
 const node: ReaderFragment = (function(){
-var v0 = [
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "EventConnection",
-    "kind": "LinkedField",
-    "name": "events",
-    "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "kind": "ScalarField",
-        "name": "totalCount",
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  }
-];
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "eventCount",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [],
   "kind": "Fragment",
@@ -78,27 +57,7 @@ return {
               "name": "key",
               "storageKey": null
             },
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "Category",
-              "kind": "LinkedField",
-              "name": "categories",
-              "plural": true,
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "Tournament",
-                  "kind": "LinkedField",
-                  "name": "tournaments",
-                  "plural": true,
-                  "selections": (v0/*:: as any*/),
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
-            },
+            (v0/*:: as any*/),
             {
               "args": null,
               "kind": "FragmentSpread",
@@ -125,7 +84,9 @@ return {
           "kind": "LinkedField",
           "name": "topTournaments",
           "plural": true,
-          "selections": (v0/*:: as any*/),
+          "selections": [
+            (v0/*:: as any*/)
+          ],
           "storageKey": "topTournaments(first:4)"
         }
       ]
@@ -136,6 +97,6 @@ return {
 };
 })();
 
-(node as any).hash = "1f0dc76f7d481adcb7a75d31c1d867f4";
+(node as any).hash = "830822a35bebffb7b5377fd62356bc4d";
 
 export default node;
