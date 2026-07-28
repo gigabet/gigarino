@@ -165,24 +165,24 @@ export default function Betslip() {
             onValueChange={v => setBetType(v as TicketType)}
             className='px-5 pt-4'
           >
-            <Tabs.List className='grid w-full grid-cols-3 border border-white/5 p-1'>
+            <Tabs.List className='grid w-full grid-cols-3 gap-1 border border-white/5 p-1'>
               <Tabs.Trigger
                 value='SINGLE'
-                className='data-[state=active]:bg-primary data-[state=active]:text-black'
+                className='data-[state=active]:bg-primary hover:bg-dark-300 transition-colors data-[state=active]:text-black'
               >
                 Singles
               </Tabs.Trigger>
               <Tabs.Trigger
                 value='MULTIPLE'
                 disabled={selections.length < 2}
-                className='data-[state=active]:bg-primary data-[state=active]:text-black'
+                className='data-[state=active]:bg-primary hover:bg-dark-300 transition-colors data-[state=active]:text-black'
               >
                 Combi
               </Tabs.Trigger>
               <Tabs.Trigger
                 value='SYSTEM'
                 disabled={selections.length < 3}
-                className='data-[state=active]:bg-primary data-[state=active]:text-black'
+                className='data-[state=active]:bg-primary hover:bg-dark-300 transition-colors data-[state=active]:text-black'
               >
                 System
               </Tabs.Trigger>
@@ -276,7 +276,6 @@ export default function Betslip() {
                       onChange={e => setStake(e.target.value)}
                       className='appearance-none text-right font-mono text-sm [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'
                     />
-
                     <InputGroupAddon align='inline-end' className='text-xs'>
                       EUR
                     </InputGroupAddon>
@@ -360,7 +359,7 @@ function Tip(props: {
     <div
       className={cn(
         'group relative rounded-xl border bg-black/20 p-3 transition-colors',
-        blocked ? 'border-red-500/30 bg-red-500/5' : 'border-white/5'
+        blocked ? 'border-neutral-500/30 bg-neutral-500/5 opacity-80' : 'border-white/5'
       )}
     >
       <button
@@ -374,29 +373,23 @@ function Tip(props: {
 
       <div className='flex items-start justify-between gap-2'>
         <div className='min-w-0 pr-1'>
-          {/*
-            Outcome name carries the highlight — bold + primary-tinted while
-            available (same "this is your pick" signal as the selected odds
-            toggle, just via color instead of a glowbox on every row), and
-            greyed + struck through the moment it's blocked. Market sits
-            directly below at clearly-secondary-but-still-legible weight;
-            event (+ live score, inline, only when present) is the smallest
-            line — matches how every one of the reference sportsbooks
-            orders this, and needs nothing beyond outcomeName/marketName/
-            eventName, all of which are real BetslipQuoteItem fields.
-          */}
           <p
             className={cn(
               'truncate text-sm font-bold',
               blocked ? 'text-secondary line-through' : 'text-primary'
             )}
           >
-            {s.outcomeName}
+            {normalise(s.eventName.split(' v ')[0], s.eventName.split(' v ')[1], s.outcomeName)}
           </p>
           <p className='truncate text-xs font-medium text-white/80'>{s.marketName}</p>
           <p className='text-secondary truncate text-[0.7rem]'>
             {s.liveScore && (
-              <span className='mr-1.5 font-bold text-red-400 uppercase'>
+              <span
+                className={cn(
+                  'text-accent mr-1.5 font-bold uppercase',
+                  blocked && 'text-secondary'
+                )}
+              >
                 {s.liveScore.home}-{s.liveScore.away}
               </span>
             )}
@@ -437,16 +430,16 @@ function Tip(props: {
 
       {!blocked && props.showStake && (
         <div className='mt-2 flex items-center gap-2 border-t border-white/5 pt-2'>
+          <span className='text-secondary text-xs'>Stake</span>
           <InputGroup className='bg-dark flex-1 rounded-full'>
             <InputGroupInput
               type='number'
-              placeholder='Stake'
+              placeholder='0'
               value={props.stakeValue}
               onFocus={e => e.target.select()}
               onChange={e => props.onStakeChange(e.target.value)}
               className='appearance-none text-right font-mono text-sm [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'
             />
-
             <InputGroupAddon align='inline-end' className='text-xs'>
               EUR
             </InputGroupAddon>
@@ -544,3 +537,6 @@ export function BetslipMobileBar() {
     </button>
   )
 }
+
+const normalise = (home: string, away: string, label: string) =>
+  label.replace(/[Hh]ome/g, home).replace(/[Aa]way/, away)
