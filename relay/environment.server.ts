@@ -1,5 +1,3 @@
-// src/relay/environment.server.ts
-
 import { cache } from 'react'
 import { createServerEnvironment, type ServerEnvironment } from 'react-relay/rsc_EXPERIMENTAL'
 import { Environment, Network, RecordSource, Store } from 'relay-runtime'

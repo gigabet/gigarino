@@ -44,7 +44,7 @@ export const getGameQuery = (query: string) => {
 
     const res = await fetch(url.toString())
 
-    if (!res || !res.ok) {
+    if (!res?.ok) {
       const errorData = (await res.json()) as ErrorResponse
       throw new Error(
         isArray(errorData.message)

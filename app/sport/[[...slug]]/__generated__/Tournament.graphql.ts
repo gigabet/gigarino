@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<115ca6a94b449694f90f856625523893>>
+ * @generated SignedSource<<e344117a7bb9c7d5e0a57d6c36c526ba>>
  * @lightSyntaxTransform
  */
 
@@ -20,7 +20,7 @@ export type Tournament$data = {
   };
   readonly " $fragmentSpreads": FragmentRefs<"TournamentEventList">;
   readonly " $fragmentType": "Tournament";
-};
+} | null | undefined;
 export type Tournament$key = {
   readonly " $data"?: Tournament$data;
   readonly " $fragmentSpreads": FragmentRefs<"Tournament">;
@@ -52,22 +52,30 @@ const node: ReaderFragment = {
   "name": "Tournament",
   "selections": [
     {
-      "alias": null,
-      "args": null,
-      "concreteType": "Sport",
-      "kind": "LinkedField",
-      "name": "sport",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "key",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
+      "kind": "RequiredField",
+      "field": {
+        "alias": null,
+        "args": null,
+        "concreteType": "Sport",
+        "kind": "LinkedField",
+        "name": "sport",
+        "plural": false,
+        "selections": [
+          {
+            "kind": "RequiredField",
+            "field": {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "key",
+              "storageKey": null
+            },
+            "action": "NONE"
+          }
+        ],
+        "storageKey": null
+      },
+      "action": "NONE"
     },
     {
       "alias": null,
@@ -116,6 +124,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "a67906f0fb782164ae8aadd27ae904cc";
+(node as any).hash = "98841505cbd53a2bf4894983c878ba32";
 
 export default node;

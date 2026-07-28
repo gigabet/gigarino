@@ -92,7 +92,8 @@ input BetslipQuoteInput {
   stake: String!
 }
 
-type BetslipQuoteItem {
+type BetslipQuoteItem implements Node {
+  id: ID!
   availability: BetslipItemAvailability!
 
   """
@@ -264,14 +265,19 @@ type EventStateUpdate {
   awayScore: Int
 
   """
-  False when the clock is paused (half-time, stoppage) - freeze the displayed time.
+  Clock ANCHOR: the instant the book set the clock - NOT the current minute. Pair with `clockElapsedSeconds`; the client derives the live value: clockRunning ? elapsed + (now - clockAnchorAt) : elapsed. Costs zero messages while running and freezes exactly on pause. Null for sports without a clock (e.g. tennis).
   """
-  clockRunning: Boolean!
+  clockAnchorAt: DateTimeISO
 
   """
-  Instant the match clock read 00:00 (current half kickoff) - NOT the current minute. Derive elapsed time client-side; pushing the minute would mean an update per event per second. Null for sports without a clock (e.g. tennis).
+  Match-clock reading in whole seconds at `clockAnchorAt`. Null for sports without a clock.
   """
-  clockStartedAt: DateTimeISO
+  clockElapsedSeconds: Int
+
+  """
+  False when the clock is paused (half-time, stoppage) - the displayed time freezes at `clockElapsedSeconds`.
+  """
+  clockRunning: Boolean!
 
   """
   Global ID of the affected Event node.
@@ -282,6 +288,11 @@ type EventStateUpdate {
   Null for sports we do not flatten to integers (e.g. tennis).
   """
   homeScore: Int
+
+  """
+  Phase of the match (half/period). Currently always null pending a confirmed source field from the live feed; wired through so clients can bind to it now.
+  """
+  period: MatchPeriod
   state: LiveEventState!
   updatedAt: DateTimeISO!
 }
@@ -369,6 +380,21 @@ enum MarketStatus {
   CLOSED
   OPEN
   SUSPENDED
+}
+
+"""
+Phase of a live match (half/period/break).
+"""
+enum MatchPeriod {
+  BREAK
+  EXTRA_TIME
+  FIRST_HALF
+  FIRST_PERIOD
+  HALF_TIME
+  PENALTIES
+  SECOND_HALF
+  SECOND_PERIOD
+  THIRD_PERIOD
 }
 
 type Mutation {
@@ -552,7 +578,7 @@ type PrematchEvent implements Event & Node {
   """
   Markets published for this event - typically match winner + totals (+ BTTS on some providers) in v1.
   """
-  markets: [Market!]!
+  markets(groups: [MarketGroup!]): [Market!]!
   sport: Sport!
 
   """
