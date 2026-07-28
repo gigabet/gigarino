@@ -1,7 +1,7 @@
 'use client'
 
 import { usePathname, useSearchParams } from 'next/navigation'
-import { useEffect, useMemo, useRef, useState, useTransition } from 'react'
+import { Suspense, useEffect, useMemo, useRef, useState, useTransition } from 'react'
 import {
   fetchQuery,
   graphql,
@@ -80,10 +80,14 @@ export default function TournamentList(props: { queryRef: PreloadedQuery<Prematc
   return (
     <div className={cn('mt-2 space-y-8', isPending && 'opacity-60 transition-opacity')}>
       {data.topTournaments?.map(tournament => (
-        <Tournament key={tournament.id} queryRef={tournament} />
+        <Suspense key={tournament.id} fallback={<TournamentSkeleton />}>
+          <Tournament queryRef={tournament} />
+        </Suspense>
       ))}
       {data.tournaments?.map(tournament => (
-        <Tournament key={tournament.id} queryRef={tournament} />
+        <Suspense key={tournament.id} fallback={<TournamentSkeleton />}>
+          <Tournament queryRef={tournament} />
+        </Suspense>
       ))}
     </div>
   )

@@ -15,13 +15,13 @@ export default function Tournament(props: { queryRef: Tournament$key }) {
   const [data, refetch] = useRefetchableFragment(
     graphql`
       fragment Tournament on Tournament @refetchable(queryName: "TournamentRefetch") {
-        sport {
-          key
+        sport @required {
+          key @required
         }
-        category {
-          countryCode
+        category @required {
+          countryCode @required
         }
-        name
+        name @required
         ...TournamentEventList @defer
       }
     `,
