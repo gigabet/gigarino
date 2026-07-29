@@ -64,15 +64,22 @@ export default function TournamentList(props: { queryRef: PreloadedQuery<Prematc
 
   const environment = useRelayEnvironment()
   useEffect(() => {
-    fetchQuery(
-      environment,
-      PrematchListRefetchNode,
-      { filterActive: tournamentKeys.length > 0, tournamentKeys },
-      { fetchPolicy: 'network-only', networkCacheConfig: { poll: 3 * 60_000 } }
-    ).subscribe({
-      error: (err: Error) => console.error('[prematch-list] poll failed', err),
-    })
-  }, [environment, tournamentKeys])
+    const id = window.setInterval(() => {
+      fetchQuery(
+        environment,
+        PrematchListRefetchNode,
+        {
+          filterActive: tournamentKeys.length > 0,
+          tournamentKeys,
+          eventCount: filterActive ? 20 : 4,
+        },
+        { fetchPolicy: 'network-only' }
+      ).subscribe({
+        error: (err: Error) => console.error('[prematch-list] poll failed', err),
+      })
+    }, 60_000)
+    return () => clearInterval(id)
+  }, [environment, tournamentKeys, filterActive])
 
   return (
     <div className={cn('mt-2 space-y-8', isPending && 'opacity-60 transition-opacity')}>

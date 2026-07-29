@@ -1,16 +1,14 @@
 'use client'
 
 import { useAtomValue } from 'jotai'
-import { Suspense, useEffect, useMemo, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import {
   fetchQuery,
   graphql,
   requestSubscription,
   useQueryLoader,
   useRelayEnvironment,
-  useSubscription,
 } from 'react-relay'
-import type { GraphQLSubscriptionConfig } from 'relay-runtime'
 import type {
   BetslipSubscription,
   BetslipSubscription$data,
@@ -45,14 +43,19 @@ export default function SportLayout({ children }: React.PropsWithChildren) {
 
   const environment = useRelayEnvironment()
   useEffect(() => {
-    fetchQuery(
-      environment,
-      PrematchLayoutQueryNode,
-      {},
-      { fetchPolicy: 'network-only', networkCacheConfig: { poll: 3 * 60_000 } }
-    ).subscribe({
-      error: (err: Error) => console.error('[prematch-layout] poll failed', err),
-    })
+    const id = window.setInterval(
+      () =>
+        fetchQuery(
+          environment,
+          PrematchLayoutQueryNode,
+          {},
+          { fetchPolicy: 'network-only' }
+        ).subscribe({
+          error: (err: Error) => console.error('[prematch-layout] poll failed', err),
+        }),
+      60_000
+    )
+    return () => clearInterval(id)
   }, [environment])
 
   // The subscription returns the full BetslipQuote immediately on init, so
