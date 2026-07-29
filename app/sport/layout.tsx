@@ -55,22 +55,31 @@ export default function SportLayout({ children }: React.PropsWithChildren) {
     })
   }, [environment])
 
-  // The subscription emits the full BetslipQuote immediately on init, so
-  // there's no separate preloaded query to keep in sync — this is the only
-  // fetch driving the betslip.
+  // The subscription returns the full BetslipQuote immediately on init, so
+  // there's no separate preloaded query — this is the only fetch driving
+  // the betslip. The server rejects an empty `items` array, so we must not
+  // initiate (or must tear down) the subscription whenever the slip is empty.
   const betslipInput = useAtomValue(betslipInputAtom)
   const [betslip, setBetslip] = useState<BetslipSubscription$data['betslipUpdated'] | null>(null)
 
-  const config: GraphQLSubscriptionConfig<BetslipSubscription> = useMemo(
-    () => ({
+  useEffect(() => {
+    if (betslipInput.items.length === 0) {
+      setBetslip(null)
+      return
+    }
+
+    const { dispose } = requestSubscription<BetslipSubscription>(environment, {
       subscription: betslipSubscription,
       variables: { input: betslipInput },
       onNext: response => setBetslip(response?.betslipUpdated ?? null),
       onError: (err: Error) => console.error('[betslip] subscription failed', err),
-    }),
-    [betslipInput]
-  )
-  useSubscription(config)
+    })
+
+    return () => {
+      dispose()
+      setBetslip(null)
+    }
+  }, [environment, betslipInput])
 
   return (
     <div
