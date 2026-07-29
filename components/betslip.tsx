@@ -33,7 +33,7 @@ export default function Betslip(props: { query: Betslip$key | null }) {
         placeable
         betType
         items {
-          id
+          outcomeId
           availability
           ...Tip
         }
@@ -64,14 +64,19 @@ export default function Betslip(props: { query: Betslip$key | null }) {
     )
 
   const remove = (outcomeId: string) =>
-    setInput(prev => ({
-      ...prev,
-      items: prev.items.filter(i => i.outcomeId !== outcomeId),
-    }))
+    setInput(prev => {
+      console.log(prev.items, outcomeId)
+      return {
+        ...prev,
+        items: prev.items.filter(i => i.outcomeId !== outcomeId),
+      }
+    })
 
   const clearAll = () => setInput(prev => ({ ...prev, items: [] }))
 
-  const unavailable = new Set(data.items.filter(i => i.availability !== 'AVAILABLE').map(i => i.id))
+  const unavailable = new Set(
+    data.items.filter(i => i.availability !== 'AVAILABLE').map(i => i.outcomeId)
+  )
 
   const handlePlace = () => {
     setIsPlacing(true)
@@ -153,17 +158,17 @@ export default function Betslip(props: { query: Betslip$key | null }) {
           <div className='scrollbar-thumb-dark-300 flex-1 scrollbar-thin scrollbar-track-transparent space-y-3 overflow-y-auto px-5 py-4'>
             {data.items.map(item => (
               <Tip
-                key={item.id}
+                key={item.outcomeId}
                 item={item}
                 showStake={data.betType === 'SINGLE'}
-                stakeValue={singleStakes[item.id] ?? '10.00'}
+                stakeValue={singleStakes[item.outcomeId] ?? '10.00'}
                 onStakeChange={value =>
                   setSingleStakes(prev => ({
                     ...prev,
-                    [item.id]: value,
+                    [item.outcomeId]: value,
                   }))
                 }
-                onRemove={() => remove(item.id)}
+                onRemove={() => remove(item.outcomeId)}
               />
             ))}
           </div>
@@ -287,17 +292,25 @@ export default function Betslip(props: { query: Betslip$key | null }) {
   )
 }
 
+const getLabel = (eventName: string | null | undefined, key: string) => {
+  const [home, away] = eventName?.split(' vs ') ?? []
+  return key
+    .replace('home', home ?? 'Home')
+    .replace('away', away ?? 'Away')
+    .replace('draw', 'Draw')
+}
+
 function Tip(props: {
-  item: Tip$key & { id: string }
+  item: Tip$key
   showStake: boolean
   stakeValue: string
   onStakeChange: (v: string) => void
   onRemove: () => void
 }) {
-  const s = useFragment(
+  const data = useFragment(
     graphql`
       fragment Tip on BetslipQuoteItem {
-        id
+        outcomeId
         # eventId
         eventName
         marketName
@@ -309,7 +322,7 @@ function Tip(props: {
     props.item
   )
 
-  const blocked = s.availability !== 'AVAILABLE'
+  const blocked = data.availability !== 'AVAILABLE'
 
   return (
     <div
@@ -335,16 +348,16 @@ function Tip(props: {
               blocked ? 'text-secondary line-through' : 'text-primary'
             )}
           >
-            {s.key ?? '—'}
+            {getLabel(data.eventName, data.key) ?? '—'}
           </p>
-          <p className='truncate text-xs font-medium text-white/80'>{s.marketName ?? '—'}</p>
-          <p className='text-secondary truncate text-[0.7rem]'>{s.eventName ?? '—'}</p>
+          <p className='truncate text-xs font-medium text-white/80'>{data.marketName ?? '—'}</p>
+          <p className='text-secondary truncate text-[0.7rem]'>{data.eventName ?? '—'}</p>
         </div>
 
         <div className='flex shrink-0 flex-col items-end self-center pt-0.5'>
           <span className='flex items-center gap-1 font-mono text-base font-semibold text-white'>
             <TrendingUpIcon className='size-3 opacity-0' />
-            {s.price ? Number(s.price).toFixed(2) : '—'}
+            {data.price ? Number(data.price).toFixed(2) : '—'}
           </span>
         </div>
       </div>
@@ -352,7 +365,7 @@ function Tip(props: {
       {blocked && (
         <p className='mt-2 flex items-center gap-1.5 text-xs text-red-400'>
           <AlertTriangleIcon className='size-3.5' />
-          {blockerCopy(s.availability)}
+          {blockerCopy(data.availability)}
         </p>
       )}
 
@@ -375,7 +388,7 @@ function Tip(props: {
             </InputGroupAddon>
           </InputGroup>
           <span className='text-primary w-20 shrink-0 text-right text-xs font-semibold'>
-            → {formatBalance((Number(props.stakeValue) || 0) * (Number(s.price) || 0))}
+            → {formatBalance((Number(props.stakeValue) || 0) * (Number(data.price) || 0))}
           </span>
         </div>
       )}
@@ -436,9 +449,7 @@ export function BetslipMobileBar(props: { query: BetslipMobileBar$key | null }) 
     graphql`
       fragment BetslipMobileBar on BetslipQuote {
         effectiveOdds
-        items {
-          id
-        }
+        items
       }
     `,
     props.query

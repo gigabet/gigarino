@@ -113,6 +113,11 @@ type BetslipQuoteItem implements Node {
   name: String
 
   """
+  Outcome global id; the client uses this to unbet / place.
+  """
+  outcomeId: ID!
+
+  """
   Current authoritative price; null when unavailable.
   """
   price: Decimal

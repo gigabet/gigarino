@@ -77,7 +77,7 @@ export default function SportLayout({ children }: React.PropsWithChildren) {
 
     return () => {
       dispose()
-      setBetslip(null)
+      if (betslipInput.items.length === 0) setBetslip(null)
     }
   }, [environment, betslipInput])
 

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<66c3d130367bb655f19cb473cd5f59ab>>
+ * @generated SignedSource<<2d7d4aad8bcbc1ddf1c8bad8439f05ff>>
  * @lightSyntaxTransform
  */
 
@@ -13,9 +13,9 @@ import { FragmentRefs } from "relay-runtime";
 export type Tip$data = {
   readonly availability: BetslipItemAvailability;
   readonly eventName: string | null | undefined;
-  readonly id: string;
   readonly key: string;
   readonly marketName: string | null | undefined;
+  readonly outcomeId: string;
   readonly price: any | null | undefined;
   readonly " $fragmentType": "Tip";
 };
@@ -34,7 +34,7 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "id",
+      "name": "outcomeId",
       "storageKey": null
     },
     {
@@ -77,6 +77,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "45572d8e90bd3cc7c0f12ff5aa650fad";
+(node as any).hash = "25838b82828d3ed3992523b52441966e";
 
 export default node;
