@@ -1,14 +1,35 @@
 'use client'
 
-import { useSetAtom } from 'jotai'
-import { Suspense, useEffect } from 'react'
-import { fetchQuery, graphql, useQueryLoader, useRelayEnvironment } from 'react-relay'
+import { useAtomValue } from 'jotai'
+import { Suspense, useEffect, useMemo, useState } from 'react'
+import {
+  fetchQuery,
+  graphql,
+  requestSubscription,
+  useQueryLoader,
+  useRelayEnvironment,
+  useSubscription,
+} from 'react-relay'
+import type { GraphQLSubscriptionConfig } from 'relay-runtime'
+import type {
+  BetslipSubscription,
+  BetslipSubscription$data,
+} from '@/app/sport/__generated__/BetslipSubscription.graphql'
 import type { PrematchLayoutQuery } from '@/app/sport/__generated__/PrematchLayoutQuery.graphql'
 import PrematchLayoutQueryNode from '@/app/sport/__generated__/PrematchLayoutQuery.graphql'
 import Sidebar, { SidebarSkeleton } from '@/app/sport/sidebar'
-import Betslip, { betslipSelectionsAtom } from '@/components/betslip'
-import { mockBetslipSelections } from '@/components/mock.betslip'
+import Betslip, { BetslipMobileBar } from '@/components/betslip'
+import { betslipInputAtom } from '@/context/betslip'
 import { cn } from '@/lib/utils'
+
+const betslipSubscription = graphql`
+  subscription BetslipSubscription($input: BetslipQuoteInput!) {
+    betslipUpdated(input: $input) {
+      ...Betslip
+      ...BetslipMobileBar
+    }
+  }
+`
 
 export default function SportLayout({ children }: React.PropsWithChildren) {
   const [queryRef, loadQuery, disposeQuery] = useQueryLoader<PrematchLayoutQuery>(graphql`
@@ -24,24 +45,32 @@ export default function SportLayout({ children }: React.PropsWithChildren) {
 
   const environment = useRelayEnvironment()
   useEffect(() => {
-    const id = window.setInterval(() => {
-      fetchQuery(
-        environment,
-        PrematchLayoutQueryNode,
-        {},
-        { fetchPolicy: 'network-only' }
-      ).subscribe({
-        error: (err: Error) => console.error('[prematch-layout] poll failed', err),
-      })
-    }, 3 * 60_000)
-    return () => clearInterval(id)
+    fetchQuery(
+      environment,
+      PrematchLayoutQueryNode,
+      {},
+      { fetchPolicy: 'network-only', networkCacheConfig: { poll: 3 * 60_000 } }
+    ).subscribe({
+      error: (err: Error) => console.error('[prematch-layout] poll failed', err),
+    })
   }, [environment])
 
-  const setSelections = useSetAtom(betslipSelectionsAtom)
+  // The subscription emits the full BetslipQuote immediately on init, so
+  // there's no separate preloaded query to keep in sync — this is the only
+  // fetch driving the betslip.
+  const betslipInput = useAtomValue(betslipInputAtom)
+  const [betslip, setBetslip] = useState<BetslipSubscription$data['betslipUpdated'] | null>(null)
 
-  useEffect(() => {
-    setSelections(mockBetslipSelections)
-  }, [setSelections])
+  const config: GraphQLSubscriptionConfig<BetslipSubscription> = useMemo(
+    () => ({
+      subscription: betslipSubscription,
+      variables: { input: betslipInput },
+      onNext: response => setBetslip(response?.betslipUpdated ?? null),
+      onError: (err: Error) => console.error('[betslip] subscription failed', err),
+    }),
+    [betslipInput]
+  )
+  useSubscription(config)
 
   return (
     <div
@@ -53,12 +82,11 @@ export default function SportLayout({ children }: React.PropsWithChildren) {
       <Suspense fallback={<SidebarSkeleton />}>
         {queryRef ? <Sidebar queryRef={queryRef} /> : <SidebarSkeleton />}
       </Suspense>
-      {/* carousel, league pills, event list */}
-      {/* (implicit suspense boundary, filled by loading.tsx) */}
       {children}
       <div className='hidden xl:flex'>
-        <Betslip />
+        <Betslip query={betslip} />
       </div>
+      <BetslipMobileBar query={betslip} />
     </div>
   )
 }

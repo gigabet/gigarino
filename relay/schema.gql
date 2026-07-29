@@ -38,6 +38,7 @@ enum BetRejectionCode {
   INSUFFICIENT_FUNDS
   INTERNAL_ERROR
   LIABILITY_LIMIT
+  MULTI_SINGLE_NOT_SUPPORTED
   ODDS_LIMIT
   OUTCOME_NOT_AVAILABLE
   PRICE_CHANGED
@@ -58,6 +59,7 @@ enum BetslipItemAvailability {
 
 input BetslipItemInput {
   outcomeId: ID!
+  stake: String
 }
 
 type BetslipQuote {
@@ -88,31 +90,33 @@ type BetslipQuote {
 }
 
 input BetslipQuoteInput {
+  betType: TicketType!
   items: [BetslipItemInput!]!
   stake: String!
 }
 
 type BetslipQuoteItem implements Node {
-  id: ID!
   availability: BetslipItemAvailability!
-
-  """
-  Current authoritative price; null when unavailable.
-  """
-  currentPrice: Decimal
 
   """
   Global Event ID; null when NOT_FOUND.
   """
   eventId: ID
   eventName: String
-  marketName: String
+  id: ID!
 
   """
-  The outcome, as submitted.
+  Outcome key (home / over / yes …).
   """
-  outcomeId: ID!
-  outcomeName: String
+  key: String!
+  marketName: String
+  name: String
+
+  """
+  Current authoritative price; null when unavailable.
+  """
+  price: Decimal
+  status: OutcomeStatus
 }
 
 type CashoutPayload {
@@ -574,6 +578,11 @@ type PrematchEvent implements Event & Node {
   """
   homeScore: Int
   id: ID!
+
+  """
+  Materialized markets available on this event.
+  """
+  marketCount: Int!
 
   """
   Markets published for this event - typically match winner + totals (+ BTTS on some providers) in v1.

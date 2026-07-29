@@ -1,8 +1,9 @@
 'use client'
 
 import { atom, useAtom, useAtomValue } from 'jotai'
-import { entries, keys } from 'lodash'
+import { entries, keys, uniq, uniqBy } from 'lodash'
 import { Toggle } from 'radix-ui'
+import { useCallback } from 'react'
 import { graphql, useFragment } from 'react-relay'
 import type { ListViewMarkets$key } from '@/app/sport/[[...slug]]/__generated__/ListViewMarkets.graphql'
 import type { PrematchMarket$key } from '@/app/sport/[[...slug]]/__generated__/PrematchMarket.graphql'
@@ -14,6 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
+import { betslipInputAtom } from '@/context/betslip'
 import { cn, swap } from '@/lib/utils'
 
 const marketVisibility = [
@@ -113,6 +115,8 @@ export function ListViewMarketDropdowns() {
 }
 
 function Market(props: { className?: string; market: PrematchMarket$key }) {
+  const [selectedOdds, setSelectedOdds] = useAtom(betslipInputAtom)
+
   const data = useFragment(
     graphql`
       fragment PrematchMarket on Market {
@@ -126,6 +130,19 @@ function Market(props: { className?: string; market: PrematchMarket$key }) {
     props.market
   )
 
+  const toggleOdd = useCallback(
+    (outcomeId: string) =>
+      setSelectedOdds(so => {
+        if (so.items.some(i => i.outcomeId === outcomeId))
+          return {
+            ...so,
+            items: so.items.filter(i => i.outcomeId !== outcomeId),
+          }
+        return { ...so, items: [...so.items, { outcomeId }] }
+      }),
+    [setSelectedOdds]
+  )
+
   return (
     <div className={cn('flex h-15 max-w-60 min-w-50 flex-1 grow gap-1', props.className)}>
       {data.outcomes.map(odd => (
@@ -133,6 +150,8 @@ function Market(props: { className?: string; market: PrematchMarket$key }) {
           suppressHydrationWarning
           key={odd.id}
           className='group hover:bg-primary/5 hover:border-primary/20 shadow-primary/60 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-1 flex-col items-center justify-center gap-1 rounded-lg border border-white/5 bg-black/20 transition transition-all data-[state=on]:shadow-[0_0_12px]'
+          pressed={selectedOdds.items.some(i => i.outcomeId === odd.id)}
+          onPressedChange={() => toggleOdd(odd.id)}
         >
           <span className='group-data-[state=on]:text-foreground text-shadow-foreground text-secondary text-xs group-data-[state=on]:text-shadow-[0_0_8px]'>
             {odd.name}
