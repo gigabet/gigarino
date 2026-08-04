@@ -2,6 +2,7 @@
 
 import { useAtomValue } from 'jotai'
 import { Suspense, useEffect, useState } from 'react'
+import { ErrorBoundary } from 'react-error-boundary'
 import {
   fetchQuery,
   graphql,
@@ -17,6 +18,7 @@ import type { PrematchLayoutQuery } from '@/app/sport/__generated__/PrematchLayo
 import PrematchLayoutQueryNode from '@/app/sport/__generated__/PrematchLayoutQuery.graphql'
 import Sidebar, { SidebarSkeleton } from '@/app/sport/sidebar'
 import Betslip, { BetslipMobileBar } from '@/components/betslip'
+import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { betslipInputAtom } from '@/context/betslip'
 import { cn } from '@/lib/utils'
 
@@ -78,10 +80,7 @@ export default function SportLayout({ children }: React.PropsWithChildren) {
       onError: (err: Error) => console.error('[betslip] subscription failed', err),
     })
 
-    return () => {
-      dispose()
-      if (betslipInput.items.length === 0) setBetslip(null)
-    }
+    return dispose
   }, [environment, betslipInput])
 
   return (
@@ -96,7 +95,9 @@ export default function SportLayout({ children }: React.PropsWithChildren) {
       </Suspense>
       {children}
       <div className='hidden xl:flex'>
-        <Betslip query={betslip} />
+        <ErrorBoundary FallbackComponent={SectionErrorFallback}>
+          <Betslip query={betslip} />
+        </ErrorBoundary>
       </div>
       <BetslipMobileBar query={betslip} />
     </div>

@@ -1,7 +1,8 @@
 'use client'
 
+import { some } from 'lodash'
 import { RotateCwIcon, SearchXIcon } from 'lucide-react'
-import { Suspense, useTransition } from 'react'
+import { Suspense, useCallback, useEffect, useTransition } from 'react'
 import ReactCountryFlag from 'react-country-flag'
 import { graphql, useFragment, useRefetchableFragment } from 'react-relay'
 import type { Tournament$key } from '@/app/sport/[[...slug]]/__generated__/Tournament.graphql'
@@ -29,10 +30,21 @@ export default function Tournament(props: { queryRef: Tournament$key }) {
   )
 
   const [isRefreshing, startTransition] = useTransition()
-  const handleRefresh = () =>
-    startTransition(() => {
-      refetch({}, { fetchPolicy: 'network-only' })
-    })
+  const handleRefresh = useCallback(
+    () =>
+      startTransition(() => {
+        refetch({}, { fetchPolicy: 'network-only' })
+      }),
+    [refetch]
+  )
+
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') handleRefresh()
+    }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => document.removeEventListener('visibilitychange', onVisible)
+  }, [handleRefresh])
 
   if (!data)
     return (

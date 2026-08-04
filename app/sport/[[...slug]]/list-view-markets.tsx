@@ -1,7 +1,7 @@
 'use client'
 
 import { atom, useAtom, useAtomValue } from 'jotai'
-import { entries, keys, uniq, uniqBy } from 'lodash'
+import { entries, keys } from 'lodash'
 import { Toggle } from 'radix-ui'
 import { useCallback } from 'react'
 import { graphql, useFragment } from 'react-relay'
@@ -160,7 +160,7 @@ function Market(props: { className?: string; market: PrematchMarket$key }) {
             className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'
             suppressHydrationWarning
           >
-            {odd.price}
+            {Number(odd.price).toFixed(2)}
           </span>
         </Toggle.Root>
       ))}

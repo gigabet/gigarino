@@ -1,15 +1,18 @@
 'use client'
 
 import { useAtom, useSetAtom } from 'jotai'
+import { sortBy } from 'lodash'
 import {
   AlertTriangleIcon,
   ChevronDownIcon,
   Loader2Icon,
+  LockKeyhole,
   TicketIcon,
   TrendingUpIcon,
   XIcon,
 } from 'lucide-react'
 import { useState } from 'react'
+import { GiPadlock } from 'react-icons/gi'
 import { PiTicket } from 'react-icons/pi'
 import { graphql, useFragment } from 'react-relay'
 import type { Betslip$key } from '@/components/__generated__/Betslip.graphql'
@@ -212,10 +215,15 @@ export default function Betslip(props: { query: Betslip$key | null }) {
                   <InputGroup className='bg-dark flex-1 rounded-full'>
                     <InputGroupInput
                       type='number'
+                      inputMode='decimal'
                       placeholder='Stake'
                       value={input.stake}
                       onFocus={e => e.target.select()}
-                      onChange={e => setInput(prev => ({ ...prev, stake: e.target.value }))}
+                      onChange={e => {
+                        const stake = e.target.value
+                        if (/^\d*\.?\d{0,2}$/.test(stake)) setInput(prev => ({ ...prev, stake }))
+                        // else setInput(prev => ({ ...prev, stake: Number(stake).toFixed(2) }))
+                      }}
                       className='appearance-none text-right font-mono text-sm [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'
                     />
                     <InputGroupAddon align='inline-end' className='text-xs'>
@@ -224,7 +232,7 @@ export default function Betslip(props: { query: Betslip$key | null }) {
                   </InputGroup>
                 </div>
 
-                <div className='flex gap-2'>
+                {/* <div className='flex gap-2'>
                   {[5, 10, 25, 50].map(quick => (
                     <button
                       key={quick}
@@ -240,7 +248,7 @@ export default function Betslip(props: { query: Betslip$key | null }) {
                       €{quick}
                     </button>
                   ))}
-                </div>
+                </div> */}
 
                 <div className='bg-dark flex items-center justify-between rounded-xl border border-white/5 px-4 py-3'>
                   <span className='text-secondary text-sm'>Potential payout</span>
@@ -272,17 +280,20 @@ export default function Betslip(props: { query: Betslip$key | null }) {
               <div className='from-primary to-primary absolute inset-0 bg-linear-to-r via-white/30 opacity-0 transition-opacity duration-500 group-hover/button:opacity-100' />
               <div className='absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/40 to-transparent transition-transform duration-1000 group-hover/button:translate-x-full' />
               {isPlacing ? (
-                <>
+                <span className='relative'>
                   <Loader2Icon className='size-5 animate-spin' />
                   Placing bet...
-                </>
+                </span>
               ) : (
-                `Place bet · ${formatBalance(
-                  data.betType === 'SINGLE'
-                    ? Object.values(singleStakes).reduce((acc, v) => acc + (Number(v) || 0), 0) ||
-                        data.items.length * 10
-                    : Number(input.stake) || 0
-                )}`
+                <span className='relative'>
+                  Place bet ·{' '}
+                  {formatBalance(
+                    data.betType === 'SINGLE'
+                      ? Object.values(singleStakes).reduce((acc, v) => acc + (Number(v) || 0), 0) ||
+                          data.items.length * 10
+                      : Number(input.stake) || 0
+                  )}
+                </span>
               )}
             </button>
           </div>
@@ -311,7 +322,7 @@ function Tip(props: {
     graphql`
       fragment Tip on BetslipQuoteItem {
         outcomeId
-        # eventId
+        # eventId (will be used in the future for the jumping function)
         eventName
         marketName
         key
@@ -357,7 +368,11 @@ function Tip(props: {
         <div className='flex shrink-0 flex-col items-end self-center pt-0.5'>
           <span className='flex items-center gap-1 font-mono text-base font-semibold text-white'>
             <TrendingUpIcon className='size-3 opacity-0' />
-            {data.price ? Number(data.price).toFixed(2) : '—'}
+            {data.price ? (
+              Number(data.price).toFixed(2)
+            ) : (
+              <LockKeyhole className='text-secondary size-4' />
+            )}
           </span>
         </div>
       </div>
@@ -449,7 +464,10 @@ export function BetslipMobileBar(props: { query: BetslipMobileBar$key | null }) 
     graphql`
       fragment BetslipMobileBar on BetslipQuote {
         effectiveOdds
-        items
+        items {
+          # eslint-disable-next-line relay/unused-fields
+          id
+        }
       }
     `,
     props.query

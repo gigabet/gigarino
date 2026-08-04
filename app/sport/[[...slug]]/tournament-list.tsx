@@ -1,7 +1,8 @@
 'use client'
 
-import { usePathname, useSearchParams } from 'next/navigation'
-import { Suspense, useEffect, useMemo, useRef, useState, useTransition } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { Suspense, useEffect, useMemo, useTransition } from 'react'
+import { ErrorBoundary } from 'react-error-boundary'
 import {
   fetchQuery,
   graphql,
@@ -15,6 +16,7 @@ import PrematchListRefetchNode from '@/app/sport/[[...slug]]/__generated__/Prema
 import type { PrematchQuery } from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
 import PrematchQueryNode from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
 import Tournament, { TournamentSkeleton } from '@/app/sport/[[...slug]]/tournament'
+import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { cn } from '@/lib/utils'
 
 export function useTournamentKeysFromUrl() {
@@ -81,17 +83,37 @@ export default function TournamentList(props: { queryRef: PreloadedQuery<Prematc
     return () => clearInterval(id)
   }, [environment, tournamentKeys, filterActive])
 
+  const refetchTournament = (key: string) =>
+    startTransition(() => {
+      refetch(
+        { filterActive, tournamentKeys, eventCount: filterActive ? 20 : 4 },
+        { fetchPolicy: 'network-only' }
+      )
+    })
+
   return (
     <div className={cn('mt-2 space-y-8', isPending && 'opacity-60 transition-opacity')}>
       {data.topTournaments?.map(tournament => (
-        <Suspense key={tournament.id} fallback={<TournamentSkeleton />}>
-          <Tournament queryRef={tournament} />
-        </Suspense>
+        <ErrorBoundary
+          key={tournament.id}
+          FallbackComponent={SectionErrorFallback}
+          onReset={() => refetchTournament(tournament.id)}
+        >
+          <Suspense fallback={<TournamentSkeleton />}>
+            <Tournament queryRef={tournament} />
+          </Suspense>
+        </ErrorBoundary>
       ))}
       {data.tournaments?.map(tournament => (
-        <Suspense key={tournament.id} fallback={<TournamentSkeleton />}>
-          <Tournament queryRef={tournament} />
-        </Suspense>
+        <ErrorBoundary
+          key={tournament.id}
+          FallbackComponent={SectionErrorFallback}
+          onReset={() => refetchTournament(tournament.id)}
+        >
+          <Suspense fallback={<TournamentSkeleton />}>
+            <Tournament queryRef={tournament} />
+          </Suspense>
+        </ErrorBoundary>
       ))}
     </div>
   )
