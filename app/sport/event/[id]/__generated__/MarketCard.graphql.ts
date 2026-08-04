@@ -1,0 +1,96 @@
+/**
+ * @generated SignedSource<<012891b875b9fcdea0dbdcd66cad4504>>
+ * @lightSyntaxTransform
+ */
+
+/* tslint:disable */
+/* eslint-disable */
+// @ts-nocheck
+
+import { ReaderFragment } from 'relay-runtime';
+export type MarketStatus = "CLOSED" | "OPEN" | "SUSPENDED" | "%future added value";
+export type OutcomeStatus = "OPEN" | "REMOVED" | "SUSPENDED" | "%future added value";
+import { FragmentRefs } from "relay-runtime";
+export type MarketCard$data = {
+  readonly line: any | null | undefined;
+  readonly name: string;
+  readonly outcomes: ReadonlyArray<{
+    readonly id: string;
+    readonly name: string;
+    readonly price: any;
+    readonly status: OutcomeStatus;
+  }>;
+  readonly status: MarketStatus;
+  readonly " $fragmentType": "MarketCard";
+};
+export type MarketCard$key = {
+  readonly " $data"?: MarketCard$data;
+  readonly " $fragmentSpreads": FragmentRefs<"MarketCard">;
+};
+
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "status",
+  "storageKey": null
+};
+return {
+  "argumentDefinitions": [],
+  "kind": "Fragment",
+  "metadata": null,
+  "name": "MarketCard",
+  "selections": [
+    (v0/*:: as any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "line",
+      "storageKey": null
+    },
+    (v1/*:: as any*/),
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Outcome",
+      "kind": "LinkedField",
+      "name": "outcomes",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        },
+        (v0/*:: as any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "price",
+          "storageKey": null
+        },
+        (v1/*:: as any*/)
+      ],
+      "storageKey": null
+    }
+  ],
+  "type": "Market",
+  "abstractKey": null
+};
+})();
+
+(node as any).hash = "c1b6873ec0e576fa25c8cd8efa0ff951";
+
+export default node;

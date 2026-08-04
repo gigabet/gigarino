@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f57b22c9d6b9bda29e5c52917acbd146>>
+ * @generated SignedSource<<8101419ed1d60d08dfa32e66be279759>>
  * @lightSyntaxTransform
  */
 
@@ -12,6 +12,7 @@ import { FragmentRefs } from "relay-runtime";
 export type PrematchEvent$data = {
   readonly awayCompetitor: string;
   readonly homeCompetitor: string;
+  readonly id: string;
   readonly startTime: string;
   readonly " $fragmentSpreads": FragmentRefs<"ListViewMarkets">;
   readonly " $fragmentType": "PrematchEvent";
@@ -27,6 +28,13 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "PrematchEvent",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -63,6 +71,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "f140c2198296133747a5f48b7d164b5f";
+(node as any).hash = "b8b1eac6db9617542e4bd72627485722";
 
 export default node;
