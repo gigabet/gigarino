@@ -48,7 +48,7 @@ export default function MarketGroups(props: { event: MarketGroups$key }) {
 
   if (populatedGroups.length === 0) {
     return (
-      <p className='text-secondary rounded-2xl border border-white/5 bg-black/20 p-8 text-center text-sm'>
+      <p className='text-secondary rounded-2xl p-8 text-center text-sm'>
         No markets available for this event right now.
       </p>
     )

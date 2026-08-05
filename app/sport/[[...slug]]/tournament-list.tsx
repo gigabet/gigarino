@@ -83,7 +83,7 @@ export default function TournamentList(props: { queryRef: PreloadedQuery<Prematc
     return () => clearInterval(id)
   }, [environment, tournamentKeys, filterActive])
 
-  const refetchTournament = (key: string) =>
+  const refetchTournaments = () =>
     startTransition(() => {
       refetch(
         { filterActive, tournamentKeys, eventCount: filterActive ? 20 : 4 },
@@ -97,7 +97,7 @@ export default function TournamentList(props: { queryRef: PreloadedQuery<Prematc
         <ErrorBoundary
           key={tournament.id}
           FallbackComponent={SectionErrorFallback}
-          onReset={() => refetchTournament(tournament.id)}
+          onReset={refetchTournaments}
         >
           <Suspense fallback={<TournamentSkeleton />}>
             <Tournament queryRef={tournament} />
@@ -108,7 +108,7 @@ export default function TournamentList(props: { queryRef: PreloadedQuery<Prematc
         <ErrorBoundary
           key={tournament.id}
           FallbackComponent={SectionErrorFallback}
-          onReset={() => refetchTournament(tournament.id)}
+          onReset={refetchTournaments}
         >
           <Suspense fallback={<TournamentSkeleton />}>
             <Tournament queryRef={tournament} />

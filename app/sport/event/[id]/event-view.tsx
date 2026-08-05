@@ -14,11 +14,13 @@ import { Badge } from '@/components/ui/badge'
 import { getRelativeDayLabel } from '@/lib/utils'
 
 export default function EventView(props: { queryRef: PreloadedQuery<EventPageQuery> }) {
-  const preloaded = usePreloadedQuery<EventPageQuery>(EventPageQueryNode, props.queryRef)
+  const preloaded = usePreloadedQuery<EventPageQuery>(EventPageQueryNode, props.queryRef, {
+    UNSTABLE_renderPolicy: 'partial',
+  })
 
   const data = useFragment(
     graphql`
-      fragment EventView on Event {
+      fragment EventView on PrematchEvent {
         homeCompetitor
         awayCompetitor
         homeScore
@@ -36,7 +38,7 @@ export default function EventView(props: { queryRef: PreloadedQuery<EventPageQue
         tournament {
           name
         }
-        ...MarketGroups
+        ...MarketGroups @defer
       }
     `,
     preloaded.event as EventView$key | null

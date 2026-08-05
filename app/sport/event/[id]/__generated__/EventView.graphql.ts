@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2c694d7a9947cfeb56f8e61afd5e0fe6>>
+ * @generated SignedSource<<ed033bb4755557bdc2750600e44c2d2b>>
  * @lightSyntaxTransform
  */
 
@@ -140,16 +140,21 @@ return {
       "storageKey": null
     },
     {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "MarketGroups"
+      "kind": "Defer",
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "MarketGroups"
+        }
+      ]
     }
   ],
-  "type": "Event",
-  "abstractKey": "__isEvent"
+  "type": "PrematchEvent",
+  "abstractKey": null
 };
 })();
 
-(node as any).hash = "c4f4482881f52fd63d11d1ba6d229fbf";
+(node as any).hash = "f03684c03d9ef0fff2dfa4a67d296a73";
 
 export default node;
