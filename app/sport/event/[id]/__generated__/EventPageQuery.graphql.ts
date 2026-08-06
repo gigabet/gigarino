@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b0bb352aad23b79297219db1c59e7db5>>
+ * @generated SignedSource<<8a5cc885a49ac5402fbfe92c821491ab>>
  * @lightSyntaxTransform
  */
 
@@ -109,45 +109,6 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "Sport",
-            "kind": "LinkedField",
-            "name": "sport",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "key",
-                "storageKey": null
-              },
-              (v2/*:: as any*/)
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Category",
-            "kind": "LinkedField",
-            "name": "category",
-            "plural": false,
-            "selections": (v4/*:: as any*/),
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Tournament",
-            "kind": "LinkedField",
-            "name": "tournament",
-            "plural": false,
-            "selections": (v4/*:: as any*/),
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
             "kind": "ScalarField",
             "name": "homeCompetitor",
             "storageKey": null
@@ -167,33 +128,86 @@ return {
             "storageKey": null
           },
           {
-            "kind": "InlineFragment",
+            "if": null,
+            "kind": "Defer",
+            "label": "EventView$defer$PrematchSingleHeader",
             "selections": [
-              (v5/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "tradingStatus",
+                "concreteType": "Sport",
+                "kind": "LinkedField",
+                "name": "sport",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "key",
+                    "storageKey": null
+                  },
+                  (v2/*:: as any*/)
+                ],
                 "storageKey": null
               },
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "homeScore",
+                "concreteType": "Tournament",
+                "kind": "LinkedField",
+                "name": "tournament",
+                "plural": false,
+                "selections": (v4/*:: as any*/),
                 "storageKey": null
               },
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "awayScore",
+                "concreteType": "Category",
+                "kind": "LinkedField",
+                "name": "category",
+                "plural": false,
+                "selections": (v4/*:: as any*/),
                 "storageKey": null
               }
-            ],
-            "type": "Event",
-            "abstractKey": "__isEvent"
+            ]
+          },
+          {
+            "if": null,
+            "kind": "Defer",
+            "label": "EventView$defer$EventLiveState",
+            "selections": [
+              {
+                "kind": "InlineFragment",
+                "selections": [
+                  (v5/*:: as any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "tradingStatus",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "homeScore",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "awayScore",
+                    "storageKey": null
+                  }
+                ],
+                "type": "Event",
+                "abstractKey": "__isEvent"
+              }
+            ]
           },
           {
             "if": null,
@@ -264,12 +278,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9e9de50dfa2889e07663ef221b6f0dfd",
+    "cacheID": "90657911a03ede83b8dbd24a741bdf20",
     "id": null,
     "metadata": {},
     "name": "EventPageQuery",
     "operationKind": "query",
-    "text": "query EventPageQuery(\n  $id: ID!\n) {\n  event(id: $id) {\n    id\n    ...EventView\n  }\n}\n\nfragment EventLiveState on Event {\n  __isEvent: __typename\n  status\n  tradingStatus\n  homeScore\n  awayScore\n}\n\nfragment EventView on PrematchEvent {\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    id\n  }\n  tournament {\n    name\n    id\n  }\n  homeCompetitor\n  awayCompetitor\n  startTime\n  ...EventLiveState\n  ...MarketGroups @defer(label: \"EventView$defer$MarketGroups\")\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  outcomes {\n    id\n    name\n    price\n    status\n  }\n}\n\nfragment MarketGroups on Event {\n  __isEvent: __typename\n  markets {\n    id\n    group\n    ...MarketCard\n  }\n}\n"
+    "text": "query EventPageQuery(\n  $id: ID!\n) {\n  event(id: $id) {\n    id\n    ...EventView\n  }\n}\n\nfragment EventLiveState on Event {\n  __isEvent: __typename\n  status\n  tradingStatus\n  homeScore\n  awayScore\n}\n\nfragment EventView on PrematchEvent {\n  homeCompetitor\n  awayCompetitor\n  startTime\n  ...PrematchSingleHeader @defer(label: \"EventView$defer$PrematchSingleHeader\")\n  ...EventLiveState @defer(label: \"EventView$defer$EventLiveState\")\n  ...MarketGroups @defer(label: \"EventView$defer$MarketGroups\")\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  outcomes {\n    id\n    name\n    price\n    status\n  }\n}\n\nfragment MarketGroups on Event {\n  __isEvent: __typename\n  markets {\n    id\n    group\n    ...MarketCard\n  }\n}\n\nfragment PrematchSingleHeader on PrematchEvent {\n  sport {\n    key\n    id\n  }\n  tournament {\n    name\n    id\n  }\n  category {\n    name\n    id\n  }\n}\n"
   }
 };
 })();

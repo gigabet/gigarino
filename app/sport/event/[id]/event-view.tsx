@@ -8,10 +8,12 @@ import type { EventLiveState$key } from '@/app/sport/event/[id]/__generated__/Ev
 import type { EventPageQuery } from '@/app/sport/event/[id]/__generated__/EventPageQuery.graphql'
 import EventPageQueryNode from '@/app/sport/event/[id]/__generated__/EventPageQuery.graphql'
 import type { EventView$key } from '@/app/sport/event/[id]/__generated__/EventView.graphql'
+import type { PrematchSingleHeader$key } from '@/app/sport/event/[id]/__generated__/PrematchSingleHeader.graphql'
 import MarketGroups, { MarketGroupsSkeleton } from '@/app/sport/event/[id]/market-groups'
 import StatisticsWidget from '@/app/sport/event/[id]/statistics-widget'
 import { SportIcon } from '@/components/sport-icon'
 import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
 import { getRelativeDayLabel } from '@/lib/utils'
 
 export default function EventView(props: { queryRef: PreloadedQuery<EventPageQuery> }) {
@@ -20,20 +22,11 @@ export default function EventView(props: { queryRef: PreloadedQuery<EventPageQue
   const data = useFragment(
     graphql`
       fragment EventView on PrematchEvent {
-        sport {
-          key
-        }
-        category {
-          name
-          # countryCode
-        }
-        tournament {
-          name
-        }
         homeCompetitor
         awayCompetitor
         startTime
-        ...EventLiveState
+        ...PrematchSingleHeader @defer
+        ...EventLiveState @defer
         ...MarketGroups @defer
       }
     `,
@@ -48,13 +41,9 @@ export default function EventView(props: { queryRef: PreloadedQuery<EventPageQue
       {/* Header: competitors, score/kick-off, breadcrumb                  */}
       {/* ---------------------------------------------------------------- */}
       <section className='flex flex-col gap-4 rounded-2xl border border-white/5 bg-black/20 p-6'>
-        <div className='text-secondary flex items-center gap-2 text-xs uppercase'>
-          <SportIcon sport={data.sport.key} className='size-3.5' />
-          <span>{data.tournament.name}</span>
-          <span>·</span>
-          <span>{data.category.name}</span>
-        </div>
-
+        <Suspense fallback={<Skeleton className='h-4 w-48' />}>
+          <PrematchSingleHeader event={data} />
+        </Suspense>
         <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-4'>
           <Competitor name={data.homeCompetitor} />
 
@@ -79,6 +68,34 @@ export default function EventView(props: { queryRef: PreloadedQuery<EventPageQue
         <MarketGroups event={data} />
       </Suspense>
     </main>
+  )
+}
+
+function PrematchSingleHeader(props: { event: PrematchSingleHeader$key }) {
+  const data = useFragment(
+    graphql`
+      fragment PrematchSingleHeader on PrematchEvent {
+        sport {
+          key
+        }
+        tournament {
+          name
+        }
+        category {
+          name
+        }
+      }
+    `,
+    props.event
+  )
+
+  return (
+    <div className='text-secondary flex items-center gap-2 text-xs uppercase'>
+      <SportIcon sport={data.sport.key} className='size-3.5' />
+      <span>{data.tournament.name}</span>
+      <span>·</span>
+      <span>{data.category.name}</span>
+    </div>
   )
 }
 
