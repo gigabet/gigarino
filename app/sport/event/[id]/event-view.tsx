@@ -4,6 +4,7 @@ import { format } from 'date-fns'
 import { ImageIcon, SearchXIcon } from 'lucide-react'
 import { Suspense } from 'react'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
+import type { EventLiveState$key } from '@/app/sport/event/[id]/__generated__/EventLiveState.graphql'
 import type { EventPageQuery } from '@/app/sport/event/[id]/__generated__/EventPageQuery.graphql'
 import EventPageQueryNode from '@/app/sport/event/[id]/__generated__/EventPageQuery.graphql'
 import type { EventView$key } from '@/app/sport/event/[id]/__generated__/EventView.graphql'
@@ -14,20 +15,11 @@ import { Badge } from '@/components/ui/badge'
 import { getRelativeDayLabel } from '@/lib/utils'
 
 export default function EventView(props: { queryRef: PreloadedQuery<EventPageQuery> }) {
-  const preloaded = usePreloadedQuery<EventPageQuery>(EventPageQueryNode, props.queryRef, {
-    UNSTABLE_renderPolicy: 'partial',
-  })
+  const preloaded = usePreloadedQuery<EventPageQuery>(EventPageQueryNode, props.queryRef)
 
   const data = useFragment(
     graphql`
       fragment EventView on PrematchEvent {
-        homeCompetitor
-        awayCompetitor
-        homeScore
-        awayScore
-        startTime
-        status
-        tradingStatus
         sport {
           key
         }
@@ -38,6 +30,10 @@ export default function EventView(props: { queryRef: PreloadedQuery<EventPageQue
         tournament {
           name
         }
+        homeCompetitor
+        awayCompetitor
+        startTime
+        ...EventLiveState
         ...MarketGroups @defer
       }
     `,
@@ -45,8 +41,6 @@ export default function EventView(props: { queryRef: PreloadedQuery<EventPageQue
   )
 
   if (!data) return <EventNotFound />
-
-  const isLive = data.status === 'LIVE'
 
   return (
     <main className='mx-auto flex w-full max-w-7xl flex-col gap-6'>
@@ -59,29 +53,16 @@ export default function EventView(props: { queryRef: PreloadedQuery<EventPageQue
           <span>{data.tournament.name}</span>
           <span>·</span>
           <span>{data.category.name}</span>
-          {isLive && (
-            <Badge variant='destructive' className='ml-auto animate-pulse'>
-              Live
-            </Badge>
-          )}
         </div>
 
         <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-4'>
-          <Competitor name={data.homeCompetitor} score={data.homeScore} />
+          <Competitor name={data.homeCompetitor} />
 
-          <div className='flex flex-col items-center gap-1 text-center'>
-            <time
-              suppressHydrationWarning
-              dateTime={data.startTime}
-              className='text-secondary text-xs leading-relaxed'
-            >
-              {isLive ? data.tradingStatus : getRelativeDayLabel(data.startTime)}
-              <br />
-              {!isLive && format(data.startTime, 'HH:mm')}
-            </time>
-          </div>
+          <Suspense fallback={<EventLiveStateFallback startTime={data.startTime} />}>
+            <EventLiveState event={data} startTime={data.startTime} />
+          </Suspense>
 
-          <Competitor name={data.awayCompetitor} score={data.awayScore} reverse />
+          <Competitor name={data.awayCompetitor} reverse />
         </div>
       </section>
 
@@ -101,7 +82,7 @@ export default function EventView(props: { queryRef: PreloadedQuery<EventPageQue
   )
 }
 
-function Competitor(props: { name: string; score?: number | null; reverse?: boolean }) {
+function Competitor(props: { name: string; reverse?: boolean }) {
   return (
     <div
       className={`flex items-center gap-3 ${props.reverse ? 'flex-row-reverse text-right' : ''}`}
@@ -109,13 +90,61 @@ function Competitor(props: { name: string; score?: number | null; reverse?: bool
       <div className='bg-dark-300 text-muted-foreground flex size-10 min-w-10 items-center justify-center rounded-full'>
         <ImageIcon className='size-4' />
       </div>
-      <div className='flex flex-col'>
-        <span className='truncate text-sm font-semibold text-white sm:text-base'>{props.name}</span>
-        {props.score != null && (
-          <span className='text-primary text-lg leading-none font-bold'>{props.score}</span>
-        )}
-      </div>
+      <span className='truncate text-sm font-semibold text-white sm:text-base'>{props.name}</span>
     </div>
+  )
+}
+
+function EventLiveState(props: { event: EventLiveState$key; startTime: string }) {
+  const data = useFragment(
+    graphql`
+      fragment EventLiveState on Event {
+        status
+        tradingStatus
+        homeScore
+        awayScore
+      }
+    `,
+    props.event
+  )
+
+  if (data.status !== 'LIVE') return <KickoffTime startTime={props.startTime} />
+
+  return (
+    <div className='flex flex-col items-center gap-1'>
+      <Badge variant='destructive' className='animate-pulse'>
+        Live
+      </Badge>
+      <span className='text-lg leading-none font-bold text-white'>
+        {data.homeScore ?? 0} - {data.awayScore ?? 0}
+      </span>
+      <span className='text-secondary text-[0.65rem] uppercase'>{data.tradingStatus}</span>
+    </div>
+  )
+}
+
+/**
+ * Suspense fallback while `EventLiveState` resolves. `startTime` is a plain
+ * prop (already available from the cached, non-suspending part of the
+ * fragment tree) so we can show the correct kick-off time immediately
+ * instead of a generic skeleton — it only needs correcting in the rare case
+ * the match has since gone live, which swaps in a moment later.
+ */
+export function EventLiveStateFallback(props: { startTime: string }) {
+  return <KickoffTime startTime={props.startTime} />
+}
+
+function KickoffTime(props: { startTime: string }) {
+  return (
+    <time
+      suppressHydrationWarning
+      dateTime={props.startTime}
+      className='text-secondary text-xs leading-relaxed'
+    >
+      {getRelativeDayLabel(props.startTime)}
+      <br />
+      {format(props.startTime, 'HH:mm')}
+    </time>
   )
 }
 

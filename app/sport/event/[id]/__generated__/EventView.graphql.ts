@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ed033bb4755557bdc2750600e44c2d2b>>
+ * @generated SignedSource<<9a23ae89630e40d0b434d282d6f61171>>
  * @lightSyntaxTransform
  */
 
@@ -8,27 +8,21 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type EventStatus = "ABANDONED" | "CANCELLED" | "ENDED" | "LIVE" | "POSTPONED" | "SCHEDULED" | "%future added value";
-export type TradingStatus = "CLOSED" | "OPEN" | "SUSPENDED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type EventView$data = {
   readonly awayCompetitor: string;
-  readonly awayScore: number | null | undefined;
   readonly category: {
     readonly name: string;
   };
   readonly homeCompetitor: string;
-  readonly homeScore: number | null | undefined;
   readonly sport: {
     readonly key: string;
   };
   readonly startTime: string;
-  readonly status: EventStatus;
   readonly tournament: {
     readonly name: string;
   };
-  readonly tradingStatus: TradingStatus;
-  readonly " $fragmentSpreads": FragmentRefs<"MarketGroups">;
+  readonly " $fragmentSpreads": FragmentRefs<"EventLiveState" | "MarketGroups">;
   readonly " $fragmentType": "EventView";
 };
 export type EventView$key = {
@@ -52,55 +46,6 @@ return {
   "metadata": null,
   "name": "EventView",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "homeCompetitor",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "awayCompetitor",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "homeScore",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "awayScore",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "startTime",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "status",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "tradingStatus",
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": null,
@@ -140,6 +85,32 @@ return {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "homeCompetitor",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "awayCompetitor",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "startTime",
+      "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "EventLiveState"
+    },
+    {
       "kind": "Defer",
       "selections": [
         {
@@ -155,6 +126,6 @@ return {
 };
 })();
 
-(node as any).hash = "f03684c03d9ef0fff2dfa4a67d296a73";
+(node as any).hash = "e6b54ca90879216516d3d6c5819e9e86";
 
 export default node;
