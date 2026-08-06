@@ -4,18 +4,17 @@ import { useParams } from 'next/navigation'
 import { useEffect } from 'react'
 import { useQueryLoader } from 'react-relay'
 import { graphql } from 'relay-runtime'
-import type { EventPageQuery } from '@/app/sport/event/[id]/__generated__/EventPageQuery.graphql'
-import EventView from '@/app/sport/event/[id]/event-view'
-import EventPageSkeleton from '@/app/sport/event/[id]/loading'
+import type { PrematchSingleViewQuery } from '@/app/sport/event/[id]/__generated__/PrematchSingleViewQuery.graphql'
+import PrematchSingleViewSkeleton from '@/app/sport/event/[id]/loading'
+import PrematchSingleView from '@/app/sport/event/[id]/prematch-single-view'
 
 export default function EventPage() {
   const { id } = useParams<{ id: string }>()
 
-  const [queryRef, loadQuery, disposeQuery] = useQueryLoader<EventPageQuery>(graphql`
-    query EventPageQuery($id: ID!) {
+  const [queryRef, loadQuery, disposeQuery] = useQueryLoader<PrematchSingleViewQuery>(graphql`
+    query PrematchSingleViewQuery($id: ID!) {
       event(id: $id) {
-        id
-        ...EventView
+        ...PrematchSingleView
       }
     }
   `)
@@ -25,7 +24,7 @@ export default function EventPage() {
     return () => disposeQuery()
   }, [loadQuery, disposeQuery, id])
 
-  if (!queryRef) return <EventPageSkeleton />
+  if (!queryRef) return <PrematchSingleViewSkeleton />
 
-  return <EventView queryRef={queryRef} />
+  return <PrematchSingleView queryRef={queryRef} />
 }

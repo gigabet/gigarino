@@ -5,10 +5,10 @@ import { ImageIcon, SearchXIcon } from 'lucide-react'
 import { Suspense } from 'react'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
 import type { EventLiveState$key } from '@/app/sport/event/[id]/__generated__/EventLiveState.graphql'
-import type { EventPageQuery } from '@/app/sport/event/[id]/__generated__/EventPageQuery.graphql'
-import EventPageQueryNode from '@/app/sport/event/[id]/__generated__/EventPageQuery.graphql'
-import type { EventView$key } from '@/app/sport/event/[id]/__generated__/EventView.graphql'
 import type { PrematchSingleHeader$key } from '@/app/sport/event/[id]/__generated__/PrematchSingleHeader.graphql'
+import type { PrematchSingleView$key } from '@/app/sport/event/[id]/__generated__/PrematchSingleView.graphql'
+import type { PrematchSingleViewQuery } from '@/app/sport/event/[id]/__generated__/PrematchSingleViewQuery.graphql'
+import PrematchSingleViewQueryNode from '@/app/sport/event/[id]/__generated__/PrematchSingleViewQuery.graphql'
 import MarketGroups, { MarketGroupsSkeleton } from '@/app/sport/event/[id]/market-groups'
 import StatisticsWidget from '@/app/sport/event/[id]/statistics-widget'
 import { SportIcon } from '@/components/sport-icon'
@@ -16,21 +16,26 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getRelativeDayLabel } from '@/lib/utils'
 
-export default function EventView(props: { queryRef: PreloadedQuery<EventPageQuery> }) {
-  const preloaded = usePreloadedQuery<EventPageQuery>(EventPageQueryNode, props.queryRef)
+export default function PrematchSingleView(props: {
+  queryRef: PreloadedQuery<PrematchSingleViewQuery>
+}) {
+  const preloaded = usePreloadedQuery<PrematchSingleViewQuery>(
+    PrematchSingleViewQueryNode,
+    props.queryRef
+  )
 
   const data = useFragment(
     graphql`
-      fragment EventView on PrematchEvent {
+      fragment PrematchSingleView on PrematchEvent {
         homeCompetitor
         awayCompetitor
         startTime
-        ...PrematchSingleHeader @defer
-        ...EventLiveState @defer
+        ...PrematchSingleHeader
+        ...EventLiveState
         ...MarketGroups @defer
       }
     `,
-    preloaded.event as EventView$key | null
+    preloaded.event as PrematchSingleView$key | null
   )
 
   if (!data) return <EventNotFound />
@@ -41,9 +46,7 @@ export default function EventView(props: { queryRef: PreloadedQuery<EventPageQue
       {/* Header: competitors, score/kick-off, breadcrumb                  */}
       {/* ---------------------------------------------------------------- */}
       <section className='flex flex-col gap-4 rounded-2xl border border-white/5 bg-black/20 p-6'>
-        <Suspense fallback={<Skeleton className='h-4 w-48' />}>
-          <PrematchSingleHeader event={data} />
-        </Suspense>
+        <PrematchSingleHeader event={data} />
         <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-4'>
           <Competitor name={data.homeCompetitor} />
 
@@ -84,6 +87,7 @@ function PrematchSingleHeader(props: { event: PrematchSingleHeader$key }) {
         category {
           name
         }
+        status
       }
     `,
     props.event
@@ -91,6 +95,15 @@ function PrematchSingleHeader(props: { event: PrematchSingleHeader$key }) {
 
   return (
     <div className='text-secondary flex items-center gap-2 text-xs uppercase'>
+      {data.status === 'LIVE' && (
+        <div className='text-foreground flex items-center gap-1.5 text-xs'>
+          <div className='relative size-2'>
+            <div className='bg-destructive absolute size-2 animate-ping rounded-full' />
+            <div className='bg-destructive absolute size-2 rounded-full' />
+          </div>
+          Live
+        </div>
+      )}
       <SportIcon sport={data.sport.key} className='size-3.5' />
       <span>{data.tournament.name}</span>
       <span>·</span>
@@ -129,9 +142,6 @@ function EventLiveState(props: { event: EventLiveState$key; startTime: string })
 
   return (
     <div className='flex flex-col items-center gap-1'>
-      <Badge variant='destructive' className='animate-pulse'>
-        Live
-      </Badge>
       <span className='text-lg leading-none font-bold text-white'>
         {data.homeScore ?? 0} - {data.awayScore ?? 0}
       </span>
@@ -156,7 +166,7 @@ function KickoffTime(props: { startTime: string }) {
     <time
       suppressHydrationWarning
       dateTime={props.startTime}
-      className='text-secondary text-xs leading-relaxed'
+      className='text-secondary text-center text-xs leading-relaxed'
     >
       {getRelativeDayLabel(props.startTime)}
       <br />

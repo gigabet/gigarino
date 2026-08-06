@@ -1,7 +1,7 @@
 import { MarketGroupsSkeleton } from '@/app/sport/event/[id]/market-groups'
 import { Skeleton } from '@/components/ui/skeleton'
 
-export default function EventPageSkeleton() {
+export default function PrematchSingleViewSkeleton() {
   return (
     <main className='mx-auto flex w-full max-w-7xl flex-col gap-6'>
       <section className='flex flex-col gap-4 rounded-2xl border border-white/5 bg-black/20 p-6'>

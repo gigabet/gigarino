@@ -2,17 +2,15 @@
 import { format } from 'date-fns'
 import { ChartNoAxesColumnIcon, ImageIcon } from 'lucide-react'
 import Link from 'next/link'
-import { Toggle } from 'radix-ui'
-import { Suspense } from 'react'
-import { graphql, useFragment } from 'react-relay'
-import type { ListViewMarkets$key } from '@/app/sport/[[...slug]]/__generated__/ListViewMarkets.graphql'
+import { Suspense, useRef } from 'react'
+import { fetchQuery, graphql, useFragment, useRelayEnvironment } from 'react-relay'
 import type { PrematchEvent$key } from '@/app/sport/[[...slug]]/__generated__/PrematchEvent.graphql'
-import type { PrematchMarket$key } from '@/app/sport/[[...slug]]/__generated__/PrematchMarket.graphql'
 import { ListViewMarkets, ListViewMarketsSkeleton } from '@/app/sport/[[...slug]]/list-view-markets'
+import PrematchSingleViewQueryNode from '@/app/sport/event/[id]/__generated__/PrematchSingleViewQuery.graphql'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
-import { cn, getRelativeDayLabel } from '@/lib/utils'
+import { getRelativeDayLabel } from '@/lib/utils'
 
 export default function PrematchEvent(props: { node: PrematchEvent$key }) {
   const data = useFragment(
@@ -27,6 +25,21 @@ export default function PrematchEvent(props: { node: PrematchEvent$key }) {
     `,
     props.node
   )
+
+  const env = useRelayEnvironment()
+  const hasPrefetched = useRef(false)
+  const prefetch = () => {
+    if (hasPrefetched.current) return
+    hasPrefetched.current = true
+    fetchQuery(
+      env,
+      PrematchSingleViewQueryNode,
+      { id: data.id },
+      { fetchPolicy: 'store-or-network' }
+    ).subscribe({
+      error: () => (hasPrefetched.current = false),
+    })
+  }
 
   return (
     <div className='flex h-27 flex-nowrap items-center gap-4 rounded-2xl border-white/5 bg-black/20 px-5 py-3'>
@@ -66,6 +79,9 @@ export default function PrematchEvent(props: { node: PrematchEvent$key }) {
             variant: 'ghost',
             size: 'sm',
           })}
+          onMouseEnter={prefetch}
+          onMouseDown={prefetch}
+          onFocus={prefetch}
         >
           +126
         </Link>

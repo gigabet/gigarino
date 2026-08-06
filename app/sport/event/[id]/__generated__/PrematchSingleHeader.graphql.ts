@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1db21ee799405839e13dc18603d50113>>
+ * @generated SignedSource<<e0de8658010aa31385e11d8f70f5e835>>
  * @lightSyntaxTransform
  */
 
@@ -8,6 +8,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type EventStatus = "ABANDONED" | "CANCELLED" | "ENDED" | "LIVE" | "POSTPONED" | "SCHEDULED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type PrematchSingleHeader$data = {
   readonly category: {
@@ -16,6 +17,7 @@ export type PrematchSingleHeader$data = {
   readonly sport: {
     readonly key: string;
   };
+  readonly status: EventStatus;
   readonly tournament: {
     readonly name: string;
   };
@@ -79,6 +81,13 @@ return {
       "plural": false,
       "selections": (v0/*:: as any*/),
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "status",
+      "storageKey": null
     }
   ],
   "type": "PrematchEvent",
@@ -86,6 +95,6 @@ return {
 };
 })();
 
-(node as any).hash = "b38079a6ae3aaaf83ae02567a6fd5a9c";
+(node as any).hash = "0387a4c55f2104a9d29365a2add8e6fd";
 
 export default node;

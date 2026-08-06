@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0cdfe7ddc439f79503b484fca8b4d471>>
+ * @generated SignedSource<<a29640505c674f0b39a74059d0492272>>
  * @lightSyntaxTransform
  */
 
@@ -9,23 +9,23 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type EventView$data = {
+export type PrematchSingleView$data = {
   readonly awayCompetitor: string;
   readonly homeCompetitor: string;
   readonly startTime: string;
   readonly " $fragmentSpreads": FragmentRefs<"EventLiveState" | "MarketGroups" | "PrematchSingleHeader">;
-  readonly " $fragmentType": "EventView";
+  readonly " $fragmentType": "PrematchSingleView";
 };
-export type EventView$key = {
-  readonly " $data"?: EventView$data;
-  readonly " $fragmentSpreads": FragmentRefs<"EventView">;
+export type PrematchSingleView$key = {
+  readonly " $data"?: PrematchSingleView$data;
+  readonly " $fragmentSpreads": FragmentRefs<"PrematchSingleView">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "EventView",
+  "name": "PrematchSingleView",
   "selections": [
     {
       "alias": null,
@@ -49,24 +49,14 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
-      "kind": "Defer",
-      "selections": [
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "PrematchSingleHeader"
-        }
-      ]
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PrematchSingleHeader"
     },
     {
-      "kind": "Defer",
-      "selections": [
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "EventLiveState"
-        }
-      ]
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "EventLiveState"
     },
     {
       "kind": "Defer",
@@ -83,6 +73,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "008d8812bf06c0d9ef4a1343a094f5da";
+(node as any).hash = "11c36696099103c43645be1a3586642d";
 
 export default node;
