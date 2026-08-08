@@ -3,7 +3,7 @@
 import { sortBy } from 'lodash'
 import { SearchIcon } from 'lucide-react'
 import Link from 'next/link'
-import { Accordion } from 'radix-ui'
+import { Accordion, Tabs } from 'radix-ui'
 import { Suspense, useEffect, useRef } from 'react'
 import ReactCountryFlag from 'react-country-flag'
 import {
@@ -80,9 +80,34 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
           <span className='text-muted-foreground hidden text-sm xl:inline'>search games...</span>
         </div>
 
-        <div className='text-secondary hidden h-12 items-center justify-center rounded-xl bg-white/3 text-xs xl:flex'>
-          last minute / today / all / etc
-        </div>
+        {/* <Tabs.Root
+          value={data.betType}
+          onValueChange={v => setInput(input => ({ ...input, betType: v as TicketType }))}
+          className='px-5 pt-4'
+        >
+          <Tabs.List className='grid w-full grid-cols-3 gap-1 border border-white/5 p-1'>
+            <Tabs.Trigger
+              value='ALL'
+              className='data-[state=active]:bg-primary hover:bg-dark-300 transition-colors data-[state=active]:text-black'
+            >
+              All
+            </Tabs.Trigger>
+            <Tabs.Trigger
+              value='LAST_MINUTE'
+              disabled={data.items.length < 2}
+              className='data-[state=active]:bg-primary hover:bg-dark-300 transition-colors data-[state=active]:text-black'
+            >
+              Last Min
+            </Tabs.Trigger>
+            <Tabs.Trigger
+              value='TODAY'
+              disabled={data.items.length < 3}
+              className='data-[state=active]:bg-primary hover:bg-dark-300 transition-colors data-[state=active]:text-black'
+            >
+              Today
+            </Tabs.Trigger>
+          </Tabs.List>
+        </Tabs.Root> */}
 
         <Accordion.Root
           data-slot='accordion'
@@ -124,9 +149,9 @@ export function SidebarSkeleton() {
           <span className='text-muted-foreground hidden text-sm xl:inline'>search games...</span>
         </div>
 
-        <div className='text-secondary hidden h-12 items-center justify-center rounded-xl bg-white/3 text-xs xl:flex'>
+        {/* <div className='text-secondary hidden h-12 items-center justify-center rounded-xl bg-white/3 text-xs xl:flex'>
           last minute / today / all / etc
-        </div>
+        </div> */}
 
         <div className='flex flex-col gap-2'>
           {Array(5)

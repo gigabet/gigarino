@@ -12,8 +12,6 @@ import PrematchSingleViewQueryNode from '@/app/sport/event/[id]/__generated__/Pr
 import MarketGroups, { MarketGroupsSkeleton } from '@/app/sport/event/[id]/market-groups'
 import StatisticsWidget from '@/app/sport/event/[id]/statistics-widget'
 import { SportIcon } from '@/components/sport-icon'
-import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
 import { getRelativeDayLabel } from '@/lib/utils'
 
 export default function PrematchSingleView(props: {
