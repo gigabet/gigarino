@@ -141,7 +141,7 @@ export default function Betslip(props: {
   return (
     <div
       className={cn(
-        'bg-dark-200 scrollbar-hide flex w-full shrink flex-col overflow-auto',
+        'bg-dark-200 scrollbar-hide flex w-full shrink flex-col self-start overflow-auto',
         props.variant === 'drawer'
           ? 'h-full min-h-0 flex-1'
           : 'sticky top-26.25 max-h-[calc(100dvh-8rem)] rounded-2xl border border-white/5'

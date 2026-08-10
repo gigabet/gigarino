@@ -97,7 +97,7 @@ export default function SportLayout({ children }: React.PropsWithChildren) {
         {queryRef ? <Sidebar queryRef={queryRef} /> : <SidebarSkeleton />}
       </Suspense>
       {children}
-      <div className='hidden xl:flex'>
+      <div className='sticky top-26.25 hidden self-start xl:flex'>
         <ErrorBoundary FallbackComponent={SectionErrorFallback}>
           <Betslip query={betslip} />
         </ErrorBoundary>
