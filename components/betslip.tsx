@@ -569,7 +569,7 @@ export function BetslipMobileBar(props: { query: BetslipMobileBar$key | null }) 
     <button
       type='button'
       onClick={() => setOpen(true)}
-      className='bg-primary text-primary-foreground fixed inset-x-4 bottom-24 z-40 flex items-center justify-between rounded-full px-5 py-3.5 shadow-lg sm:bottom-4 xl:hidden'
+      className='bg-primary text-primary-foreground fixed inset-x-4 bottom-24 z-40 flex items-center justify-between rounded-full px-5 py-3.5 shadow-lg lg:bottom-4 xl:hidden'
     >
       <span className='flex items-center gap-2 text-sm font-bold'>
         <TicketIcon className='size-4' />
