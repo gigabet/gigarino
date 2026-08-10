@@ -26,10 +26,10 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
     graphql`
       fragment ShortcutRow on Query {
         scr_topTournaments: topTournaments(first: 4) @stream(initialCount: 1) {
-          sport {
-            key @required(action: "NONE")
+          sport @required(action: NONE) {
+            key @required(action: NONE)
           }
-          key @required(action: "NONE")
+          key @required(action: NONE)
           name
         }
       }
@@ -40,39 +40,45 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
   const pathname = usePathname()
   const selected = useTournamentKeysFromUrl()
 
-  if (!preloaded || !data) return <ShortcutRowSkeleton />
+  if (!preloaded || !data?.scr_topTournaments) return <ShortcutRowSkeleton />
 
   const shortcuts = [
-    ...uniqBy(data.scr_topTournaments, 'label').map(t => ({
-      label: t.name,
-      icon: (
-        <SportIcon sport={t?.sport?.key} className='group-data-active:text-accent-foreground' />
-      ),
-      href: {
-        pathname,
-        query: { tournaments: t?.key },
-      },
-      key: t?.key,
-    })),
+    ...uniqBy(data.scr_topTournaments, 'label').map(
+      t =>
+        !!t && {
+          label: t.name,
+          icon: (
+            <SportIcon sport={t.sport.key} className='group-data-active:text-accent-foreground' />
+          ),
+          href: {
+            pathname,
+            query: { tournaments: t.key },
+          },
+          key: t.key,
+        }
+    ),
     ...sample.map(s => ({ ...s, icon: <s.icon />, key: null })),
   ]
 
   return (
     <div className='w-full scrollbar-none overflow-x-auto'>
       <div className='flex gap-4'>
-        {shortcuts.map(e => (
-          <Link
-            href={e.href}
-            key={e.label}
-            data-active={(selected.length === 1 && selected[0] === e?.key) || null}
-            className='group bg-muted/40 hover:bg-muted data-active:bg-accent inline-flex h-10 shrink-0 items-center gap-2 rounded-full px-3.5 whitespace-nowrap transition'
-          >
-            {e.icon}
-            <span className='text-foreground/70 group-data-active:text-accent-foreground text-xs font-light tracking-wide'>
-              {e.label}
-            </span>
-          </Link>
-        ))}
+        {shortcuts.map(
+          e =>
+            !!e && (
+              <Link
+                href={e.href}
+                key={e.label}
+                data-active={(selected.length === 1 && selected[0] === e?.key) || null}
+                className='group bg-muted/40 hover:bg-muted data-active:bg-accent inline-flex h-10 shrink-0 items-center gap-2 rounded-full px-3.5 whitespace-nowrap transition'
+              >
+                {e.icon}
+                <span className='text-foreground/70 group-data-active:text-accent-foreground text-xs font-light tracking-wide'>
+                  {e.label}
+                </span>
+              </Link>
+            )
+        )}
       </div>
     </div>
   )

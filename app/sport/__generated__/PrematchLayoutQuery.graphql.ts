@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<508979fe226ed9a95203863c068d3b35>>
+ * @generated SignedSource<<32e99ab27021d2d94ce3647d69d8e86b>>
  * @lightSyntaxTransform
  */
 
@@ -75,7 +75,6 @@ return {
                 "name": "key",
                 "storageKey": null
               },
-              (v0/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -83,6 +82,7 @@ return {
                 "name": "name",
                 "storageKey": null
               },
+              (v0/*:: as any*/),
               (v1/*:: as any*/)
             ],
             "storageKey": null
@@ -118,12 +118,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "318da7df5061656c3bc6b86191d82c41",
+    "cacheID": "1c388bafbd17cbb029d106fcdaf310c6",
     "id": null,
     "metadata": {},
     "name": "PrematchLayoutQuery",
     "operationKind": "query",
-    "text": "query PrematchLayoutQuery {\n  ...Sidebar\n}\n\nfragment Sidebar on Query {\n  sports @stream(label: \"Sidebar$stream$sports\", initialCount: 4) {\n    key\n    eventCount\n    ...SidebarSport\n    id\n  }\n  sb_topTournaments: topTournaments(first: 4) @stream(label: \"Sidebar$stream$sb_topTournaments_3z2gQm\", initialCount: 1) {\n    eventCount\n    id\n  }\n}\n\nfragment SidebarSport on Sport {\n  key\n  name\n  eventCount\n}\n"
+    "text": "query PrematchLayoutQuery {\n  ...Sidebar\n}\n\nfragment Sidebar on Query {\n  sports @stream(label: \"Sidebar$stream$sports\", initialCount: 4) {\n    key\n    name\n    eventCount\n    ...SidebarSport\n    id\n  }\n  sb_topTournaments: topTournaments(first: 4) @stream(label: \"Sidebar$stream$sb_topTournaments_3z2gQm\", initialCount: 1) {\n    eventCount\n    id\n  }\n}\n\nfragment SidebarSport on Sport {\n  key\n  name\n  eventCount\n}\n"
   }
 };
 })();

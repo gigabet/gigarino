@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<99e404cdee86a7255b603d4add76b61e>>
+ * @generated SignedSource<<58bca5c6a9b71715490ab558c1d887a5>>
  * @lightSyntaxTransform
  */
 
@@ -16,6 +16,7 @@ export type Sidebar$data = {
   readonly sports: ReadonlyArray<{
     readonly eventCount: number;
     readonly key: string;
+    readonly name: string;
     readonly " $fragmentSpreads": FragmentRefs<"SidebarSport">;
   }>;
   readonly " $fragmentType": "Sidebar";
@@ -55,6 +56,13 @@ return {
               "args": null,
               "kind": "ScalarField",
               "name": "key",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "name",
               "storageKey": null
             },
             (v0/*:: as any*/),
@@ -97,6 +105,6 @@ return {
 };
 })();
 
-(node as any).hash = "830822a35bebffb7b5377fd62356bc4d";
+(node as any).hash = "f90b16974b2fd6fd3dbdaa5f6a26d499";
 
 export default node;

@@ -17,7 +17,7 @@ import type {
 import type { PrematchLayoutQuery } from '@/app/sport/__generated__/PrematchLayoutQuery.graphql'
 import PrematchLayoutQueryNode from '@/app/sport/__generated__/PrematchLayoutQuery.graphql'
 import Sidebar, { SidebarSkeleton } from '@/app/sport/sidebar'
-import Betslip, { BetslipMobileBar } from '@/components/betslip'
+import Betslip, { BetslipDrawer, BetslipMobileBar } from '@/components/betslip'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { betslipInputAtom } from '@/context/betslip'
 import { cn } from '@/lib/utils'
@@ -87,7 +87,10 @@ export default function SportLayout({ children }: React.PropsWithChildren) {
     <div
       className={cn(
         'z-1 mx-auto grid min-h-screen w-full max-w-480 gap-8 px-4 py-6 pb-24 sm:px-6 lg:px-8',
-        'grid-cols-1 lg:grid-cols-[4rem_minmax(auto,1fr)] xl:grid-cols-[16rem_minmax(auto,1fr)] 2xl:grid-cols-[16rem_minmax(auto,1fr)_20rem]'
+        // md and below: single column (sidebar renders as a sticky topbar, out of grid flow)
+        // lg: narrow collapsible strip + content
+        // xl+: full sidebar + content + betslip aside
+        'grid-cols-1 lg:grid-cols-[4rem_minmax(auto,1fr)] xl:grid-cols-[16rem_minmax(auto,1fr)_20rem]'
       )}
     >
       <Suspense fallback={<SidebarSkeleton />}>
@@ -99,7 +102,10 @@ export default function SportLayout({ children }: React.PropsWithChildren) {
           <Betslip query={betslip} />
         </ErrorBoundary>
       </div>
-      <BetslipMobileBar query={betslip} />
+      <div className='xl:hidden'>
+        <BetslipMobileBar query={betslip} />
+        <BetslipDrawer query={betslip} />
+      </div>
     </div>
   )
 }

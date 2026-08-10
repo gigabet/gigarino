@@ -13,6 +13,7 @@ import {
 import { useState } from 'react'
 import { PiTicket } from 'react-icons/pi'
 import { graphql, useFragment } from 'react-relay'
+import { Drawer } from 'vaul'
 import type { Betslip$key } from '@/components/__generated__/Betslip.graphql'
 import type { BetslipMobileBar$key } from '@/components/__generated__/BetslipMobileBar.graphql'
 import type { Tip$key } from '@/components/__generated__/Tip.graphql'
@@ -28,10 +29,14 @@ import {
 import { Separator } from '@/components/ui/separator'
 import * as Tabs from '@/components/ui/tabs'
 import { betslipInputAtom, betslipOpenAtom } from '@/context/betslip'
+import { useMediaQuery } from '@/context/hooks'
 import { cn, formatBalance, nCk } from '@/lib/utils'
 import type { TicketType } from '@/types'
 
-export default function Betslip(props: { query: Betslip$key | null }) {
+export default function Betslip(props: {
+  query: Betslip$key | null
+  variant?: 'panel' | 'drawer'
+}) {
   const data = useFragment(
     graphql`
       fragment Betslip on BetslipQuote {
@@ -59,7 +64,14 @@ export default function Betslip(props: { query: Betslip$key | null }) {
 
   if (!data || input.items.length === 0)
     return (
-      <div className='bg-dark-200 sticky top-26.25 flex max-h-[calc(100dvh-8rem)] w-full shrink flex-col self-start overflow-hidden rounded-2xl border border-white/5'>
+      <div
+        className={cn(
+          'bg-dark-200 flex w-full shrink flex-col overflow-hidden',
+          props.variant === 'drawer'
+            ? 'h-full min-h-0 flex-1'
+            : 'sticky top-26.25 max-h-[calc(100dvh-8rem)] rounded-2xl border border-white/5'
+        )}
+      >
         <div className='flex items-center justify-between border-b border-white/5 px-5 py-4'>
           <h2 className='flex items-center gap-2 text-sm font-semibold tracking-wide text-white uppercase'>
             <TicketIcon className='text-primary size-4' />
@@ -127,7 +139,14 @@ export default function Betslip(props: { query: Betslip$key | null }) {
     )
 
   return (
-    <div className='bg-dark-200 scrollbar-hide sticky top-26.25 flex max-h-[calc(100dvh-8rem)] w-full shrink flex-col self-start overflow-auto rounded-2xl border border-white/5'>
+    <div
+      className={cn(
+        'bg-dark-200 scrollbar-hide flex w-full shrink flex-col overflow-auto',
+        props.variant === 'drawer'
+          ? 'h-full min-h-0 flex-1'
+          : 'sticky top-26.25 max-h-[calc(100dvh-8rem)] rounded-2xl border border-white/5'
+      )}
+    >
       <div className='flex items-center justify-between border-b border-white/5 px-5 py-4'>
         <h2 className='flex items-center gap-2 text-sm font-semibold tracking-wide text-white uppercase'>
           <TicketIcon className='text-primary size-4' />
@@ -550,7 +569,7 @@ export function BetslipMobileBar(props: { query: BetslipMobileBar$key | null }) 
     <button
       type='button'
       onClick={() => setOpen(true)}
-      className='bg-primary text-primary-foreground fixed inset-x-4 bottom-4 z-40 flex items-center justify-between rounded-full px-5 py-3.5 shadow-lg xl:hidden'
+      className='bg-primary text-primary-foreground fixed inset-x-4 bottom-24 z-40 flex items-center justify-between rounded-full px-5 py-3.5 shadow-lg sm:bottom-4 xl:hidden'
     >
       <span className='flex items-center gap-2 text-sm font-bold'>
         <TicketIcon className='size-4' />
@@ -561,5 +580,36 @@ export function BetslipMobileBar(props: { query: BetslipMobileBar$key | null }) 
         <ChevronDownIcon className='size-4 rotate-180' />
       </span>
     </button>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Mobile/tablet: drawer housing the full Betslip, opened via the FAB above.
+// Anchors to the bottom on narrow screens, to the right from `sm` up.
+// ---------------------------------------------------------------------------
+export function BetslipDrawer(props: { query: Betslip$key | null }) {
+  const [open, setOpen] = useAtom(betslipOpenAtom)
+  const isWiderThanMobile = useMediaQuery('(min-width: 640px)')
+  const direction = isWiderThanMobile ? 'right' : 'bottom'
+
+  return (
+    <Drawer.Root open={open} onOpenChange={setOpen} direction={direction}>
+      <Drawer.Portal>
+        <Drawer.Overlay className='fixed inset-0 z-50 bg-black/50' />
+        <Drawer.Content
+          className={cn(
+            'bg-dark-200 fixed z-50 flex flex-col outline-none',
+            direction === 'bottom' && 'inset-x-0 bottom-0 max-h-[85dvh]',
+            direction === 'right' && 'inset-y-0 right-0 h-full w-full max-w-sm'
+          )}
+        >
+          {/* grabber handle, bottom sheet only */}
+          {direction === 'bottom' && (
+            <div className='mx-auto mt-3 h-1.5 w-10 shrink-0 rounded-full bg-white/20' />
+          )}
+          <Betslip query={props.query} variant='drawer' />
+        </Drawer.Content>
+      </Drawer.Portal>
+    </Drawer.Root>
   )
 }

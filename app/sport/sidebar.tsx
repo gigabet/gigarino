@@ -1,10 +1,10 @@
 'use client'
 
 import { sortBy } from 'lodash'
-import { SearchIcon } from 'lucide-react'
+import { ChevronLeftIcon, ChevronRightIcon, SearchIcon } from 'lucide-react'
 import Link from 'next/link'
-import { Accordion, Tabs } from 'radix-ui'
-import { Suspense, useEffect, useRef } from 'react'
+import { Accordion, Popover, Tabs } from 'radix-ui'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import ReactCountryFlag from 'react-country-flag'
 import {
   fetchQuery,
@@ -30,7 +30,6 @@ import SidebarTournamentsLoadNode, {
   type SidebarTournamentsLoad,
 } from '@/app/sport/__generated__/SidebarTournamentsLoad.graphql'
 import { SportIcon } from '@/components/sport-icon'
-import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Field, FieldGroup } from '@/components/ui/field'
 import { Label } from '@/components/ui/label'
@@ -56,6 +55,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
       fragment Sidebar on Query {
         sports @stream(initialCount: 4) {
           key
+          name
           eventCount
           ...SidebarSport
         }
@@ -72,102 +72,231 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
     return index === -1 ? Infinity : index
   }).filter(s => s.eventCount > 0)
 
+  const [expanded, setExpanded] = useState(false)
+
+  const topTournamentsEventCount = data.sb_topTournaments.reduce(
+    (acc, curr) => acc + Math.min(4, curr?.eventCount ?? 0),
+    0
+  )
+
   return (
-    <aside className='scrollbar-hide! scrollbar-thumb-dark-300 sticky top-26.25 hidden max-h-[calc(100dvh-7rem)] w-full scrollbar-thin scrollbar-track-transparent place-self-start overflow-y-auto md:block'>
-      <div className='flex w-full flex-col gap-4'>
-        <div className='flex h-10 items-center justify-center gap-4 rounded-full border bg-black/50 px-4 xl:justify-start'>
-          <SearchIcon className='size-4 shrink-0' />
-          <span className='text-muted-foreground hidden text-sm xl:inline'>search games...</span>
+    <>
+      {/* ---- md and below: horizontal topbar, pills open a submenu ---- */}
+      <div className='bg-dark/60 sticky top-16 z-20 -mx-4 border-b border-white/5 px-4 py-2 backdrop-blur sm:-mx-6 sm:px-6 lg:hidden'>
+        <div className='flex scrollbar-none items-center gap-2 overflow-x-auto'>
+          <Link
+            href='/sport'
+            prefetch
+            className='bg-dark-200 flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-xs whitespace-nowrap hover:bg-white/5'
+          >
+            <SportIcon sport='highlights' className='size-4' />
+            Highlights
+          </Link>
+          {filteredSports.map(sport => (
+            <SportSubmenu
+              key={sport.key}
+              sportKey={sport.key}
+              sportName={sport.name}
+              side='bottom'
+              trigger={
+                <button
+                  type='button'
+                  className='bg-dark-200 flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-xs whitespace-nowrap hover:bg-white/5'
+                >
+                  <SportIcon sport={sport.key} className='size-4' />
+                  {sport.name}
+                  <span className='text-secondary'>{sport.eventCount}</span>
+                </button>
+              }
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* ---- lg only: icon strip; icons open a submenu, arrow expands to full size ---- */}
+      <div className='sticky top-26.25 z-30 hidden h-fit lg:block xl:hidden'>
+        <div className='bg-dark-200 flex w-16 flex-col items-center gap-3 rounded-2xl border border-white/5 py-4'>
+          <button
+            type='button'
+            onClick={() => setExpanded(e => !e)}
+            aria-label={expanded ? 'Collapse sidebar' : 'Expand sidebar'}
+            className='text-secondary hover:bg-dark-300 hover:text-foreground flex size-8 items-center justify-center rounded-full transition-colors'
+          >
+            {expanded ? (
+              <ChevronLeftIcon className='size-4' />
+            ) : (
+              <ChevronRightIcon className='size-4' />
+            )}
+          </button>
+          <hr className='w-8 border-white/7' />
+          <Link
+            href='/sport'
+            className='text-secondary hover:bg-dark-300 hover:text-foreground flex size-9 items-center justify-center rounded-full transition-colors'
+          >
+            <SportIcon sport='highlights' className='size-5' />
+          </Link>
+          {filteredSports.map(sport => (
+            <SportSubmenu
+              key={sport.key}
+              sportKey={sport.key}
+              sportName={sport.name}
+              side='right'
+              trigger={
+                <button
+                  type='button'
+                  className='text-secondary hover:bg-dark-300 hover:text-foreground flex size-9 items-center justify-center rounded-full transition-colors'
+                >
+                  <SportIcon sport={sport.key} className='size-5' />
+                </button>
+              }
+            />
+          ))}
         </div>
 
-        {/* <Tabs.Root
-          value={data.betType}
-          onValueChange={v => setInput(input => ({ ...input, betType: v as TicketType }))}
-          className='px-5 pt-4'
-        >
-          <Tabs.List className='grid w-full grid-cols-3 gap-1 border border-white/5 p-1'>
-            <Tabs.Trigger
-              value='ALL'
-              className='data-[state=active]:bg-primary hover:bg-dark-300 transition-colors data-[state=active]:text-black'
-            >
-              All
-            </Tabs.Trigger>
-            <Tabs.Trigger
-              value='LAST_MINUTE'
-              disabled={data.items.length < 2}
-              className='data-[state=active]:bg-primary hover:bg-dark-300 transition-colors data-[state=active]:text-black'
-            >
-              Last Min
-            </Tabs.Trigger>
-            <Tabs.Trigger
-              value='TODAY'
-              disabled={data.items.length < 3}
-              className='data-[state=active]:bg-primary hover:bg-dark-300 transition-colors data-[state=active]:text-black'
-            >
-              Today
-            </Tabs.Trigger>
-          </Tabs.List>
-        </Tabs.Root> */}
-
-        <Accordion.Root
-          data-slot='accordion'
-          type='single'
-          collapsible
-          className='flex flex-col gap-2'
-        >
-          <div className='bg-dark-200 overflow-hidden rounded-xl'>
-            <Link
-              href='/sport'
-              className='flex w-full items-center gap-2 px-4 py-3 hover:bg-white/4 data-[state=open]:bg-white/4'
-              prefetch={true}
-            >
-              <SportIcon sport='highlights' className='size-5' />{' '}
-              <span className='mr-auto text-sm'>Highlights</span>
-              <span className='text-secondary text-xs'>
-                {data.sb_topTournaments.reduce(
-                  (acc, curr) => acc + Math.min(4, curr?.eventCount ?? 0),
-                  0
-                )}
-              </span>
-            </Link>
+        {expanded && (
+          <div className='bg-dark-200 absolute top-0 left-full ml-2 max-h-[calc(100dvh-7rem)] w-72 overflow-y-auto rounded-2xl border border-white/5 p-3 shadow-2xl'>
+            <FullSidebarContent
+              filteredSports={filteredSports}
+              topTournamentsEventCount={topTournamentsEventCount}
+            />
           </div>
-          {filteredSports.map(sport => (
-            <Sport key={sport.key} sport={sport} />
-          ))}
-        </Accordion.Root>
+        )}
       </div>
-    </aside>
+
+      {/* ---- xl and up: full sidebar ---- */}
+      <aside className='scrollbar-hide! scrollbar-thumb-dark-300 sticky top-26.25 hidden max-h-[calc(100dvh-7rem)] w-full scrollbar-thin scrollbar-track-transparent place-self-start overflow-y-auto xl:block'>
+        <FullSidebarContent
+          filteredSports={filteredSports}
+          topTournamentsEventCount={topTournamentsEventCount}
+        />
+      </aside>
+    </>
   )
 }
 
 export function SidebarSkeleton() {
   return (
-    <aside className='scrollbar-hide! scrollbar-thumb-dark-300 sticky top-26.25 hidden max-h-[calc(100dvh-7rem)] w-full scrollbar-thin scrollbar-track-transparent place-self-start overflow-y-auto md:block'>
-      <div className='flex w-full flex-col gap-4'>
-        <div className='flex h-10 items-center justify-center gap-4 rounded-full border bg-black/50 px-4 xl:justify-start'>
-          <SearchIcon className='size-4 shrink-0' />
-          <span className='text-muted-foreground hidden text-sm xl:inline'>search games...</span>
-        </div>
-
-        {/* <div className='text-secondary hidden h-12 items-center justify-center rounded-xl bg-white/3 text-xs xl:flex'>
-          last minute / today / all / etc
-        </div> */}
-
-        <div className='flex flex-col gap-2'>
-          {Array(5)
-            .fill(5)
-            .map((_, i) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: identical
-              <div key={i} className='bg-dark-200 overflow-hidden rounded-xl'>
-                <div className='flex w-full items-center gap-2 px-4 py-3 hover:bg-white/4 data-[state=open]:bg-white/4'>
-                  <Skeleton className='size-5' />
-                  <Skeleton className='h-4 w-20' />
-                </div>
-              </div>
-            ))}
-        </div>
+    <>
+      <div className='bg-dark/60 sticky top-16 z-20 -mx-4 flex gap-2 border-b border-white/5 px-4 py-2 sm:-mx-6 sm:px-6 lg:hidden'>
+        {Array(6)
+          .fill(6)
+          .map((_, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: identical
+            <Skeleton key={i} className='h-9 w-24 shrink-0 rounded-full' />
+          ))}
       </div>
-    </aside>
+
+      <div className='bg-dark-200 sticky top-26.25 hidden h-fit w-16 flex-col items-center gap-3 rounded-2xl border border-white/5 py-4 lg:flex xl:hidden'>
+        {Array(6)
+          .fill(6)
+          .map((_, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: identical
+            <Skeleton key={i} className='size-9 rounded-full' />
+          ))}
+      </div>
+
+      <aside className='scrollbar-hide! scrollbar-thumb-dark-300 sticky top-26.25 hidden max-h-[calc(100dvh-7rem)] w-full scrollbar-thin scrollbar-track-transparent place-self-start overflow-y-auto xl:block'>
+        <div className='flex w-full flex-col gap-4'>
+          <div className='flex h-10 items-center justify-center gap-4 rounded-full border bg-black/50 px-4 xl:justify-start'>
+            <SearchIcon className='size-4 shrink-0' />
+            <span className='text-muted-foreground hidden text-sm xl:inline'>search games...</span>
+          </div>
+
+          <div className='flex flex-col gap-2'>
+            {Array(5)
+              .fill(5)
+              .map((_, i) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: identical
+                <div key={i} className='bg-dark-200 overflow-hidden rounded-xl'>
+                  <div className='flex w-full items-center gap-2 px-4 py-3 hover:bg-white/4 data-[state=open]:bg-white/4'>
+                    <Skeleton className='size-5' />
+                    <Skeleton className='h-4 w-20' />
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
+      </aside>
+    </>
+  )
+}
+
+/**
+ * Popover housing the country/tournament picker for one sport — used by the
+ * mobile topbar pills and the lg icon strip, where there's no room (or no
+ * intent) to expand a whole accordion inline. Fetches lazily on open, same
+ * `SidebarSportDetails` query the full accordion (`Sport`) uses for prefetch.
+ */
+function SportSubmenu(props: {
+  sportKey: string
+  sportName: string
+  side: 'right' | 'bottom'
+  trigger: React.ReactNode
+}) {
+  const [queryRef, loadQuery, disposeQuery] =
+    useQueryLoader<SidebarSportDetails>(SidebarSportDetailsNode)
+
+  return (
+    <Popover.Root
+      onOpenChange={open => {
+        if (open) loadQuery({ key: props.sportKey }, { fetchPolicy: 'store-or-network' })
+        else disposeQuery()
+      }}
+    >
+      <Popover.Trigger asChild>{props.trigger}</Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content
+          side={props.side}
+          align='start'
+          sideOffset={8}
+          collisionPadding={16}
+          className='bg-dark-200 z-40 max-h-[70dvh] w-72 overflow-y-auto rounded-2xl border border-white/5 p-3 shadow-2xl'
+        >
+          <p className='text-secondary mb-2 px-1 text-xs font-semibold tracking-wider uppercase'>
+            {props.sportName}
+          </p>
+          <Suspense fallback={<CategorySkeleton />}>
+            {queryRef && <CountryList queryRef={queryRef} />}
+          </Suspense>
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
+  )
+}
+
+function FullSidebarContent(props: {
+  filteredSports: Sidebar$data['sports']
+  topTournamentsEventCount: number
+}) {
+  return (
+    <div className='flex w-full flex-col gap-4'>
+      <div className='flex h-10 items-center justify-center gap-4 rounded-full border bg-black/50 px-4 xl:justify-start'>
+        <SearchIcon className='size-4 shrink-0' />
+        <span className='text-muted-foreground hidden text-sm xl:inline'>search games...</span>
+      </div>
+
+      <Accordion.Root
+        data-slot='accordion'
+        type='single'
+        collapsible
+        className='flex flex-col gap-2'
+      >
+        <div className='bg-dark-200 overflow-hidden rounded-xl'>
+          <Link
+            href='/sport'
+            className='flex w-full items-center gap-2 px-4 py-3 hover:bg-white/4 data-[state=open]:bg-white/4'
+            prefetch={true}
+          >
+            <SportIcon sport='highlights' className='size-5' />{' '}
+            <span className='mr-auto text-sm'>Highlights</span>
+            <span className='text-secondary text-xs'>{props.topTournamentsEventCount}</span>
+          </Link>
+        </div>
+        {props.filteredSports.map(sport => (
+          <Sport key={sport.key} sport={sport} />
+        ))}
+      </Accordion.Root>
+    </div>
   )
 }
 

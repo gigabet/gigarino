@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<00f20c2dc2ee19116f813a56b10c457c>>
+ * @generated SignedSource<<1f10e34c079d850ed2a61a1ae9f18200>>
  * @lightSyntaxTransform
  */
 
@@ -16,7 +16,7 @@ export type ShortcutRow$data = {
     readonly sport: {
       readonly key: string;
     };
-  }>;
+  } | null | undefined>;
   readonly " $fragmentType": "ShortcutRow";
 };
 export type ShortcutRow$key = {
@@ -26,11 +26,15 @@ export type ShortcutRow$key = {
 
 const node: ReaderFragment = (function(){
 var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "key",
-  "storageKey": null
+  "kind": "RequiredField",
+  "field": {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "key",
+    "storageKey": null
+  },
+  "action": "NONE"
 };
 return {
   "argumentDefinitions": [],
@@ -56,16 +60,20 @@ return {
           "plural": true,
           "selections": [
             {
-              "alias": null,
-              "args": null,
-              "concreteType": "Sport",
-              "kind": "LinkedField",
-              "name": "sport",
-              "plural": false,
-              "selections": [
-                (v0/*:: as any*/)
-              ],
-              "storageKey": null
+              "kind": "RequiredField",
+              "field": {
+                "alias": null,
+                "args": null,
+                "concreteType": "Sport",
+                "kind": "LinkedField",
+                "name": "sport",
+                "plural": false,
+                "selections": [
+                  (v0/*:: as any*/)
+                ],
+                "storageKey": null
+              },
+              "action": "NONE"
             },
             (v0/*:: as any*/),
             {
@@ -86,6 +94,6 @@ return {
 };
 })();
 
-(node as any).hash = "d5bf894a43f5d5f13f07fae6f38c392e";
+(node as any).hash = "6a523bda262d6a2d8757046017ea02a5";
 
 export default node;
