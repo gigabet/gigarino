@@ -93,6 +93,7 @@ input BetslipQuoteInput {
   betType: TicketType!
   items: [BetslipItemInput!]!
   stake: String!
+  systemSize: Int
 }
 
 type BetslipQuoteItem implements Node {
@@ -547,13 +548,20 @@ type PageInfo {
 }
 
 input PlaceBetInput {
+  betType: TicketType!
+
   """
   Client-generated token making the mutation idempotent - resubmitting with the same value returns the original ticket instead of placing twice.
   """
   clientRequestId: String
   items: [PlaceBetItemInput!]!
   oddsPolicy: OddsChangePolicy! = REJECT
+
+  """
+  Accumulator stake (MULTIPLE); default per-leg stake for SINGLE.
+  """
   stake: String!
+  systemSize: Int
 }
 
 input PlaceBetItemInput {
@@ -562,6 +570,7 @@ input PlaceBetItemInput {
   """
   expectedPrice: String!
   outcomeId: ID!
+  stake: String
 }
 
 type PlaceBetPayload {

@@ -27,9 +27,9 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
       fragment ShortcutRow on Query {
         scr_topTournaments: topTournaments(first: 4) @stream(initialCount: 1) {
           sport {
-            key
+            key @required(action: "NONE")
           }
-          key
+          key @required(action: "NONE")
           name
         }
       }
@@ -40,17 +40,19 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
   const pathname = usePathname()
   const selected = useTournamentKeysFromUrl()
 
-  if (!preloaded) return <ShortcutRowSkeleton />
+  if (!preloaded || !data) return <ShortcutRowSkeleton />
 
   const shortcuts = [
     ...uniqBy(data.scr_topTournaments, 'label').map(t => ({
       label: t.name,
-      icon: <SportIcon sport={t.sport.key} className='group-data-active:text-accent-foreground' />,
+      icon: (
+        <SportIcon sport={t?.sport?.key} className='group-data-active:text-accent-foreground' />
+      ),
       href: {
         pathname,
-        query: { tournaments: t.key },
+        query: { tournaments: t?.key },
       },
-      key: t.key,
+      key: t?.key,
     })),
     ...sample.map(s => ({ ...s, icon: <s.icon />, key: null })),
   ]
@@ -62,7 +64,7 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
           <Link
             href={e.href}
             key={e.label}
-            data-active={(selected.length === 1 && selected[0] === e.key) || null}
+            data-active={(selected.length === 1 && selected[0] === e?.key) || null}
             className='group bg-muted/40 hover:bg-muted data-active:bg-accent inline-flex h-10 shrink-0 items-center gap-2 rounded-full px-3.5 whitespace-nowrap transition'
           >
             {e.icon}

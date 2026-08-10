@@ -114,3 +114,15 @@ export function swap<T>(arr: T[], i: number, j: number): T[] {
   ;[copy[i], copy[j]] = [copy[j], copy[i]]
   return copy
 }
+
+export function nCk(n: number, k: number): number {
+  if (k < 0 || k > n) return 0
+  if (k === 0 || k === n) return 1
+
+  k = Math.min(k, n - k)
+  let result = 1
+  for (let i = 0; i < k; i++) {
+    result = (result * (n - i)) / (i + 1)
+  }
+  return Math.round(result)
+}

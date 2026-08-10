@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1d3cd426e9195410dd5461fd3d15c8b6>>
+ * @generated SignedSource<<165f9050266205899deb44995d640d47>>
  * @lightSyntaxTransform
  */
 
@@ -14,6 +14,7 @@ export type BetslipQuoteInput = {
   betType: TicketType;
   items: ReadonlyArray<BetslipItemInput>;
   stake: string;
+  systemSize?: number | null | undefined;
 };
 export type BetslipItemInput = {
   outcomeId: string;

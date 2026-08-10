@@ -6,7 +6,12 @@ import type { BetslipSubscription$variables } from '@/app/sport/__generated__/Be
 
 export type BetslipInput = BetslipSubscription$variables['input']
 
-const defaultInput: BetslipInput = { items: [], stake: '10', betType: 'SINGLE' }
+const defaultInput: BetslipInput = {
+  items: [],
+  stake: '10',
+  betType: 'SINGLE',
+  systemSize: undefined,
+}
 
 /** Persisted across reloads — this is exactly what we send as subscription variables */
 export const betslipInputAtom = atomWithStorage<BetslipInput>('betslip', defaultInput)

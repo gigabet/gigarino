@@ -1,7 +1,6 @@
 'use client'
 
 import { useAtom, useSetAtom } from 'jotai'
-import { sortBy } from 'lodash'
 import {
   AlertTriangleIcon,
   ChevronDownIcon,
@@ -12,7 +11,6 @@ import {
   XIcon,
 } from 'lucide-react'
 import { useState } from 'react'
-import { GiPadlock } from 'react-icons/gi'
 import { PiTicket } from 'react-icons/pi'
 import { graphql, useFragment } from 'react-relay'
 import type { Betslip$key } from '@/components/__generated__/Betslip.graphql'
@@ -20,10 +18,17 @@ import type { BetslipMobileBar$key } from '@/components/__generated__/BetslipMob
 import type { Tip$key } from '@/components/__generated__/Tip.graphql'
 import { Button } from '@/components/ui/button'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import * as Tabs from '@/components/ui/tabs'
-import { type BetslipInput, betslipInputAtom, betslipOpenAtom } from '@/context/betslip'
-import { cn, formatBalance } from '@/lib/utils'
+import { betslipInputAtom, betslipOpenAtom } from '@/context/betslip'
+import { cn, formatBalance, nCk } from '@/lib/utils'
 import type { TicketType } from '@/types'
 
 export default function Betslip(props: { query: Betslip$key | null }) {
@@ -68,14 +73,32 @@ export default function Betslip(props: { query: Betslip$key | null }) {
 
   const remove = (outcomeId: string) =>
     setInput(prev => {
-      console.log(prev.items, outcomeId)
+      let { systemSize, betType } = prev
+      if (systemSize && systemSize === prev.items.length - 1) {
+        systemSize = prev.items.length - 2
+        if (systemSize < 2) {
+          systemSize = null
+          betType = 'MULTIPLE'
+        }
+      }
+
+      if (prev.items.length <= 2) betType = 'SINGLE'
+
       return {
         ...prev,
         items: prev.items.filter(i => i.outcomeId !== outcomeId),
+        systemSize,
+        betType,
       }
     })
 
-  const clearAll = () => setInput(prev => ({ ...prev, items: [] }))
+  const clearAll = () =>
+    setInput(prev => ({
+      ...prev,
+      items: [],
+      systemSize: null,
+      betType: 'SINGLE',
+    }))
 
   const unavailable = new Set(
     data.items.filter(i => i.availability !== 'AVAILABLE').map(i => i.outcomeId)
@@ -91,6 +114,8 @@ export default function Betslip(props: { query: Betslip$key | null }) {
     }, 900)
   }
 
+  const systemOptions = Array.from({ length: data.items.length - 2 }, (_, i) => i + 2) // k = 2..n-1
+
   if (placed)
     return (
       <PlacedState
@@ -102,7 +127,7 @@ export default function Betslip(props: { query: Betslip$key | null }) {
     )
 
   return (
-    <div className='bg-dark-200 sticky top-26.25 flex max-h-[calc(100dvh-8rem)] w-full shrink flex-col self-start overflow-hidden rounded-2xl border border-white/5'>
+    <div className='bg-dark-200 scrollbar-hide sticky top-26.25 flex max-h-[calc(100dvh-8rem)] w-full shrink flex-col self-start overflow-auto rounded-2xl border border-white/5'>
       <div className='flex items-center justify-between border-b border-white/5 px-5 py-4'>
         <h2 className='flex items-center gap-2 text-sm font-semibold tracking-wide text-white uppercase'>
           <TicketIcon className='text-primary size-4' />
@@ -131,7 +156,13 @@ export default function Betslip(props: { query: Betslip$key | null }) {
           {/* Dummy tabs — visual only, not wired to the input yet */}
           <Tabs.Root
             value={data.betType}
-            onValueChange={v => setInput(input => ({ ...input, betType: v as TicketType }))}
+            onValueChange={v =>
+              setInput(input => ({
+                ...input,
+                betType: v as TicketType,
+                systemSize: v === 'SYSTEM' && !input.systemSize ? 2 : input.systemSize,
+              }))
+            }
             className='px-5 pt-4'
           >
             <Tabs.List className='grid w-full grid-cols-3 gap-1 border border-white/5 p-1'>
@@ -158,7 +189,30 @@ export default function Betslip(props: { query: Betslip$key | null }) {
             </Tabs.List>
           </Tabs.Root>
 
-          <div className='scrollbar-thumb-dark-300 flex-1 scrollbar-thin scrollbar-track-transparent space-y-3 overflow-y-auto px-5 py-4'>
+          {data.betType === 'SYSTEM' && !!input?.systemSize && input.systemSize >= 2 && (
+            <div className='px-5 pt-2'>
+              <Select
+                value={String(input.systemSize)}
+                onValueChange={v => setInput({ ...input, systemSize: Number(v) })}
+              >
+                <SelectTrigger size='sm' className='w-full'>
+                  <SelectValue>
+                    {input.systemSize} out of {data.items.length} (
+                    {nCk(data.items.length, input.systemSize)} bets)
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {systemOptions.map(k => (
+                    <SelectItem key={k} value={String(k)}>
+                      {k} out of {data.items.length} ({nCk(data.items.length, k)} bets)
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          <div className='scrollbar-thumb-dark-300 min-h-30 flex-1 scrollbar-thin scrollbar-track-transparent scrollbar-gutter-stable space-y-3 overflow-y-auto py-4 pr-2.5 pl-5'>
             {data.items.map(item => (
               <Tip
                 key={item.outcomeId}
@@ -189,10 +243,26 @@ export default function Betslip(props: { query: Betslip$key | null }) {
                 size='icon-sm'
                 className='-mx-2 size-6 rounded-full text-xs text-red-400 hover:bg-red-400/30 hover:text-white'
                 onClick={() =>
-                  setInput(prev => ({
-                    ...prev,
-                    items: prev.items.filter(i => !unavailable.has(i.outcomeId)),
-                  }))
+                  setInput(prev => {
+                    let { systemSize, betType, items } = prev
+                    items = prev.items.filter(i => !unavailable.has(i.outcomeId))
+                    if (systemSize && systemSize === items.length - 1) {
+                      systemSize = items.length - 2
+                      if (systemSize < 2) {
+                        systemSize = null
+                        betType = 'MULTIPLE'
+                      }
+                    }
+
+                    if (items.length <= 2) betType = 'SINGLE'
+
+                    return {
+                      ...prev,
+                      items,
+                      systemSize,
+                      betType,
+                    }
+                  })
                 }
               >
                 <XIcon />
@@ -430,7 +500,7 @@ function blockerCopy(availability: string) {
 
 function EmptyState() {
   return (
-    <div className='text-secondary flex flex-col items-center justify-center gap-3 px-6 py-16 text-center'>
+    <div className='text-secondary flex h-96.25 flex-col items-center justify-center gap-3 px-6 text-center'>
       <div className='bg-dark flex size-14 items-center justify-center rounded-full border border-white/5'>
         <PiTicket className='size-6 opacity-40' />
       </div>
