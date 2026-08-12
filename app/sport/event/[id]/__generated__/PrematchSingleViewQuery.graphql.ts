@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<64a23bb52b7caf956bf1ccb4aefebb4e>>
+ * @generated SignedSource<<ccd336f407eaf1acc1f83352b2923cbd>>
  * @lightSyntaxTransform
  */
 
@@ -235,6 +235,13 @@ return {
                         "plural": true,
                         "selections": [
                           (v2/*:: as any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "index",
+                            "storageKey": null
+                          },
                           (v3/*:: as any*/),
                           {
                             "alias": null,
@@ -262,12 +269,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b533ee527cc5ca68752b007bf4de685e",
+    "cacheID": "f9764c075a501831f7494d8f05a8cfb9",
     "id": null,
     "metadata": {},
     "name": "PrematchSingleViewQuery",
     "operationKind": "query",
-    "text": "query PrematchSingleViewQuery(\n  $id: ID!\n) {\n  event(id: $id) {\n    ...PrematchSingleView\n    id\n  }\n}\n\nfragment EventLiveState on Event {\n  __isEvent: __typename\n  status\n  tradingStatus\n  homeScore\n  awayScore\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  outcomes {\n    id\n    name\n    price\n    status\n  }\n}\n\nfragment MarketGroups on Event {\n  __isEvent: __typename\n  markets {\n    id\n    group\n    ...MarketCard\n  }\n}\n\nfragment PrematchSingleHeader on PrematchEvent {\n  sport {\n    key\n    id\n  }\n  tournament {\n    name\n    id\n  }\n  category {\n    name\n    id\n  }\n  status\n}\n\nfragment PrematchSingleView on PrematchEvent {\n  homeCompetitor\n  awayCompetitor\n  startTime\n  ...PrematchSingleHeader\n  ...EventLiveState\n  ...MarketGroups @defer(label: \"PrematchSingleView$defer$MarketGroups\")\n}\n"
+    "text": "query PrematchSingleViewQuery(\n  $id: ID!\n) {\n  event(id: $id) {\n    ...PrematchSingleView\n    id\n  }\n}\n\nfragment EventLiveState on Event {\n  __isEvent: __typename\n  status\n  tradingStatus\n  homeScore\n  awayScore\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  outcomes {\n    id\n    index\n    name\n    price\n    status\n  }\n}\n\nfragment MarketGroups on Event {\n  __isEvent: __typename\n  markets {\n    id\n    group\n    ...MarketCard\n  }\n}\n\nfragment PrematchSingleHeader on PrematchEvent {\n  sport {\n    key\n    id\n  }\n  tournament {\n    name\n    id\n  }\n  category {\n    name\n    id\n  }\n  status\n}\n\nfragment PrematchSingleView on PrematchEvent {\n  homeCompetitor\n  awayCompetitor\n  startTime\n  ...PrematchSingleHeader\n  ...EventLiveState\n  ...MarketGroups @defer(label: \"PrematchSingleView$defer$MarketGroups\")\n}\n"
   }
 };
 })();

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<012891b875b9fcdea0dbdcd66cad4504>>
+ * @generated SignedSource<<2fc351b6813d7210b205cbe52e2fe42c>>
  * @lightSyntaxTransform
  */
 
@@ -16,6 +16,7 @@ export type MarketCard$data = {
   readonly name: string;
   readonly outcomes: ReadonlyArray<{
     readonly id: string;
+    readonly index: number;
     readonly name: string;
     readonly price: any;
     readonly status: OutcomeStatus;
@@ -73,6 +74,13 @@ return {
           "name": "id",
           "storageKey": null
         },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "index",
+          "storageKey": null
+        },
         (v0/*:: as any*/),
         {
           "alias": null,
@@ -91,6 +99,6 @@ return {
 };
 })();
 
-(node as any).hash = "c1b6873ec0e576fa25c8cd8efa0ff951";
+(node as any).hash = "42a25f475d241ac4e7783815a9fa6768";
 
 export default node;

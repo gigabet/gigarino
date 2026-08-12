@@ -1,7 +1,7 @@
 'use client'
 
 import { atom, useAtom, useAtomValue } from 'jotai'
-import { entries, keys } from 'lodash'
+import { entries, keys, sortBy } from 'lodash'
 import { Toggle } from 'radix-ui'
 import { useCallback } from 'react'
 import { graphql, useFragment } from 'react-relay'
@@ -122,6 +122,7 @@ function Market(props: { className?: string; market: PrematchMarket$key }) {
       fragment PrematchMarket on Market {
         outcomes {
           id
+          index
           name
           price
         }
@@ -145,7 +146,7 @@ function Market(props: { className?: string; market: PrematchMarket$key }) {
 
   return (
     <div className={cn('flex h-15 max-w-60 min-w-50 flex-1 grow gap-1', props.className)}>
-      {data.outcomes.map(odd => (
+      {sortBy(data.outcomes, e => e.index).map(odd => (
         <Toggle.Root
           suppressHydrationWarning
           key={odd.id}

@@ -13,6 +13,8 @@ Stream list items incrementally instead of waiting for the full list.
 directive @stream(if: Boolean = true, initialCount: Int = 0, label: String) on FIELD
 
 enum BetItemStatus {
+  HALF_LOST
+  HALF_WON
   LOST
   PENDING
   PUSH
@@ -499,6 +501,11 @@ One selectable option within a market with its current price.
 """
 type Outcome implements Node {
   id: ID!
+
+  """
+  Canonical display order within the market (0=Home,1=Draw,2=Away; 0=Over,1=Under). Sort by this.
+  """
+  index: Int!
 
   """
   Stable within the market: `home` / `draw` / `away` / `over` / `under` / `2-1`, …

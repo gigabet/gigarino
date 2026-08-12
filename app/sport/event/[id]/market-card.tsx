@@ -1,5 +1,6 @@
 'use client'
 
+import { sortBy } from 'lodash'
 import { Toggle } from 'radix-ui'
 import { graphql, useFragment } from 'react-relay'
 import type { MarketCard$key } from '@/app/sport/event/[id]/__generated__/MarketCard.graphql'
@@ -28,6 +29,7 @@ export default function MarketCard(props: { market: MarketCard$key }) {
         status
         outcomes {
           id
+          index
           name
           price
           status
@@ -53,7 +55,7 @@ export default function MarketCard(props: { market: MarketCard$key }) {
       </div>
 
       <div className={container}>
-        {market.outcomes.map(outcome => (
+        {sortBy(market.outcomes, e => e.index).map(outcome => (
           <Toggle.Root
             key={outcome.id}
             disabled={suspended || outcome.status !== 'OPEN'}
