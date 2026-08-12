@@ -1,4 +1,5 @@
 import { isArray } from 'lodash'
+import { getToken, getUser } from '@/lib/auth'
 import type { ApiResponse, ErrorResponse, GamesResponse, ProvidersResponse } from '@/types'
 
 export const categories = {
@@ -67,11 +68,22 @@ export const providersQuery = async (): Promise<ProvidersResponse | []> => {
 }
 
 export const getGameDemo = async (gameUuid: string) => {
+  const token = await getToken()
+  let url = '/api/v1/public/games/init-demo',
+    headers: Record<string, string> = {}
+  if (token) {
+    url = '/api/v1/game-sessions/init'
+    headers = {
+      Authorization: `Bearer ${token}`,
+    }
+  }
+
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/public/games/init-demo`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${url}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        ...headers,
       },
       body: JSON.stringify({
         gameUuid,
