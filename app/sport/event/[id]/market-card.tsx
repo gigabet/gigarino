@@ -1,9 +1,11 @@
 'use client'
 
+import { useAtomValue } from 'jotai'
 import { sortBy } from 'lodash'
 import { Toggle } from 'radix-ui'
 import { graphql, useFragment } from 'react-relay'
 import type { MarketCard$key } from '@/app/sport/event/[id]/__generated__/MarketCard.graphql'
+import { betslipInputAtom, useHasOdd, useToggleOdd } from '@/context/betslip'
 import { cn } from '@/lib/utils'
 
 /**
@@ -42,6 +44,9 @@ export default function MarketCard(props: { market: MarketCard$key }) {
   const suspended = market.status !== 'OPEN'
   const { container, item } = getOutcomesLayout(market.outcomes.length)
 
+  const hasOdd = useHasOdd()
+  const toggleOdd = useToggleOdd()
+
   return (
     <div
       className={cn(
@@ -55,24 +60,26 @@ export default function MarketCard(props: { market: MarketCard$key }) {
       </div>
 
       <div className={container}>
-        {sortBy(market.outcomes, e => e.index).map(outcome => (
+        {sortBy(market.outcomes, e => e.index).map(odd => (
           <Toggle.Root
-            key={outcome.id}
-            disabled={suspended || outcome.status !== 'OPEN'}
+            key={odd.id}
+            disabled={suspended || odd.status !== 'OPEN'}
             suppressHydrationWarning
             className={cn(
               'group hover:bg-primary/5 hover:border-primary/20 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-col items-center justify-center gap-0.5 rounded-lg border border-white/5 bg-black/20 py-2 transition disabled:pointer-events-none',
               item
             )}
+            pressed={hasOdd(odd.id)}
+            onPressedChange={() => toggleOdd(odd.id)}
           >
             <span className='group-data-[state=on]:text-foreground text-secondary text-[0.7rem]'>
-              {outcome.name}
+              {odd.name}
             </span>
             <span
               className='group-data-[state=on]:text-primary text-foreground text-sm font-semibold'
               suppressHydrationWarning
             >
-              {outcome.price}
+              {odd.price}
             </span>
           </Toggle.Root>
         ))}
