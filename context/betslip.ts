@@ -51,5 +51,5 @@ export function useToggleOdd() {
 
 export function useHasOdd() {
   const input = useAtomValue(betslipInputAtom)
-  return useCallback((oddId: string) => input.items.some(i => i.outcomeId === oddId), [input])
+  return useCallback((oddId: string) => input.items.some(i => i.outcomeId === oddId), [input.items])
 }
