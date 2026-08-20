@@ -29,6 +29,7 @@ import type { SidebarTournaments$key } from '@/app/sport/__generated__/SidebarTo
 import SidebarTournamentsLoadNode, {
   type SidebarTournamentsLoad,
 } from '@/app/sport/__generated__/SidebarTournamentsLoad.graphql'
+import SidebarSearch from '@/app/sport/sidebar-search'
 import { SportIcon } from '@/components/sport-icon'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Field, FieldGroup } from '@/components/ui/field'
@@ -270,10 +271,7 @@ function FullSidebarContent(props: {
 }) {
   return (
     <div className='flex w-full flex-col gap-4'>
-      <div className='flex h-10 items-center justify-center gap-4 rounded-full border bg-black/50 px-4 xl:justify-start'>
-        <SearchIcon className='size-4 shrink-0' />
-        <span className='text-muted-foreground hidden text-sm xl:inline'>search games...</span>
-      </div>
+      <SidebarSearch />
 
       <Accordion.Root
         data-slot='accordion'

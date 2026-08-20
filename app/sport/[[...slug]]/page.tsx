@@ -8,6 +8,7 @@ import SportPageSkeleton from '@/app/sport/[[...slug]]/loading'
 import ShortcutRow from '@/app/sport/[[...slug]]/shortcut-row'
 import TournamentList, { useTournamentKeysFromUrl } from '@/app/sport/[[...slug]]/tournament-list'
 import Carousel from '@/app/sport/carousel'
+import { useSidebarSearch } from '@/context/hooks'
 
 export default function SportPage() {
   // const params = useParams<{ slug?: string[] }>()
@@ -15,21 +16,38 @@ export default function SportPage() {
   // const tournamentKeys = tournamentsSegment?.split(',').filter(Boolean) ?? []
 
   const [queryRef, loadQuery, disposeQuery] = useQueryLoader<PrematchQuery>(graphql`
-    query PrematchQuery($filterActive: Boolean!, $tournamentKeys: [String!]!, $eventCount: Int!) {
+    query PrematchQuery(
+      $filterActive: Boolean!
+      $hasSearch: Boolean!
+      $hasAny: Boolean!
+      $tournamentKeys: [String!]!
+      $eventCount: Int!
+    ) {
       ...ShortcutRow
-      ...PrematchList @arguments(filterActive: $filterActive, tournamentKeys: $tournamentKeys)
+      ...PrematchList
+        @arguments(
+          filterActive: $filterActive
+          tournamentKeys: $tournamentKeys
+          hasSearch: $hasSearch
+          hasAny: $hasAny
+        )
     }
   `)
 
   const tournamentKeys = useTournamentKeysFromUrl()
   const filterActive = tournamentKeys.length > 0
+
+  const { term: search } = useSidebarSearch()
+  const hasSearch = search.length > 0
+  const hasAny = filterActive || hasSearch
+
   useEffect(() => {
     loadQuery(
-      { filterActive, tournamentKeys, eventCount: filterActive ? 20 : 4 },
+      { filterActive, tournamentKeys, eventCount: filterActive ? 20 : 4, hasAny, hasSearch },
       { fetchPolicy: 'store-or-network' }
     )
     return () => disposeQuery()
-  }, [loadQuery, disposeQuery, tournamentKeys, filterActive])
+  }, [loadQuery, disposeQuery, tournamentKeys, filterActive, hasAny, hasSearch])
 
   if (queryRef)
     return (

@@ -15,8 +15,10 @@ import type { PrematchList$key } from '@/app/sport/[[...slug]]/__generated__/Pre
 import PrematchListRefetchNode from '@/app/sport/[[...slug]]/__generated__/PrematchListRefetch.graphql'
 import type { PrematchQuery } from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
 import PrematchQueryNode from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
+import SearchResults from '@/app/sport/[[...slug]]/search-results'
 import Tournament, { TournamentSkeleton } from '@/app/sport/[[...slug]]/tournament'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
+import { useSidebarSearch } from '@/context/hooks'
 import { cn } from '@/lib/utils'
 
 export function useTournamentKeysFromUrl() {
@@ -30,23 +32,42 @@ export function useTournamentKeysFromUrl() {
 export default function TournamentList(props: { queryRef: PreloadedQuery<PrematchQuery> }) {
   const preloaded = usePreloadedQuery<PrematchQuery>(PrematchQueryNode, props.queryRef)
   const tournamentKeys = useTournamentKeysFromUrl()
+  const { term: search } = useSidebarSearch()
+
   const filterActive = tournamentKeys.length > 0
+  const hasSearch = search.length > 0
+  const hasAny = filterActive || hasSearch
 
   const [data, refetch] = useRefetchableFragment(
     graphql`
       fragment PrematchList on Query
       @refetchable(queryName: "PrematchListRefetch")
       @argumentDefinitions(
-        filterActive: { type: "Boolean!" }
         tournamentKeys: { type: "[String!]!" }
+        filterActive: { type: "Boolean!" }
+        hasSearch: { type: "Boolean!" }
+        hasAny: { type: "Boolean!" }
+        search: { type: "String" }
       ) {
-        topTournaments(first: 4) @stream(initialCount: 1) @skip(if: $filterActive) {
+        topTournaments(first: 4) @stream(initialCount: 1) @skip(if: $hasAny) {
           id
           ...Tournament
         }
-        tournaments(keys: $tournamentKeys) @stream(initialCount: 1) @include(if: $filterActive) {
+        tournaments(keys: $tournamentKeys)
+          @stream(initialCount: 1)
+          @include(if: $filterActive)
+          @skip(if: $hasSearch) {
           id
           ...Tournament
+        }
+        searchResults: events(search: $search, first: 20) @include(if: $hasSearch) {
+          totalCount
+          edges {
+            node {
+              id
+              ...PrematchEvent
+            }
+          }
         }
       }
     `,
@@ -58,11 +79,18 @@ export default function TournamentList(props: { queryRef: PreloadedQuery<Prematc
   useEffect(() => {
     startTransition(() => {
       refetch(
-        { filterActive, tournamentKeys, eventCount: filterActive ? 20 : 4 },
+        {
+          filterActive,
+          tournamentKeys,
+          eventCount: filterActive ? 20 : 4,
+          hasSearch,
+          hasAny,
+          search: hasSearch ? search : null,
+        },
         { fetchPolicy: 'store-or-network' }
       )
     })
-  }, [tournamentKeys, refetch, filterActive])
+  }, [tournamentKeys, refetch, filterActive, hasSearch, search, hasAny])
 
   const environment = useRelayEnvironment()
   useEffect(() => {
@@ -74,6 +102,9 @@ export default function TournamentList(props: { queryRef: PreloadedQuery<Prematc
           filterActive: tournamentKeys.length > 0,
           tournamentKeys,
           eventCount: filterActive ? 20 : 4,
+          hasSearch,
+          hasAny,
+          search: hasSearch ? search : null,
         },
         { fetchPolicy: 'network-only' }
       ).subscribe({
@@ -81,7 +112,7 @@ export default function TournamentList(props: { queryRef: PreloadedQuery<Prematc
       })
     }, 60_000)
     return () => clearInterval(id)
-  }, [environment, tournamentKeys, filterActive])
+  }, [environment, tournamentKeys, filterActive, hasSearch, search, hasAny])
 
   const refetchTournaments = () =>
     startTransition(() => {
@@ -93,28 +124,38 @@ export default function TournamentList(props: { queryRef: PreloadedQuery<Prematc
 
   return (
     <div className={cn('mt-2 space-y-8', isPending && 'opacity-60 transition-opacity')}>
-      {data.topTournaments?.map(tournament => (
-        <ErrorBoundary
-          key={tournament.id}
-          FallbackComponent={SectionErrorFallback}
-          onReset={refetchTournaments}
-        >
-          <Suspense fallback={<TournamentSkeleton />}>
-            <Tournament queryRef={tournament} />
-          </Suspense>
-        </ErrorBoundary>
-      ))}
-      {data.tournaments?.map(tournament => (
-        <ErrorBoundary
-          key={tournament.id}
-          FallbackComponent={SectionErrorFallback}
-          onReset={refetchTournaments}
-        >
-          <Suspense fallback={<TournamentSkeleton />}>
-            <Tournament queryRef={tournament} />
-          </Suspense>
-        </ErrorBoundary>
-      ))}
+      {hasSearch ? (
+        <SearchResults
+          query={search}
+          totalCount={data.searchResults?.totalCount}
+          events={data.searchResults?.edges.map(e => e.node)}
+        />
+      ) : (
+        <>
+          {data.topTournaments?.map(tournament => (
+            <ErrorBoundary
+              key={tournament.id}
+              FallbackComponent={SectionErrorFallback}
+              onReset={refetchTournaments}
+            >
+              <Suspense fallback={<TournamentSkeleton />}>
+                <Tournament queryRef={tournament} />
+              </Suspense>
+            </ErrorBoundary>
+          ))}
+          {data.tournaments?.map(tournament => (
+            <ErrorBoundary
+              key={tournament.id}
+              FallbackComponent={SectionErrorFallback}
+              onReset={refetchTournaments}
+            >
+              <Suspense fallback={<TournamentSkeleton />}>
+                <Tournament queryRef={tournament} />
+              </Suspense>
+            </ErrorBoundary>
+          ))}
+        </>
+      )}
     </div>
   )
 }

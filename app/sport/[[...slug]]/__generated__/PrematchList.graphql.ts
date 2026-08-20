@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<24f2591520b1180146c473c487f16b35>>
+ * @generated SignedSource<<9f232e5933001a47bbbbd8ef108448fd>>
  * @lightSyntaxTransform
  */
 
@@ -10,6 +10,15 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PrematchList$data = {
+  readonly searchResults?: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly id: string;
+        readonly " $fragmentSpreads": FragmentRefs<"PrematchEvent">;
+      };
+    }>;
+    readonly totalCount: number;
+  };
   readonly topTournaments?: ReadonlyArray<{
     readonly id: string;
     readonly " $fragmentSpreads": FragmentRefs<"Tournament">;
@@ -28,14 +37,15 @@ export type PrematchList$key = {
 import PrematchListRefetch_graphql from './PrematchListRefetch.graphql';
 
 const node: ReaderFragment = (function(){
-var v0 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "id",
-    "storageKey": null
-  },
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v1 = [
+  (v0/*:: as any*/),
   {
     "args": null,
     "kind": "FragmentSpread",
@@ -56,6 +66,21 @@ return {
     {
       "defaultValue": null,
       "kind": "LocalArgument",
+      "name": "hasAny"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "hasSearch"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "search"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
       "name": "tournamentKeys"
     }
   ],
@@ -70,7 +95,7 @@ return {
   "name": "PrematchList",
   "selections": [
     {
-      "condition": "filterActive",
+      "condition": "hasAny",
       "kind": "Condition",
       "passingValue": false,
       "selections": [
@@ -90,7 +115,7 @@ return {
               "kind": "LinkedField",
               "name": "topTournaments",
               "plural": true,
-              "selections": (v0/*:: as any*/),
+              "selections": (v1/*:: as any*/),
               "storageKey": "topTournaments(first:4)"
             }
           ]
@@ -98,30 +123,101 @@ return {
       ]
     },
     {
-      "condition": "filterActive",
+      "condition": "hasSearch",
+      "kind": "Condition",
+      "passingValue": false,
+      "selections": [
+        {
+          "condition": "filterActive",
+          "kind": "Condition",
+          "passingValue": true,
+          "selections": [
+            {
+              "kind": "Stream",
+              "selections": [
+                {
+                  "alias": null,
+                  "args": [
+                    {
+                      "kind": "Variable",
+                      "name": "keys",
+                      "variableName": "tournamentKeys"
+                    }
+                  ],
+                  "concreteType": "Tournament",
+                  "kind": "LinkedField",
+                  "name": "tournaments",
+                  "plural": true,
+                  "selections": (v1/*:: as any*/),
+                  "storageKey": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "condition": "hasSearch",
       "kind": "Condition",
       "passingValue": true,
       "selections": [
         {
-          "kind": "Stream",
+          "alias": "searchResults",
+          "args": [
+            {
+              "kind": "Literal",
+              "name": "first",
+              "value": 20
+            },
+            {
+              "kind": "Variable",
+              "name": "search",
+              "variableName": "search"
+            }
+          ],
+          "concreteType": "EventConnection",
+          "kind": "LinkedField",
+          "name": "events",
+          "plural": false,
           "selections": [
             {
               "alias": null,
-              "args": [
+              "args": null,
+              "kind": "ScalarField",
+              "name": "totalCount",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "EventEdge",
+              "kind": "LinkedField",
+              "name": "edges",
+              "plural": true,
+              "selections": [
                 {
-                  "kind": "Variable",
-                  "name": "keys",
-                  "variableName": "tournamentKeys"
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "PrematchEvent",
+                  "kind": "LinkedField",
+                  "name": "node",
+                  "plural": false,
+                  "selections": [
+                    (v0/*:: as any*/),
+                    {
+                      "args": null,
+                      "kind": "FragmentSpread",
+                      "name": "PrematchEvent"
+                    }
+                  ],
+                  "storageKey": null
                 }
               ],
-              "concreteType": "Tournament",
-              "kind": "LinkedField",
-              "name": "tournaments",
-              "plural": true,
-              "selections": (v0/*:: as any*/),
               "storageKey": null
             }
-          ]
+          ],
+          "storageKey": null
         }
       ]
     }
@@ -131,6 +227,6 @@ return {
 };
 })();
 
-(node as any).hash = "f2ec6661371ec79eddc174a67c48785b";
+(node as any).hash = "4602f0a60e5b954a0c24ced3f1cfec7e";
 
 export default node;

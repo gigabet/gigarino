@@ -120,3 +120,23 @@ export function useMediaQuery(query: string) {
 
   return matches
 }
+
+export function useSidebarSearch() {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  const term = searchParams.get('q') ?? ''
+
+  const setTerm = useCallback(
+    (value: string) => {
+      if (value === term) return
+      const params = new URLSearchParams(searchParams)
+      value ? params.set('q', value) : params.delete('q')
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false })
+    },
+    [searchParams, pathname, router, term]
+  )
+
+  return { term, setTerm }
+}
