@@ -14,12 +14,12 @@ export default function SidebarSearch() {
 
   // only search if 3+ chars
   useEffect(() => {
-    if (debounced === term) return
+    if (debounced === lastCommitted.current) return
     if (debounced.length === 0 || debounced.length >= MIN_CHARS) {
       lastCommitted.current = debounced
       setTerm(debounced)
     }
-  }, [debounced, term, setTerm])
+  }, [debounced, setTerm])
 
   // sync with `q` in case user types in the url, refreshes, or uses back/forward
   useEffect(() => {

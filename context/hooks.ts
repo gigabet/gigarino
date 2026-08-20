@@ -96,6 +96,7 @@ export function useSelectedTournaments() {
 
       const params = new URLSearchParams(searchParams)
       next.length ? params.set('tournaments', next.join(',')) : params.delete('tournaments')
+      params.delete('q') // selecting a tournament exits search mode — same view can't show both
 
       // Search-param-only change — Next treats this as a shallow update,
       // not a route match change, so page.tsx/layout.tsx are not remounted.
