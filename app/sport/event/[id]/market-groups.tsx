@@ -1,6 +1,6 @@
 'use client'
 
-import { groupBy } from 'lodash'
+import { entries, groupBy } from 'lodash'
 import { graphql, useFragment } from 'react-relay'
 import type { MarketGroups$key } from '@/app/sport/event/[id]/__generated__/MarketGroups.graphql'
 import MarketCard from '@/app/sport/event/[id]/market-card'
@@ -36,6 +36,7 @@ export default function MarketGroups(props: { event: MarketGroups$key }) {
         markets {
           id
           group
+          kind
           ...MarketCard
         }
       }
@@ -73,8 +74,18 @@ export default function MarketGroups(props: { event: MarketGroups$key }) {
 
       {populatedGroups.map(group => (
         <Tabs.Content key={group} value={group} className='flex flex-col gap-3'>
-          {byGroup[group].map(market => (
-            <MarketCard key={market.id} market={market} />
+          {entries(groupBy(byGroup[group], m => m.kind)).map(([kind, markets]) => (
+            <div
+              className='flex flex-col gap-2 rounded-xl border border-white/5 bg-black/20 p-4'
+              key={kind}
+            >
+              <p className='mb-4 text-sm font-medium tracking-wide uppercase'>
+                {kind.replaceAll('_', ' ')}
+              </p>
+              {markets.map(market => (
+                <MarketCard key={market.id} market={market} />
+              ))}
+            </div>
           ))}
         </Tabs.Content>
       ))}

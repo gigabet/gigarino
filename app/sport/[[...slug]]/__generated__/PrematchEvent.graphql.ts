@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8101419ed1d60d08dfa32e66be279759>>
+ * @generated SignedSource<<4bef5e8bd9b80b955f5fb908482ab8dc>>
  * @lightSyntaxTransform
  */
 
@@ -13,6 +13,7 @@ export type PrematchEvent$data = {
   readonly awayCompetitor: string;
   readonly homeCompetitor: string;
   readonly id: string;
+  readonly oddCount: number;
   readonly startTime: string;
   readonly " $fragmentSpreads": FragmentRefs<"ListViewMarkets">;
   readonly " $fragmentType": "PrematchEvent";
@@ -57,6 +58,13 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "oddCount",
+      "storageKey": null
+    },
+    {
       "kind": "Defer",
       "selections": [
         {
@@ -71,6 +79,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "b8b1eac6db9617542e4bd72627485722";
+(node as any).hash = "2bc326b8a2145189333b5489870d0099";
 
 export default node;

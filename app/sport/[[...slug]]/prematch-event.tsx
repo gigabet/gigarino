@@ -20,6 +20,7 @@ export default function PrematchEvent(props: { node: PrematchEvent$key }) {
         homeCompetitor
         awayCompetitor
         startTime
+        oddCount
         ...ListViewMarkets @defer
       }
     `,
@@ -73,18 +74,20 @@ export default function PrematchEvent(props: { node: PrematchEvent$key }) {
       </Suspense>
 
       <div className='flex w-24 justify-end'>
-        <Link
-          href={`/sport/event/${data.id}`}
-          className={buttonVariants({
-            variant: 'ghost',
-            size: 'sm',
-          })}
-          onMouseEnter={prefetch}
-          onMouseDown={prefetch}
-          onFocus={prefetch}
-        >
-          +126
-        </Link>
+        {data.oddCount > 0 && (
+          <Link
+            href={`/sport/event/${data.id}`}
+            className={buttonVariants({
+              variant: 'ghost',
+              size: 'sm',
+            })}
+            onMouseEnter={prefetch}
+            onMouseDown={prefetch}
+            onFocus={prefetch}
+          >
+            +{data.oddCount}
+          </Link>
+        )}
         <Button variant='ghost' size='icon-sm' className='rounded-full'>
           <ChartNoAxesColumnIcon />
         </Button>

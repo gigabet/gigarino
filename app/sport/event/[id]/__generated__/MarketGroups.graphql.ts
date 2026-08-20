@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7d0124b2e2518eca8980a66392125c2d>>
+ * @generated SignedSource<<76dd2b13d1f713a2a514ce71e2489c01>>
  * @lightSyntaxTransform
  */
 
@@ -14,6 +14,7 @@ export type MarketGroups$data = {
   readonly markets: ReadonlyArray<{
     readonly group: MarketGroup;
     readonly id: string;
+    readonly kind: string;
     readonly " $fragmentSpreads": FragmentRefs<"MarketCard">;
   }>;
   readonly " $fragmentType": "MarketGroups";
@@ -52,6 +53,13 @@ const node: ReaderFragment = {
           "storageKey": null
         },
         {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "kind",
+          "storageKey": null
+        },
+        {
           "args": null,
           "kind": "FragmentSpread",
           "name": "MarketCard"
@@ -64,6 +72,6 @@ const node: ReaderFragment = {
   "abstractKey": "__isEvent"
 };
 
-(node as any).hash = "751c49bab3431bc2b98d2a5e7f161338";
+(node as any).hash = "a7b0bc68fd0f5d8789744ab4a55139ec";
 
 export default node;

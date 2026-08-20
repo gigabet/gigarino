@@ -48,15 +48,9 @@ export default function MarketCard(props: { market: MarketCard$key }) {
   const toggleOdd = useToggleOdd()
 
   return (
-    <div
-      className={cn(
-        'flex flex-col gap-2 rounded-xl border border-white/5 bg-black/20 p-4',
-        suspended && 'opacity-50'
-      )}
-    >
-      <div className='text-secondary flex items-center justify-between text-xs font-medium'>
-        <span className='truncate'>{market.name}</span>
-        {market.line && <span className='text-foreground/70'>{market.line}</span>}
+    <div className={cn('flex flex-col gap-2', suspended && 'opacity-50')}>
+      <div className='text-secondary truncate text-xs font-medium'>
+        <span>{market.name}</span> {!!market.line && <span>{market.line}</span>}
       </div>
 
       <div className={container}>
@@ -79,7 +73,7 @@ export default function MarketCard(props: { market: MarketCard$key }) {
               className='group-data-[state=on]:text-primary text-foreground text-sm font-semibold'
               suppressHydrationWarning
             >
-              {odd.price}
+              {Number(odd.price).toFixed(2)}
             </span>
           </Toggle.Root>
         ))}

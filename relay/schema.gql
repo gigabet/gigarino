@@ -179,6 +179,11 @@ type Category implements Node {
     last: Int
 
     """
+    Free-text search over competitor and tournament names.
+    """
+    search: String
+
+    """
     Filter by sport `key` (e.g. `football`).
     """
     sport: String
@@ -609,6 +614,11 @@ type PrematchEvent implements Event & Node {
   Markets published for this event - typically match winner + totals (+ BTTS on some providers) in v1.
   """
   markets(groups: [MarketGroup!]): [Market!]!
+
+  """
+  Total odds (outcomes) across this event's markets.
+  """
+  oddCount: Int!
   sport: Sport!
 
   """
@@ -670,6 +680,11 @@ type Query {
     Take up to N edges before `before` (max 100).
     """
     last: Int
+
+    """
+    Free-text search over competitor and tournament names.
+    """
+    search: String
 
     """
     Filter by sport `key` (e.g. `football`).
@@ -892,6 +907,11 @@ type Tournament implements Node {
     Take up to N edges before `before` (max 100).
     """
     last: Int
+
+    """
+    Free-text search over competitor and tournament names.
+    """
+    search: String
 
     """
     Filter by sport `key` (e.g. `football`).
