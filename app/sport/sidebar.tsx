@@ -449,6 +449,9 @@ function Tournaments(props: { category: SidebarTournaments$key }) {
       @argumentDefinitions(open: { type: "Boolean", defaultValue: false })
       @refetchable(queryName: "SidebarTournamentsLoad") {
         tournaments @include(if: $open) {
+          sport {
+            key
+          }
           key
           name
           eventCount
@@ -514,8 +517,8 @@ function Tournaments(props: { category: SidebarTournaments$key }) {
               id={t.key}
               name={t.key}
               className='peer border-secondary ml-2'
-              checked={selected.includes(t.key)}
-              onCheckedChange={() => toggle(t.key)}
+              checked={selected.includes(`${t.sport.key}:${t.key}`)}
+              onCheckedChange={() => toggle(`${t.sport.key}:${t.key}`)}
             />
             <Label
               htmlFor={t.key}

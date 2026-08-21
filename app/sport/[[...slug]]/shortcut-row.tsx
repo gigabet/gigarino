@@ -48,9 +48,9 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
         ),
         href: {
           pathname,
-          query: { tournaments: t.key },
+          query: { tournaments: `${t.sport.key}:${t.key}` },
         },
-        key: t.key,
+        key: `${t.sport.key}:${t.key}`,
       })),
     ...sample.map(s => ({ ...s, icon: <s.icon />, key: null })),
   ]
@@ -64,7 +64,7 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
               <Link
                 href={e.href}
                 key={e.label}
-                data-active={(selected.length === 1 && selected[0] === e?.key) || null}
+                data-active={selected.some(s => decodeURIComponent(s) === e?.key) || null}
                 className='bg-dark-200 data-active:bg-primary data-active:text-primary-foreground shadow-primary/40 inline-flex h-10 shrink-0 items-center gap-2 rounded-full px-3.5 whitespace-nowrap text-white/70 transition hover:bg-white/10 hover:text-white data-active:shadow-[0_0_4px,0_0_12px,0_0_20px]'
               >
                 {e.icon}

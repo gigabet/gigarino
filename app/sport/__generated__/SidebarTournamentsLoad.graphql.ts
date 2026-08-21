@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c5a804bf55e0dee6f3e318b49999f50f>>
+ * @generated SignedSource<<ba80d045385bc5bb3a7e4d4d891a628a>>
  * @lightSyntaxTransform
  */
 
@@ -46,6 +46,13 @@ v3 = {
   "args": null,
   "kind": "ScalarField",
   "name": "id",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "key",
   "storageKey": null
 };
 return {
@@ -128,10 +135,17 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "kind": "ScalarField",
-                        "name": "key",
+                        "concreteType": "Sport",
+                        "kind": "LinkedField",
+                        "name": "sport",
+                        "plural": false,
+                        "selections": [
+                          (v4/*:: as any*/),
+                          (v3/*:: as any*/)
+                        ],
                         "storageKey": null
                       },
+                      (v4/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -162,16 +176,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f93e5695c7185d54adb5fec5b8764d84",
+    "cacheID": "8e16361e2107deda6ad8be967387b21b",
     "id": null,
     "metadata": {},
     "name": "SidebarTournamentsLoad",
     "operationKind": "query",
-    "text": "query SidebarTournamentsLoad(\n  $open: Boolean = false\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...SidebarTournaments_3Qbc3L\n    id\n  }\n}\n\nfragment SidebarTournaments_3Qbc3L on Category {\n  tournaments @include(if: $open) {\n    key\n    name\n    eventCount\n    id\n  }\n  id\n}\n"
+    "text": "query SidebarTournamentsLoad(\n  $open: Boolean = false\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...SidebarTournaments_3Qbc3L\n    id\n  }\n}\n\nfragment SidebarTournaments_3Qbc3L on Category {\n  tournaments @include(if: $open) {\n    sport {\n      key\n      id\n    }\n    key\n    name\n    eventCount\n    id\n  }\n  id\n}\n"
   }
 };
 })();
 
-(node as any).hash = "3692fbd7974c2acef041e639bba2825f";
+(node as any).hash = "08bdab1738688869b18bb7e2d1f2948f";
 
 export default node;
