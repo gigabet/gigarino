@@ -40,13 +40,13 @@ export default function PrematchSingleView(props: {
   if (!data) return <EventNotFound />
 
   return (
-    <main className='mx-auto flex w-full max-w-7xl flex-col gap-6'>
+    <main className='mx-auto flex w-full max-w-7xl flex-col gap-4 sm:gap-6'>
       {/* ---------------------------------------------------------------- */}
       {/* Header: competitors, score/kick-off, breadcrumb                  */}
       {/* ---------------------------------------------------------------- */}
-      <section className='flex flex-col gap-4 rounded-2xl border border-white/5 bg-black/20 p-6'>
+      <section className='flex flex-col gap-3 rounded-2xl border border-white/5 bg-black/20 p-4 sm:gap-4 sm:p-6'>
         <PrematchSingleHeader event={data} />
-        <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-4'>
+        <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-4'>
           <Competitor name={data.homeCompetitor} />
 
           <Suspense fallback={<EventLiveStateFallback startTime={data.startTime} />}>
@@ -94,9 +94,9 @@ function PrematchSingleHeader(props: { event: PrematchSingleHeader$key }) {
   )
 
   return (
-    <div className='text-secondary flex items-center gap-2 text-xs uppercase'>
+    <div className='text-secondary flex flex-wrap items-center gap-x-2 gap-y-1 text-xs uppercase'>
       {data.status === 'LIVE' && (
-        <div className='text-foreground flex items-center gap-1.5 text-xs'>
+        <div className='text-foreground flex shrink-0 items-center gap-1.5 text-xs'>
           <div className='relative size-2'>
             <div className='bg-destructive absolute size-2 animate-ping rounded-full' />
             <div className='bg-destructive absolute size-2 rounded-full' />
@@ -104,18 +104,18 @@ function PrematchSingleHeader(props: { event: PrematchSingleHeader$key }) {
           Live
         </div>
       )}
-      <SportIcon sport={data.sport.key} className='size-3.5' />
+      <SportIcon sport={data.sport.key} className='size-3.5 shrink-0' />
       <Link
         href={{
           pathname: '/sport',
           query: { tournaments: `${data.sport.key}:${data.tournament.key}` },
         }}
-        className='group relative flex items-center gap-2 text-current transition-colors hover:text-white'
+        className='group relative flex min-w-0 items-center gap-2 text-current transition-colors hover:text-white'
       >
-        <span>{data.tournament.name}</span>
-        <span>·</span>
-        <span>{data.category.name}</span>
-        <ExternalLinkIcon className='size-3' />
+        <span className='max-w-40 truncate sm:max-w-none'>{data.tournament.name}</span>
+        <span className='shrink-0'>·</span>
+        <span className='max-w-32 truncate sm:max-w-none'>{data.category.name}</span>
+        <ExternalLinkIcon className='size-3 shrink-0' />
         <span className='bg-primary absolute -bottom-0.5 h-px w-full opacity-0 transition-all group-hover:opacity-100' />
       </Link>
     </div>
@@ -125,12 +125,14 @@ function PrematchSingleHeader(props: { event: PrematchSingleHeader$key }) {
 function Competitor(props: { name: string; reverse?: boolean }) {
   return (
     <div
-      className={`flex items-center gap-3 ${props.reverse ? 'flex-row-reverse text-right' : ''}`}
+      className={`flex min-w-0 items-center gap-2 sm:gap-3 ${props.reverse ? 'flex-row-reverse text-right' : ''}`}
     >
-      <div className='bg-dark-300 text-muted-foreground flex size-10 min-w-10 items-center justify-center rounded-full'>
-        <ImageIcon className='size-4' />
+      <div className='bg-dark-300 text-muted-foreground flex size-8 min-w-8 items-center justify-center rounded-full sm:size-10 sm:min-w-10'>
+        <ImageIcon className='size-3.5 sm:size-4' />
       </div>
-      <span className='truncate text-sm font-semibold text-white sm:text-base'>{props.name}</span>
+      <span className='truncate text-xs font-semibold text-white sm:text-sm lg:text-base'>
+        {props.name}
+      </span>
     </div>
   )
 }
@@ -151,11 +153,13 @@ function EventLiveState(props: { event: EventLiveState$key; startTime: string })
   if (data.status !== 'LIVE') return <KickoffTime startTime={props.startTime} />
 
   return (
-    <div className='flex flex-col items-center gap-1'>
-      <span className='text-lg leading-none font-bold text-white'>
+    <div className='flex shrink-0 flex-col items-center gap-1 px-1'>
+      <span className='text-base leading-none font-bold text-white sm:text-lg'>
         {data.homeScore ?? 0} - {data.awayScore ?? 0}
       </span>
-      <span className='text-secondary text-[0.65rem] uppercase'>{data.tradingStatus}</span>
+      <span className='text-secondary text-[0.6rem] uppercase sm:text-[0.65rem]'>
+        {data.tradingStatus}
+      </span>
     </div>
   )
 }
@@ -176,7 +180,7 @@ function KickoffTime(props: { startTime: string }) {
     <time
       suppressHydrationWarning
       dateTime={props.startTime}
-      className='text-secondary text-center text-xs leading-relaxed'
+      className='text-secondary shrink-0 px-1 text-center text-[0.65rem] leading-relaxed sm:text-xs'
     >
       {getRelativeDayLabel(props.startTime)}
       <br />
@@ -187,7 +191,7 @@ function KickoffTime(props: { startTime: string }) {
 
 function EventNotFound() {
   return (
-    <main className='mx-auto flex w-full max-w-7xl flex-col items-center justify-center gap-4 px-4 py-24 text-center'>
+    <main className='mx-auto flex w-full max-w-7xl flex-col items-center justify-center gap-4 px-4 py-16 text-center sm:py-24'>
       <div className='bg-dark-300 text-muted-foreground flex size-14 items-center justify-center rounded-full'>
         <SearchXIcon className='size-6' />
       </div>
