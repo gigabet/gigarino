@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e0de8658010aa31385e11d8f70f5e835>>
+ * @generated SignedSource<<f2d971f69c1d5a0eeb286fd3706232e7>>
  * @lightSyntaxTransform
  */
 
@@ -19,6 +19,7 @@ export type PrematchSingleHeader$data = {
   };
   readonly status: EventStatus;
   readonly tournament: {
+    readonly key: string;
     readonly name: string;
   };
   readonly " $fragmentType": "PrematchSingleHeader";
@@ -29,15 +30,20 @@ export type PrematchSingleHeader$key = {
 };
 
 const node: ReaderFragment = (function(){
-var v0 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "name",
-    "storageKey": null
-  }
-];
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "key",
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [],
   "kind": "Fragment",
@@ -52,13 +58,7 @@ return {
       "name": "sport",
       "plural": false,
       "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "key",
-          "storageKey": null
-        }
+        (v0/*:: as any*/)
       ],
       "storageKey": null
     },
@@ -69,7 +69,10 @@ return {
       "kind": "LinkedField",
       "name": "tournament",
       "plural": false,
-      "selections": (v0/*:: as any*/),
+      "selections": [
+        (v0/*:: as any*/),
+        (v1/*:: as any*/)
+      ],
       "storageKey": null
     },
     {
@@ -79,7 +82,9 @@ return {
       "kind": "LinkedField",
       "name": "category",
       "plural": false,
-      "selections": (v0/*:: as any*/),
+      "selections": [
+        (v1/*:: as any*/)
+      ],
       "storageKey": null
     },
     {
@@ -95,6 +100,6 @@ return {
 };
 })();
 
-(node as any).hash = "0387a4c55f2104a9d29365a2add8e6fd";
+(node as any).hash = "7b7ddbdf2a62946facb9ca8b62d7d5ac";
 
 export default node;

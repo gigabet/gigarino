@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b8947ccf343be57be71f1c6b0423909c>>
+ * @generated SignedSource<<b2867a8fda93d57b1723e867e8cc9be7>>
  * @lightSyntaxTransform
  */
 
@@ -41,20 +41,23 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "key",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
 },
-v4 = [
-  (v3/*:: as any*/),
-  (v2/*:: as any*/)
-],
 v5 = {
   "alias": null,
   "args": null,
@@ -132,14 +135,8 @@ return {
             "name": "sport",
             "plural": false,
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "key",
-                "storageKey": null
-              },
-              (v2/*:: as any*/)
+              (v2/*:: as any*/),
+              (v3/*:: as any*/)
             ],
             "storageKey": null
           },
@@ -150,7 +147,11 @@ return {
             "kind": "LinkedField",
             "name": "tournament",
             "plural": false,
-            "selections": (v4/*:: as any*/),
+            "selections": [
+              (v2/*:: as any*/),
+              (v4/*:: as any*/),
+              (v3/*:: as any*/)
+            ],
             "storageKey": null
           },
           {
@@ -160,11 +161,14 @@ return {
             "kind": "LinkedField",
             "name": "category",
             "plural": false,
-            "selections": (v4/*:: as any*/),
+            "selections": [
+              (v4/*:: as any*/),
+              (v3/*:: as any*/)
+            ],
             "storageKey": null
           },
           (v5/*:: as any*/),
-          (v2/*:: as any*/),
+          (v3/*:: as any*/),
           {
             "kind": "InlineFragment",
             "selections": [
@@ -209,7 +213,7 @@ return {
                     "name": "markets",
                     "plural": true,
                     "selections": [
-                      (v2/*:: as any*/),
+                      (v3/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -224,7 +228,7 @@ return {
                         "name": "kind",
                         "storageKey": null
                       },
-                      (v3/*:: as any*/),
+                      (v4/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -241,7 +245,7 @@ return {
                         "name": "outcomes",
                         "plural": true,
                         "selections": [
-                          (v2/*:: as any*/),
+                          (v3/*:: as any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -249,7 +253,7 @@ return {
                             "name": "index",
                             "storageKey": null
                           },
-                          (v3/*:: as any*/),
+                          (v4/*:: as any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -276,12 +280,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "41b5eb169870869c8a9c7da88ccb760f",
+    "cacheID": "e168fe4211e7c0ec0039b68b4125fd18",
     "id": null,
     "metadata": {},
     "name": "PrematchSingleViewQuery",
     "operationKind": "query",
-    "text": "query PrematchSingleViewQuery(\n  $id: ID!\n) {\n  event(id: $id) {\n    ...PrematchSingleView\n    id\n  }\n}\n\nfragment EventLiveState on Event {\n  __isEvent: __typename\n  status\n  tradingStatus\n  homeScore\n  awayScore\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  outcomes {\n    id\n    index\n    name\n    price\n    status\n  }\n}\n\nfragment MarketGroups on Event {\n  __isEvent: __typename\n  markets {\n    id\n    group\n    kind\n    ...MarketCard\n  }\n}\n\nfragment PrematchSingleHeader on PrematchEvent {\n  sport {\n    key\n    id\n  }\n  tournament {\n    name\n    id\n  }\n  category {\n    name\n    id\n  }\n  status\n}\n\nfragment PrematchSingleView on PrematchEvent {\n  homeCompetitor\n  awayCompetitor\n  startTime\n  ...PrematchSingleHeader\n  ...EventLiveState\n  ...MarketGroups @defer(label: \"PrematchSingleView$defer$MarketGroups\")\n}\n"
+    "text": "query PrematchSingleViewQuery(\n  $id: ID!\n) {\n  event(id: $id) {\n    ...PrematchSingleView\n    id\n  }\n}\n\nfragment EventLiveState on Event {\n  __isEvent: __typename\n  status\n  tradingStatus\n  homeScore\n  awayScore\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  outcomes {\n    id\n    index\n    name\n    price\n    status\n  }\n}\n\nfragment MarketGroups on Event {\n  __isEvent: __typename\n  markets {\n    id\n    group\n    kind\n    ...MarketCard\n  }\n}\n\nfragment PrematchSingleHeader on PrematchEvent {\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    name\n    id\n  }\n  category {\n    name\n    id\n  }\n  status\n}\n\nfragment PrematchSingleView on PrematchEvent {\n  homeCompetitor\n  awayCompetitor\n  startTime\n  ...PrematchSingleHeader\n  ...EventLiveState\n  ...MarketGroups @defer(label: \"PrematchSingleView$defer$MarketGroups\")\n}\n"
   }
 };
 })();

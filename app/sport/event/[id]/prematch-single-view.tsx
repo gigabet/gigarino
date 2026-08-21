@@ -1,7 +1,8 @@
 'use client'
 
 import { format } from 'date-fns'
-import { ImageIcon, SearchXIcon } from 'lucide-react'
+import { ExternalLinkIcon, ImageIcon, SearchXIcon } from 'lucide-react'
+import Link from 'next/link'
 import { Suspense } from 'react'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
 import type { EventLiveState$key } from '@/app/sport/event/[id]/__generated__/EventLiveState.graphql'
@@ -80,6 +81,7 @@ function PrematchSingleHeader(props: { event: PrematchSingleHeader$key }) {
           key
         }
         tournament {
+          key
           name
         }
         category {
@@ -103,9 +105,19 @@ function PrematchSingleHeader(props: { event: PrematchSingleHeader$key }) {
         </div>
       )}
       <SportIcon sport={data.sport.key} className='size-3.5' />
-      <span>{data.tournament.name}</span>
-      <span>·</span>
-      <span>{data.category.name}</span>
+      <Link
+        href={{
+          pathname: '/sport',
+          query: { tournaments: `${data.sport.key}:${data.tournament.key}` },
+        }}
+        className='group relative flex items-center gap-2 text-current transition-colors hover:text-white'
+      >
+        <span>{data.tournament.name}</span>
+        <span>·</span>
+        <span>{data.category.name}</span>
+        <ExternalLinkIcon className='size-3' />
+        <span className='bg-primary absolute -bottom-0.5 h-px w-full opacity-0 transition-all group-hover:opacity-100' />
+      </Link>
     </div>
   )
 }
