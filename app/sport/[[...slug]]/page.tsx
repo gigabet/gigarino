@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useQueryLoader } from 'react-relay'
 import { graphql } from 'relay-runtime'
 import type { PrematchQuery } from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
@@ -41,13 +41,17 @@ export default function SportPage() {
   const hasSearch = search.length > 0
   const hasAny = filterActive || hasSearch
 
+  const vars = useRef({
+    filterActive,
+    tournamentKeys,
+    eventCount: filterActive ? 20 : 4,
+    hasAny,
+    hasSearch,
+  })
   useEffect(() => {
-    loadQuery(
-      { filterActive, tournamentKeys, eventCount: filterActive ? 20 : 4, hasAny, hasSearch },
-      { fetchPolicy: 'store-or-network' }
-    )
+    loadQuery(vars.current, { fetchPolicy: 'store-or-network' })
     return () => disposeQuery()
-  }, [loadQuery, disposeQuery, tournamentKeys, filterActive, hasAny, hasSearch])
+  }, [loadQuery, disposeQuery])
 
   if (queryRef)
     return (
