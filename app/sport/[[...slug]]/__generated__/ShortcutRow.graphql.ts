@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1f10e34c079d850ed2a61a1ae9f18200>>
+ * @generated SignedSource<<774b630f325e655740a767cd72cb8f82>>
  * @lightSyntaxTransform
  */
 
@@ -51,7 +51,7 @@ return {
             {
               "kind": "Literal",
               "name": "first",
-              "value": 4
+              "value": 6
             }
           ],
           "concreteType": "Tournament",
@@ -84,7 +84,7 @@ return {
               "storageKey": null
             }
           ],
-          "storageKey": "topTournaments(first:4)"
+          "storageKey": "topTournaments(first:6)"
         }
       ]
     }
@@ -94,6 +94,6 @@ return {
 };
 })();
 
-(node as any).hash = "6a523bda262d6a2d8757046017ea02a5";
+(node as any).hash = "4c5fba739f723022f56c0b8a7f6cfef3";
 
 export default node;

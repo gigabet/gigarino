@@ -133,7 +133,12 @@ export function useSidebarSearch() {
     (value: string) => {
       if (value === term) return
       const params = new URLSearchParams(searchParams)
-      value ? params.set('q', value) : params.delete('q')
+      if (value) {
+        params.set('q', value)
+        params.delete('tournaments') // searching exits tournament filter mode — same view can't show both
+      } else {
+        params.delete('q')
+      }
       router.replace(`${pathname}?${params.toString()}`, { scroll: false })
     },
     [searchParams, pathname, router, term]

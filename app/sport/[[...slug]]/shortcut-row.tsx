@@ -14,18 +14,14 @@ import { useTournamentKeysFromUrl } from '@/app/sport/[[...slug]]/tournament-lis
 import { SportIcon } from '@/components/sport-icon'
 import { Skeleton } from '@/components/ui/skeleton'
 
-const sample = [
-  { label: 'Football Today', icon: GiSoccerBall, href: '' },
-  { label: 'Tennis Today', icon: GiTennisBall, href: '' },
-  { label: 'In Play', icon: PiMonitorPlayFill, href: '/live' },
-]
+const sample = [{ label: 'In Play', icon: PiMonitorPlayFill, href: '/live' }]
 
 export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQuery> }) {
   const preloaded = usePreloadedQuery<PrematchQuery>(PrematchQueryNode, props.queryRef)
   const data = useFragment(
     graphql`
       fragment ShortcutRow on Query {
-        scr_topTournaments: topTournaments(first: 4) @stream(initialCount: 1) {
+        scr_topTournaments: topTournaments(first: 6) @stream(initialCount: 1) {
           sport @required(action: NONE) {
             key @required(action: NONE)
           }
@@ -43,25 +39,24 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
   if (!preloaded || !data?.scr_topTournaments) return <ShortcutRowSkeleton />
 
   const shortcuts = [
-    ...uniqBy(data.scr_topTournaments, 'label').map(
-      t =>
-        !!t && {
-          label: t.name,
-          icon: (
-            <SportIcon sport={t.sport.key} className='group-data-active:text-accent-foreground' />
-          ),
-          href: {
-            pathname,
-            query: { tournaments: t.key },
-          },
-          key: t.key,
-        }
-    ),
+    ...data.scr_topTournaments
+      .filter(t => !!t)
+      .map(t => ({
+        label: t.name,
+        icon: (
+          <SportIcon sport={t.sport.key} className='group-data-active:text-accent-foreground' />
+        ),
+        href: {
+          pathname,
+          query: { tournaments: t.key },
+        },
+        key: t.key,
+      })),
     ...sample.map(s => ({ ...s, icon: <s.icon />, key: null })),
   ]
 
   return (
-    <div className='w-full scrollbar-none overflow-x-auto'>
+    <div className='-m-5 w-full scrollbar-none overflow-x-auto p-5'>
       <div className='flex gap-4'>
         {shortcuts.map(
           e =>
@@ -70,12 +65,10 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
                 href={e.href}
                 key={e.label}
                 data-active={(selected.length === 1 && selected[0] === e?.key) || null}
-                className='group bg-muted/40 hover:bg-muted data-active:bg-accent inline-flex h-10 shrink-0 items-center gap-2 rounded-full px-3.5 whitespace-nowrap transition'
+                className='bg-dark-200 data-active:bg-primary data-active:text-primary-foreground shadow-primary/40 inline-flex h-10 shrink-0 items-center gap-2 rounded-full px-3.5 whitespace-nowrap text-white/70 transition hover:bg-white/10 hover:text-white data-active:shadow-[0_0_4px,0_0_12px,0_0_20px]'
               >
                 {e.icon}
-                <span className='text-foreground/70 group-data-active:text-accent-foreground text-xs font-light tracking-wide'>
-                  {e.label}
-                </span>
+                <span className='text-xs font-light tracking-wide'>{e.label}</span>
               </Link>
             )
         )}
