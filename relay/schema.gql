@@ -342,8 +342,18 @@ type Market implements Node {
   """
   UI tab this market belongs to.
   """
-  group: MarketGroup!
+  group: MarketGroup! @deprecated(reason: "Use `groups` — a market can appear in several tabs.")
+
+  """
+  All UI tabs this market appears in.
+  """
+  groups: [MarketGroup!]!
   id: ID!
+
+  """
+  Canonical display order within the event.
+  """
+  index: Int!
 
   """
   Family kind (never carries the line): `match_winner`, `over_under`, `both_teams_to_score`, `draw_no_bet`, `correct_score`, …

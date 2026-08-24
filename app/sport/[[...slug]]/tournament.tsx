@@ -16,6 +16,7 @@ export default function Tournament(props: { queryRef: Tournament$key }) {
   const [data, refetch] = useRefetchableFragment(
     graphql`
       fragment Tournament on Tournament @refetchable(queryName: "TournamentRefetch") {
+        id
         sport @required(action: NONE) {
           key @required(action: NONE)
         }
@@ -30,13 +31,12 @@ export default function Tournament(props: { queryRef: Tournament$key }) {
   )
 
   const [isRefreshing, startTransition] = useTransition()
-  const handleRefresh = useCallback(
-    () =>
+  const handleRefresh = useCallback(() => {
+    if (data?.id)
       startTransition(() => {
         refetch({}, { fetchPolicy: 'network-only' })
-      }),
-    [refetch]
-  )
+      })
+  }, [refetch, data?.id])
 
   useEffect(() => {
     const onVisible = () => {
@@ -77,19 +77,19 @@ export default function Tournament(props: { queryRef: Tournament$key }) {
 
   return (
     <section>
-      <div className='text-secondary mb-4 flex items-end gap-4 border-b py-2 text-sm'>
-        <h2 className='flex w-90 items-center gap-2'>
-          <SportIcon sport={data.sport.key} className='size-4.5' />
+      <div className='text-secondary mb-4 flex items-end gap-2 gap-4 border-b py-2 text-sm'>
+        <h2 className='flex min-w-0 flex-1 items-center gap-2 sm:max-w-90'>
+          <SportIcon sport={data.sport.key} className='size-4.5 shrink-0' />
           <ReactCountryFlag
             svg
             countryCode={data.category.countryCode ?? 'UN'}
-            className='w-5 rounded-xs shadow-xs'
+            className='w-5 shrink-0 rounded-xs shadow-xs'
             style={{ width: undefined, height: undefined }}
           />
           <span className='truncate'>{data.name}</span>
         </h2>
         <ListViewMarketDropdowns />
-        <div className='w-29' />
+        <div className='hidden sm:block sm:w-0 lg:w-29' />
       </div>
       <Suspense fallback={<EventListSkeleton />}>
         <EventList tournament={data} />
@@ -127,9 +127,9 @@ function EventList(props: { tournament: TournamentEventList$key }) {
 export function TournamentSkeleton() {
   return (
     <section>
-      <div className='text-secondary mb-4 flex items-end gap-4 border-b py-2 text-sm'>
-        <Skeleton className='my-1 flex h-4 w-90' />
-        <div className='h-8.5 w-29' />
+      <div className='text-secondary mb-4 flex flex-col gap-2 border-b py-2 text-sm sm:flex-row sm:items-end sm:gap-4'>
+        <Skeleton className='my-1 flex h-4 w-full sm:w-90' />
+        <div className='h-8.5 w-29 max-sm:hidden' />
       </div>
       <EventListSkeleton />
     </section>

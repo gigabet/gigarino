@@ -83,12 +83,12 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
   return (
     <>
       {/* ---- md and below: horizontal topbar, pills open a submenu ---- */}
-      <div className='bg-dark/60 sticky top-16 z-20 -mx-4 border-b border-white/5 px-4 py-2 backdrop-blur sm:-mx-6 sm:px-6 lg:hidden'>
+      <div className='bg-dark sticky top-20 z-20 -mx-4 -mt-8 border-b border-white/5 px-4 py-2 sm:-mx-6 sm:px-6 lg:hidden'>
         <div className='flex scrollbar-none items-center gap-2 overflow-x-auto'>
           <Link
             href='/sport'
             prefetch
-            className='bg-dark-200 flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-xs whitespace-nowrap hover:bg-white/5'
+            className='bg-dark-300 flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-xs whitespace-nowrap hover:bg-white/5'
           >
             <SportIcon sport='highlights' className='size-4' />
             Highlights
@@ -102,7 +102,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
               trigger={
                 <button
                   type='button'
-                  className='bg-dark-200 flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-xs whitespace-nowrap hover:bg-white/5'
+                  className='bg-dark-300 flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-xs whitespace-nowrap hover:bg-white/5'
                 >
                   <SportIcon sport={sport.key} className='size-4' />
                   {sport.name}
@@ -178,7 +178,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
 export function SidebarSkeleton() {
   return (
     <>
-      <div className='bg-dark/60 sticky top-16 z-20 -mx-4 flex gap-2 border-b border-white/5 px-4 py-2 sm:-mx-6 sm:px-6 lg:hidden'>
+      <div className='bg-dark sticky top-20 z-20 -mx-4 -mt-8 flex gap-2 border-b border-white/5 px-4 py-2 sm:-mx-6 sm:px-6 lg:hidden'>
         {Array(6)
           .fill(6)
           .map((_, i) => (

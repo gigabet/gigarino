@@ -2,11 +2,14 @@
 
 import { entries, groupBy } from 'lodash'
 import { graphql, useFragment } from 'react-relay'
-import type { MarketGroups$key } from '@/app/sport/event/[id]/__generated__/MarketGroups.graphql'
+import type {
+  MarketGroup,
+  MarketGroups$data,
+  MarketGroups$key,
+} from '@/app/sport/event/[id]/__generated__/MarketGroups.graphql'
 import MarketCard from '@/app/sport/event/[id]/market-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import * as Tabs from '@/components/ui/tabs'
-import type { MarketGroup } from '@/types'
 
 /** Fixed render order — matches the tab order elsewhere in the app. */
 const GROUP_ORDER: MarketGroup[] = [
@@ -27,6 +30,8 @@ const GROUP_LABEL: Record<MarketGroup, string> = {
   PENALTIES: 'Penalties',
   PLAYERS: 'Players',
   SPECIAL: 'Special',
+  // eslint-disable-next-line relay/no-future-added-value
+  '%future added value': '',
 }
 
 export default function MarketGroups(props: { event: MarketGroups$key }) {
@@ -35,7 +40,7 @@ export default function MarketGroups(props: { event: MarketGroups$key }) {
       fragment MarketGroups on Event {
         markets {
           id
-          group
+          groups
           kind
           ...MarketCard
         }
@@ -44,7 +49,15 @@ export default function MarketGroups(props: { event: MarketGroups$key }) {
     props.event
   )
 
-  const byGroup = groupBy(data.markets, m => m.group)
+  const byGroup = data.markets.reduce(
+    (acc, curr) => {
+      curr.groups.forEach(group => {
+        acc[group] = [...(acc[group] || []), curr]
+      })
+      return acc
+    },
+    {} as Record<MarketGroup, MarketGroups$data['markets']>
+  )
   const populatedGroups = GROUP_ORDER.filter(g => byGroup[g]?.length)
 
   if (populatedGroups.length === 0) {

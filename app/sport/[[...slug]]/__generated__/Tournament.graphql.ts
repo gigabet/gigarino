@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e344117a7bb9c7d5e0a57d6c36c526ba>>
+ * @generated SignedSource<<a85e1dc2e619dd284d0f1d6245c8fd0e>>
  * @lightSyntaxTransform
  */
 
@@ -51,6 +51,13 @@ const node: ReaderFragment = {
   },
   "name": "Tournament",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
     {
       "kind": "RequiredField",
       "field": {
@@ -111,19 +118,12 @@ const node: ReaderFragment = {
           "name": "TournamentEventList"
         }
       ]
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
     }
   ],
   "type": "Tournament",
   "abstractKey": null
 };
 
-(node as any).hash = "98841505cbd53a2bf4894983c878ba32";
+(node as any).hash = "f97ec6505b7c9262346c0437e8c3d70f";
 
 export default node;

@@ -55,14 +55,17 @@ export function ListViewMarkets(props: { event: ListViewMarkets$key }) {
   const sortedMarkets = selectedMarkets.map(marketByKind)
 
   return (
-    <div className='@container/markets ml-auto flex grow items-center justify-end gap-4'>
+    <div className='@container/markets ml-auto flex grow items-center justify-end gap-4 lg:order-4'>
       {sortedMarkets.map((market, i) =>
         market ? (
           <Market key={market.id} className={marketVisibility[i]} market={market} />
         ) : (
           <div
             key={selectedMarkets[i]}
-            className={cn('flex h-15 max-w-60 min-w-50 flex-1 grow gap-1', marketVisibility[i])}
+            className={cn(
+              'flex h-15 max-w-42 min-w-42 flex-1 grow gap-1 lg:max-w-60 lg:min-w-50',
+              marketVisibility[i]
+            )}
           />
         )
       )}
@@ -72,7 +75,7 @@ export function ListViewMarkets(props: { event: ListViewMarkets$key }) {
 
 export function ListViewMarketsSkeleton() {
   return (
-    <div className='@container/markets ml-auto flex grow items-center justify-end gap-4'>
+    <div className='@container/markets ml-auto flex grow items-center justify-end gap-4 lg:order-4'>
       {[0, 1, 2, 3].map(i => (
         <MarketSkeleton key={i} className={marketVisibility[i]} />
       ))}
@@ -98,7 +101,10 @@ export function ListViewMarketDropdowns() {
             })
           }
         >
-          <SelectTrigger className={cn('max-w-60 min-w-50 flex-1', marketVisibility[i])} size='sm'>
+          <SelectTrigger
+            className={cn('max-w-42 min-w-42 flex-1 lg:max-w-60 lg:min-w-50', marketVisibility[i])}
+            size='sm'
+          >
             <SelectValue>{availableMarkets[market]}</SelectValue>
           </SelectTrigger>
           <SelectContent>
@@ -133,7 +139,12 @@ function Market(props: { className?: string; market: PrematchMarket$key }) {
   const toggleOdd = useToggleOdd()
 
   return (
-    <div className={cn('flex h-15 max-w-60 min-w-50 flex-1 grow gap-1', props.className)}>
+    <div
+      className={cn(
+        'flex h-15 max-w-42 min-w-42 flex-1 grow gap-1 lg:max-w-60 lg:min-w-50',
+        props.className
+      )}
+    >
       {sortBy(data.outcomes, e => e.index).map(odd => (
         <Toggle.Root
           suppressHydrationWarning
@@ -159,7 +170,12 @@ function Market(props: { className?: string; market: PrematchMarket$key }) {
 
 function MarketSkeleton(props: { className?: string }) {
   return (
-    <div className={cn('flex h-15 max-w-60 min-w-50 flex-1 grow gap-1', props.className)}>
+    <div
+      className={cn(
+        'flex h-15 max-w-42 min-w-42 flex-1 grow gap-1 lg:max-w-60 lg:min-w-50',
+        props.className
+      )}
+    >
       <Skeleton className='h-full w-full flex-1' />
       <Skeleton className='h-full w-full flex-1' />
       <Skeleton className='h-full w-full flex-1' />

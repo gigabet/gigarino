@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<76dd2b13d1f713a2a514ce71e2489c01>>
+ * @generated SignedSource<<814a5c5ac17c182ed9744823e88219ef>>
  * @lightSyntaxTransform
  */
 
@@ -12,7 +12,7 @@ export type MarketGroup = "CARDS" | "CORNERS" | "GOALS" | "MAIN" | "PENALTIES" |
 import { FragmentRefs } from "relay-runtime";
 export type MarketGroups$data = {
   readonly markets: ReadonlyArray<{
-    readonly group: MarketGroup;
+    readonly groups: ReadonlyArray<MarketGroup>;
     readonly id: string;
     readonly kind: string;
     readonly " $fragmentSpreads": FragmentRefs<"MarketCard">;
@@ -49,7 +49,7 @@ const node: ReaderFragment = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "group",
+          "name": "groups",
           "storageKey": null
         },
         {
@@ -72,6 +72,6 @@ const node: ReaderFragment = {
   "abstractKey": "__isEvent"
 };
 
-(node as any).hash = "a7b0bc68fd0f5d8789744ab4a55139ec";
+(node as any).hash = "a753ef6cf046fbb4487fee371ca60774";
 
 export default node;
