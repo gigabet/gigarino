@@ -1,9 +1,7 @@
 'use client'
 
-import { uniqBy } from 'lodash'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { GiSoccerBall, GiTennisBall } from 'react-icons/gi'
 import { PiMonitorPlayFill } from 'react-icons/pi'
 import { type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
 import { graphql } from 'relay-runtime'

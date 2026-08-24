@@ -1,6 +1,6 @@
 'use client'
 
-import { entries, groupBy } from 'lodash'
+import { entries, groupBy, sortBy } from 'lodash'
 import { graphql, useFragment } from 'react-relay'
 import type {
   MarketGroup,
@@ -11,7 +11,6 @@ import MarketCard from '@/app/sport/event/[id]/market-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import * as Tabs from '@/components/ui/tabs'
 
-/** Fixed render order — matches the tab order elsewhere in the app. */
 const GROUP_ORDER: MarketGroup[] = [
   'MAIN',
   'GOALS',
@@ -42,6 +41,7 @@ export default function MarketGroups(props: { event: MarketGroups$key }) {
           id
           groups
           kind
+          index
           ...MarketCard
         }
       }
@@ -49,7 +49,7 @@ export default function MarketGroups(props: { event: MarketGroups$key }) {
     props.event
   )
 
-  const byGroup = data.markets.reduce(
+  const byGroup = sortBy(data.markets, e => e.index).reduce(
     (acc, curr) => {
       curr.groups.forEach(group => {
         acc[group] = [...(acc[group] || []), curr]

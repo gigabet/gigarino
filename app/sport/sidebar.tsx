@@ -222,12 +222,7 @@ export function SidebarSkeleton() {
   )
 }
 
-/**
- * Popover housing the country/tournament picker for one sport — used by the
- * mobile topbar pills and the lg icon strip, where there's no room (or no
- * intent) to expand a whole accordion inline. Fetches lazily on open, same
- * `SidebarSportDetails` query the full accordion (`Sport`) uses for prefetch.
- */
+// popover housing the country/tournament picker for one sport
 function SportSubmenu(props: {
   sportKey: string
   sportName: string

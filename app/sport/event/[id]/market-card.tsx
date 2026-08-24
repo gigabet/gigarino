@@ -1,19 +1,18 @@
 'use client'
 
-import { useAtomValue } from 'jotai'
 import { sortBy } from 'lodash'
 import { Toggle } from 'radix-ui'
 import { graphql, useFragment } from 'react-relay'
 import type { MarketCard$key } from '@/app/sport/event/[id]/__generated__/MarketCard.graphql'
-import { betslipInputAtom, useHasOdd, useToggleOdd } from '@/context/betslip'
+import { useHasOdd, useToggleOdd } from '@/context/betslip'
 import { cn } from '@/lib/utils'
 
 /**
- * Odds layout rule, driven purely by outcome count:
- * - 2-4 outcomes: single row, one column per outcome
+ * Odds layout rule, driven purely by odd count:
+ * - 2-4 odds: single row, one column per odd
  * - count % 3 === 0 (6, 9, 12, ...): grid split into rows of 3
  * - everything else (1, 5, 7, 8, >9 non-multiples of 3): full-width
- *   flex-wrap, each outcome grows to fill (`flex-1`)
+ *   flex-wrap, each odd grows to fill (`flex-1`)
  */
 function getOutcomesLayout(count: number): { container: string; item: string } {
   if (count % 3 === 0) return { container: 'grid grid-cols-3 gap-1.5', item: '' }

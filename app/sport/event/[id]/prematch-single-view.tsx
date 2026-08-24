@@ -41,9 +41,6 @@ export default function PrematchSingleView(props: {
 
   return (
     <main className='mx-auto flex w-full max-w-7xl flex-col gap-4 sm:gap-6'>
-      {/* ---------------------------------------------------------------- */}
-      {/* Header: competitors, score/kick-off, breadcrumb                  */}
-      {/* ---------------------------------------------------------------- */}
       <section className='flex flex-col gap-3 rounded-2xl border border-white/5 bg-black/20 p-4 sm:gap-4 sm:p-6'>
         <PrematchSingleHeader event={data} />
         <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-4'>
@@ -57,15 +54,8 @@ export default function PrematchSingleView(props: {
         </div>
       </section>
 
-      {/* ---------------------------------------------------------------- */}
-      {/* Statistics widget — reserved slot, filled in separately          */}
-      {/* ---------------------------------------------------------------- */}
       <StatisticsWidget />
 
-      {/* ---------------------------------------------------------------- */}
-      {/* Markets, grouped main > goals > corners > cards > penalties >    */}
-      {/* players > special                                               */}
-      {/* ---------------------------------------------------------------- */}
       <Suspense fallback={<MarketGroupsSkeleton />}>
         <MarketGroups event={data} />
       </Suspense>
