@@ -55,6 +55,7 @@
     "react-error-boundary": "^6.1.2",
     "react-hook-form": "^7.79.0",
     "react-icons": "^5.6.0",
+    "react-indiana-drag-scroll": "^2.2.1",
     "react-intersection-observer": "^10.0.3",
     "react-relay": "^21.0.1",
     "react-resizable-panels": "^4.11.2",

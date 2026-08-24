@@ -28,17 +28,17 @@ export default function PrematchEvent(props: { node: PrematchEvent$key }) {
   )
 
   const env = useRelayEnvironment()
-  const hasPrefetched = useRef(false)
+  // const hasPrefetched = useRef(false)
   const prefetch = () => {
-    if (hasPrefetched.current) return
-    hasPrefetched.current = true
+    // if (hasPrefetched.current) return
+    // hasPrefetched.current = true
     fetchQuery(
       env,
       PrematchSingleViewQueryNode,
       { id: data.id },
       { fetchPolicy: 'store-or-network' }
     ).subscribe({
-      error: () => (hasPrefetched.current = false),
+      // error: () => (hasPrefetched.current = false),
     })
   }
 

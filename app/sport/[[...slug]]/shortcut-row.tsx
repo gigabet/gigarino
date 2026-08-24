@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { PiMonitorPlayFill } from 'react-icons/pi'
+import ScrollContainer from 'react-indiana-drag-scroll'
 import { type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
 import { graphql } from 'relay-runtime'
 import type { PrematchQuery } from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
@@ -54,7 +55,7 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
   ]
 
   return (
-    <div className='w-full scrollbar-none overflow-x-auto'>
+    <ScrollContainer className='w-full cursor-grab scrollbar-none overflow-x-auto' vertical={false}>
       <div className='flex gap-4'>
         {shortcuts.map(
           e =>
@@ -71,7 +72,7 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
             )
         )}
       </div>
-    </div>
+    </ScrollContainer>
   )
 }
 
