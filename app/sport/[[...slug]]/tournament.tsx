@@ -78,18 +78,18 @@ export default function Tournament(props: { queryRef: Tournament$key }) {
   return (
     <section>
       <div className='text-secondary mb-4 flex items-end gap-4 border-b py-2 text-sm'>
-        <h2 className='flex w-90 items-center gap-2'>
-          <SportIcon sport={data.sport.key} className='size-4.5' />
+        <h2 className='flex min-w-0 flex-1 items-center gap-2 lg:w-90 lg:flex-none'>
+          <SportIcon sport={data.sport.key} className='size-4.5 shrink-0' />
           <ReactCountryFlag
             svg
             countryCode={data.category.countryCode ?? 'UN'}
-            className='w-5 rounded-xs shadow-xs'
+            className='w-5 shrink-0 rounded-xs shadow-xs'
             style={{ width: undefined, height: undefined }}
           />
-          <span className='truncate'>{data.name}</span>
+          <span className='min-w-0 truncate'>{data.name}</span>
         </h2>
         <ListViewMarketDropdowns />
-        <div className='w-29' />
+        <div className='hidden sm:block sm:w-0 lg:w-29' />
       </div>
       <Suspense fallback={<EventListSkeleton />}>
         <EventList tournament={data} />
