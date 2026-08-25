@@ -3,7 +3,6 @@
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { entries, keys, sortBy } from 'lodash'
 import { Toggle } from 'radix-ui'
-import { useCallback } from 'react'
 import { graphql, useFragment } from 'react-relay'
 import type { ListViewMarkets$key } from '@/app/sport/[[...slug]]/__generated__/ListViewMarkets.graphql'
 import type { PrematchMarket$key } from '@/app/sport/[[...slug]]/__generated__/PrematchMarket.graphql'
@@ -15,14 +14,14 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
-import { betslipInputAtom, useHasOdd, useToggleOdd } from '@/context/betslip'
+import { useHasOdd, useToggleOdd } from '@/context/betslip'
 import { cn, swap } from '@/lib/utils'
 
 const marketVisibility = [
-  '',
-  'hidden @min-[352px]/markets:flex',
-  'hidden @min-[536px]/markets:flex',
-  'hidden @min-[720px]/markets:flex',
+  '', //                                 w-42 = 168, gap-4 = 16
+  'hidden @min-[352px]/markets:flex', // 168 + 16 + 168 = 352
+  'hidden @min-[536px]/markets:flex', // 168 + 16 + 168 + 16 + 168 = 536
+  'hidden @min-[720px]/markets:flex', // 168 + 16 + 168 + 16 + 168 + 16 + 168 = 720
 ]
 
 const availableMarkets = {

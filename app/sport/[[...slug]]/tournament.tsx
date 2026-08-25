@@ -1,6 +1,5 @@
 'use client'
 
-import { some } from 'lodash'
 import { RotateCwIcon, SearchXIcon } from 'lucide-react'
 import { Suspense, useCallback, useEffect, useTransition } from 'react'
 import ReactCountryFlag from 'react-country-flag'
@@ -21,6 +20,7 @@ export default function Tournament(props: { queryRef: Tournament$key }) {
           key @required(action: NONE)
         }
         category {
+          name
           countryCode
         }
         name
@@ -78,7 +78,7 @@ export default function Tournament(props: { queryRef: Tournament$key }) {
   return (
     <section>
       <div className='text-secondary mb-4 flex items-end gap-4 border-b py-2 text-sm'>
-        <h2 className='flex w-28 shrink-0 items-center gap-2 overflow-hidden sm:w-44 lg:w-90 lg:flex-none'>
+        <h2 className='flex w-34 shrink-0 items-center gap-2 overflow-hidden sm:w-44 lg:w-90 lg:flex-none'>
           <SportIcon sport={data.sport.key} className='size-4.5 shrink-0' />
           <ReactCountryFlag
             svg
@@ -86,7 +86,7 @@ export default function Tournament(props: { queryRef: Tournament$key }) {
             className='w-5 shrink-0 rounded-xs shadow-xs'
             style={{ width: undefined, height: undefined }}
           />
-          <span className='min-w-0 truncate'>{data.name}</span>
+          <span className='min-w-0 truncate'>{data.name.replace(data.category.name, '')}</span>
         </h2>
         <ListViewMarketDropdowns />
         <div className='hidden sm:block sm:w-0 lg:w-29' />

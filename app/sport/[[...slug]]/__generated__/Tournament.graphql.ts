@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a85e1dc2e619dd284d0f1d6245c8fd0e>>
+ * @generated SignedSource<<7b231d788c55a49b804ad8ade0421dee>>
  * @lightSyntaxTransform
  */
 
@@ -12,6 +12,7 @@ import { FragmentRefs } from "relay-runtime";
 export type Tournament$data = {
   readonly category: {
     readonly countryCode: string | null | undefined;
+    readonly name: string;
   };
   readonly id: string;
   readonly name: string;
@@ -28,7 +29,15 @@ export type Tournament$key = {
 
 import TournamentRefetch_graphql from './TournamentRefetch.graphql';
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
@@ -92,6 +101,7 @@ const node: ReaderFragment = {
       "name": "category",
       "plural": false,
       "selections": [
+        (v0/*:: as any*/),
         {
           "alias": null,
           "args": null,
@@ -102,13 +112,7 @@ const node: ReaderFragment = {
       ],
       "storageKey": null
     },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "name",
-      "storageKey": null
-    },
+    (v0/*:: as any*/),
     {
       "kind": "Defer",
       "selections": [
@@ -123,7 +127,8 @@ const node: ReaderFragment = {
   "type": "Tournament",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "f97ec6505b7c9262346c0437e8c3d70f";
+(node as any).hash = "c659e540fc25958501750928030cb317";
 
 export default node;
