@@ -55,7 +55,7 @@ export function ListViewMarkets(props: { event: ListViewMarkets$key }) {
   const sortedMarkets = selectedMarkets.map(marketByKind)
 
   return (
-    <div className='@container/markets ml-auto flex grow items-center justify-end gap-4 lg:order-4'>
+    <div className='@container/markets flex min-w-0 flex-1 items-center justify-end gap-4 lg:order-4'>
       {sortedMarkets.map((market, i) =>
         market ? (
           <Market key={market.id} className={marketVisibility[i]} market={market} />
@@ -75,7 +75,7 @@ export function ListViewMarkets(props: { event: ListViewMarkets$key }) {
 
 export function ListViewMarketsSkeleton() {
   return (
-    <div className='@container/markets ml-auto flex grow items-center justify-end gap-4 lg:order-4'>
+    <div className='@container/markets flex min-w-0 flex-1 items-center justify-end gap-4 lg:order-4'>
       {[0, 1, 2, 3].map(i => (
         <MarketSkeleton key={i} className={marketVisibility[i]} />
       ))}
@@ -87,7 +87,7 @@ export function ListViewMarketDropdowns() {
   const [selectedMarkets, setSelectedMarkets] = useAtom(selectedMarketsState)
 
   return (
-    <div className='text-foreground @container/markets ml-auto flex grow items-center justify-end gap-4'>
+    <div className='text-foreground @container/markets flex min-w-0 flex-1 items-center justify-end gap-4'>
       {selectedMarkets.map((market, i) => (
         <Select
           key={market}
