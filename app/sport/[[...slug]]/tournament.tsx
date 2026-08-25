@@ -78,7 +78,7 @@ export default function Tournament(props: { queryRef: Tournament$key }) {
   return (
     <section>
       <div className='text-secondary mb-4 flex items-end gap-4 border-b py-2 text-sm'>
-        <h2 className='flex min-w-0 flex-1 items-center gap-2 lg:w-90 lg:flex-none'>
+        <h2 className='flex w-28 shrink-0 items-center gap-2 overflow-hidden sm:w-44 lg:w-90 lg:flex-none'>
           <SportIcon sport={data.sport.key} className='size-4.5 shrink-0' />
           <ReactCountryFlag
             svg
