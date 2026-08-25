@@ -749,7 +749,7 @@ type Query {
   topTournaments(first: Int, sport: String): [Tournament!]!
 
   """
-  The selected tournaments, each with its own paginated `events` connection - so a multi-tournament view renders one group per tournament instead of one flat, interleaved feed. Pass `keys` + `sport` for readable, URL-persistable selections (`?sport=football&t=premier-league,la-liga`); `ids` is the opaque-global-id form. Preserves input order; drops entries that no longer resolve.
+  The selected tournaments, each with its own paginated `events` connection - so a multi-tournament view renders one group per tournament instead of one flat, interleaved feed. Selection can span sports: `keys` accepts the self-describing compound form `sportKey:tournamentKey` (e.g. `["basketball:l1942","football:premier-league"]`), OR bare `keys` plus a single `sport` when they share one (`?sport=football&t=premier-league,la-liga`), OR opaque global `ids`. A tournament key is only unique within its sport, hence the sport prefix. Preserves input order; drops entries that no longer resolve.
   """
   tournaments(ids: [ID!], keys: [String!], sport: String): [Tournament!]!
 }
