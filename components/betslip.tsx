@@ -4,19 +4,24 @@ import { useAtom, useSetAtom } from 'jotai'
 import {
   AlertTriangleIcon,
   ChevronDownIcon,
+  HistoryIcon,
   Loader2Icon,
   LockKeyhole,
   TicketIcon,
   TrendingUpIcon,
   XIcon,
 } from 'lucide-react'
-import { useState } from 'react'
-import { PiTicket } from 'react-icons/pi'
-import { graphql, useFragment } from 'react-relay'
+import { AnimatePresence, motion } from 'motion/react'
+import { VisuallyHidden } from 'radix-ui'
+import { useRef, useState } from 'react'
+import { PiTicket, PiTrash } from 'react-icons/pi'
+import { graphql, useFragment, useMutation } from 'react-relay'
 import { Drawer } from 'vaul'
 import type { Betslip$key } from '@/components/__generated__/Betslip.graphql'
 import type { BetslipMobileBar$key } from '@/components/__generated__/BetslipMobileBar.graphql'
+import type { BetslipPlaceBetMutation } from '@/components/__generated__/BetslipPlaceBetMutation.graphql'
 import type { Tip$key } from '@/components/__generated__/Tip.graphql'
+import MyTickets from '@/components/my-tickets'
 import { Button } from '@/components/ui/button'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
 import {
@@ -33,6 +38,8 @@ import { useMediaQuery } from '@/context/hooks'
 import { cn, formatBalance, nCk } from '@/lib/utils'
 import type { TicketType } from '@/types'
 
+type MainTab = 'betslip' | 'tickets'
+
 export default function Betslip(props: {
   query: Betslip$key | null
   variant?: 'panel' | 'drawer'
@@ -48,6 +55,7 @@ export default function Betslip(props: {
         items {
           outcomeId
           availability
+          price
           ...Tip
         }
       }
@@ -56,32 +64,40 @@ export default function Betslip(props: {
   )
 
   const [input, setInput] = useAtom(betslipInputAtom)
-  const [isPlacing, setIsPlacing] = useState(false)
-  const [placed, setPlaced] = useState(false)
+  const [mainTab, setMainTab] = useState<MainTab>('betslip')
+  const [placed, setPlaced] = useState<{
+    id: string
+    stake: string
+    potentialPayout: string | null
+  } | null>(null)
+  const [placeError, setPlaceError] = useState<string | null>(null)
+  const [ticketsKey, setTicketsKey] = useState(0)
 
   const [singleStakes, setSingleStakes] = useState<Record<string, string>>({})
-  // --------------------------------------------------------------------
 
-  if (!data || input.items.length === 0)
-    return (
-      <div
-        className={cn(
-          'bg-dark-200 flex w-full shrink flex-col overflow-hidden',
-          props.variant === 'drawer'
-            ? 'h-full min-h-0 flex-1'
-            : 'sticky top-26.25 max-h-[calc(100dvh-8rem)] rounded-2xl border border-white/5'
-        )}
-      >
-        <div className='flex items-center justify-between border-b border-white/5 px-5 py-4'>
-          <h2 className='flex items-center gap-2 text-sm font-semibold tracking-wide text-white uppercase'>
-            <TicketIcon className='text-primary size-4' />
-            Betslip
-          </h2>
-        </div>
+  const clientRequestId = useRef<string>(crypto.randomUUID())
 
-        <EmptyState />
-      </div>
-    )
+  const [commitPlaceBet, isPlacing] = useMutation<BetslipPlaceBetMutation>(graphql`
+    mutation BetslipPlaceBetMutation($input: PlaceBetInput!) {
+      placeBet(input: $input) {
+        ticket {
+          id
+          status
+          stake
+          potentialPayout
+        }
+        rejection {
+          code
+          message
+          priceChanges {
+            outcomeId
+            expectedPrice
+            currentPrice
+          }
+        }
+      }
+    }
+  `)
 
   const remove = (outcomeId: string) =>
     setInput(prev => {
@@ -113,73 +129,142 @@ export default function Betslip(props: {
     }))
 
   const unavailable = new Set(
-    data.items.filter(i => i.availability !== 'AVAILABLE').map(i => i.outcomeId)
+    (data?.items ?? []).filter(i => i.availability !== 'AVAILABLE').map(i => i.outcomeId)
   )
 
   const handlePlace = () => {
-    setIsPlacing(true)
-    // TODO: wire `placeBet` mutation — items: data.items.map(i => ({
-    //   outcomeId: i.outcomeId, expectedPrice: <price from BetslipItem> }))
-    setTimeout(() => {
-      setIsPlacing(false)
-      setPlaced(true)
-    }, 900)
+    if (!data) return
+    setPlaceError(null)
+
+    const items = data.items
+      .filter(i => i.availability === 'AVAILABLE')
+      .map(i => ({
+        outcomeId: i.outcomeId,
+        expectedPrice: i.price,
+        stake: data.betType === 'SINGLE' ? (singleStakes[i.outcomeId] ?? '10.00') : undefined,
+      }))
+
+    commitPlaceBet({
+      variables: {
+        input: {
+          betType: data.betType,
+          items,
+          stake: input.stake || '0',
+          systemSize: input.systemSize ?? null,
+          clientRequestId: clientRequestId.current,
+          oddsPolicy: 'REJECT',
+        },
+      },
+      onCompleted: response => {
+        if (response.placeBet.rejection) {
+          setPlaceError(
+            response.placeBet.rejection.code === 'PRICE_CHANGED'
+              ? 'Odds have changed. Please review your selections and try again.'
+              : response.placeBet.rejection.message
+          )
+          return
+        }
+        if (response.placeBet.ticket) {
+          setPlaced({
+            id: response.placeBet.ticket.id,
+            stake: response.placeBet.ticket.stake,
+            potentialPayout: response.placeBet.ticket.potentialPayout,
+          })
+          setTicketsKey(k => k + 1)
+        }
+      },
+      onError: error => {
+        setPlaceError(error.message || 'Failed to place bet. Please try again.')
+      },
+    })
   }
 
-  const systemOptions = Array.from({ length: data.items.length - 2 }, (_, i) => i + 2) // k = 2..n-1
+  const startNewBet = () => {
+    clientRequestId.current = crypto.randomUUID()
+    setPlaced(null)
+    setPlaceError(null)
+    clearAll()
+  }
 
-  if (placed)
-    return (
-      <PlacedState
-        onNewBet={() => {
-          setPlaced(false)
-          clearAll()
-        }}
-      />
-    )
+  const systemOptions = data ? Array.from({ length: data.items.length - 2 }, (_, i) => i + 2) : []
 
   return (
     <div
       className={cn(
-        'bg-dark-200 scrollbar-hide flex w-full shrink flex-col self-start overflow-auto',
+        'bg-dark-200 flex w-full shrink flex-col overflow-hidden',
         props.variant === 'drawer'
           ? 'h-full min-h-0 flex-1'
           : 'sticky top-26.25 max-h-[calc(100dvh-8rem)] rounded-2xl border border-white/5'
       )}
     >
       <div className='flex items-center justify-between border-b border-white/5 px-5 py-4'>
-        <h2 className='flex items-center gap-2 text-sm font-semibold tracking-wide text-white uppercase'>
-          <TicketIcon className='text-primary size-4' />
-          Betslip
-          {data.items.length > 0 && (
-            <span className='bg-primary/15 text-primary rounded-full px-2 py-0.5 text-xs font-bold'>
-              {data.items.length}
-            </span>
+        <div className='flex items-center gap-1'>
+          <MainTabButton
+            active={mainTab === 'betslip'}
+            onClick={() => setMainTab('betslip')}
+            icon={<TicketIcon className='size-4' />}
+            label='Betslip'
+            // count={data?.items.length}
+          />
+          <MainTabButton
+            active={mainTab === 'tickets'}
+            onClick={() => setMainTab('tickets')}
+            icon={<HistoryIcon className='size-4' />}
+            label='My Tickets'
+          />
+        </div>
+        <AnimatePresence>
+          {mainTab === 'betslip' && !!data?.items.length && !placed && (
+            <motion.button
+              type='button'
+              onClick={clearAll}
+              className='text-secondary hover:text-foreground mr-2 transition-colors'
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{
+                scale: 1,
+                opacity: 1,
+                transition: {
+                  type: 'spring',
+                  stiffness: 500,
+                  damping: 15,
+                  mass: 0.5,
+                },
+              }}
+              exit={{
+                scale: 0,
+                opacity: 0,
+                transition: {
+                  duration: 0.1,
+                  ease: 'easeIn',
+                },
+              }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <PiTrash />
+            </motion.button>
           )}
-        </h2>
-        {data.items.length > 0 && (
-          <button
-            type='button'
-            onClick={clearAll}
-            className='text-secondary hover:text-foreground text-xs font-medium transition-colors'
-          >
-            Clear all
-          </button>
-        )}
+        </AnimatePresence>
       </div>
 
-      {data.items.length === 0 ? (
+      {mainTab === 'tickets' ? (
+        <MyTickets key={ticketsKey} />
+      ) : placed ? (
+        <PlacedState
+          ticket={placed}
+          onNewBet={startNewBet}
+          onViewTickets={() => setMainTab('tickets')}
+        />
+      ) : !data || input.items.length === 0 ? (
         <EmptyState />
       ) : (
-        <>
-          {/* Dummy tabs — visual only, not wired to the input yet */}
+        <div className='scrollbar-hide flex flex-1 flex-col overflow-auto'>
           <Tabs.Root
             value={data.betType}
             onValueChange={v =>
-              setInput(input => ({
-                ...input,
+              setInput(i => ({
+                ...i,
                 betType: v as TicketType,
-                systemSize: v === 'SYSTEM' && !input.systemSize ? 2 : input.systemSize,
+                systemSize: v === 'SYSTEM' && !i.systemSize ? 2 : i.systemSize,
               }))
             }
             className='px-5 pt-4'
@@ -249,7 +334,7 @@ export default function Betslip(props: {
             ))}
           </div>
 
-          {unavailable.size === 0 && <Separator />}
+          {unavailable.size === 0 && placeError === null && <Separator />}
 
           {unavailable.size > 0 && (
             <div className='z-1 flex items-center gap-2 bg-red-500/10 p-3 px-6 text-red-400'>
@@ -289,6 +374,13 @@ export default function Betslip(props: {
             </div>
           )}
 
+          {placeError && (
+            <div className='z-1 flex items-start gap-2 bg-red-500/10 p-3 px-6 text-red-400'>
+              <AlertTriangleIcon className='mt-0.5 size-4 shrink-0' />
+              <p className='text-xs'>{placeError}</p>
+            </div>
+          )}
+
           <div className='space-y-4 px-5 py-4'>
             {data.betType !== 'SINGLE' && (
               <>
@@ -311,7 +403,6 @@ export default function Betslip(props: {
                       onChange={e => {
                         const stake = e.target.value
                         if (/^\d*\.?\d{0,2}$/.test(stake)) setInput(prev => ({ ...prev, stake }))
-                        // else setInput(prev => ({ ...prev, stake: Number(stake).toFixed(2) }))
                       }}
                       className='appearance-none text-right font-mono text-sm [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'
                     />
@@ -320,24 +411,6 @@ export default function Betslip(props: {
                     </InputGroupAddon>
                   </InputGroup>
                 </div>
-
-                {/* <div className='flex gap-2'>
-                  {[5, 10, 25, 50].map(quick => (
-                    <button
-                      key={quick}
-                      type='button'
-                      onClick={() =>
-                        setInput(prev => ({
-                          ...prev,
-                          stake: quick.toFixed(2),
-                        }))
-                      }
-                      className='bg-dark hover:border-primary/40 flex-1 rounded-lg border border-white/10 py-1.5 text-xs text-gray-400 transition-colors hover:text-white'
-                    >
-                      €{quick}
-                    </button>
-                  ))}
-                </div> */}
 
                 <div className='bg-dark flex items-center justify-between rounded-xl border border-white/5 px-4 py-3'>
                   <span className='text-secondary text-sm'>Potential payout</span>
@@ -362,14 +435,14 @@ export default function Betslip(props: {
 
             <button
               type='button'
-              disabled={isPlacing || !data.placeable}
+              disabled={isPlacing || !data.placeable || unavailable.size > 0}
               onClick={handlePlace}
               className='group/button bg-primary hover:shadow-glow-lg text-primary-foreground relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-full px-10 py-4 text-base font-bold tracking-wide uppercase transition-all duration-300 select-none disabled:pointer-events-none disabled:bg-neutral-400 disabled:text-neutral-700'
             >
               <div className='from-primary to-primary absolute inset-0 bg-linear-to-r via-white/30 opacity-0 transition-opacity duration-500 group-hover/button:opacity-100' />
               <div className='absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/40 to-transparent transition-transform duration-1000 group-hover/button:translate-x-full' />
               {isPlacing ? (
-                <span className='relative'>
+                <span className='relative flex items-center gap-2'>
                   <Loader2Icon className='size-5 animate-spin' />
                   Placing bet...
                 </span>
@@ -386,9 +459,36 @@ export default function Betslip(props: {
               )}
             </button>
           </div>
-        </>
+        </div>
       )}
     </div>
+  )
+}
+
+function MainTabButton(props: {
+  active: boolean
+  onClick: () => void
+  icon: React.ReactNode
+  label: string
+  count?: number
+}) {
+  return (
+    <button
+      type='button'
+      onClick={props.onClick}
+      className={cn(
+        'flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold tracking-wide uppercase transition-colors',
+        props.active ? 'bg-primary/10 text-primary' : 'text-secondary hover:text-foreground'
+      )}
+    >
+      {props.icon}
+      {props.label}
+      {!!props.count && (
+        <span className='bg-primary/15 text-primary rounded-full px-2 py-0.5 text-xs font-bold normal-case'>
+          {props.count}
+        </span>
+      )}
+    </button>
   )
 }
 
@@ -411,7 +511,6 @@ function Tip(props: {
     graphql`
       fragment Tip on BetslipQuoteItem {
         outcomeId
-        # eventId (will be used in the future for the jumping function)
         eventName
         marketName
         key
@@ -473,8 +572,6 @@ function Tip(props: {
         </p>
       )}
 
-      {/* Per-item stake — dummy for now, mirrors the old mock UI. Will feed
-          into a real per-item field once the schema supports it. */}
       {!blocked && props.showStake && (
         <div className='mt-2 flex items-center gap-2 border-t border-white/5 pt-2'>
           <span className='text-secondary text-xs'>Stake</span>
@@ -531,19 +628,34 @@ function EmptyState() {
   )
 }
 
-function PlacedState(props: { onNewBet: () => void }) {
+function PlacedState(props: {
+  ticket: { id: string; stake: string; potentialPayout: string | null }
+  onNewBet: () => void
+  onViewTickets: () => void
+}) {
   return (
-    <div className='bg-dark-200 sticky top-26.25 flex max-h-[calc(100dvh-7rem)] w-full flex-col items-center justify-center gap-4 overflow-hidden rounded-2xl border border-white/5 px-6 py-16 text-center'>
+    <div className='flex max-h-[calc(100dvh-7rem)] w-full flex-col items-center justify-center gap-4 overflow-hidden px-6 py-16 text-center'>
       <div className='bg-primary/15 flex size-14 items-center justify-center rounded-full'>
         <TicketIcon className='text-primary size-6' />
       </div>
       <div>
         <p className='font-semibold text-white'>Bet placed!</p>
-        <p className='text-secondary mt-1 text-xs'>Good luck — track it under My Bets.</p>
+        <p className='text-secondary mt-1 text-xs'>Good luck — track it under My Tickets.</p>
       </div>
-      <Button variant='outline' onClick={props.onNewBet} className='mt-2'>
-        Place another bet
-      </Button>
+      {props.ticket.potentialPayout && (
+        <div className='bg-dark flex w-full max-w-60 items-center justify-between rounded-xl border border-white/5 px-4 py-3'>
+          <span className='text-secondary text-sm'>Potential payout</span>
+          <span className='text-primary text-lg font-bold'>
+            {formatBalance(Number(props.ticket.potentialPayout))}
+          </span>
+        </div>
+      )}
+      <div className='mt-2 flex gap-2'>
+        <Button variant='outline' onClick={props.onNewBet}>
+          Place another bet
+        </Button>
+        <Button onClick={props.onViewTickets}>My Tickets</Button>
+      </div>
     </div>
   )
 }
@@ -583,10 +695,6 @@ export function BetslipMobileBar(props: { query: BetslipMobileBar$key | null }) 
   )
 }
 
-// ---------------------------------------------------------------------------
-// Mobile/tablet: drawer housing the full Betslip, opened via the FAB above.
-// Anchors to the bottom on narrow screens, to the right from `sm` up.
-// ---------------------------------------------------------------------------
 export function BetslipDrawer(props: { query: Betslip$key | null }) {
   const [open, setOpen] = useAtom(betslipOpenAtom)
   const isWiderThanMobile = useMediaQuery('(min-width: 640px)')
@@ -602,8 +710,11 @@ export function BetslipDrawer(props: { query: Betslip$key | null }) {
             direction === 'bottom' && 'inset-x-0 bottom-0 max-h-[85dvh]',
             direction === 'right' && 'inset-y-0 right-0 h-full w-full max-w-sm'
           )}
+          aria-describedby={undefined}
         >
-          {/* grabber handle, bottom sheet only */}
+          <VisuallyHidden.Root>
+            <Drawer.Title>Betslip</Drawer.Title>
+          </VisuallyHidden.Root>
           {direction === 'bottom' && (
             <div className='mx-auto mt-3 h-1.5 w-10 shrink-0 rounded-full bg-white/20' />
           )}

@@ -15,10 +15,11 @@ import { cn } from '@/lib/utils'
  *   flex-wrap, each odd grows to fill (`flex-1`)
  */
 function getOutcomesLayout(count: number): { container: string; item: string } {
-  if (count % 3 === 0) return { container: 'grid grid-cols-3 gap-1.5', item: '' }
+  // if (count % 3 === 0) return { container: 'grid grid-cols-3 gap-1.5', item: '' }
   if (count === 2) return { container: 'grid grid-cols-2 gap-1.5', item: '' }
   if (count === 4) return { container: 'grid grid-cols-4 gap-1.5', item: '' }
-  return { container: 'flex flex-wrap gap-1.5', item: 'flex-1 min-w-20' }
+  return { container: 'grid grid-cols-3 gap-1.5', item: '' }
+  // return { container: 'flex flex-wrap gap-1.5', item: 'min-w-20' }
 }
 
 export default function MarketCard(props: { market: MarketCard$key }) {

@@ -107,7 +107,7 @@ export type LossCashbackPromotion = ReplaceKeys<
   { type: 'LOSS_CASHBACK'; rules: LossCashbackRulesDto }
 >
 
-export type BetItemStatus = 'LOST' | 'PENDING' | 'PUSH' | 'VOID' | 'WON'
+export type BetItemStatus = 'LOST' | 'PENDING' | 'PUSH' | 'VOID' | 'WON' | 'HALF_WON' | 'HALF_LOST'
 
 export type BetRejectionCode =
   | 'CASHOUT_UNAVAILABLE'

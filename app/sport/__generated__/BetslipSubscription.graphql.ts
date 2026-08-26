@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<165f9050266205899deb44995d640d47>>
+ * @generated SignedSource<<8de2a1aea468827844c6de1576c90e90>>
  * @lightSyntaxTransform
  */
 
@@ -155,6 +155,13 @@ return {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
+                "name": "price",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
                 "name": "eventName",
                 "storageKey": null
               },
@@ -176,13 +183,6 @@ return {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "price",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
                 "name": "id",
                 "storageKey": null
               }
@@ -195,12 +195,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7a25564ec5a845a66996b76a6a40c9cf",
+    "cacheID": "fab693020925998cb46135688494a30c",
     "id": null,
     "metadata": {},
     "name": "BetslipSubscription",
     "operationKind": "subscription",
-    "text": "subscription BetslipSubscription(\n  $input: BetslipQuoteInput!\n) {\n  betslipUpdated(input: $input) {\n    ...Betslip\n    ...BetslipMobileBar\n  }\n}\n\nfragment Betslip on BetslipQuote {\n  stake\n  effectiveOdds\n  potentialPayout\n  placeable\n  betType\n  items {\n    outcomeId\n    availability\n    ...Tip\n    id\n  }\n}\n\nfragment BetslipMobileBar on BetslipQuote {\n  effectiveOdds\n  items {\n    id\n  }\n}\n\nfragment Tip on BetslipQuoteItem {\n  outcomeId\n  eventName\n  marketName\n  key\n  price\n  availability\n}\n"
+    "text": "subscription BetslipSubscription(\n  $input: BetslipQuoteInput!\n) {\n  betslipUpdated(input: $input) {\n    ...Betslip\n    ...BetslipMobileBar\n  }\n}\n\nfragment Betslip on BetslipQuote {\n  stake\n  effectiveOdds\n  potentialPayout\n  placeable\n  betType\n  items {\n    outcomeId\n    availability\n    price\n    ...Tip\n    id\n  }\n}\n\nfragment BetslipMobileBar on BetslipQuote {\n  effectiveOdds\n  items {\n    id\n  }\n}\n\nfragment Tip on BetslipQuoteItem {\n  outcomeId\n  eventName\n  marketName\n  key\n  price\n  availability\n}\n"
   }
 };
 })();

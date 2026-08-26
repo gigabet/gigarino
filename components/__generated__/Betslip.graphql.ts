@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<afe57b653fc24f8070ce0b72aec4e5a5>>
+ * @generated SignedSource<<e8c3c2726395a20c408c081871f0208a>>
  * @lightSyntaxTransform
  */
 
@@ -17,6 +17,7 @@ export type Betslip$data = {
   readonly items: ReadonlyArray<{
     readonly availability: BetslipItemAvailability;
     readonly outcomeId: string;
+    readonly price: any | null | undefined;
     readonly " $fragmentSpreads": FragmentRefs<"Tip">;
   }>;
   readonly placeable: boolean;
@@ -93,6 +94,13 @@ const node: ReaderFragment = {
           "storageKey": null
         },
         {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "price",
+          "storageKey": null
+        },
+        {
           "args": null,
           "kind": "FragmentSpread",
           "name": "Tip"
@@ -105,6 +113,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "56757984fc6d99e463a3a630e87a5514";
+(node as any).hash = "f4402e82a7d053946e79bba2f844371c";
 
 export default node;
