@@ -3,7 +3,7 @@
 import { format } from 'date-fns'
 import { ExternalLinkIcon, ImageIcon, SearchXIcon } from 'lucide-react'
 import Link from 'next/link'
-import { Suspense } from 'react'
+import { Suspense, useEffect } from 'react'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
 import type { EventLiveState$key } from '@/app/sport/event/[id]/__generated__/EventLiveState.graphql'
 import type { PrematchSingleHeader$key } from '@/app/sport/event/[id]/__generated__/PrematchSingleHeader.graphql'
@@ -36,6 +36,10 @@ export default function PrematchSingleView(props: {
     `,
     preloaded.event as PrematchSingleView$key | null
   )
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   if (!data) return <EventNotFound />
 
