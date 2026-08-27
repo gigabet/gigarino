@@ -210,7 +210,7 @@ function CashoutButton(props: { ticketId: string; onCashedOut?: () => void }) {
       }}
     >
       <Popover.Trigger asChild>
-        <Button size='sm' variant='outline' className='w-full'>
+        <Button size='sm' variant='accent' className='w-full'>
           Cash Out
         </Button>
       </Popover.Trigger>
