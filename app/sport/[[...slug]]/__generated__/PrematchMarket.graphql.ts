@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3fdca5d417e1ca3f2a98091bc6b931aa>>
+ * @generated SignedSource<<8a7a402c39cb3465aa0983fa696114e1>>
  * @lightSyntaxTransform
  */
 
@@ -13,6 +13,7 @@ export type PrematchMarket$data = {
   readonly outcomes: ReadonlyArray<{
     readonly id: string;
     readonly index: number;
+    readonly key: string;
     readonly name: string;
     readonly price: any;
   }>;
@@ -62,6 +63,13 @@ const node: ReaderFragment = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
+          "name": "key",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
           "name": "price",
           "storageKey": null
         }
@@ -73,6 +81,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "107d857834431d69dcfbbf2b84c7e947";
+(node as any).hash = "408a6bf94944f8725ede3df03e11b3f6";
 
 export default node;

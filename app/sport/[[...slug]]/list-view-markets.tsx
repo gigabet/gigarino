@@ -18,16 +18,19 @@ import { useHasOdd, useToggleOdd } from '@/context/betslip'
 import { cn, swap } from '@/lib/utils'
 
 const marketVisibility = [
-  '', //                                 w-42 = 168, gap-4 = 16
-  'hidden @min-[352px]/markets:flex', // 168 + 16 + 168 = 352
-  'hidden @min-[536px]/markets:flex', // 168 + 16 + 168 + 16 + 168 = 536
-  'hidden @min-[720px]/markets:flex', // 168 + 16 + 168 + 16 + 168 + 16 + 168 = 720
+  '', // (10.5 + 1 + 10.5) + 11.5 + 11.5...
+  'hidden @min-[22rem]/markets:flex', // 352px
+  'hidden @min-[33.5rem]/markets:flex', // 536px
+  'hidden @min-[45rem]/markets:flex', // 720px
 ]
 
 const availableMarkets = {
   match_winner: 'Match Winner',
   over_under: 'Over/Under',
+  draw_no_bet: 'Draw No Bet',
   double_chance: 'Double Chance',
+  handicap: 'Handicap',
+  even_odd: 'Even/Odd',
   both_teams_to_score: 'Both to Score',
 }
 const selectedMarketsState = atom(keys(availableMarkets) as (keyof typeof availableMarkets)[])
@@ -57,13 +60,13 @@ export function ListViewMarkets(props: { event: ListViewMarkets$key }) {
     <div className='@container/markets flex min-w-0 flex-1 items-center justify-end gap-4 lg:order-4'>
       {sortedMarkets.map((market, i) =>
         market ? (
-          <Market key={market.id} className={marketVisibility[i]} market={market} />
+          <Market key={market.id} className={marketVisibility[i] ?? 'hidden'} market={market} />
         ) : (
           <div
             key={selectedMarkets[i]}
             className={cn(
               'flex h-15 max-w-50 min-w-42 flex-1 grow gap-1 xl:max-w-60',
-              marketVisibility[i]
+              marketVisibility[i] ?? 'hidden'
             )}
           />
         )
@@ -76,7 +79,7 @@ export function ListViewMarketsSkeleton() {
   return (
     <div className='@container/markets flex min-w-0 flex-1 items-center justify-end gap-4 lg:order-4'>
       {[0, 1, 2, 3].map(i => (
-        <MarketSkeleton key={i} className={marketVisibility[i]} />
+        <MarketSkeleton key={i} className={marketVisibility[i] ?? 'hidden'} />
       ))}
     </div>
   )
@@ -101,7 +104,7 @@ export function ListViewMarketDropdowns() {
           }
         >
           <SelectTrigger
-            className={cn('max-w-50 min-w-42 flex-1 xl:max-w-60', marketVisibility[i])}
+            className={cn('max-w-50 min-w-42 flex-1 xl:max-w-60', marketVisibility[i] ?? 'hidden')}
             size='sm'
           >
             <SelectValue>{availableMarkets[market]}</SelectValue>
@@ -127,6 +130,7 @@ function Market(props: { className?: string; market: PrematchMarket$key }) {
           id
           index
           name
+          key
           price
         }
       }
@@ -150,7 +154,8 @@ function Market(props: { className?: string; market: PrematchMarket$key }) {
           onPressedChange={() => toggleOdd(odd.id)}
         >
           <span className='group-data-[state=on]:text-foreground text-shadow-foreground text-secondary text-xs group-data-[state=on]:text-shadow-[0_0_8px]'>
-            {odd.name}
+            {/* HACK: avoid team names in double chance labels (may not work for other markets) */}
+            {odd.name.length > 12 ? <span className='capitalize'>{odd.key}</span> : odd.name}
           </span>
           <span
             className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'
