@@ -3,7 +3,7 @@ import { environmentManager, QueryClient, QueryClientProvider } from '@tanstack/
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { cx } from 'class-variance-authority'
 import { atom, useAtomValue } from 'jotai'
-import { createContext, useContext } from 'react'
+import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { BarLoader } from 'react-spinners'
 import { Toaster } from '@/components/ui/sonner'
 import { RelayProvider } from '@/relay/relay-provider'
@@ -49,9 +49,12 @@ export default function Providers({
 }
 
 type UserContext = { user: User | null; wallet: Wallet | null }
-const UserContext = createContext<UserContext>({
+type UserContextValue = UserContext & { clearUser: () => void }
+
+const UserContext = createContext<UserContextValue>({
   user: null,
   wallet: null,
+  clearUser: () => {},
 })
 
 export function useUser() {
@@ -60,11 +63,24 @@ export function useUser() {
 
 function UserProvider({
   children,
-  ...props
+  ...incoming
 }: {
   children: React.ReactNode
 } & UserContext) {
-  return <UserContext.Provider value={props}>{children}</UserContext.Provider>
+  const [state, setState] = useState<UserContext>(incoming)
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: id keeps this a no-op on unrelated re-renders
+  useEffect(() => {
+    setState(prev => (prev.user?.id === incoming.user?.id ? prev : incoming))
+  }, [incoming.user?.id])
+
+  const clearUser = useCallback(() => {
+    setState(prev =>
+      prev.user === null && prev.wallet === null ? prev : { user: null, wallet: null }
+    )
+  }, [])
+
+  return <UserContext.Provider value={{ ...state, clearUser }}>{children}</UserContext.Provider>
 }
 
 export const isLoadingOverlayState = atom(false)

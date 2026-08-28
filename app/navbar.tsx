@@ -23,9 +23,10 @@ import Search from '@/app/search'
 import Logo from '@/components/logo'
 import * as DropdownMenu from '@/components/ui/dropdown-menu'
 import { useBalanceUpdates } from '@/context/hooks'
+import { useUser } from '@/context/providers'
 import { logout } from '@/lib/auth'
 import { formatBalance } from '@/lib/utils'
-import type { User, Wallet } from '@/types'
+import type { Wallet } from '@/types'
 
 const navLinks = [
   { label: 'Casino', href: '/', icon: CoinsIcon },
@@ -38,13 +39,16 @@ const navLinks = [
 const navbarMobileMenuState = atom(false)
 export const NAVBAR_HEIGHT = 'h-20'
 
-export default function Navbar(props: {
-  user: User | null
-  wallet: Wallet | null
-  token: string | undefined
-}) {
+export default function Navbar(props: { token: string | undefined }) {
   const router = useRouter()
   const pathname = usePathname()
+  const { user, wallet, clearUser } = useUser()
+
+  const handleLogout = async () => {
+    await logout()
+    clearUser()
+    router.refresh()
+  }
 
   return (
     <>
@@ -98,10 +102,10 @@ export default function Navbar(props: {
             <div className='flex items-center gap-2 sm:gap-3'>
               <Search />
 
-              {!!props.user && !!props.wallet && (
+              {!!user && !!wallet && (
                 <>
                   {/** biome-ignore lint/style/noNonNullAssertion: can't be null if wallet is non-null */}
-                  <BalanceDisplay token={props.token!} wallet={props.wallet} />
+                  <BalanceDisplay token={props.token!} wallet={wallet} />
                   <DropdownMenu.Root>
                     <DropdownMenu.Trigger asChild>
                       <button
@@ -112,15 +116,15 @@ export default function Navbar(props: {
                           <UserIcon className='size-3 text-black sm:size-4' />
                         </div>
                         <span className='hidden text-sm font-medium text-white md:block'>
-                          {props.user.displayName}
+                          {user.displayName}
                         </span>
                         <ChevronDownIcon className='size-4 text-gray-400' />
                       </button>
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content align='end' className='w-56'>
                       <div className='border-b border-white/10 px-3 py-2'>
-                        <p className='text-sm font-medium text-white'>{props.user.username}</p>
-                        <p className='text-xs text-gray-400'>{props.user.email}</p>
+                        <p className='text-sm font-medium text-white'>{user.username}</p>
+                        <p className='text-xs text-gray-400'>{user.email}</p>
                       </div>
                       <DropdownMenu.Item
                         onClick={() => router.push('/user/account')}
@@ -153,7 +157,7 @@ export default function Navbar(props: {
                       <DropdownMenu.Separator className='bg-white/10' />
                       <DropdownMenu.Item
                         className='group/logout cursor-pointer text-red-400 focus:bg-red-500/10 focus:text-red-300'
-                        onClick={logout}
+                        onClick={handleLogout}
                       >
                         <LogOutIcon className='mr-2 size-4 group-focus/logout:text-red-200' />
                         Logout
@@ -164,7 +168,7 @@ export default function Navbar(props: {
               )}
 
               {/* Auth Buttons */}
-              {!props.user && (
+              {!user && (
                 <>
                   <Link
                     href='/register'
@@ -200,7 +204,6 @@ function BalanceDisplay(props: { token: string; wallet: Wallet }) {
       animate={{ opacity: 1, scale: 1 }}
       className='border-primary-500/30 bg-primary-500/10 flex items-center gap-2 rounded-full border px-3 py-1.5'
     >
-      {/* <WalletIcon className='text-primary hidden size-4 sm:block' /> */}
       <span className='text-primary text-xs font-semibold sm:text-sm'>
         {formatBalance(Number(balance))}
       </span>

@@ -1,9 +1,9 @@
 'use client'
 
-import { HistoryIcon, Loader2Icon, LockKeyholeIcon } from 'lucide-react'
+import { Loader2Icon, LockKeyholeIcon } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense, useEffect } from 'react'
-import { ErrorBoundary } from 'react-error-boundary'
+import { ErrorBoundary, type FallbackProps } from 'react-error-boundary'
 import { PiTicket } from 'react-icons/pi'
 import { useInView } from 'react-intersection-observer'
 import { graphql, useLazyLoadQuery, usePaginationFragment } from 'react-relay'
@@ -14,6 +14,7 @@ import { SectionErrorFallback } from '@/components/section-error-fallback'
 import TicketCard, { TicketCardSkeleton } from '@/components/ticket-card'
 import { buttonVariants } from '@/components/ui/button'
 import { useUser } from '@/context/providers'
+import { isAuthError } from '@/lib/utils'
 
 const OPEN_STATUSES = new Set(['PENDING_ACCEPTANCE', 'ACCEPTED', 'PARTIALLY_CASHED_OUT'])
 
@@ -25,7 +26,7 @@ export default function MyTickets() {
       {!user ? (
         <LoggedOutTickets />
       ) : (
-        <ErrorBoundary FallbackComponent={SectionErrorFallback}>
+        <ErrorBoundary FallbackComponent={MyTicketsErrorFallback}>
           <Suspense fallback={<MyTicketsSkeleton />}>
             <MyTicketsContent />
           </Suspense>
@@ -33,6 +34,30 @@ export default function MyTickets() {
       )}
     </div>
   )
+}
+
+/**
+ * Catches errors thrown while `MyTicketsContent` is mounted — most notably
+ * a session that expired *after* the tab was already open (initial mount
+ * succeeded, a later refetch/paginate/cashout didn't). An auth error here
+ * means the client's belief that it's logged in is now wrong, so we correct
+ * it via `clearUser()` and show the same sign-in prompt as the logged-out
+ * state, instead of a generic "Retry" that would just fail the same way
+ * again.
+ */
+function MyTicketsErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
+  const { clearUser } = useUser()
+
+  useEffect(() => {
+    // Log unconditionally — we need to see the *actual* error text before
+    // trusting any heuristic about what kind of failure this is.
+    console.error('[my-tickets]', error)
+    if (isAuthError(error)) clearUser()
+  }, [error, clearUser])
+
+  if (isAuthError(error)) return <LoggedOutTickets />
+
+  return <SectionErrorFallback error={error} resetErrorBoundary={resetErrorBoundary} />
 }
 
 function MyTicketsContent() {
@@ -119,7 +144,6 @@ function MyTicketsContent() {
   )
 }
 
-/** Static placeholder rows — mirrors TicketCard's collapsed markup, no relay fragment involved. */
 function FakeTicketRow(props: { status: 'Open' | 'Won' | 'Lost'; combi?: boolean }) {
   const meta =
     props.status === 'Open'

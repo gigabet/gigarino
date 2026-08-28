@@ -126,3 +126,9 @@ export function nCk(n: number, k: number): number {
   }
   return Math.round(result)
 }
+
+// HACK: best-effort detection of an auth/session error surfaced through Relay
+export function isAuthError(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error)
+  return /logg|auth|401|token|expired/i.test(message)
+}

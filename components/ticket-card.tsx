@@ -108,9 +108,7 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
             </span>
           </div>
           <p className='text-secondary mt-1 truncate text-xs'>
-            {data.items.length === 1
-              ? data.items[0].outcomeName
-              : `${data.items.length} selections`}
+            {data.items.length === 1 ? '1 selection' : `${data.items.length} selections`}
           </p>
         </div>
 

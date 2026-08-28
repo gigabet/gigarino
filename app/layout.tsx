@@ -73,7 +73,7 @@ export default async function RootLayout({
         <ParticleBackground />
 
         <Providers user={user} wallet={wallet}>
-          <Navbar user={user} wallet={wallet} token={token} />
+          <Navbar token={token} />
           {children}
           <Footer />
         </Providers>
