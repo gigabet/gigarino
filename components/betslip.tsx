@@ -36,7 +36,7 @@ import * as Tabs from '@/components/ui/tabs'
 import { betslipInputAtom, betslipOpenAtom } from '@/context/betslip'
 import { useMediaQuery } from '@/context/hooks'
 import { cn, formatBalance, nCk } from '@/lib/utils'
-import type { TicketType } from '@/types'
+import type { PriceChange, TicketType } from '@/types'
 
 type MainTab = 'betslip' | 'tickets'
 
@@ -64,6 +64,7 @@ export default function Betslip(props: {
   )
 
   const [input, setInput] = useAtom(betslipInputAtom)
+
   const [mainTab, setMainTab] = useState<MainTab>('betslip')
   const [placed, setPlaced] = useState<{
     id: string
@@ -71,6 +72,8 @@ export default function Betslip(props: {
     potentialPayout: string | null
   } | null>(null)
   const [placeError, setPlaceError] = useState<string | null>(null)
+  const [priceChanges, setPriceChanges] = useState<PriceChange[] | null>(null)
+  const priceChangeMap = new Map((priceChanges ?? []).map(c => [c.outcomeId, c]))
   const [ticketsKey, setTicketsKey] = useState(0)
 
   const [singleStakes, setSingleStakes] = useState<Record<string, string>>({})
@@ -135,6 +138,7 @@ export default function Betslip(props: {
   const handlePlace = () => {
     if (!data) return
     setPlaceError(null)
+    setPriceChanges(null)
 
     const items = data.items
       .filter(i => i.availability === 'AVAILABLE')
@@ -157,11 +161,14 @@ export default function Betslip(props: {
       },
       onCompleted: response => {
         if (response.placeBet.rejection) {
-          setPlaceError(
-            response.placeBet.rejection.code === 'PRICE_CHANGED'
-              ? 'Odds have changed. Please review your selections and try again.'
-              : response.placeBet.rejection.message
-          )
+          const { code, message, priceChanges: changes } = response.placeBet.rejection
+          if (code === 'PRICE_CHANGED' && changes?.length) {
+            setPriceChanges([...changes])
+            setPlaceError(null)
+          } else {
+            setPlaceError(message)
+            setPriceChanges(null)
+          }
           return
         }
         if (response.placeBet.ticket) {
@@ -175,8 +182,42 @@ export default function Betslip(props: {
       },
       onError: error => {
         setPlaceError(error.message || 'Failed to place bet. Please try again.')
+        setPriceChanges(null)
       },
     })
+  }
+
+  const handleKeepHigher = () => {
+    if (!priceChanges) return
+
+    const droppedIds = new Set(
+      priceChanges
+        .filter(c => Number(c.currentPrice) < Number(c.expectedPrice))
+        .map(c => c.outcomeId)
+    )
+
+    if (droppedIds.size > 0) {
+      setInput(prev => {
+        let { systemSize, betType } = prev
+        const items = prev.items.filter(i => !droppedIds.has(i.outcomeId))
+
+        if (systemSize && systemSize > items.length - 1) {
+          systemSize = items.length - 2
+          if (systemSize < 2) {
+            systemSize = null
+            betType = 'MULTIPLE'
+          }
+        }
+        if (items.length <= 2) betType = 'SINGLE'
+
+        return { ...prev, items, systemSize, betType }
+      })
+    }
+
+    // Prices that went up are already reflected live via data.items[].price
+    // (fed by the betslipUpdated subscription) — nothing to reconcile there,
+    // just clear the banner so the user can review and press Place bet again.
+    setPriceChanges(null)
   }
 
   const startNewBet = () => {
@@ -321,13 +362,11 @@ export default function Betslip(props: {
               <Tip
                 key={item.outcomeId}
                 item={item}
+                priceChange={priceChangeMap.get(item.outcomeId)}
                 showStake={data.betType === 'SINGLE'}
                 stakeValue={singleStakes[item.outcomeId] ?? '10.00'}
                 onStakeChange={value =>
-                  setSingleStakes(prev => ({
-                    ...prev,
-                    [item.outcomeId]: value,
-                  }))
+                  setSingleStakes(prev => ({ ...prev, [item.outcomeId]: value }))
                 }
                 onRemove={() => remove(item.outcomeId)}
               />
@@ -378,6 +417,33 @@ export default function Betslip(props: {
             <div className='z-1 flex items-start gap-2 bg-red-500/10 p-3 px-6 text-red-400'>
               <AlertTriangleIcon className='mt-0.5 size-4 shrink-0' />
               <p className='text-xs'>{placeError}</p>
+            </div>
+          )}
+
+          {priceChanges && (
+            <div className='z-1 flex items-center gap-2 bg-yellow-500/10 p-3 px-6 text-yellow-400'>
+              <TrendingUpIcon className='size-4 shrink-0' />
+              <p className='mr-auto truncate text-xs'>
+                {priceChanges.length === 1
+                  ? '1 odd change.'
+                  : `${priceChanges.length} odds changes.`}
+              </p>
+              <Button
+                variant='outline'
+                size='sm'
+                className='h-6 shrink-0 px-2 text-[0.7rem]'
+                onClick={() => setPriceChanges(null)}
+              >
+                Reject
+              </Button>
+              <Button
+                variant='outline'
+                size='sm'
+                className='h-6 shrink-0 px-2 text-[0.7rem]'
+                onClick={handleKeepHigher}
+              >
+                Keep higher
+              </Button>
             </div>
           )}
 
@@ -436,7 +502,7 @@ export default function Betslip(props: {
             <button
               type='button'
               disabled={isPlacing || !data.placeable || unavailable.size > 0}
-              onClick={handlePlace}
+              onClick={() => handlePlace()}
               className='group/button bg-primary hover:shadow-glow-lg text-primary-foreground relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-full px-10 py-4 text-base font-bold tracking-wide uppercase transition-all duration-300 select-none disabled:pointer-events-none disabled:bg-neutral-400 disabled:text-neutral-700'
             >
               <div className='from-primary to-primary absolute inset-0 bg-linear-to-r via-white/30 opacity-0 transition-opacity duration-500 group-hover/button:opacity-100' />
@@ -502,6 +568,7 @@ const getLabel = (eventName: string | null | undefined, key: string) => {
 
 function Tip(props: {
   item: Tip$key
+  priceChange?: { expectedPrice: string; currentPrice: string }
   showStake: boolean
   stakeValue: string
   onStakeChange: (v: string) => void
@@ -520,7 +587,8 @@ function Tip(props: {
     `,
     props.item
   )
-
+  const change = props.priceChange
+  const up = change ? Number(change.currentPrice) > Number(change.expectedPrice) : false
   const blocked = data.availability !== 'AVAILABLE'
 
   return (
@@ -555,8 +623,19 @@ function Tip(props: {
 
         <div className='flex shrink-0 flex-col items-end self-center pt-0.5'>
           <span className='flex items-center gap-1 font-mono text-base font-semibold text-white'>
-            <TrendingUpIcon className='size-3 opacity-0' />
-            {data.price ? (
+            {change ? (
+              <span className='flex items-center gap-1'>
+                <span className='text-secondary text-xs line-through'>
+                  {Number(change.expectedPrice).toFixed(2)}
+                </span>
+                <TrendingUpIcon
+                  className={cn('size-3', up ? 'text-primary' : 'rotate-90 text-red-400')}
+                />
+                <span className={up ? 'text-primary' : 'text-red-400'}>
+                  {Number(change.currentPrice).toFixed(2)}
+                </span>
+              </span>
+            ) : data.price ? (
               Number(data.price).toFixed(2)
             ) : (
               <LockKeyhole className='text-secondary size-4' />

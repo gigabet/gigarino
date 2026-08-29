@@ -165,6 +165,12 @@ export type OddsChangePolicy = 'ACCEPT_ANY' | 'ACCEPT_HIGHER' | 'REJECT'
 
 export type OutcomeStatus = 'OPEN' | 'REMOVED' | 'SUSPENDED'
 
+export type PriceChange = {
+  currentPrice: string
+  expectedPrice: string
+  outcomeId: string
+}
+
 export type TicketStatus =
   | 'ACCEPTED'
   | 'CASHED_OUT'
