@@ -60,6 +60,7 @@ enum BetslipItemAvailability {
 }
 
 input BetslipItemInput {
+  expectedPrice: String
   outcomeId: ID!
   stake: String
 }
@@ -106,6 +107,11 @@ type BetslipQuoteItem implements Node {
   """
   eventId: ID
   eventName: String
+
+  """
+  The price the client supplied for this selection (echoed); null if none was sent.
+  """
+  expectedPrice: Decimal
   id: ID!
 
   """
@@ -124,6 +130,11 @@ type BetslipQuoteItem implements Node {
   Current authoritative price; null when unavailable.
   """
   price: Decimal
+
+  """
+  True when the current price differs from the supplied expectedPrice — the client shows an accept/reject prompt. False when no expectedPrice was sent.
+  """
+  priceChanged: Boolean!
   status: OutcomeStatus
 }
 
@@ -209,6 +220,11 @@ type Category implements Node {
   sport: Sport!
   tournaments: [Tournament!]!
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 """
 A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.This scalar is serialized to a string in ISO 8601 format and parsed from a string in ISO 8601 format.
@@ -324,6 +340,65 @@ enum EventStatus {
   LIVE
   POSTPONED
   SCHEDULED
+}
+
+"""
+An admin-curated promotional bet for the sport carousel.
+"""
+type FeaturedBet {
+  """
+  BET_BOOST only: the enhanced price offered (above the fair combined price).
+  """
+  boostedPrice: Decimal
+
+  """
+  Combined live odds across selections; null unless every leg is available.
+  """
+  combinedPrice: Decimal
+  id: ID!
+  kind: FeaturedBetKind!
+
+  """
+  BET_BOOST only: max stake accepted at the boosted price (liability cap).
+  """
+  maxStake: Decimal
+  selections: [FeaturedBetSelection!]!
+  subtitle: String
+  title: String!
+
+  """
+  When the promo stops showing.
+  """
+  validTo: DateTime
+}
+
+"""
+Which carousel slot a curated bet fills.
+"""
+enum FeaturedBetKind {
+  BET_BOOST
+  COMBO_OF_WEEK
+  FEATURED_GAME
+}
+
+"""
+One curated leg, resolved to its live price and labels at read time.
+"""
+type FeaturedBetSelection {
+  """
+  False when the selection is suspended, closed, or gone.
+  """
+  available: Boolean!
+  eventId: ID
+  eventName: String
+  marketName: String
+  outcomeId: ID!
+  outcomeName: String
+
+  """
+  Live price; null when unavailable.
+  """
+  price: Decimal
 }
 
 """
@@ -717,6 +792,11 @@ type Query {
   Batched re-fetch: one round trip for many event ids. Preserves input order, drops missing rows.
   """
   eventsByIds(ids: [ID!]!): [PrematchEvent!]!
+
+  """
+  Active curated carousel bets — combo of the week, bet boost, featured game — each live-priced. Optionally filter by kind. Public: builds a betslip, moves no money.
+  """
+  featuredBets(kind: FeaturedBetKind): [FeaturedBet!]!
 
   """
   The caller's tickets, newest first (forward-only pagination).

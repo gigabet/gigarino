@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8de2a1aea468827844c6de1576c90e90>>
+ * @generated SignedSource<<8f9984543abc19fe7dd5ae929df3b700>>
  * @lightSyntaxTransform
  */
 
@@ -17,6 +17,7 @@ export type BetslipQuoteInput = {
   systemSize?: number | null | undefined;
 };
 export type BetslipItemInput = {
+  expectedPrice?: string | null | undefined;
   outcomeId: string;
   stake?: string | null | undefined;
 };
