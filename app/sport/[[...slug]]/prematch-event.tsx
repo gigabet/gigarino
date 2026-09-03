@@ -44,7 +44,7 @@ export default function PrematchEvent(props: { node: PrematchEvent$key }) {
 
       {/* mobile row 1: teams + odds */}
       <div className='relative flex items-center gap-4 lg:contents'>
-        <div className='flex w-34 min-w-0 shrink-0 flex-col gap-1 overflow-hidden text-xs sm:w-40 sm:gap-2 sm:text-sm lg:order-3 lg:ml-1 lg:w-60 lg:flex-none'>
+        <div className='flex w-34 min-w-0 shrink-0 flex-col gap-1 text-xs sm:w-40 sm:gap-2 sm:text-sm lg:order-3 lg:ml-1 lg:w-60 lg:flex-none'>
           <div className='flex items-center gap-2'>
             <TeamBadge name={data.homeCompetitor} />
             <span className='truncate'>{data.homeCompetitor}</span>
