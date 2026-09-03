@@ -61,6 +61,7 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
               <Link
                 href={e.href}
                 key={e.label}
+                scroll={false}
                 data-active={selected.some(s => decodeURIComponent(s) === e?.key) || null}
                 className='group/link bg-dark data-active:border-primary/70 data-active:bg-primary-500/2 data-active:shadow-primary/30 inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-white/5 px-3.5 whitespace-nowrap text-white/60 transition-colors text-shadow-current hover:text-white data-active:text-white data-active:shadow-[inset_0_0_10px_-2px] data-active:text-shadow-[0_0_8px]'
               >

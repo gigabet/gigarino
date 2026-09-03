@@ -1,8 +1,10 @@
 'use client'
 
 import { formatDistanceToNowStrict } from 'date-fns'
-import { CheckIcon, ChevronLeft, ChevronRight, FlameIcon, PlusIcon } from 'lucide-react'
+import { sortBy } from 'lodash'
+import { CheckIcon, ChevronLeft, ChevronRight, PlusIcon } from 'lucide-react'
 import Link from 'next/link'
+import { Toggle } from 'radix-ui'
 import { Suspense, useRef } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { BsBatteryCharging } from 'react-icons/bs'
@@ -14,9 +16,11 @@ import type {
   CarouselQuery$data,
 } from '@/app/sport/__generated__/CarouselQuery.graphql'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
+import { SportIcon } from '@/components/sport-icon'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useHasOdd, useToggleOdd } from '@/context/betslip'
-import { cn, formatBalance } from '@/lib/utils'
+import { useUpDown } from '@/context/hooks'
+import { cn, formatBalance, getRelativeDayLabel, initials, stringToHue } from '@/lib/utils'
 
 type FeaturedBet = CarouselQuery$data['featuredBets'][number]
 
@@ -24,18 +28,18 @@ const KIND_META = {
   COMBO_OF_WEEK: {
     label: 'Combo of the Week',
     icon: GiFlame,
-    text: 'text-primary',
-    chip: 'bg-primary/15',
-    blob: 'bg-primary',
-    ring: 'hover:border-primary/40', //'hover:shadow-[0_0_40px_-8px_rgba(209,243,102,0.35)]',
+    text: 'text-purple-accent',
+    chip: 'bg-purple-accent/15',
+    blob: 'bg-purple-accent',
+    ring: 'hover:border-purple-accent/40',
   },
   BET_BOOST: {
     label: 'Bet Boost',
     icon: BsBatteryCharging,
-    text: 'text-purple-accent',
-    chip: 'bg-purple-accent/15',
-    blob: 'bg-purple-accent',
-    ring: 'hover:border-purple-accent/40', //'hover:shadow-[0_0_40px_-8px_rgba(127,92,255,0.4)]',
+    text: 'text-primary',
+    chip: 'bg-primary/15',
+    blob: 'bg-primary',
+    ring: 'hover:border-primary/40',
   },
   FEATURED_GAME: {
     label: 'Featured Game',
@@ -43,7 +47,7 @@ const KIND_META = {
     text: 'text-sky-400',
     chip: 'bg-sky-400/15',
     blob: 'bg-sky-400',
-    ring: 'hover:border-sky-400/40', //'hover:shadow-[0_0_40px_-8px_rgba(56,189,248,0.35)]',
+    ring: 'hover:border-sky-400/40',
   },
 } as const
 
@@ -74,12 +78,38 @@ function CarouselContent() {
           validTo
           selections {
             outcomeId
-            eventId
+            # eventId
             eventName
             marketName
             outcomeName
             price
             available
+            event {
+              id
+              homeCompetitor
+              awayCompetitor
+              startTime
+              status
+              sport {
+                key
+              }
+              tournament {
+                name
+              }
+              markets(groups: [MAIN]) {
+                id
+                kind
+                name
+                outcomes {
+                  id
+                  index
+                  name
+                  key
+                  price
+                  status
+                }
+              }
+            }
           }
         }
       }
@@ -142,28 +172,33 @@ function CarouselContent() {
 }
 
 function FeaturedBetCard({ bet }: { bet: FeaturedBet }) {
-  const meta = KIND_META[bet.kind as keyof typeof KIND_META] ?? KIND_META.FEATURED_GAME
-  const Icon = meta.icon
-
-  const hasOdd = useHasOdd()
-  const toggleOdd = useToggleOdd()
-
-  const availableSelections = bet.selections.filter(s => s.available)
-  const allAdded =
-    availableSelections.length > 0 && availableSelections.every(s => hasOdd(s.outcomeId))
-
-  const handleAdd = () => {
-    availableSelections.forEach(s => {
-      if (!hasOdd(s.outcomeId)) toggleOdd(s.outcomeId)
-    })
+  switch (bet.kind) {
+    case 'BET_BOOST':
+      return <BetBoostCard bet={bet} />
+    case 'FEATURED_GAME':
+      return <FeaturedGameCard bet={bet} />
+    default:
+      return <ComboOfWeekCard bet={bet} />
   }
+}
 
-  const singleEventId = bet.selections.length === 1 ? bet.selections[0].eventId : null
-  const price = bet.kind === 'BET_BOOST' ? bet.boostedPrice : bet.combinedPrice
-  const endsIn =
-    bet.validTo && Date.parse(bet.validTo) > Date.now()
-      ? formatDistanceToNowStrict(new Date(bet.validTo))
-      : null
+/* -------------------------------------------------------------------------- */
+/* Shared shell                                                               */
+/* -------------------------------------------------------------------------- */
+
+function useEndsIn(validTo: string | null | undefined) {
+  return validTo && Date.parse(validTo) > Date.now()
+    ? formatDistanceToNowStrict(new Date(validTo))
+    : null
+}
+
+function CardShell(props: {
+  kind: keyof typeof KIND_META
+  endsIn?: string | null
+  children: React.ReactNode
+}) {
+  const meta = KIND_META[props.kind]
+  const Icon = meta.icon
 
   return (
     <div
@@ -193,13 +228,139 @@ function FeaturedBetCard({ bet }: { bet: FeaturedBet }) {
             {meta.label}
           </span>
         </div>
-        {endsIn && (
+        {props.endsIn && (
           <span className='text-secondary shrink-0 text-[0.65rem] whitespace-nowrap'>
-            ends in {endsIn}
+            ends in {props.endsIn}
           </span>
         )}
       </div>
 
+      {props.children}
+    </div>
+  )
+}
+
+/* -------------------------------------------------------------------------- */
+/* Bet Boost — 100% about the one boosted bet                                 */
+/* -------------------------------------------------------------------------- */
+
+function BetBoostCard({ bet }: { bet: FeaturedBet }) {
+  const endsIn = useEndsIn(bet.validTo)
+  const hasOdd = useHasOdd()
+  const toggleOdd = useToggleOdd()
+
+  const availableSelections = bet.selections.filter(s => s.available)
+  const allAdded =
+    availableSelections.length > 0 && availableSelections.every(s => hasOdd(s.outcomeId))
+
+  const handleSelect = () => {
+    availableSelections.forEach(s => {
+      if (!hasOdd(s.outcomeId)) toggleOdd(s.outcomeId)
+    })
+  }
+
+  const leg = bet.selections[0]
+
+  return (
+    <CardShell kind='BET_BOOST' endsIn={endsIn}>
+      <div className='relative min-w-0'>
+        <h3 className='truncate text-base font-bold text-white'>{bet.title}</h3>
+        {bet.subtitle && <p className='text-secondary mt-0.5 truncate text-xs'>{bet.subtitle}</p>}
+      </div>
+
+      {leg && (
+        <div
+          className={cn(
+            'relative flex items-center justify-between gap-2 rounded-xl border border-white/5 bg-white/3 px-3 py-2.5',
+            !leg.available && 'line-through opacity-40'
+          )}
+        >
+          <div className='min-w-0'>
+            <p className='truncate text-sm font-bold text-white'>{leg.outcomeName ?? '—'}</p>
+            <p className='text-secondary truncate text-xs'>
+              {leg.marketName}
+              {leg.eventName ? ` · ${leg.eventName}` : ''}
+            </p>
+          </div>
+          {leg.price && (
+            <span className='shrink-0 font-mono text-sm font-semibold text-white/70'>
+              {Number(leg.price).toFixed(2)}
+            </span>
+          )}
+        </div>
+      )}
+
+      <div className='relative mt-auto flex items-end justify-between gap-3 border-t border-white/5 pt-3'>
+        <div className='flex flex-col'>
+          <span className='text-secondary text-[0.65rem] tracking-wide uppercase'>
+            Boosted odds
+          </span>
+          <span className='flex items-center gap-2'>
+            {bet.combinedPrice && (
+              <span className='text-secondary text-xs line-through'>
+                {Number(bet.combinedPrice).toFixed(2)}
+              </span>
+            )}
+            <span className='text-primary text-2xl font-bold'>
+              {bet.boostedPrice ? Number(bet.boostedPrice).toFixed(2) : '—'}
+            </span>
+          </span>
+          {bet.maxStake && (
+            <span className='text-secondary text-[0.6rem]'>
+              Max stake {formatBalance(Number(bet.maxStake))}
+            </span>
+          )}
+        </div>
+
+        <button
+          type='button'
+          onClick={handleSelect}
+          disabled={allAdded || availableSelections.length === 0}
+          className={cn(
+            'flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold uppercase transition-all',
+            allAdded
+              ? 'bg-primary/15 text-primary cursor-default'
+              : 'bg-primary hover:shadow-glow text-primary-foreground'
+          )}
+        >
+          {allAdded ? (
+            <>
+              <CheckIcon className='size-3.5' />
+              Added
+            </>
+          ) : (
+            <>
+              <PlusIcon className='size-3.5' />
+              Select
+            </>
+          )}
+        </button>
+      </div>
+    </CardShell>
+  )
+}
+
+/* -------------------------------------------------------------------------- */
+/* Combo of the Week — the multi-leg list                                     */
+/* -------------------------------------------------------------------------- */
+
+function ComboOfWeekCard({ bet }: { bet: FeaturedBet }) {
+  const endsIn = useEndsIn(bet.validTo)
+  const hasOdd = useHasOdd()
+  const toggleOdd = useToggleOdd()
+
+  const availableSelections = bet.selections.filter(s => s.available)
+  const allAdded =
+    availableSelections.length > 0 && availableSelections.every(s => hasOdd(s.outcomeId))
+
+  const handleAdd = () => {
+    availableSelections.forEach(s => {
+      if (!hasOdd(s.outcomeId)) toggleOdd(s.outcomeId)
+    })
+  }
+
+  return (
+    <CardShell kind='COMBO_OF_WEEK' endsIn={endsIn}>
       <div className='relative min-w-0'>
         <h3 className='truncate text-base font-bold text-white'>{bet.title}</h3>
         {bet.subtitle && <p className='text-secondary mt-0.5 truncate text-xs'>{bet.subtitle}</p>}
@@ -241,59 +402,157 @@ function FeaturedBetCard({ bet }: { bet: FeaturedBet }) {
       <div className='relative mt-auto flex items-center justify-between gap-3 border-t border-white/5 pt-3'>
         <div className='flex flex-col'>
           <span className='text-secondary text-[0.65rem] tracking-wide uppercase'>
-            {bet.kind === 'BET_BOOST' ? 'Boosted odds' : 'Combined odds'}
+            Combined odds
           </span>
-          <span className='flex items-center gap-2'>
-            {bet.kind === 'BET_BOOST' && bet.combinedPrice && (
-              <span className='text-secondary text-xs line-through'>
-                {Number(bet.combinedPrice).toFixed(2)}
-              </span>
-            )}
-            <span className={cn('text-lg font-bold', meta.text)}>
-              {price ? Number(price).toFixed(2) : '—'}
-            </span>
+          <span className='text-purple-accent text-lg font-bold'>
+            {bet.combinedPrice ? Number(bet.combinedPrice).toFixed(2) : '—'}
           </span>
-          {bet.kind === 'BET_BOOST' && bet.maxStake && (
-            <span className='text-secondary text-[0.6rem]'>
-              Max stake {formatBalance(Number(bet.maxStake))}
-            </span>
-          )}
         </div>
 
-        {singleEventId ? (
-          <Link
-            href={`/sport/event/${singleEventId}`}
-            className='bg-primary hover:shadow-glow text-primary-foreground shrink-0 rounded-full px-4 py-2 text-xs font-bold uppercase transition-all'
-          >
-            View
-          </Link>
-        ) : (
-          <button
-            type='button'
-            onClick={handleAdd}
-            disabled={allAdded || availableSelections.length === 0}
-            className={cn(
-              'flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold uppercase transition-all',
-              allAdded
-                ? 'bg-primary/15 text-primary cursor-default'
-                : 'bg-primary hover:shadow-glow text-primary-foreground'
-            )}
-          >
-            {allAdded ? (
-              <>
-                <CheckIcon className='size-3.5' />
-                Added
-              </>
-            ) : (
-              <>
-                <PlusIcon className='size-3.5' />
-                Add
-              </>
-            )}
-          </button>
-        )}
+        <button
+          type='button'
+          onClick={handleAdd}
+          disabled={allAdded || availableSelections.length === 0}
+          className={cn(
+            'flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold uppercase transition-all',
+            allAdded
+              ? 'bg-purple-accent/15 text-purple-accent cursor-default'
+              : 'bg-purple-accent hover:shadow-glow-purple text-white'
+          )}
+        >
+          {allAdded ? (
+            <>
+              <CheckIcon className='size-3.5' />
+              Added
+            </>
+          ) : (
+            <>
+              <PlusIcon className='size-3.5' />
+              Add
+            </>
+          )}
+        </button>
       </div>
+    </CardShell>
+  )
+}
+
+/* -------------------------------------------------------------------------- */
+/* Featured Game — mini preview of the event, with the match winner market    */
+/* -------------------------------------------------------------------------- */
+
+function FeaturedGameCard({ bet }: { bet: FeaturedBet }) {
+  const endsIn = useEndsIn(bet.validTo)
+  const event = bet.selections.find(s => s.event)?.event ?? null
+  const matchWinner =
+    event?.markets.find(m => m.kind === 'match_winner') ?? event?.markets[0] ?? null
+
+  return (
+    <CardShell kind='FEATURED_GAME' endsIn={endsIn}>
+      <div className='relative min-w-0'>
+        <h3 className='truncate text-base font-bold text-white'>{bet.title}</h3>
+        {bet.subtitle && <p className='text-secondary mt-0.5 truncate text-xs'>{bet.subtitle}</p>}
+      </div>
+
+      {event ? (
+        <>
+          <div className='relative flex items-center justify-between gap-2 rounded-xl border border-white/5 bg-white/3 px-3 py-3'>
+            <MiniTeam name={event.homeCompetitor} />
+            <div className='flex shrink-0 flex-col items-center gap-1 px-1'>
+              {event.status === 'LIVE' ? (
+                <span className='text-destructive flex items-center gap-1 text-[0.6rem] uppercase'>
+                  <span className='relative inline-flex size-1.5'>
+                    <span className='bg-destructive absolute inline-flex size-full animate-ping rounded-full opacity-75' />
+                    <span className='bg-destructive relative inline-flex size-1.5 rounded-full' />
+                  </span>
+                  Live
+                </span>
+              ) : (
+                <span className='text-secondary flex items-center gap-1 text-[0.6rem] uppercase'>
+                  <SportIcon sport={event.sport.key} className='size-3' />
+                  {getRelativeDayLabel(event.startTime)}
+                </span>
+              )}
+              <span className='text-secondary text-[0.65rem]'>vs</span>
+            </div>
+            <MiniTeam name={event.awayCompetitor} reverse />
+          </div>
+
+          {matchWinner && (
+            <div className='relative flex gap-1.5'>
+              {sortBy(matchWinner.outcomes, o => o.index).map(outcome => (
+                <FeaturedOutcomeToggle key={outcome.id} outcome={outcome} />
+              ))}
+            </div>
+          )}
+
+          <Link
+            href={`/sport/event/${event.id}`}
+            className='text-secondary relative mt-auto flex items-center justify-center gap-1 border-t border-white/5 pt-3 text-xs font-semibold uppercase transition-colors hover:text-sky-400'
+          >
+            Full match odds
+          </Link>
+        </>
+      ) : (
+        <p className='text-secondary relative text-xs'>This event is no longer available.</p>
+      )}
+    </CardShell>
+  )
+}
+
+function MiniTeam(props: { name: string; reverse?: boolean }) {
+  const hue = stringToHue(props.name)
+
+  return (
+    <div
+      className={cn(
+        'flex min-w-0 items-center gap-2',
+        props.reverse && 'flex-row-reverse text-right'
+      )}
+    >
+      <div
+        className='flex size-7 min-w-7 shrink-0 items-center justify-center rounded-full text-[0.6rem] font-bold text-white'
+        style={{
+          background: `linear-gradient(135deg, hsl(${hue} 70% 42%), hsl(${(hue + 40) % 360} 70% 30%))`,
+        }}
+      >
+        {initials(props.name)}
+      </div>
+      <span className='truncate text-xs font-semibold text-white'>{props.name}</span>
     </div>
+  )
+}
+
+function FeaturedOutcomeToggle(props: {
+  outcome: { id: string; name: string; price: unknown; status: string }
+}) {
+  const hasOdd = useHasOdd()
+  const toggleOdd = useToggleOdd()
+  const upDown = useUpDown(Number(props.outcome.price))
+  const suspended = props.outcome.status !== 'OPEN'
+
+  return (
+    <Toggle.Root
+      disabled={suspended}
+      suppressHydrationWarning
+      className={cn(
+        'group/odd flex flex-1 flex-col items-center justify-center gap-0.5 rounded-lg border border-white/5 bg-black/20 py-1.5 transition hover:border-sky-400/20 hover:bg-sky-400/5 disabled:pointer-events-none disabled:opacity-40 data-[state=on]:border-sky-400 data-[state=on]:bg-sky-400/10',
+        upDown === 'up' && 'animate-odds-flash-up',
+        upDown === 'down' && 'animate-odds-flash-down'
+      )}
+      pressed={hasOdd(props.outcome.id)}
+      onPressedChange={() => toggleOdd(props.outcome.id)}
+    >
+      <span className='group-data-[state=on]/odd:text-foreground text-secondary text-[0.65rem]'>
+        {props.outcome.name}
+      </span>
+      <span
+        className='text-foreground text-sm font-semibold group-data-[state=on]/odd:text-sky-400'
+        suppressHydrationWarning
+      >
+        {Number(props.outcome.price).toFixed(2)}
+      </span>
+    </Toggle.Root>
   )
 }
 
