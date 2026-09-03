@@ -5,21 +5,13 @@ import { Toggle } from 'radix-ui'
 import { graphql, useFragment } from 'react-relay'
 import type { MarketCard$key } from '@/app/sport/event/[id]/__generated__/MarketCard.graphql'
 import { useHasOdd, useToggleOdd } from '@/context/betslip'
+import { useUpDown } from '@/context/hooks'
 import { cn } from '@/lib/utils'
 
-/**
- * Odds layout rule, driven purely by odd count:
- * - 2-4 odds: single row, one column per odd
- * - count % 3 === 0 (6, 9, 12, ...): grid split into rows of 3
- * - everything else (1, 5, 7, 8, >9 non-multiples of 3): full-width
- *   flex-wrap, each odd grows to fill (`flex-1`)
- */
 function getOutcomesLayout(count: number): { container: string; item: string } {
-  // if (count % 3 === 0) return { container: 'grid grid-cols-3 gap-1.5', item: '' }
   if (count === 2) return { container: 'grid grid-cols-2 gap-1.5', item: '' }
   if (count === 4) return { container: 'grid grid-cols-4 gap-1.5', item: '' }
   return { container: 'grid grid-cols-3 gap-1.5', item: '' }
-  // return { container: 'flex flex-wrap gap-1.5', item: 'min-w-20' }
 }
 
 export default function MarketCard(props: { market: MarketCard$key }) {
@@ -44,9 +36,6 @@ export default function MarketCard(props: { market: MarketCard$key }) {
   const suspended = market.status !== 'OPEN'
   const { container, item } = getOutcomesLayout(market.outcomes.length)
 
-  const hasOdd = useHasOdd()
-  const toggleOdd = useToggleOdd()
-
   return (
     <div className={cn('flex flex-col gap-2', suspended && 'opacity-50')}>
       <div className='text-secondary truncate text-xs font-medium'>
@@ -55,29 +44,44 @@ export default function MarketCard(props: { market: MarketCard$key }) {
 
       <div className={container}>
         {sortBy(market.outcomes, e => e.index).map(odd => (
-          <Toggle.Root
-            key={odd.id}
-            disabled={suspended || odd.status !== 'OPEN'}
-            suppressHydrationWarning
-            className={cn(
-              'group hover:bg-primary/5 hover:border-primary/20 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-col items-center justify-center gap-0.5 rounded-lg border border-white/5 bg-black/20 py-2 transition disabled:pointer-events-none',
-              item
-            )}
-            pressed={hasOdd(odd.id)}
-            onPressedChange={() => toggleOdd(odd.id)}
-          >
-            <span className='group-data-[state=on]:text-foreground text-secondary text-[0.7rem]'>
-              {odd.name}
-            </span>
-            <span
-              className='group-data-[state=on]:text-primary text-foreground text-sm font-semibold'
-              suppressHydrationWarning
-            >
-              {Number(odd.price).toFixed(2)}
-            </span>
-          </Toggle.Root>
+          <OutcomeToggle key={odd.id} odd={odd} suspended={suspended} className={item} />
         ))}
       </div>
     </div>
+  )
+}
+
+function OutcomeToggle(props: {
+  odd: { id: string; name: string; price: unknown; status: string }
+  suspended: boolean
+  className?: string
+}) {
+  const hasOdd = useHasOdd()
+  const toggleOdd = useToggleOdd()
+  const upDown = useUpDown(Number(props.odd.price))
+
+  return (
+    <Toggle.Root
+      disabled={props.suspended || props.odd.status !== 'OPEN'}
+      suppressHydrationWarning
+      className={cn(
+        'group hover:bg-primary/5 hover:border-primary/20 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-col items-center justify-center gap-0.5 rounded-lg border border-white/5 bg-black/20 py-2 transition disabled:pointer-events-none',
+        upDown === 'up' && 'animate-odds-flash-up',
+        upDown === 'down' && 'animate-odds-flash-down',
+        props.className
+      )}
+      pressed={hasOdd(props.odd.id)}
+      onPressedChange={() => toggleOdd(props.odd.id)}
+    >
+      <span className='group-data-[state=on]:text-foreground text-secondary text-[0.7rem]'>
+        {props.odd.name}
+      </span>
+      <span
+        className='group-data-[state=on]:text-primary text-foreground text-sm font-semibold'
+        suppressHydrationWarning
+      >
+        {Number(props.odd.price).toFixed(2)}
+      </span>
+    </Toggle.Root>
   )
 }

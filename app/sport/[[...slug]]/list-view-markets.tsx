@@ -2,6 +2,7 @@
 
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { entries, keys, sortBy } from 'lodash'
+import { TrendingUpIcon } from 'lucide-react'
 import { Toggle } from 'radix-ui'
 import { graphql, useFragment } from 'react-relay'
 import type { ListViewMarkets$key } from '@/app/sport/[[...slug]]/__generated__/ListViewMarkets.graphql'
@@ -15,6 +16,7 @@ import {
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useHasOdd, useToggleOdd } from '@/context/betslip'
+import { useUpDown } from '@/context/hooks'
 import { cn, swap } from '@/lib/utils'
 
 const marketVisibility = [
@@ -138,34 +140,47 @@ function Market(props: { className?: string; market: PrematchMarket$key }) {
     props.market
   )
 
-  const hasOdd = useHasOdd()
-  const toggleOdd = useToggleOdd()
-
   return (
     <div
       className={cn('flex h-15 max-w-50 min-w-42 flex-1 grow gap-1 xl:max-w-60', props.className)}
     >
       {sortBy(data.outcomes, e => e.index).map(odd => (
-        <Toggle.Root
-          suppressHydrationWarning
-          key={odd.id}
-          className='group hover:bg-primary/5 hover:border-primary/20 shadow-primary/60 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-1 flex-col items-center justify-center gap-1 rounded-lg border border-white/5 bg-black/20 transition transition-all data-[state=on]:shadow-[0_0_12px]'
-          pressed={hasOdd(odd.id)}
-          onPressedChange={() => toggleOdd(odd.id)}
-        >
-          <span className='group-data-[state=on]:text-foreground text-shadow-foreground text-secondary text-xs group-data-[state=on]:text-shadow-[0_0_8px]'>
-            {/* HACK: avoid team names in double chance labels (may not work for other markets) */}
-            {odd.name.length > 12 ? <span className='capitalize'>{odd.key}</span> : odd.name}
-          </span>
-          <span
-            className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'
-            suppressHydrationWarning
-          >
-            {Number(odd.price).toFixed(2)}
-          </span>
-        </Toggle.Root>
+        <OddToggle key={odd.id} odd={odd} />
       ))}
     </div>
+  )
+}
+
+function OddToggle(props: { odd: { id: string; name: string; key: string; price: unknown } }) {
+  const hasOdd = useHasOdd()
+  const toggleOdd = useToggleOdd()
+  const upDown = useUpDown(Number(props.odd.price))
+
+  return (
+    <Toggle.Root
+      suppressHydrationWarning
+      className={cn(
+        'group hover:bg-primary/5 hover:border-primary/20 shadow-primary/60 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-1 flex-col items-center justify-center gap-1 rounded-lg border border-white/5 bg-black/20 transition-all',
+        'data-[state=on]:shadow-[0_0_12px]',
+        upDown === 'up' && 'animate-odds-flash-up',
+        upDown === 'down' && 'animate-odds-flash-down'
+      )}
+      pressed={hasOdd(props.odd.id)}
+      onPressedChange={() => toggleOdd(props.odd.id)}
+    >
+      <span className='group-data-[state=on]:text-foreground text-shadow-foreground text-secondary text-xs group-data-[state=on]:text-shadow-[0_0_8px]'>
+        {props.odd.name.length > 12 ? (
+          <span className='capitalize'>{props.odd.key}</span>
+        ) : (
+          props.odd.name
+        )}
+      </span>
+      <span className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground flex items-center gap-1 text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'>
+        {upDown === 'up' && <TrendingUpIcon className='text-primary size-3' />}
+        {upDown === 'down' && <TrendingUpIcon className='size-3 rotate-180 text-red-400' />}
+        <span suppressHydrationWarning>{Number(props.odd.price).toFixed(2)}</span>
+      </span>
+    </Toggle.Root>
   )
 }
 

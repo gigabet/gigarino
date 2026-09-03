@@ -132,3 +132,20 @@ export function isAuthError(error: unknown): boolean {
   const message = error instanceof Error ? error.message : String(error)
   return /logg|auth|401|token|expired/i.test(message)
 }
+
+export function stringToHue(input: string): number {
+  let hash = 0
+  for (let i = 0; i < input.length; i++) {
+    hash = input.charCodeAt(i) + ((hash << 5) - hash)
+  }
+  return Math.abs(hash) % 360
+}
+
+export function initials(name: string): string {
+  const parts = name
+    .trim()
+    .replace(/[()0-9]/g, '')
+    .split(/\s+/)
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+}

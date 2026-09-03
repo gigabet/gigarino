@@ -8,8 +8,9 @@ import type { Tournament$key } from '@/app/sport/[[...slug]]/__generated__/Tourn
 import type { TournamentEventList$key } from '@/app/sport/[[...slug]]/__generated__/TournamentEventList.graphql'
 import { ListViewMarketDropdowns } from '@/app/sport/[[...slug]]/list-view-markets'
 import PrematchEvent, { PrematchEventSkeleton } from '@/app/sport/[[...slug]]/prematch-event'
-import { SportIcon } from '@/components/sport-icon'
+import { SportIcon, SportIconBadge } from '@/components/sport-icon'
 import { Skeleton } from '@/components/ui/skeleton'
+import { getSportTheme } from '@/lib/sport-theme'
 
 export default function Tournament(props: { queryRef: Tournament$key }) {
   const [data, refetch] = useRefetchableFragment(
@@ -75,11 +76,16 @@ export default function Tournament(props: { queryRef: Tournament$key }) {
       </section>
     )
 
+  const theme = getSportTheme(data.sport.key)
   return (
     <section>
-      <div className='text-secondary mb-4 flex items-end gap-4 border-b py-2 text-sm'>
+      <div className='text-secondary relative mb-4 flex items-end gap-4 border-b border-white/5 py-2 text-sm'>
+        <span
+          className='pointer-events-none absolute inset-x-0 -bottom-px h-px opacity-70'
+          style={{ background: `linear-gradient(90deg, ${theme.primary}, transparent 65%)` }}
+        />
         <h2 className='flex w-34 shrink-0 items-center gap-2 overflow-hidden sm:w-44 lg:w-90 lg:flex-none'>
-          <SportIcon sport={data.sport.key} className='size-4.5 shrink-0' />
+          <SportIconBadge sport={data.sport.key} size='sm' />
           <ReactCountryFlag
             svg
             countryCode={data.category.countryCode ?? 'UN'}

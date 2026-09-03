@@ -30,7 +30,7 @@ import SidebarTournamentsLoadNode, {
   type SidebarTournamentsLoad,
 } from '@/app/sport/__generated__/SidebarTournamentsLoad.graphql'
 import SidebarSearch from '@/app/sport/sidebar-search'
-import { SportIcon } from '@/components/sport-icon'
+import { SportIcon, SportIconBadge } from '@/components/sport-icon'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Field, FieldGroup } from '@/components/ui/field'
 import { Label } from '@/components/ui/label'
@@ -47,6 +47,15 @@ const sportOrder = [
   'ebasketball',
   'e-ice-hockey',
 ]
+
+function HotDot() {
+  return (
+    <span className='relative ml-1 inline-flex size-1.5'>
+      <span className='animate-pulse-ring bg-primary/70 absolute inline-flex size-full rounded-full' />
+      <span className='bg-primary relative inline-flex size-1.5 rounded-full' />
+    </span>
+  )
+}
 
 export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayoutQuery> }) {
   const preloaded = usePreloadedQuery<PrematchLayoutQuery>(PrematchLayoutQueryNode, props.queryRef)
@@ -88,9 +97,9 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
           <Link
             href='/sport'
             prefetch
-            className='bg-dark-300 flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-xs whitespace-nowrap hover:bg-white/5'
+            className='bg-dark-300 sport-texture flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-xs whitespace-nowrap transition-colors hover:bg-white/5'
           >
-            <SportIcon sport='highlights' className='size-4' />
+            <SportIcon sport='highlights' colored className='size-4' />
             Highlights
           </Link>
           {filteredSports.map(sport => (
@@ -102,11 +111,11 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
               trigger={
                 <button
                   type='button'
-                  className='bg-dark-300 flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-xs whitespace-nowrap hover:bg-white/5'
+                  className='bg-dark-300 sport-texture flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-xs whitespace-nowrap transition-colors hover:bg-white/5'
                 >
-                  <SportIcon sport={sport.key} className='size-4' />
+                  <SportIcon sport={sport.key} colored className='size-4' />
                   {sport.name}
-                  <span className='text-secondary'>{sport.eventCount}</span>
+                  <span className='text-secondary flex items-center'>{sport.eventCount}</span>
                 </button>
               }
             />
@@ -132,9 +141,9 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
           <hr className='w-8 border-white/7' />
           <Link
             href='/sport'
-            className='text-secondary hover:bg-dark-300 hover:text-foreground flex size-9 items-center justify-center rounded-full transition-colors'
+            className='text-secondary hover:bg-dark-300 hover:text-foreground flex size-9 items-center justify-center rounded-full transition-all hover:scale-110'
           >
-            <SportIcon sport='highlights' className='size-5' />
+            <SportIcon sport='highlights' colored className='size-5' />
           </Link>
           {filteredSports.map(sport => (
             <SportSubmenu
@@ -145,9 +154,9 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
               trigger={
                 <button
                   type='button'
-                  className='text-secondary hover:bg-dark-300 hover:text-foreground flex size-9 items-center justify-center rounded-full transition-colors'
+                  className='text-secondary hover:bg-dark-300 hover:text-foreground flex size-9 items-center justify-center rounded-full transition-all hover:scale-110'
                 >
-                  <SportIcon sport={sport.key} className='size-5' />
+                  <SportIcon sport={sport.key} colored className='size-5' />
                 </button>
               }
             />
@@ -274,15 +283,17 @@ function FullSidebarContent(props: {
         collapsible
         className='flex flex-col gap-2'
       >
-        <div className='bg-dark-200 overflow-hidden rounded-xl'>
+        <div className='bg-dark-200 sport-texture overflow-hidden rounded-xl'>
           <Link
             href='/sport'
-            className='flex w-full items-center gap-2 px-4 py-3 hover:bg-white/4 data-[state=open]:bg-white/4'
+            className='group flex w-full items-center gap-2 px-4 py-3 transition-colors hover:bg-white/4 data-[state=open]:bg-white/4'
             prefetch={true}
           >
-            <SportIcon sport='highlights' className='size-5' />{' '}
+            <SportIconBadge sport='highlights' size='sm' />
             <span className='mr-auto text-sm'>Highlights</span>
-            <span className='text-secondary text-xs'>{props.topTournamentsEventCount}</span>
+            <span className='text-secondary flex items-center text-xs'>
+              {props.topTournamentsEventCount}
+            </span>
           </Link>
         </div>
         {props.filteredSports.map(sport => (
@@ -324,17 +335,17 @@ function Sport(props: { sport: SidebarSport$key }) {
       data-slot='accordion-item'
       key={data.key}
       value={data.key}
-      className='bg-dark-200 overflow-hidden rounded-xl'
+      className='bg-dark-200 sport-texture overflow-hidden rounded-xl'
     >
       <Accordion.Trigger
         data-slot='accordion-trigger'
-        className='flex w-full items-center gap-2 px-4 py-3 hover:bg-white/4 data-[state=open]:bg-white/4'
+        className='group flex w-full items-center gap-2 px-4 py-3 transition-colors hover:bg-white/4 data-[state=open]:bg-white/4'
         onFocus={() => loadQuery({ key: data.key })}
         onMouseDown={() => loadQuery({ key: data.key })}
       >
-        <SportIcon sport={data.key} className='size-5' />{' '}
+        <SportIconBadge sport={data.key} size='sm' />
         <span className='mr-auto text-sm'>{data.name}</span>
-        <span className='text-secondary text-xs'>{data.eventCount}</span>
+        <span className='text-secondary flex items-center text-xs'>{data.eventCount}</span>
       </Accordion.Trigger>
       <Accordion.Content
         data-slot='accordion-content'
@@ -369,8 +380,14 @@ function CountryList(props: { queryRef: PreloadedQuery<SidebarSportDetails> }) {
     <Accordion.Root type='multiple' className='space-y-0.5'>
       {data.categories
         .filter(c => c.eventCount > 0)
-        .map(country => (
-          <CountryItem key={country.key} country={country} />
+        .map((country, i) => (
+          <div
+            key={country.key}
+            className='animate-fade-in'
+            style={{ animationDelay: `${Math.min(i, 8) * 40}ms`, animationFillMode: 'backwards' }}
+          >
+            <CountryItem country={country} />
+          </div>
         ))}
     </Accordion.Root>
   )
@@ -417,7 +434,7 @@ function CountryItem(props: { country: SidebarCountryItem$key }) {
         <ReactCountryFlag
           svg
           countryCode={data.countryCode ?? 'UN'}
-          className='w-5 rounded-[3px]'
+          className='w-5 rounded-[3px] ring-1 ring-white/0 transition-all hover:ring-white/40'
           style={{ width: undefined, height: undefined }}
         />{' '}
         <span className='mr-auto text-[0.8rem] font-normal'>{data.name}</span>
@@ -501,12 +518,16 @@ function Tournaments(props: { category: SidebarTournaments$key }) {
       </svg>
 
       <FieldGroup className='gap-0 py-0.5'>
-        {validTourns.map(t => (
+        {validTourns.map((t, i) => (
           <Field
             key={t.key}
             orientation='horizontal'
-            style={{ height: ROW_HEIGHT }}
-            className='items-center'
+            style={{
+              height: ROW_HEIGHT,
+              animationDelay: `${Math.min(i, 8) * 40}ms`,
+              animationFillMode: 'backwards',
+            }}
+            className='animate-fade-in items-center'
           >
             <Checkbox
               id={t.key}

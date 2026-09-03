@@ -42,21 +42,19 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
       .filter(t => !!t)
       .map(t => ({
         label: t.name,
-        icon: (
-          <SportIcon sport={t.sport.key} className='group-data-active:text-accent-foreground' />
-        ),
+        icon: <SportIcon sport={t.sport.key} colored className='size-4' />,
         href: {
           pathname,
           query: { tournaments: `${t.sport.key}:${t.key}` },
         },
         key: `${t.sport.key}:${t.key}`,
       })),
-    ...sample.map(s => ({ ...s, icon: <s.icon />, key: null })),
+    ...sample.map(s => ({ ...s, icon: <s.icon className='size-4' />, key: null })),
   ]
 
   return (
     <ScrollContainer className='w-full cursor-grab scrollbar-none overflow-x-auto' vertical={false}>
-      <div className='flex gap-4'>
+      <div className='flex gap-2'>
         {shortcuts.map(
           e =>
             !!e && (
@@ -64,7 +62,7 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
                 href={e.href}
                 key={e.label}
                 data-active={selected.some(s => decodeURIComponent(s) === e?.key) || null}
-                className='bg-dark-300 data-active:bg-primary data-active:text-primary-foreground shadow-primary/40 hover:bg-dark-400 inline-flex h-10 shrink-0 items-center gap-2 rounded-full px-3.5 whitespace-nowrap text-white/70 transition hover:text-white data-inactive:shadow-[0_0_4px,0_0_12px,0_0_20px]'
+                className='group/link bg-dark data-active:border-primary/70 data-active:bg-primary-500/2 data-active:shadow-primary/30 inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-white/5 px-3.5 whitespace-nowrap text-white/60 transition-colors text-shadow-current hover:text-white data-active:text-white data-active:shadow-[inset_0_0_10px_-2px] data-active:text-shadow-[0_0_8px]'
               >
                 {e.icon}
                 <span className='text-xs font-light tracking-wide'>{e.label}</span>
@@ -79,7 +77,7 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
 export function ShortcutRowSkeleton() {
   return (
     <div className='w-full scrollbar-none overflow-x-auto'>
-      <div className='flex gap-4'>
+      <div className='flex gap-2'>
         {Array(9)
           .fill(9)
           .map((_, i) => (
