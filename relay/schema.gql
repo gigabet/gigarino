@@ -389,6 +389,11 @@ type FeaturedBetSelection {
   False when the selection is suspended, closed, or gone.
   """
   available: Boolean!
+
+  """
+  The full event this selection belongs to — spread your event/markets fragment here to show its odds.
+  """
+  event: PrematchEvent
   eventId: ID
   eventName: String
   marketName: String
