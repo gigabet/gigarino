@@ -12,6 +12,7 @@ import type { ShortcutRow$key } from '@/app/sport/[[...slug]]/__generated__/Shor
 import { useTournamentKeysFromUrl } from '@/app/sport/[[...slug]]/tournament-list'
 import { SportIcon } from '@/components/sport-icon'
 import { Skeleton } from '@/components/ui/skeleton'
+import { getSportTheme } from '@/lib/sport-theme'
 
 const sample = [{ label: 'In Play', icon: PiMonitorPlayFill, href: '/live' }]
 
@@ -48,28 +49,44 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
           query: { tournaments: `${t.sport.key}:${t.key}` },
         },
         key: `${t.sport.key}:${t.key}`,
+        sportKey: t.sport.key,
       })),
-    ...sample.map(s => ({ ...s, icon: <s.icon className='size-4' />, key: null })),
+    ...sample.map(s => ({ ...s, icon: <s.icon className='size-4' />, key: null, sportKey: null })),
   ]
 
   return (
     <ScrollContainer className='w-full cursor-grab scrollbar-none overflow-x-auto' vertical={false}>
       <div className='flex gap-2'>
-        {shortcuts.map(
-          e =>
+        {shortcuts.map(e => {
+          // Create a style object with the sport theme
+          const theme = e.sportKey ? getSportTheme(e.sportKey) : null
+          const isActive = selected.some(s => decodeURIComponent(s) === e?.key)
+
+          return (
             !!e && (
               <Link
                 href={e.href}
                 key={e.label}
                 scroll={false}
-                data-active={selected.some(s => decodeURIComponent(s) === e?.key) || null}
-                className='group/link bg-dark data-active:border-primary/70 data-active:bg-primary-500/2 data-active:shadow-primary/30 inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-white/5 px-3.5 whitespace-nowrap text-white/60 transition-colors text-shadow-current hover:text-white data-active:text-white data-active:shadow-[inset_0_0_10px_-2px] data-active:text-shadow-[0_0_8px]'
+                data-active={isActive || null}
+                className='group/link bg-dark inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-white/5 px-3.5 whitespace-nowrap text-white/60 transition-colors text-shadow-current hover:text-white data-active:text-white data-active:text-shadow-[0_0_8px]'
+                style={
+                  isActive && theme
+                    ? ({
+                        '--active-border': theme.primary,
+                        '--active-shadow': theme.glow,
+                        borderColor: theme.primary,
+                        boxShadow: `inset 0 0 10px -2px ${theme.primary}`,
+                      } as React.CSSProperties)
+                    : undefined
+                }
               >
                 {e.icon}
                 <span className='text-xs font-light tracking-wide'>{e.label}</span>
               </Link>
             )
-        )}
+          )
+        })}
       </div>
     </ScrollContainer>
   )
