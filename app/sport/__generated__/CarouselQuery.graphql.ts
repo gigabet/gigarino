@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<27200ab55b904f60e6cb21b23f1862f7>>
+ * @generated SignedSource<<e964721ccc981201d30e05b0baee19b4>>
  * @lightSyntaxTransform
  */
 
@@ -8,54 +8,14 @@
 // @ts-nocheck
 
 import { ConcreteRequest } from 'relay-runtime';
-export type EventStatus = "ABANDONED" | "CANCELLED" | "ENDED" | "LIVE" | "POSTPONED" | "SCHEDULED" | "%future added value";
+import { FragmentRefs } from "relay-runtime";
 export type FeaturedBetKind = "BET_BOOST" | "COMBO_OF_WEEK" | "FEATURED_GAME" | "%future added value";
-export type OutcomeStatus = "OPEN" | "REMOVED" | "SUSPENDED" | "%future added value";
 export type CarouselQuery$variables = Record<PropertyKey, never>;
 export type CarouselQuery$data = {
   readonly featuredBets: ReadonlyArray<{
-    readonly boostedPrice: any | null | undefined;
-    readonly combinedPrice: any | null | undefined;
     readonly id: string;
     readonly kind: FeaturedBetKind;
-    readonly maxStake: any | null | undefined;
-    readonly selections: ReadonlyArray<{
-      readonly available: boolean;
-      readonly event: {
-        readonly awayCompetitor: string;
-        readonly homeCompetitor: string;
-        readonly id: string;
-        readonly markets: ReadonlyArray<{
-          readonly id: string;
-          readonly kind: string;
-          readonly name: string;
-          readonly outcomes: ReadonlyArray<{
-            readonly id: string;
-            readonly index: number;
-            readonly key: string;
-            readonly name: string;
-            readonly price: any;
-            readonly status: OutcomeStatus;
-          }>;
-        }>;
-        readonly sport: {
-          readonly key: string;
-        };
-        readonly startTime: string;
-        readonly status: EventStatus;
-        readonly tournament: {
-          readonly name: string;
-        };
-      } | null | undefined;
-      readonly eventName: string | null | undefined;
-      readonly marketName: string | null | undefined;
-      readonly outcomeId: string;
-      readonly outcomeName: string | null | undefined;
-      readonly price: any | null | undefined;
-    }>;
-    readonly subtitle: string | null | undefined;
-    readonly title: string;
-    readonly validTo: any | null | undefined;
+    readonly " $fragmentSpreads": FragmentRefs<"BetBoostCard_bet" | "ComboOfWeekCard_bet" | "FeaturedGameCard_bet">;
   }>;
 };
 export type CarouselQuery = {
@@ -82,172 +42,29 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "title",
+  "name": "price",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "subtitle",
+  "name": "status",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "combinedPrice",
+  "name": "key",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "boostedPrice",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "maxStake",
-  "storageKey": null
-},
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "validTo",
-  "storageKey": null
-},
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "outcomeId",
-  "storageKey": null
-},
-v9 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "eventName",
-  "storageKey": null
-},
-v10 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "marketName",
-  "storageKey": null
-},
-v11 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "outcomeName",
-  "storageKey": null
-},
-v12 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "price",
-  "storageKey": null
-},
-v13 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "available",
-  "storageKey": null
-},
-v14 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "homeCompetitor",
-  "storageKey": null
-},
-v15 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "awayCompetitor",
-  "storageKey": null
-},
-v16 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "startTime",
-  "storageKey": null
-},
-v17 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "status",
-  "storageKey": null
-},
-v18 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "key",
-  "storageKey": null
-},
-v19 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "name",
   "storageKey": null
-},
-v20 = {
-  "alias": null,
-  "args": [
-    {
-      "kind": "Literal",
-      "name": "groups",
-      "value": [
-        "MAIN"
-      ]
-    }
-  ],
-  "concreteType": "Market",
-  "kind": "LinkedField",
-  "name": "markets",
-  "plural": true,
-  "selections": [
-    (v0/*:: as any*/),
-    (v1/*:: as any*/),
-    (v19/*:: as any*/),
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "Outcome",
-      "kind": "LinkedField",
-      "name": "outcomes",
-      "plural": true,
-      "selections": [
-        (v0/*:: as any*/),
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "index",
-          "storageKey": null
-        },
-        (v19/*:: as any*/),
-        (v18/*:: as any*/),
-        (v12/*:: as any*/),
-        (v17/*:: as any*/)
-      ],
-      "storageKey": null
-    }
-  ],
-  "storageKey": "markets(groups:[\"MAIN\"])"
 };
 return {
   "fragment": {
@@ -266,69 +83,20 @@ return {
         "selections": [
           (v0/*:: as any*/),
           (v1/*:: as any*/),
-          (v2/*:: as any*/),
-          (v3/*:: as any*/),
-          (v4/*:: as any*/),
-          (v5/*:: as any*/),
-          (v6/*:: as any*/),
-          (v7/*:: as any*/),
           {
-            "alias": null,
             "args": null,
-            "concreteType": "FeaturedBetSelection",
-            "kind": "LinkedField",
-            "name": "selections",
-            "plural": true,
-            "selections": [
-              (v8/*:: as any*/),
-              (v9/*:: as any*/),
-              (v10/*:: as any*/),
-              (v11/*:: as any*/),
-              (v12/*:: as any*/),
-              (v13/*:: as any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "PrematchEvent",
-                "kind": "LinkedField",
-                "name": "event",
-                "plural": false,
-                "selections": [
-                  (v0/*:: as any*/),
-                  (v14/*:: as any*/),
-                  (v15/*:: as any*/),
-                  (v16/*:: as any*/),
-                  (v17/*:: as any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Sport",
-                    "kind": "LinkedField",
-                    "name": "sport",
-                    "plural": false,
-                    "selections": [
-                      (v18/*:: as any*/)
-                    ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Tournament",
-                    "kind": "LinkedField",
-                    "name": "tournament",
-                    "plural": false,
-                    "selections": [
-                      (v19/*:: as any*/)
-                    ],
-                    "storageKey": null
-                  },
-                  (v20/*:: as any*/)
-                ],
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
+            "kind": "FragmentSpread",
+            "name": "BetBoostCard_bet"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "ComboOfWeekCard_bet"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "FeaturedGameCard_bet"
           }
         ],
         "storageKey": null
@@ -353,12 +121,34 @@ return {
         "selections": [
           (v0/*:: as any*/),
           (v1/*:: as any*/),
-          (v2/*:: as any*/),
-          (v3/*:: as any*/),
-          (v4/*:: as any*/),
-          (v5/*:: as any*/),
-          (v6/*:: as any*/),
-          (v7/*:: as any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "boostedPrice",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "combinedPrice",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "maxStake",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "validTo",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -367,12 +157,42 @@ return {
             "name": "selections",
             "plural": true,
             "selections": [
-              (v8/*:: as any*/),
-              (v9/*:: as any*/),
-              (v10/*:: as any*/),
-              (v11/*:: as any*/),
-              (v12/*:: as any*/),
-              (v13/*:: as any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "outcomeId",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "outcomeName",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "marketName",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "eventName",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "available",
+                "storageKey": null
+              },
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -382,10 +202,28 @@ return {
                 "plural": false,
                 "selections": [
                   (v0/*:: as any*/),
-                  (v14/*:: as any*/),
-                  (v15/*:: as any*/),
-                  (v16/*:: as any*/),
-                  (v17/*:: as any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "homeCompetitor",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "awayCompetitor",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "startTime",
+                    "storageKey": null
+                  },
+                  (v3/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -394,7 +232,7 @@ return {
                     "name": "sport",
                     "plural": false,
                     "selections": [
-                      (v18/*:: as any*/),
+                      (v4/*:: as any*/),
                       (v0/*:: as any*/)
                     ],
                     "storageKey": null
@@ -407,16 +245,73 @@ return {
                     "name": "tournament",
                     "plural": false,
                     "selections": [
-                      (v19/*:: as any*/),
+                      (v5/*:: as any*/),
                       (v0/*:: as any*/)
                     ],
                     "storageKey": null
                   },
-                  (v20/*:: as any*/)
+                  {
+                    "alias": null,
+                    "args": [
+                      {
+                        "kind": "Literal",
+                        "name": "groups",
+                        "value": [
+                          "MAIN"
+                        ]
+                      }
+                    ],
+                    "concreteType": "Market",
+                    "kind": "LinkedField",
+                    "name": "markets",
+                    "plural": true,
+                    "selections": [
+                      (v0/*:: as any*/),
+                      (v1/*:: as any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Outcome",
+                        "kind": "LinkedField",
+                        "name": "outcomes",
+                        "plural": true,
+                        "selections": [
+                          (v0/*:: as any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "index",
+                            "storageKey": null
+                          },
+                          (v5/*:: as any*/),
+                          (v4/*:: as any*/),
+                          (v2/*:: as any*/),
+                          (v3/*:: as any*/)
+                        ],
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": "markets(groups:[\"MAIN\"])"
+                  }
                 ],
                 "storageKey": null
               }
             ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "title",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "subtitle",
             "storageKey": null
           }
         ],
@@ -425,16 +320,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "31d06fece68f7dd9c4d2a75358f5c3fb",
+    "cacheID": "318f72470f2e999f211cc1deb14e83d3",
     "id": null,
     "metadata": {},
     "name": "CarouselQuery",
     "operationKind": "query",
-    "text": "query CarouselQuery {\n  featuredBets {\n    id\n    kind\n    title\n    subtitle\n    combinedPrice\n    boostedPrice\n    maxStake\n    validTo\n    selections {\n      outcomeId\n      eventName\n      marketName\n      outcomeName\n      price\n      available\n      event {\n        id\n        homeCompetitor\n        awayCompetitor\n        startTime\n        status\n        sport {\n          key\n          id\n        }\n        tournament {\n          name\n          id\n        }\n        markets(groups: [MAIN]) {\n          id\n          kind\n          name\n          outcomes {\n            id\n            index\n            name\n            key\n            price\n            status\n          }\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query CarouselQuery {\n  featuredBets {\n    id\n    kind\n    ...BetBoostCard_bet\n    ...ComboOfWeekCard_bet\n    ...FeaturedGameCard_bet\n  }\n}\n\nfragment BetBoostCard_bet on FeaturedBet {\n  boostedPrice\n  combinedPrice\n  maxStake\n  validTo\n  selections {\n    outcomeId\n    outcomeName\n    marketName\n    eventName\n    available\n  }\n}\n\nfragment ComboOfWeekCard_bet on FeaturedBet {\n  title\n  subtitle\n  combinedPrice\n  validTo\n  selections {\n    outcomeId\n    outcomeName\n    marketName\n    eventName\n    price\n    available\n  }\n}\n\nfragment FeaturedGameCard_bet on FeaturedBet {\n  validTo\n  selections {\n    event {\n      id\n      homeCompetitor\n      awayCompetitor\n      startTime\n      status\n      sport {\n        key\n        id\n      }\n      tournament {\n        name\n        id\n      }\n      markets(groups: [MAIN]) {\n        id\n        kind\n        outcomes {\n          id\n          index\n          name\n          key\n          price\n          status\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "167947f187501d146cb7370dd35f1690";
+(node as any).hash = "a0ba35788ddd51ea751a8ed4680100fe";
 
 export default node;
