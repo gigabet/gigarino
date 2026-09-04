@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f41e89e27857212f432462b98c641ec8>>
+ * @generated SignedSource<<8dc9b2e46a70912b842dea9e4075a5b1>>
  * @lightSyntaxTransform
  */
 
@@ -15,7 +15,7 @@ export type CarouselQuery$data = {
   readonly featuredBets: ReadonlyArray<{
     readonly id: string;
     readonly kind: FeaturedBetKind;
-    readonly " $fragmentSpreads": FragmentRefs<"BetBoostCard_bet" | "ComboOfWeekCard_bet" | "FeaturedGameCard_bet">;
+    readonly " $fragmentSpreads": FragmentRefs<"BetBoostCard" | "ComboOfWeekCard" | "FeaturedGameCard">;
   }>;
 };
 export type CarouselQuery = {
@@ -86,17 +86,17 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "BetBoostCard_bet"
+            "name": "BetBoostCard"
           },
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "ComboOfWeekCard_bet"
+            "name": "ComboOfWeekCard"
           },
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "FeaturedGameCard_bet"
+            "name": "FeaturedGameCard"
           }
         ],
         "storageKey": null
@@ -313,16 +313,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "8a5bd8a42959d07a2924e2616cc1f1d9",
+    "cacheID": "00319adf6f24361e51041e80ad1f927c",
     "id": null,
     "metadata": {},
     "name": "CarouselQuery",
     "operationKind": "query",
-    "text": "query CarouselQuery {\n  featuredBets {\n    id\n    kind\n    ...BetBoostCard_bet\n    ...ComboOfWeekCard_bet\n    ...FeaturedGameCard_bet\n  }\n}\n\nfragment BetBoostCard_bet on FeaturedBet {\n  boostedPrice\n  combinedPrice\n  maxStake\n  validTo\n  selections {\n    outcomeId\n    outcomeName\n    marketName\n    eventName\n    available\n  }\n}\n\nfragment ComboOfWeekCard_bet on FeaturedBet {\n  title\n  combinedPrice\n  validTo\n  selections {\n    outcomeId\n    outcomeName\n    marketName\n    eventName\n    price\n    available\n  }\n}\n\nfragment FeaturedGameCard_bet on FeaturedBet {\n  validTo\n  selections {\n    event {\n      id\n      homeCompetitor\n      awayCompetitor\n      startTime\n      status\n      sport {\n        key\n        id\n      }\n      tournament {\n        name\n        id\n      }\n      markets(groups: [MAIN]) {\n        id\n        kind\n        outcomes {\n          id\n          index\n          name\n          key\n          price\n          status\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query CarouselQuery {\n  featuredBets {\n    id\n    kind\n    ...BetBoostCard\n    ...ComboOfWeekCard\n    ...FeaturedGameCard\n  }\n}\n\nfragment BetBoostCard on FeaturedBet {\n  boostedPrice\n  combinedPrice\n  maxStake\n  validTo\n  selections {\n    outcomeId\n    outcomeName\n    marketName\n    eventName\n    available\n  }\n}\n\nfragment ComboOfWeekCard on FeaturedBet {\n  title\n  combinedPrice\n  validTo\n  selections {\n    outcomeId\n    outcomeName\n    marketName\n    eventName\n    price\n    available\n  }\n}\n\nfragment FeaturedGameCard on FeaturedBet {\n  validTo\n  selections {\n    event {\n      id\n      homeCompetitor\n      awayCompetitor\n      startTime\n      status\n      sport {\n        key\n        id\n      }\n      tournament {\n        name\n        id\n      }\n      markets(groups: [MAIN]) {\n        id\n        kind\n        outcomes {\n          id\n          index\n          name\n          key\n          price\n          status\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "a0ba35788ddd51ea751a8ed4680100fe";
+(node as any).hash = "c8e42d57945bb37f472f7bd6f6b060f6";
 
 export default node;

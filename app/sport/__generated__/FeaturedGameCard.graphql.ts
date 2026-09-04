@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7e323e420cd2204954b155cfaa52e0db>>
+ * @generated SignedSource<<7f9374d07b38bae2710115b1a0fd19b3>>
  * @lightSyntaxTransform
  */
 
@@ -11,7 +11,7 @@ import { ReaderFragment } from 'relay-runtime';
 export type EventStatus = "ABANDONED" | "CANCELLED" | "ENDED" | "LIVE" | "POSTPONED" | "SCHEDULED" | "%future added value";
 export type OutcomeStatus = "OPEN" | "REMOVED" | "SUSPENDED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type FeaturedGameCard_bet$data = {
+export type FeaturedGameCard$data = {
   readonly selections: ReadonlyArray<{
     readonly event: {
       readonly awayCompetitor: string;
@@ -40,11 +40,11 @@ export type FeaturedGameCard_bet$data = {
     } | null | undefined;
   }>;
   readonly validTo: any | null | undefined;
-  readonly " $fragmentType": "FeaturedGameCard_bet";
+  readonly " $fragmentType": "FeaturedGameCard";
 };
-export type FeaturedGameCard_bet$key = {
-  readonly " $data"?: FeaturedGameCard_bet$data;
-  readonly " $fragmentSpreads": FragmentRefs<"FeaturedGameCard_bet">;
+export type FeaturedGameCard$key = {
+  readonly " $data"?: FeaturedGameCard$data;
+  readonly " $fragmentSpreads": FragmentRefs<"FeaturedGameCard">;
 };
 
 const node: ReaderFragment = (function(){
@@ -80,7 +80,7 @@ return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "FeaturedGameCard_bet",
+  "name": "FeaturedGameCard",
   "selections": [
     {
       "alias": null,
@@ -220,6 +220,6 @@ return {
 };
 })();
 
-(node as any).hash = "50d9b91d90db3ddd36fc1244b70280dd";
+(node as any).hash = "b0890316fa7a9266af0d85bca5658393";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fba10f106cf2b06f7a5600b35a03364e>>
+ * @generated SignedSource<<03e6746d1eaa1594cbe76eb7d9ed8bcb>>
  * @lightSyntaxTransform
  */
 
@@ -9,7 +9,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type BetBoostCard_bet$data = {
+export type BetBoostCard$data = {
   readonly boostedPrice: any | null | undefined;
   readonly combinedPrice: any | null | undefined;
   readonly maxStake: any | null | undefined;
@@ -21,18 +21,18 @@ export type BetBoostCard_bet$data = {
     readonly outcomeName: string | null | undefined;
   }>;
   readonly validTo: any | null | undefined;
-  readonly " $fragmentType": "BetBoostCard_bet";
+  readonly " $fragmentType": "BetBoostCard";
 };
-export type BetBoostCard_bet$key = {
-  readonly " $data"?: BetBoostCard_bet$data;
-  readonly " $fragmentSpreads": FragmentRefs<"BetBoostCard_bet">;
+export type BetBoostCard$key = {
+  readonly " $data"?: BetBoostCard$data;
+  readonly " $fragmentSpreads": FragmentRefs<"BetBoostCard">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "BetBoostCard_bet",
+  "name": "BetBoostCard",
   "selections": [
     {
       "alias": null,
@@ -113,6 +113,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "a8dcb1f2c6c5646dfae810af04d2b8f6";
+(node as any).hash = "274a79a15df6ebe5d1c139ffe3153515";
 
 export default node;

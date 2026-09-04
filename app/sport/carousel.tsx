@@ -18,32 +18,19 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { GiFlame } from 'react-icons/gi'
 import { HiOutlineSparkles } from 'react-icons/hi2'
 import { graphql, useFragment, useLazyLoadQuery } from 'react-relay'
-import type { BetBoostCard_bet$key } from '@/app/sport/__generated__/BetBoostCard_bet.graphql'
+import type { BetBoostCard$key } from '@/app/sport/__generated__/BetBoostCard.graphql'
 import type {
   CarouselQuery,
   CarouselQuery$data,
 } from '@/app/sport/__generated__/CarouselQuery.graphql'
-import type { ComboOfWeekCard_bet$key } from '@/app/sport/__generated__/ComboOfWeekCard_bet.graphql'
-import type { FeaturedGameCard_bet$key } from '@/app/sport/__generated__/FeaturedGameCard_bet.graphql'
+import type { ComboOfWeekCard$key } from '@/app/sport/__generated__/ComboOfWeekCard.graphql'
+import type { FeaturedGameCard$key } from '@/app/sport/__generated__/FeaturedGameCard.graphql'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { SportIcon } from '@/components/sport-icon'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useHasOdd, useToggleOdd } from '@/context/betslip'
 import { useUpDown } from '@/context/hooks'
 import { cn, formatBalance, getRelativeDayLabel } from '@/lib/utils'
-
-/**
- * NOTE: three colocated fragments (one per card) instead of one flat
- * `featuredBets` selection. `FeaturedBet` isn't a per-kind GraphQL
- * union/interface (it's one concrete type with a `kind` enum), so a card
- * still receives the ref for all three fragments — each `useFragment` call
- * below just reads the subset of fields that card actually needs. Run
- * `pnpm relay` to (re)generate the artifacts these imports point at.
- *
- * All three cards share the same header treatment (stacked italic wordmark
- * + glowing accent icon) for family resemblance; everything below it is
- * built for what that specific promo needs to say.
- */
 
 const CARD_SIZE = 'h-72 w-72 sm:w-80'
 
@@ -68,9 +55,9 @@ function CarouselContent() {
         featuredBets {
           id
           kind
-          ...BetBoostCard_bet
-          ...ComboOfWeekCard_bet
-          ...FeaturedGameCard_bet
+          ...BetBoostCard
+          ...ComboOfWeekCard
+          ...FeaturedGameCard
         }
       }
     `,
@@ -148,10 +135,6 @@ function useEndsIn(validTo: string | null | undefined) {
     : null
 }
 
-/* -------------------------------------------------------------------------- */
-/* Shared header — the one thing all three cards keep in common.             */
-/* -------------------------------------------------------------------------- */
-
 function PromoWordmark(props: {
   top: string
   bottom: string
@@ -173,16 +156,10 @@ function PromoWordmark(props: {
   )
 }
 
-/* -------------------------------------------------------------------------- */
-/* Bet Boost — teams on one line (equal weight either side of "vs"), the     */
-/* market/outcome underneath, then the price story stacked plainly: small    */
-/* struck-through "was", big "boosted" right below it. No box, no mono font. */
-/* -------------------------------------------------------------------------- */
-
-function BetBoostCard(props: { bet: BetBoostCard_bet$key }) {
+function BetBoostCard(props: { bet: BetBoostCard$key }) {
   const data = useFragment(
     graphql`
-      fragment BetBoostCard_bet on FeaturedBet {
+      fragment BetBoostCard on FeaturedBet {
         boostedPrice
         combinedPrice
         maxStake
@@ -305,15 +282,10 @@ function BetBoostCard(props: { bet: BetBoostCard_bet$key }) {
   )
 }
 
-/* -------------------------------------------------------------------------- */
-/* Combo of the Week — trimmed further: single-line legs (no second line of  */
-/* market text), tighter padding throughout, no "Legs" counter.              */
-/* -------------------------------------------------------------------------- */
-
-function ComboOfWeekCard(props: { bet: ComboOfWeekCard_bet$key }) {
+function ComboOfWeekCard(props: { bet: ComboOfWeekCard$key }) {
   const data = useFragment(
     graphql`
-      fragment ComboOfWeekCard_bet on FeaturedBet {
+      fragment ComboOfWeekCard on FeaturedBet {
         title
         # subtitle
         combinedPrice
@@ -429,15 +401,10 @@ function ComboOfWeekCard(props: { bet: ComboOfWeekCard_bet$key }) {
   )
 }
 
-/* -------------------------------------------------------------------------- */
-/* Featured Game — back to the original stacked "Home / vs / Away" matchup;  */
-/* the "Full match odds" ghost link stays as-is (quiet, secondary to odds).  */
-/* -------------------------------------------------------------------------- */
-
-function FeaturedGameCard(props: { bet: FeaturedGameCard_bet$key }) {
+function FeaturedGameCard(props: { bet: FeaturedGameCard$key }) {
   const data = useFragment(
     graphql`
-      fragment FeaturedGameCard_bet on FeaturedBet {
+      fragment FeaturedGameCard on FeaturedBet {
         validTo
         selections {
           event {

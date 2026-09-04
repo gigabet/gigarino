@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0858c88b7126330be315fc9e48ea0abd>>
+ * @generated SignedSource<<2212462f1c991eed287c99029b083e83>>
  * @lightSyntaxTransform
  */
 
@@ -9,7 +9,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ComboOfWeekCard_bet$data = {
+export type ComboOfWeekCard$data = {
   readonly combinedPrice: any | null | undefined;
   readonly selections: ReadonlyArray<{
     readonly available: boolean;
@@ -21,18 +21,18 @@ export type ComboOfWeekCard_bet$data = {
   }>;
   readonly title: string;
   readonly validTo: any | null | undefined;
-  readonly " $fragmentType": "ComboOfWeekCard_bet";
+  readonly " $fragmentType": "ComboOfWeekCard";
 };
-export type ComboOfWeekCard_bet$key = {
-  readonly " $data"?: ComboOfWeekCard_bet$data;
-  readonly " $fragmentSpreads": FragmentRefs<"ComboOfWeekCard_bet">;
+export type ComboOfWeekCard$key = {
+  readonly " $data"?: ComboOfWeekCard$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ComboOfWeekCard">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "ComboOfWeekCard_bet",
+  "name": "ComboOfWeekCard",
   "selections": [
     {
       "alias": null,
@@ -113,6 +113,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "e5acfe5508cbb863d552c6a4296373fa";
+(node as any).hash = "91851a5062e550b8ba88270c825f0384";
 
 export default node;
