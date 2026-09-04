@@ -49,7 +49,7 @@ function EventSidebarContent(props: { eventId: string }) {
 
   if (!tournament) {
     return (
-      <div className='bg-dark-200 rounded-2xl border border-white/5 p-4 text-center text-xs text-white/40'>
+      <div className='bg-dark-200 hidden rounded-2xl border border-white/5 p-4 text-center text-xs text-white/40 xl:block'>
         No other events in this tournament right now.
       </div>
     )
@@ -85,7 +85,7 @@ function EventSidebarTournament(props: {
 
   if (tournament.events.edges.length === 0) {
     return (
-      <div className='bg-dark-200 rounded-2xl border border-white/5 p-4 text-center text-xs text-white/40'>
+      <div className='bg-dark-200 hidden rounded-2xl border border-white/5 p-4 text-center text-xs text-white/40 xl:block'>
         No other events in this tournament right now.
       </div>
     )
@@ -94,7 +94,7 @@ function EventSidebarTournament(props: {
   const events = tournament.events.edges.map(e => e.node)
 
   return (
-    <aside className='scrollbar-hide! scrollbar-thumb-dark-300 sticky top-26.25 flex max-h-[calc(100dvh-7rem)] w-full scrollbar-thin scrollbar-track-transparent flex-col gap-3 place-self-start overflow-y-auto'>
+    <aside className='scrollbar-hide! scrollbar-thumb-dark-300 sticky top-26.25 hidden max-h-[calc(100dvh-7rem)] w-full scrollbar-thin scrollbar-track-transparent flex-col gap-3 place-self-start overflow-y-auto xl:flex'>
       <div className='flex items-center gap-2 px-1'>
         <SportIconBadge sport={tournament.sport.key} size='sm' />
         <div className='min-w-0'>
@@ -249,7 +249,7 @@ function EventSidebarOdd(props: { outcome: EventSidebarOdd$key }) {
 
 export function EventSidebarSkeleton() {
   return (
-    <div className='sticky top-26.25 flex w-full flex-col gap-3'>
+    <div className='sticky top-26.25 hidden w-full flex-col gap-3 xl:flex'>
       <div className='flex items-center gap-2 px-1'>
         <Skeleton className='size-7 rounded-full' />
         <Skeleton className='h-4 w-32' />

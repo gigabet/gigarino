@@ -35,11 +35,6 @@ const betslipSubscription = graphql`
 
 export default function SportLayout({ children }: React.PropsWithChildren) {
   const pathname = usePathname()
-  // Single-event routes get their own sibling-events sidebar; the tournament
-  // filter sidebar's search/checkbox state writes `?tournaments=`/`?q=` back
-  // onto `pathname` via router.replace, which has no consumer here and used
-  // to silently no-op (or fight the event page's own params) instead of
-  // filtering anything.
   const eventId = useMemo(() => {
     const match = pathname.match(/^\/sport\/event\/([^/]+)/)
     return match ? decodeURIComponent(match[1]) : null
@@ -73,10 +68,8 @@ export default function SportLayout({ children }: React.PropsWithChildren) {
     return () => clearInterval(id)
   }, [environment])
 
-  // The subscription returns the full BetslipQuote immediately on init, so
-  // there's no separate preloaded query — this is the only fetch driving
-  // the betslip. The server rejects an empty `items` array, so we must not
-  // initiate (or must tear down) the subscription whenever the slip is empty.
+  // subscription returns full BetslipQuote immediately on init,
+  // so there's no separate preloaded query
   const betslipInput = useAtomValue(betslipInputAtom)
   const [betslip, setBetslip] = useState<BetslipSubscription$data['betslipUpdated'] | null>(null)
 
@@ -103,7 +96,10 @@ export default function SportLayout({ children }: React.PropsWithChildren) {
         // md and below: single column (sidebar renders as a sticky topbar, out of grid flow)
         // lg: narrow collapsible strip + content
         // xl+: full sidebar + content + betslip aside
-        'grid-cols-1 lg:grid-cols-[4rem_minmax(auto,1fr)] xl:grid-cols-[16rem_minmax(auto,1fr)_20rem]'
+        'grid-cols-1',
+        eventId
+          ? 'xl:grid-cols-[16rem_minmax(auto,1fr)_20rem]'
+          : 'lg:grid-cols-[4rem_minmax(auto,1fr)] xl:grid-cols-[16rem_minmax(auto,1fr)_20rem]'
       )}
     >
       <Suspense fallback={eventId ? <EventSidebarSkeleton /> : <SidebarSkeleton />}>
