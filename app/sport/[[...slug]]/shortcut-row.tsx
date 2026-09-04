@@ -1,8 +1,6 @@
 'use client'
 
-import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { PiMonitorPlayFill } from 'react-icons/pi'
 import ScrollContainer from 'react-indiana-drag-scroll'
 import { type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
 import { graphql } from 'relay-runtime'
@@ -12,9 +10,8 @@ import type { ShortcutRow$key } from '@/app/sport/[[...slug]]/__generated__/Shor
 import { useTournamentKeysFromUrl } from '@/app/sport/[[...slug]]/tournament-list'
 import { SportIcon } from '@/components/sport-icon'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useSelectedTournaments } from '@/context/hooks'
 import { getSportTheme } from '@/lib/sport-theme'
-
-const sample = [{ label: 'In Play', icon: PiMonitorPlayFill, href: '/live' }]
 
 export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQuery> }) {
   const preloaded = usePreloadedQuery<PrematchQuery>(PrematchQueryNode, props.queryRef)
@@ -35,6 +32,7 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
 
   const pathname = usePathname()
   const selected = useTournamentKeysFromUrl()
+  const { toggle } = useSelectedTournaments()
 
   if (!preloaded || !data?.scr_topTournaments) return <ShortcutRowSkeleton />
 
@@ -44,15 +42,18 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
       .map(t => ({
         label: t.name,
         icon: <SportIcon sport={t.sport.key} colored className='size-4' />,
-        href: {
-          pathname,
-          query: { tournaments: `${t.sport.key}:${t.key}` },
-        },
         key: `${t.sport.key}:${t.key}`,
         sportKey: t.sport.key,
+        tournamentKey: t.key,
       })),
-    ...sample.map(s => ({ ...s, icon: <s.icon className='size-4' />, key: null, sportKey: null })),
   ]
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>, key: string | null) => {
+    if (key) {
+      e.preventDefault()
+      toggle(key)
+    }
+  }
 
   return (
     <ScrollContainer className='w-full cursor-grab scrollbar-none overflow-x-auto' vertical={false}>
@@ -64,11 +65,11 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
 
           return (
             !!e && (
-              <Link
-                href={e.href}
+              <button
                 key={e.label}
-                scroll={false}
+                type='button'
                 data-active={isActive || null}
+                onClick={event => handleClick(event, e.key)}
                 className='group/link bg-dark inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-white/5 px-3.5 whitespace-nowrap text-white/60 transition-colors text-shadow-current hover:text-white data-active:text-white data-active:text-shadow-[0_0_8px]'
                 style={
                   isActive && theme
@@ -83,7 +84,7 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
               >
                 {e.icon}
                 <span className='text-xs font-light tracking-wide'>{e.label}</span>
-              </Link>
+              </button>
             )
           )
         })}

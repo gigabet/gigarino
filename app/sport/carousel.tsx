@@ -552,7 +552,7 @@ function FeaturedOutcomeToggle(props: {
 export function CarouselSkeleton() {
   return (
     <section>
-      <div className='mb-1 flex items-center justify-between'>
+      <div className='mb-3 flex items-center justify-between'>
         <Skeleton className='h-6 w-40' />
       </div>
       <div className='flex gap-4 overflow-hidden py-5'>
