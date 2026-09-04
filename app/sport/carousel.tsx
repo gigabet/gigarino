@@ -7,9 +7,9 @@ import {
   CheckIcon,
   ChevronLeft,
   ChevronRight,
+  ChevronsUp,
   PlusIcon,
   SearchXIcon,
-  ZapIcon,
 } from 'lucide-react'
 import Link from 'next/link'
 import { Toggle } from 'radix-ui'
@@ -30,7 +30,7 @@ import { SportIcon } from '@/components/sport-icon'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useHasOdd, useToggleOdd } from '@/context/betslip'
 import { useUpDown } from '@/context/hooks'
-import { cn, formatBalance, getRelativeDayLabel, initials, stringToHue } from '@/lib/utils'
+import { cn, formatBalance, getRelativeDayLabel } from '@/lib/utils'
 
 /**
  * NOTE: three colocated fragments (one per card) instead of one flat
@@ -40,10 +40,9 @@ import { cn, formatBalance, getRelativeDayLabel, initials, stringToHue } from '@
  * below just reads the subset of fields that card actually needs. Run
  * `pnpm relay` to (re)generate the artifacts these imports point at.
  *
- * All three cards share one fixed footprint (CARD_SIZE below) on purpose —
- * that's what makes them read as a matched set in the strip. Everything
- * *inside* that footprint — shape, layout, accent — is deliberately
- * different per card, so "same size" never means "same card".
+ * All three cards share the same header treatment (stacked italic wordmark
+ * + glowing accent icon) for family resemblance; everything below it is
+ * built for what that specific promo needs to say.
  */
 
 const CARD_SIZE = 'h-72 w-72 sm:w-80'
@@ -149,36 +148,35 @@ function useEndsIn(validTo: string | null | undefined) {
     : null
 }
 
-function CardHeader(props: {
+/* -------------------------------------------------------------------------- */
+/* Shared header — the one thing all three cards keep in common.             */
+/* -------------------------------------------------------------------------- */
+
+function PromoWordmark(props: {
+  top: string
+  bottom: string
+  accentClassName: string
   icon: React.ReactNode
-  label: string
-  labelClassName?: string
-  endsIn: string | null
 }) {
   return (
-    <div className='relative flex items-center justify-between gap-2'>
-      <span
-        className={cn(
-          'inline-flex shrink-0 items-center gap-1.5 text-[0.65rem] font-bold tracking-wide uppercase',
-          props.labelClassName
-        )}
-      >
-        {props.icon}
-        {props.label}
-      </span>
-      {props.endsIn && (
-        <span className='text-secondary shrink-0 truncate text-[0.65rem]'>
-          ends in {props.endsIn}
-        </span>
-      )}
+    <div className='relative flex items-start justify-between gap-2'>
+      <div className='leading-[0.82]'>
+        <p className='font-display text-xl font-black text-white uppercase italic'>{props.top}</p>
+        <p
+          className={cn('font-display text-3xl font-black uppercase italic', props.accentClassName)}
+        >
+          {props.bottom}
+        </p>
+      </div>
+      <div className='shrink-0 pt-1'>{props.icon}</div>
     </div>
   )
 }
 
 /* -------------------------------------------------------------------------- */
-/* Bet Boost — a price tag, not a form. Two columns: the boosted number owns  */
-/* the left with real hierarchy (was → now, +% when we have both prices),    */
-/* context + CTA fill the right. Nothing stacked, nothing repeated.          */
+/* Bet Boost — teams on one line (equal weight either side of "vs"), the     */
+/* market/outcome underneath, then the price story stacked plainly: small    */
+/* struck-through "was", big "boosted" right below it. No box, no mono font. */
 /* -------------------------------------------------------------------------- */
 
 function BetBoostCard(props: { bet: BetBoostCard_bet$key }) {
@@ -212,7 +210,6 @@ function BetBoostCard(props: { bet: BetBoostCard_bet$key }) {
 
   const boosted = data.boostedPrice ? Number(data.boostedPrice) : null
   const was = data.combinedPrice ? Number(data.combinedPrice) : null
-  const boostPct = boosted && was && was > 0 ? Math.round((boosted / was - 1) * 100) : null
 
   const handleSelect = () => {
     availableSelections.forEach(s => {
@@ -220,91 +217,97 @@ function BetBoostCard(props: { bet: BetBoostCard_bet$key }) {
     })
   }
 
+  const [home, away] = (leg?.eventName ?? '').split(' vs ')
+
   return (
     <div
       className={cn(
         CARD_SIZE,
-        'group bg-primary/6 border-primary/25 hover:border-primary/45 relative flex shrink-0 snap-start flex-col overflow-hidden rounded-2xl border p-4 transition-colors duration-300'
+        'group bg-dark-200 border-primary/40 hover:border-primary/70 relative flex shrink-0 snap-start flex-col gap-2 overflow-hidden rounded-2xl border p-3.5 transition-colors duration-300'
       )}
     >
-      <CardHeader
-        icon={<ZapIcon className='size-3.5' fill='currentColor' />}
-        label='Bet Boost'
-        labelClassName='text-primary'
-        endsIn={endsIn}
+      <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_100%_0%,rgba(209,243,102,0.14),transparent_55%)]' />
+
+      <PromoWordmark
+        top='Bet'
+        bottom='Boost'
+        accentClassName='text-primary text-shadow-[0_0_16px_rgba(209,243,102,0.55)]'
+        icon={
+          <ChevronsUp
+            className='text-primary size-8 drop-shadow-[0_0_10px_rgba(209,243,102,0.7)]'
+            strokeWidth={3}
+          />
+        }
       />
 
-      <div className='relative mt-3 flex min-h-0 flex-1 items-stretch gap-4'>
-        {/* boost figure — always the loudest thing on the card */}
-        <div className='flex shrink-0 flex-col items-center justify-center gap-1 border-r border-white/10 pr-4 text-center'>
-          <span className='text-secondary text-[0.6rem] font-bold tracking-wide whitespace-nowrap uppercase'>
-            Boosted odds
-          </span>
-          {was && (
-            <span className='text-secondary flex items-center gap-1 text-xs whitespace-nowrap'>
-              <span className='line-through'>{was.toFixed(2)}</span>
-              <ArrowRightIcon className='size-3' />
-            </span>
-          )}
-          <span className='text-primary text-4xl leading-none font-black whitespace-nowrap sm:text-5xl'>
-            {boosted ? boosted.toFixed(2) : '—'}
-          </span>
-          {boostPct !== null && boostPct > 0 && (
-            <span className='text-primary/70 text-[0.65rem] font-bold whitespace-nowrap'>
-              +{boostPct}% boost
-            </span>
-          )}
-        </div>
+      {endsIn && (
+        <p className='text-secondary relative -mt-1 text-right text-[0.6rem] tracking-wide uppercase'>
+          Ends in {endsIn}
+        </p>
+      )}
 
-        {/* context + CTA */}
-        <div className='flex min-w-0 flex-1 flex-col justify-between gap-3'>
-          <div className='min-w-0'>
-            <p className='truncate text-sm font-bold text-white'>{leg?.eventName ?? '—'}</p>
-            <p className='text-secondary truncate text-xs'>
-              {leg?.marketName}
-              {leg?.outcomeName ? ` · ${leg.outcomeName}` : ''}
-            </p>
-          </div>
+      <div className='relative min-w-0'>
+        <p className='truncate text-sm font-bold text-white'>
+          {home || leg?.eventName || '—'}
+          {away && (
+            <>
+              <span className='text-secondary mx-1 text-xs font-normal normal-case'>vs</span>
+              {away}
+            </>
+          )}
+        </p>
+        <p className='text-secondary mt-0.5 truncate text-[0.65rem] tracking-wide uppercase'>
+          {leg?.marketName}
+          {leg?.outcomeName ? ` · ${leg.outcomeName}` : ''}
+        </p>
+      </div>
 
-          <div className='flex flex-col gap-2'>
-            {data.maxStake && (
-              <span className='text-secondary text-[0.65rem]'>
-                Max stake {formatBalance(Number(data.maxStake))}
-              </span>
-            )}
-            <button
-              type='button'
-              onClick={handleSelect}
-              disabled={allAdded || availableSelections.length === 0}
-              className={cn(
-                'flex w-full items-center justify-center gap-1.5 rounded-full px-4 py-2.5 text-xs font-bold uppercase transition-all',
-                allAdded
-                  ? 'bg-primary/15 text-primary cursor-default'
-                  : 'bg-primary hover:shadow-glow text-primary-foreground'
-              )}
-            >
-              {allAdded ? (
-                <>
-                  <CheckIcon className='size-3.5' />
-                  Added
-                </>
-              ) : (
-                <>
-                  <PlusIcon className='size-3.5' />
-                  Select
-                </>
-              )}
-            </button>
-          </div>
-        </div>
+      <div className='relative flex flex-1 flex-col justify-center gap-0.5'>
+        <span className='text-secondary text-sm font-semibold line-through'>
+          {was ? was.toFixed(2) : '—'}
+        </span>
+        <span className='text-primary text-4xl leading-none font-black'>
+          {boosted ? boosted.toFixed(2) : '—'}
+        </span>
+      </div>
+
+      <div className='relative flex items-center gap-2'>
+        {data.maxStake && (
+          <span className='text-secondary shrink-0 text-[0.6rem]'>
+            Max {formatBalance(Number(data.maxStake))}
+          </span>
+        )}
+        <button
+          type='button'
+          onClick={handleSelect}
+          disabled={allAdded || availableSelections.length === 0}
+          className={cn(
+            'group/cta ml-auto flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold uppercase transition-all',
+            allAdded
+              ? 'bg-primary/15 text-primary cursor-default'
+              : 'bg-primary hover:shadow-glow text-black'
+          )}
+        >
+          {allAdded ? (
+            <>
+              <CheckIcon className='size-3.5' />
+              Added
+            </>
+          ) : (
+            <>
+              Select
+              <ArrowRightIcon className='size-3.5 transition-transform group-hover/cta:translate-x-0.5' />
+            </>
+          )}
+        </button>
       </div>
     </div>
   )
 }
 
 /* -------------------------------------------------------------------------- */
-/* Combo of the Week — the only card whose content is genuinely a list, so   */
-/* it's the only one that keeps a row-per-item body.                         */
+/* Combo of the Week — trimmed further: single-line legs (no second line of  */
+/* market text), tighter padding throughout, no "Legs" counter.              */
 /* -------------------------------------------------------------------------- */
 
 function ComboOfWeekCard(props: { bet: ComboOfWeekCard_bet$key }) {
@@ -312,7 +315,7 @@ function ComboOfWeekCard(props: { bet: ComboOfWeekCard_bet$key }) {
     graphql`
       fragment ComboOfWeekCard_bet on FeaturedBet {
         title
-        subtitle
+        # subtitle
         combinedPrice
         validTo
         selections {
@@ -346,68 +349,64 @@ function ComboOfWeekCard(props: { bet: ComboOfWeekCard_bet$key }) {
     <div
       className={cn(
         CARD_SIZE,
-        'group hover:border-purple-accent/40 relative flex shrink-0 snap-start flex-col gap-2.5 overflow-hidden rounded-2xl border border-white/5 bg-black/30 p-3.5 transition-colors duration-300'
+        'group bg-dark-200 border-purple-accent/40 hover:border-purple-accent/70 relative flex shrink-0 snap-start flex-col gap-1.5 overflow-hidden rounded-2xl border p-3 transition-colors duration-300'
       )}
     >
-      <CardHeader
-        icon={<GiFlame className='size-3.5' />}
-        label='Combo of the Week'
-        labelClassName='text-purple-accent'
-        endsIn={endsIn}
+      <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_100%_0%,rgba(127,92,255,0.16),transparent_55%)]' />
+
+      <PromoWordmark
+        top='Combo'
+        bottom='Week'
+        accentClassName='text-purple-accent text-shadow-[0_0_16px_rgba(127,92,255,0.55)]'
+        icon={
+          <GiFlame className='text-purple-accent size-8 drop-shadow-[0_0_10px_rgba(127,92,255,0.7)]' />
+        }
       />
 
-      <div className='relative min-w-0'>
-        <h3 className='truncate text-sm font-bold text-white'>{data.title}</h3>
-        {data.subtitle && <p className='text-secondary truncate text-xs'>{data.subtitle}</p>}
+      <div className='text-secondary relative flex items-center gap-2 text-[0.6rem] tracking-wide uppercase'>
+        {data.title && (
+          <span className='min-w-0 truncate text-white/80 normal-case'>{data.title}</span>
+        )}
+        {endsIn && <span className='ml-auto shrink-0'>Ends in {endsIn}</span>}
       </div>
 
-      <div className='relative flex flex-1 flex-col justify-center gap-1.5'>
+      <div className='relative flex flex-1 flex-col justify-center gap-1'>
         {data.selections.slice(0, 3).map(s => (
           <div
             key={s.outcomeId}
             className={cn(
-              'flex items-center justify-between gap-2 rounded-lg border border-white/5 bg-white/3 px-2.5 py-1.5 text-xs',
+              'flex items-center justify-between gap-2 rounded-lg border border-white/5 bg-white/3 px-2.5 py-1 text-[0.7rem]',
               !s.available && 'line-through opacity-40'
             )}
           >
-            <div className='min-w-0'>
-              <p className='truncate text-white/90'>{s.outcomeName ?? '—'}</p>
-              <p className='text-secondary truncate text-[0.65rem]'>
-                {s.marketName}
-                {s.eventName ? ` · ${s.eventName}` : ''}
-              </p>
-            </div>
+            <span className='truncate text-white/90'>
+              {s.outcomeName ?? '—'}
+              {s.eventName && <span className='text-secondary'> · {s.eventName}</span>}
+            </span>
             {s.price && (
-              <span className='shrink-0 font-mono font-semibold text-white'>
+              <span className='shrink-0 font-semibold text-white'>
                 {Number(s.price).toFixed(2)}
               </span>
             )}
           </div>
         ))}
-        {data.selections.length > 3 && (
-          <p className='text-secondary text-[0.65rem]'>
-            +{data.selections.length - 3} more selection
-            {data.selections.length - 3 === 1 ? '' : 's'}
-          </p>
-        )}
       </div>
 
-      <div className='relative flex items-center justify-between gap-3 border-t border-white/5 pt-2.5'>
+      <div className='relative flex items-center justify-between gap-3'>
         <div className='flex flex-col'>
-          <span className='text-secondary text-[0.65rem] tracking-wide uppercase'>
+          <span className='text-purple-accent text-[0.55rem] font-bold tracking-wide uppercase'>
             Combined odds
           </span>
-          <span className='text-purple-accent text-lg font-bold'>
+          <span className='text-purple-accent text-2xl leading-none font-black'>
             {data.combinedPrice ? Number(data.combinedPrice).toFixed(2) : '—'}
           </span>
         </div>
-
         <button
           type='button'
           onClick={handleAdd}
           disabled={allAdded || availableSelections.length === 0}
           className={cn(
-            'flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold uppercase transition-all',
+            'group/cta flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2.5 text-xs font-bold uppercase transition-all',
             allAdded
               ? 'bg-purple-accent/15 text-purple-accent cursor-default'
               : 'bg-purple-accent hover:shadow-glow-purple text-white'
@@ -431,9 +430,8 @@ function ComboOfWeekCard(props: { bet: ComboOfWeekCard_bet$key }) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* Featured Game — a head-to-head panel: both teams centred and stacked      */
-/* (avatar above name, own column, own truncation), never sharing a line     */
-/* with anything else, so nothing can collide regardless of name length.     */
+/* Featured Game — back to the original stacked "Home / vs / Away" matchup;  */
+/* the "Full match odds" ghost link stays as-is (quiet, secondary to odds).  */
 /* -------------------------------------------------------------------------- */
 
 function FeaturedGameCard(props: { bet: FeaturedGameCard_bet$key }) {
@@ -473,7 +471,6 @@ function FeaturedGameCard(props: { bet: FeaturedGameCard_bet$key }) {
     props.bet
   )
 
-  const endsIn = useEndsIn(data.validTo)
   const event = data.selections.find(s => s.event)?.event ?? null
   const matchWinner =
     event?.markets.find(m => m.kind === 'match_winner') ?? event?.markets[0] ?? null
@@ -482,24 +479,27 @@ function FeaturedGameCard(props: { bet: FeaturedGameCard_bet$key }) {
     <div
       className={cn(
         CARD_SIZE,
-        'group relative flex shrink-0 snap-start flex-col gap-3 overflow-hidden rounded-2xl border border-white/5 bg-black/30 p-3.5 transition-colors duration-300 hover:border-sky-400/40'
+        'group bg-dark-200 relative flex shrink-0 snap-start flex-col gap-2 overflow-hidden rounded-2xl border border-sky-400/40 p-3.5 transition-colors duration-300 hover:border-sky-400/70'
       )}
     >
-      <CardHeader
-        icon={<HiOutlineSparkles className='size-3.5' />}
-        label='Featured Game'
-        labelClassName='text-sky-400'
-        endsIn={endsIn}
+      <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_100%_0%,rgba(56,189,248,0.16),transparent_55%)]' />
+
+      <PromoWordmark
+        top='Top'
+        bottom='Pick'
+        accentClassName='text-sky-400 text-shadow-[0_0_16px_rgba(56,189,248,0.55)]'
+        icon={
+          <HiOutlineSparkles className='size-8 text-sky-400 drop-shadow-[0_0_10px_rgba(56,189,248,0.7)]' />
+        }
       />
 
       {event ? (
         <>
-          <div className='text-secondary relative flex items-center justify-center gap-1.5 text-[0.65rem] uppercase'>
+          <div className='text-secondary relative flex items-center gap-1.5 text-[0.6rem] tracking-wide uppercase'>
             <SportIcon sport={event.sport.key} className='size-3 shrink-0' />
-            <span className='max-w-32 truncate'>{event.tournament.name}</span>
-            <span>·</span>
+            <span className='min-w-0 truncate'>{event.tournament.name}</span>
             {event.status === 'LIVE' ? (
-              <span className='text-destructive flex shrink-0 items-center gap-1'>
+              <span className='text-destructive ml-auto flex shrink-0 items-center gap-1 font-bold'>
                 <span className='relative inline-flex size-1.5'>
                   <span className='bg-destructive absolute inline-flex size-full animate-ping rounded-full opacity-75' />
                   <span className='bg-destructive relative inline-flex size-1.5 rounded-full' />
@@ -507,16 +507,18 @@ function FeaturedGameCard(props: { bet: FeaturedGameCard_bet$key }) {
                 Live
               </span>
             ) : (
-              <span className='shrink-0'>{getRelativeDayLabel(event.startTime)}</span>
+              <span className='ml-auto shrink-0'>{getRelativeDayLabel(event.startTime)}</span>
             )}
           </div>
 
-          <div className='relative flex flex-1 items-center justify-center gap-3 rounded-xl border border-white/5 bg-white/3 px-3'>
-            <TeamBlock name={event.homeCompetitor} />
-            <span className='text-secondary flex size-7 shrink-0 items-center justify-center rounded-full bg-sky-400/10 text-[0.6rem] font-bold text-sky-400'>
-              VS
-            </span>
-            <TeamBlock name={event.awayCompetitor} />
+          <div className='relative flex-1'>
+            <p className='truncate text-base leading-tight font-bold text-white'>
+              {event.homeCompetitor}
+            </p>
+            <p className='text-secondary text-[0.65rem] uppercase'>vs</p>
+            <p className='truncate text-base leading-tight font-bold text-white'>
+              {event.awayCompetitor}
+            </p>
           </div>
 
           {matchWinner && (
@@ -529,9 +531,10 @@ function FeaturedGameCard(props: { bet: FeaturedGameCard_bet$key }) {
 
           <Link
             href={`/sport/event/${event.id}`}
-            className='text-secondary relative flex items-center justify-center gap-1 border-t border-white/5 pt-2.5 text-xs font-semibold uppercase transition-colors hover:text-sky-400'
+            className='text-secondary relative flex items-center justify-end gap-1 text-[0.65rem] font-semibold uppercase transition-colors hover:text-sky-400'
           >
             Full match odds
+            <ChevronRight className='size-3' />
           </Link>
         </>
       ) : (
@@ -542,29 +545,6 @@ function FeaturedGameCard(props: { bet: FeaturedGameCard_bet$key }) {
           <p className='text-secondary text-xs'>This event is no longer available.</p>
         </div>
       )}
-    </div>
-  )
-}
-
-/** Team column for the head-to-head panel: avatar above name, its own
- * flex column so it never has to share a line — long names wrap to two
- * lines instead of colliding with the avatar or the neighbouring team. */
-function TeamBlock(props: { name: string }) {
-  const hue = stringToHue(props.name)
-
-  return (
-    <div className='flex min-w-0 flex-1 flex-col items-center gap-1.5 text-center'>
-      <div
-        className='flex size-9 shrink-0 items-center justify-center rounded-full text-[0.65rem] font-bold text-white'
-        style={{
-          background: `linear-gradient(135deg, hsl(${hue} 70% 42%), hsl(${(hue + 40) % 360} 70% 30%))`,
-        }}
-      >
-        {initials(props.name)}
-      </div>
-      <span className='line-clamp-2 text-xs leading-tight font-semibold text-white'>
-        {props.name}
-      </span>
     </div>
   )
 }

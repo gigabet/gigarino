@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e964721ccc981201d30e05b0baee19b4>>
+ * @generated SignedSource<<f41e89e27857212f432462b98c641ec8>>
  * @lightSyntaxTransform
  */
 
@@ -306,13 +306,6 @@ return {
             "kind": "ScalarField",
             "name": "title",
             "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "subtitle",
-            "storageKey": null
           }
         ],
         "storageKey": null
@@ -320,12 +313,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "318f72470f2e999f211cc1deb14e83d3",
+    "cacheID": "8a5bd8a42959d07a2924e2616cc1f1d9",
     "id": null,
     "metadata": {},
     "name": "CarouselQuery",
     "operationKind": "query",
-    "text": "query CarouselQuery {\n  featuredBets {\n    id\n    kind\n    ...BetBoostCard_bet\n    ...ComboOfWeekCard_bet\n    ...FeaturedGameCard_bet\n  }\n}\n\nfragment BetBoostCard_bet on FeaturedBet {\n  boostedPrice\n  combinedPrice\n  maxStake\n  validTo\n  selections {\n    outcomeId\n    outcomeName\n    marketName\n    eventName\n    available\n  }\n}\n\nfragment ComboOfWeekCard_bet on FeaturedBet {\n  title\n  subtitle\n  combinedPrice\n  validTo\n  selections {\n    outcomeId\n    outcomeName\n    marketName\n    eventName\n    price\n    available\n  }\n}\n\nfragment FeaturedGameCard_bet on FeaturedBet {\n  validTo\n  selections {\n    event {\n      id\n      homeCompetitor\n      awayCompetitor\n      startTime\n      status\n      sport {\n        key\n        id\n      }\n      tournament {\n        name\n        id\n      }\n      markets(groups: [MAIN]) {\n        id\n        kind\n        outcomes {\n          id\n          index\n          name\n          key\n          price\n          status\n        }\n      }\n    }\n  }\n}\n"
+    "text": "query CarouselQuery {\n  featuredBets {\n    id\n    kind\n    ...BetBoostCard_bet\n    ...ComboOfWeekCard_bet\n    ...FeaturedGameCard_bet\n  }\n}\n\nfragment BetBoostCard_bet on FeaturedBet {\n  boostedPrice\n  combinedPrice\n  maxStake\n  validTo\n  selections {\n    outcomeId\n    outcomeName\n    marketName\n    eventName\n    available\n  }\n}\n\nfragment ComboOfWeekCard_bet on FeaturedBet {\n  title\n  combinedPrice\n  validTo\n  selections {\n    outcomeId\n    outcomeName\n    marketName\n    eventName\n    price\n    available\n  }\n}\n\nfragment FeaturedGameCard_bet on FeaturedBet {\n  validTo\n  selections {\n    event {\n      id\n      homeCompetitor\n      awayCompetitor\n      startTime\n      status\n      sport {\n        key\n        id\n      }\n      tournament {\n        name\n        id\n      }\n      markets(groups: [MAIN]) {\n        id\n        kind\n        outcomes {\n          id\n          index\n          name\n          key\n          price\n          status\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f565c008b574bd69dc5c3530a30915e1>>
+ * @generated SignedSource<<0858c88b7126330be315fc9e48ea0abd>>
  * @lightSyntaxTransform
  */
 
@@ -19,7 +19,6 @@ export type ComboOfWeekCard_bet$data = {
     readonly outcomeName: string | null | undefined;
     readonly price: any | null | undefined;
   }>;
-  readonly subtitle: string | null | undefined;
   readonly title: string;
   readonly validTo: any | null | undefined;
   readonly " $fragmentType": "ComboOfWeekCard_bet";
@@ -40,13 +39,6 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "ScalarField",
       "name": "title",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "subtitle",
       "storageKey": null
     },
     {
@@ -121,6 +113,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "3a43b77a4d933d00f8b369f98d6f175a";
+(node as any).hash = "e5acfe5508cbb863d552c6a4296373fa";
 
 export default node;
