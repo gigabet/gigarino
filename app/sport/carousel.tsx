@@ -15,8 +15,8 @@ import Link from 'next/link'
 import { Toggle } from 'radix-ui'
 import { Suspense, useRef } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
-import { GiFlame } from 'react-icons/gi'
-import { HiOutlineSparkles } from 'react-icons/hi2'
+import { GiLaurelCrown } from 'react-icons/gi'
+import { HiOutlineSparkles, HiSquare3Stack3D } from 'react-icons/hi2'
 import { graphql, useFragment, useLazyLoadQuery } from 'react-relay'
 import type { BetBoostCard$key } from '@/app/sport/__generated__/BetBoostCard.graphql'
 import type {
@@ -28,7 +28,7 @@ import type { FeaturedGameCard$key } from '@/app/sport/__generated__/FeaturedGam
 import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { SportIcon } from '@/components/sport-icon'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useHasOdd, useToggleOdd } from '@/context/betslip'
+import { useCombo, useHasOdd, useToggleOdd } from '@/context/betslip'
 import { useUpDown } from '@/context/hooks'
 import { cn, formatBalance, getRelativeDayLabel } from '@/lib/utils'
 
@@ -305,16 +305,14 @@ function ComboOfWeekCard(props: { bet: ComboOfWeekCard$key }) {
 
   const endsIn = useEndsIn(data.validTo)
   const hasOdd = useHasOdd()
-  const toggleOdd = useToggleOdd()
+  const combo = useCombo()
 
   const availableSelections = data.selections.filter(s => s.available)
   const allAdded =
     availableSelections.length > 0 && availableSelections.every(s => hasOdd(s.outcomeId))
 
   const handleAdd = () => {
-    availableSelections.forEach(s => {
-      if (!hasOdd(s.outcomeId)) toggleOdd(s.outcomeId)
-    })
+    combo(availableSelections.map(s => s.outcomeId))
   }
 
   return (
@@ -327,11 +325,11 @@ function ComboOfWeekCard(props: { bet: ComboOfWeekCard$key }) {
       <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_100%_0%,rgba(127,92,255,0.16),transparent_55%)]' />
 
       <PromoWordmark
-        top='Combo'
+        top='Combo of the'
         bottom='Week'
         accentClassName='text-purple-accent text-shadow-[0_0_16px_rgba(127,92,255,0.55)]'
         icon={
-          <GiFlame className='text-purple-accent size-8 drop-shadow-[0_0_10px_rgba(127,92,255,0.7)]' />
+          <HiSquare3Stack3D className='text-purple-accent size-8 drop-shadow-[0_0_10px_rgba(127,92,255,0.7)]' />
         }
       />
 
@@ -456,7 +454,7 @@ function FeaturedGameCard(props: { bet: FeaturedGameCard$key }) {
         bottom='Pick'
         accentClassName='text-sky-400 text-shadow-[0_0_16px_rgba(56,189,248,0.55)]'
         icon={
-          <HiOutlineSparkles className='size-8 text-sky-400 drop-shadow-[0_0_10px_rgba(56,189,248,0.7)]' />
+          <GiLaurelCrown className='size-8 text-sky-400 drop-shadow-[0_0_10px_rgba(56,189,248,0.7)]' />
         }
       />
 

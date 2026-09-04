@@ -53,3 +53,18 @@ export function useHasOdd() {
   const input = useAtomValue(betslipInputAtom)
   return useCallback((oddId: string) => input.items.some(i => i.outcomeId === oddId), [input.items])
 }
+
+export function useCombo() {
+  const setInput = useSetAtom(betslipInputAtom)
+
+  return useCallback(
+    (odds: string[]) =>
+      setInput({
+        items: odds.map(id => ({ outcomeId: id })),
+        stake: '10',
+        betType: odds.length > 1 ? 'MULTIPLE' : 'SINGLE',
+        systemSize: undefined,
+      }),
+    [setInput]
+  )
+}
