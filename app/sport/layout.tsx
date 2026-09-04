@@ -1,7 +1,8 @@
 'use client'
 
 import { useAtomValue } from 'jotai'
-import { Suspense, useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
+import { Suspense, useEffect, useMemo, useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import {
   fetchQuery,
@@ -16,6 +17,7 @@ import type {
 } from '@/app/sport/__generated__/BetslipSubscription.graphql'
 import type { PrematchLayoutQuery } from '@/app/sport/__generated__/PrematchLayoutQuery.graphql'
 import PrematchLayoutQueryNode from '@/app/sport/__generated__/PrematchLayoutQuery.graphql'
+import EventSidebar, { EventSidebarSkeleton } from '@/app/sport/event/[id]/event-sidebar'
 import Sidebar, { SidebarSkeleton } from '@/app/sport/sidebar'
 import Betslip, { BetslipDrawer, BetslipMobileBar } from '@/components/betslip'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
@@ -32,6 +34,17 @@ const betslipSubscription = graphql`
 `
 
 export default function SportLayout({ children }: React.PropsWithChildren) {
+  const pathname = usePathname()
+  // Single-event routes get their own sibling-events sidebar; the tournament
+  // filter sidebar's search/checkbox state writes `?tournaments=`/`?q=` back
+  // onto `pathname` via router.replace, which has no consumer here and used
+  // to silently no-op (or fight the event page's own params) instead of
+  // filtering anything.
+  const eventId = useMemo(() => {
+    const match = pathname.match(/^\/sport\/event\/([^/]+)/)
+    return match ? decodeURIComponent(match[1]) : null
+  }, [pathname])
+
   const [queryRef, loadQuery, disposeQuery] = useQueryLoader<PrematchLayoutQuery>(graphql`
     query PrematchLayoutQuery {
       ...Sidebar
@@ -93,9 +106,16 @@ export default function SportLayout({ children }: React.PropsWithChildren) {
         'grid-cols-1 lg:grid-cols-[4rem_minmax(auto,1fr)] xl:grid-cols-[16rem_minmax(auto,1fr)_20rem]'
       )}
     >
-      <Suspense fallback={<SidebarSkeleton />}>
-        {queryRef ? <Sidebar queryRef={queryRef} /> : <SidebarSkeleton />}
+      <Suspense fallback={eventId ? <EventSidebarSkeleton /> : <SidebarSkeleton />}>
+        {eventId ? (
+          <EventSidebar eventId={eventId} />
+        ) : queryRef ? (
+          <Sidebar queryRef={queryRef} />
+        ) : (
+          <SidebarSkeleton />
+        )}
       </Suspense>
+
       {children}
       <div className='sticky top-26.25 hidden self-start xl:flex'>
         <ErrorBoundary FallbackComponent={SectionErrorFallback}>
