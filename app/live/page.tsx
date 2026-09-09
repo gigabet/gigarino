@@ -47,7 +47,7 @@ export default function LivePage() {
   if (!events) return <LivePageSkeleton />
 
   return (
-    <ViewportBatcherProvider onFlush={handleFlush}>
+    <ViewportBatcherProvider onFlushAction={handleFlush}>
       <main className='flex min-w-0 flex-col gap-4'>
         <SportTabs events={events} />
         <LiveControls />

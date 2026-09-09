@@ -50,12 +50,12 @@ const ViewportBatcherContext = createContext<ReturnType<typeof createViewportBat
 
 export function ViewportBatcherProvider(props: {
   children: React.ReactNode
-  onFlush: (ids: string[]) => void
+  onFlushAction: (ids: string[]) => void
 }) {
   // ref so a re-created `onFlush` callback from the parent doesn't force us
   // to tear down and rebuild the batcher (and lose pending registrations)
-  const onFlushRef = useRef(props.onFlush)
-  onFlushRef.current = props.onFlush
+  const onFlushRef = useRef(props.onFlushAction)
+  onFlushRef.current = props.onFlushAction
 
   const batcher = useMemo(() => createViewportBatcher(ids => onFlushRef.current(ids)), [])
 
