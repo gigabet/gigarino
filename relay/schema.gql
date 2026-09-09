@@ -33,6 +33,7 @@ type BetRejection {
 }
 
 enum BetRejectionCode {
+  BOOST_UNAVAILABLE
   CASHOUT_UNAVAILABLE
   CUTOFF_PASSED
   DUPLICATE_EVENT
@@ -250,6 +251,10 @@ interface Event implements Node {
   """
   homeScore: Int
   id: ID!
+
+  """
+  All markets on this event; filter via a concrete-type fragment.
+  """
   markets: [Market!]!
   sport: Sport!
 
@@ -651,6 +656,7 @@ type PageInfo {
 
 input PlaceBetInput {
   betType: TicketType!
+  boostId: ID
 
   """
   Client-generated token making the mutation idempotent - resubmitting with the same value returns the original ticket instead of placing twice.
@@ -685,9 +691,19 @@ A fixture open for prematch betting.
 """
 type PrematchEvent implements Event & Node {
   awayCompetitor: String!
+
+  """
+  Away team crest URL; null when unavailable.
+  """
+  awayImageUrl: String
   awayScore: Int
   category: Category!
   homeCompetitor: String!
+
+  """
+  Home team crest URL; null when unavailable.
+  """
+  homeImageUrl: String
 
   """
   Null until scores start reporting.

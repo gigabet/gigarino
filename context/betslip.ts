@@ -2,8 +2,14 @@
 
 import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
-import { useCallback } from 'react'
-import type { BetslipSubscription$variables } from '@/app/sport/__generated__/BetslipSubscription.graphql'
+import { useCallback, useEffect, useState } from 'react'
+import { useRelayEnvironment } from 'react-relay'
+import { graphql, requestSubscription } from 'relay-runtime'
+import type {
+  BetslipSubscription,
+  BetslipSubscription$data,
+  BetslipSubscription$variables,
+} from '@/app/sport/__generated__/BetslipSubscription.graphql'
 
 export type BetslipInput = BetslipSubscription$variables['input']
 
@@ -67,4 +73,37 @@ export function useCombo() {
       }),
     [setInput]
   )
+}
+
+const betslipSubscription = graphql`
+  subscription BetslipSubscription($input: BetslipQuoteInput!) {
+    betslipUpdated(input: $input) {
+      ...Betslip
+      ...BetslipMobileBar
+    }
+  }
+`
+
+export function useBetslipSubscription() {
+  const environment = useRelayEnvironment()
+  const betslipInput = useAtomValue(betslipInputAtom)
+  const [betslip, setBetslip] = useState<BetslipSubscription$data['betslipUpdated'] | null>(null)
+
+  useEffect(() => {
+    if (betslipInput.items.length === 0) {
+      setBetslip(null)
+      return
+    }
+
+    const { dispose } = requestSubscription<BetslipSubscription>(environment, {
+      subscription: betslipSubscription,
+      variables: { input: betslipInput },
+      onNext: response => setBetslip(response?.betslipUpdated ?? null),
+      onError: (err: Error) => console.error('[betslip] subscription failed', err),
+    })
+
+    return dispose
+  }, [environment, betslipInput])
+
+  return betslip
 }

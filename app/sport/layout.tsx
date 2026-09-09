@@ -1,37 +1,17 @@
 'use client'
 
-import { useAtomValue } from 'jotai'
 import { usePathname } from 'next/navigation'
-import { Suspense, useEffect, useMemo, useState } from 'react'
+import { Suspense, useEffect, useMemo } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
-import {
-  fetchQuery,
-  graphql,
-  requestSubscription,
-  useQueryLoader,
-  useRelayEnvironment,
-} from 'react-relay'
-import type {
-  BetslipSubscription,
-  BetslipSubscription$data,
-} from '@/app/sport/__generated__/BetslipSubscription.graphql'
+import { fetchQuery, graphql, useQueryLoader, useRelayEnvironment } from 'react-relay'
 import type { PrematchLayoutQuery } from '@/app/sport/__generated__/PrematchLayoutQuery.graphql'
 import PrematchLayoutQueryNode from '@/app/sport/__generated__/PrematchLayoutQuery.graphql'
 import EventSidebar, { EventSidebarSkeleton } from '@/app/sport/event/[id]/event-sidebar'
 import Sidebar, { SidebarSkeleton } from '@/app/sport/sidebar'
 import Betslip, { BetslipDrawer, BetslipMobileBar } from '@/components/betslip'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
-import { betslipInputAtom } from '@/context/betslip'
+import { useBetslipSubscription } from '@/context/betslip'
 import { cn } from '@/lib/utils'
-
-const betslipSubscription = graphql`
-  subscription BetslipSubscription($input: BetslipQuoteInput!) {
-    betslipUpdated(input: $input) {
-      ...Betslip
-      ...BetslipMobileBar
-    }
-  }
-`
 
 export default function SportLayout({ children }: React.PropsWithChildren) {
   const pathname = usePathname()
@@ -68,26 +48,7 @@ export default function SportLayout({ children }: React.PropsWithChildren) {
     return () => clearInterval(id)
   }, [environment])
 
-  // subscription returns full BetslipQuote immediately on init,
-  // so there's no separate preloaded query
-  const betslipInput = useAtomValue(betslipInputAtom)
-  const [betslip, setBetslip] = useState<BetslipSubscription$data['betslipUpdated'] | null>(null)
-
-  useEffect(() => {
-    if (betslipInput.items.length === 0) {
-      setBetslip(null)
-      return
-    }
-
-    const { dispose } = requestSubscription<BetslipSubscription>(environment, {
-      subscription: betslipSubscription,
-      variables: { input: betslipInput },
-      onNext: response => setBetslip(response?.betslipUpdated ?? null),
-      onError: (err: Error) => console.error('[betslip] subscription failed', err),
-    })
-
-    return dispose
-  }, [environment, betslipInput])
+  const betslip = useBetslipSubscription()
 
   return (
     <div
