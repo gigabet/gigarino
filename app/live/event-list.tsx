@@ -74,7 +74,7 @@ export default function LiveEventList(props: {
         const first = groups[index][0]
         const theme = getSportTheme(first.sportKey)
         return (
-          <div className='bg-dark text-secondary relative mb-3 flex items-center gap-2 border-b border-white/5 py-2 text-sm'>
+          <div className='text-secondary relative mb-3 flex items-center gap-2 border-b border-white/5 py-2 text-sm'>
             <span
               className='pointer-events-none absolute inset-x-0 -bottom-px h-px opacity-70'
               style={{ background: `linear-gradient(90deg, ${theme.primary}, transparent 65%)` }}

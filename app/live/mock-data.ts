@@ -273,10 +273,14 @@ export const STAGE_LABEL: Record<LiveStage, string> = {
   PENALTIES: 'Penalties',
 }
 
-export function formatPlaytime(seconds: number | null, stage: LiveStage) {
+export function formatPlaytime(sportKey: string, seconds: number | null, stage: LiveStage) {
   if (stage === 'HALF_TIME') return 'HT'
-  if (seconds == null) return STAGE_LABEL[stage]
-  return `${Math.floor(seconds / 60)}'`
+  if (sportKey === 'football' && seconds != null) {
+    const mins = Math.floor(seconds / 60)
+    const secs = Math.floor(seconds % 60)
+    return `${mins}:${secs.toString().padStart(2, '0')}`
+  }
+  return STAGE_LABEL[stage]
 }
 
 export function nudgeOdds(event: LiveEvent): LiveEvent {

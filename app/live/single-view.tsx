@@ -2,21 +2,21 @@
 'use client'
 
 import { useAtom } from 'jotai'
-import { ArrowLeftIcon, SearchXIcon } from 'lucide-react'
+import { SearchXIcon } from 'lucide-react'
 import { Toggle } from 'radix-ui'
 import { useEffect } from 'react'
-import LiveEventList from '@/app/live/event-list'
+import ReactCountryFlag from 'react-country-flag'
 import { useTick } from '@/app/live/hooks'
+import { LiveSidebar, MobileFilmstrip } from '@/app/live/live-sidebar'
 import { formatPlaytime, getElapsedSeconds, STAGE_LABEL } from '@/app/live/mock-data'
 import { liveSelectedEventState } from '@/app/live/store'
 import type { LiveEvent, LiveMarket } from '@/app/live/types'
+import { SportIcon } from '@/components/sport-icon'
 import { useHasOdd, useToggleOdd } from '@/context/betslip'
-import { useMediaQuery } from '@/context/hooks'
 import { cn, initials, stringToHue } from '@/lib/utils'
 
 export default function LiveSingleView(props: { events: LiveEvent[] }) {
   const [selectedId, setSelected] = useAtom(liveSelectedEventState)
-  const isDesktop = useMediaQuery('(min-width: 1024px)')
 
   useEffect(() => {
     if (props.events.length === 0) return
@@ -26,45 +26,17 @@ export default function LiveSingleView(props: { events: LiveEvent[] }) {
   }, [props.events, selectedId, setSelected])
 
   const selected = props.events.find(e => e.id === selectedId) ?? null
-  const rail = (
-    <LiveEventList events={props.events} selectedId={selectedId} windowScroll={isDesktop} />
-  )
-
-  if (isDesktop) {
-    return (
-      <div className='grid grid-cols-[22rem_1fr] items-start gap-6'>
-        {/* bounded height + windowScroll=false: Virtuoso manages its own
-            internal scroll box here instead of the window, since this rail
-            shares the row with a sticky detail pane rather than owning the
-            whole page's scroll */}
-        <div className='h-[calc(100dvh-14rem)]'>{rail}</div>
-        <div className='sticky top-26.25'>
-          {selected ? <EventDetail event={selected} /> : <EmptyDetail />}
-        </div>
-      </div>
-    )
-  }
 
   return (
     <>
-      <div className={selected ? 'hidden' : undefined}>{rail}</div>
-      {selected && (
-        <div className='bg-dark fixed inset-0 z-40 flex flex-col overflow-y-auto pb-24'>
-          <div className='bg-dark/95 sticky top-0 z-10 flex items-center gap-3 border-b border-white/5 px-4 py-3 backdrop-blur-xl'>
-            <button
-              type='button'
-              onClick={() => setSelected(null)}
-              className='text-secondary hover:bg-dark-300 hover:text-foreground flex size-8 items-center justify-center rounded-full transition-colors'
-            >
-              <ArrowLeftIcon className='size-4' />
-            </button>
-            <span className='text-sm font-semibold text-white'>Live Event</span>
-          </div>
-          <div className='p-4'>
-            <EventDetail event={selected} />
-          </div>
+      <MobileFilmstrip events={props.events} selectedId={selectedId} onSelectAction={setSelected} />
+
+      <div className='grid grid-cols-1 items-start gap-6 lg:grid-cols-[20rem_1fr]'>
+        <LiveSidebar events={props.events} selectedId={selectedId} onSelectAction={setSelected} />
+        <div className='min-w-0'>
+          {selected ? <EventDetail event={selected} /> : <EmptyDetail />}
         </div>
-      )}
+      </div>
     </>
   )
 }
@@ -87,34 +59,32 @@ function EventDetail(props: { event: LiveEvent }) {
 
   return (
     <div className='flex flex-col gap-4'>
-      <section className='flex flex-col gap-4 rounded-2xl border border-white/5 bg-black/20 p-4 sm:p-6'>
-        <div className='text-secondary flex flex-wrap items-center gap-x-2 gap-y-1 text-xs uppercase'>
-          <div className='text-primary flex shrink-0 items-center gap-1.5'>
-            <span className='relative size-2'>
-              <span className='bg-destructive absolute size-2 animate-ping rounded-full' />
-              <span className='bg-destructive absolute size-2 rounded-full' />
-            </span>
-            Live · <span suppressHydrationWarning>{formatPlaytime(elapsed, event.stage)}</span>
-          </div>
-          <span>· {event.tournamentName}</span>
-          <span>· {STAGE_LABEL[event.stage]}</span>
-        </div>
+      <section className='flex flex-col gap-3 rounded-2xl border border-white/5 bg-black/20 p-4 sm:gap-4 sm:p-6'>
+        <EventHeader event={event} />
 
         <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-4'>
           <DetailCompetitor
             name={event.homeCompetitor}
             redCards={event.redCards.filter(c => c.team === 'home').length}
           />
-          <div className='flex flex-col items-center gap-1 px-1'>
-            <span className='text-lg font-bold text-white sm:text-xl'>
+
+          <div className='flex shrink-0 flex-col items-center gap-1 px-1'>
+            <span className='text-base leading-none font-bold text-white sm:text-lg'>
               {event.homeScore} - {event.awayScore}
             </span>
+            <span
+              suppressHydrationWarning
+              className='text-secondary text-[0.6rem] uppercase sm:text-[0.65rem]'
+            >
+              {formatPlaytime(event.sportKey, elapsed, event.stage)}
+            </span>
             {event.periodScores && (
-              <span className='text-secondary text-[0.65rem]'>
+              <span className='text-secondary text-[0.6rem]'>
                 {event.periodScores.map(([h, a]) => `${h}-${a}`).join(' · ')}
               </span>
             )}
           </div>
+
           <DetailCompetitor
             name={event.awayCompetitor}
             redCards={event.redCards.filter(c => c.team === 'away').length}
@@ -128,6 +98,34 @@ function EventDetail(props: { event: LiveEvent }) {
           <MarketBlock key={market.id} market={market} />
         ))}
       </div>
+    </div>
+  )
+}
+
+function EventHeader(props: { event: LiveEvent }) {
+  const { event } = props
+  return (
+    <div className='text-secondary flex flex-wrap items-center gap-x-2 gap-y-1 text-xs uppercase'>
+      <SportIcon sport={event.sportKey} className='size-3.5 shrink-0' />
+      <span className='flex min-w-0 items-center gap-1.5'>
+        {event.countryCode && (
+          <ReactCountryFlag
+            svg
+            countryCode={event.countryCode}
+            className='w-4 shrink-0 rounded-xs shadow-xs'
+            style={{ width: undefined, height: undefined }}
+          />
+        )}
+        <span className='max-w-40 truncate sm:max-w-none'>{event.tournamentName}</span>
+      </span>
+      {/* other sports already show their phase in the clock caption below;
+          football's caption is a bare mm:ss clock, so the half goes here */}
+      {event.sportKey === 'football' && (
+        <>
+          <span className='shrink-0'>·</span>
+          <span className='shrink-0'>{STAGE_LABEL[event.stage]}</span>
+        </>
+      )}
     </div>
   )
 }

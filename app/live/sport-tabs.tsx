@@ -26,7 +26,6 @@ export default function SportTabs(props: { events: LiveEvent[] }) {
       .map(([key, count]) => ({ key, count }))
   }, [props.events])
 
-  // defaults to the first sport in the list; mutually exclusive selection
   useEffect(() => {
     if (!sport && sports.length > 0) setSport(sports[0].key)
   }, [sport, sports, setSport])
@@ -34,7 +33,7 @@ export default function SportTabs(props: { events: LiveEvent[] }) {
   if (sports.length === 0) return null
 
   return (
-    <div className='flex scrollbar-none items-center gap-2 overflow-x-auto pb-1'>
+    <div className='flex scrollbar-none items-center gap-3 overflow-x-auto pb-1'>
       {sports.map(s => {
         const theme = getSportTheme(s.key)
         const active = sport === s.key
@@ -44,7 +43,7 @@ export default function SportTabs(props: { events: LiveEvent[] }) {
             type='button'
             onClick={() => setSport(s.key)}
             className={cn(
-              'bg-dark-200 sport-texture flex shrink-0 items-center gap-2 rounded-full border border-transparent px-3.5 py-2 text-xs font-medium whitespace-nowrap transition-colors',
+              'bg-dark-200 sport-texture relative flex size-16 shrink-0 flex-col items-center justify-center gap-1 rounded-2xl border border-transparent transition-colors sm:size-18',
               active ? 'text-foreground' : 'text-white/60 hover:text-white'
             )}
             style={
@@ -53,13 +52,11 @@ export default function SportTabs(props: { events: LiveEvent[] }) {
                 : undefined
             }
           >
-            <SportIcon sport={s.key} colored className='size-4' />
-            <span className='capitalize'>{s.key.replace('-', ' ')}</span>
-            <span className='text-secondary flex items-center gap-1.5'>
-              <span className='relative inline-flex size-1.5'>
-                <span className='bg-destructive absolute inline-flex size-full animate-ping rounded-full opacity-75' />
-                <span className='bg-destructive relative inline-flex size-1.5 rounded-full' />
-              </span>
+            <SportIcon sport={s.key} colored className='size-5' />
+            <span className='text-[0.6rem] leading-none font-medium capitalize'>
+              {s.key.replace('-', ' ')}
+            </span>
+            <span className='bg-dark-300 text-secondary absolute -top-1.5 -right-1.5 flex min-w-4.5 items-center justify-center rounded-full px-1 py-0.5 text-[0.55rem] font-bold'>
               {s.count}
             </span>
           </button>

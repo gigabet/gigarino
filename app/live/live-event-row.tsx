@@ -2,13 +2,14 @@
 'use client'
 
 import { useSetAtom } from 'jotai'
-import { memo } from 'react'
 import { Toggle } from 'radix-ui'
-import { formatPlaytime, getElapsedSeconds } from '@/app/live/mock-data'
+import { memo } from 'react'
 import { useTick } from '@/app/live/hooks'
+import { formatPlaytime, getElapsedSeconds } from '@/app/live/mock-data'
 import { liveSelectedEventState, liveViewState } from '@/app/live/store'
 import type { LiveEvent, LiveOutcome } from '@/app/live/types'
 import { useViewportRegistration } from '@/app/live/viewport-batcher'
+import { Separator } from '@/components/ui/separator'
 import { useHasOdd, useToggleOdd } from '@/context/betslip'
 import { useUpDown } from '@/context/hooks'
 import { cn, initials, stringToHue } from '@/lib/utils'
@@ -18,11 +19,7 @@ function LiveEventRowImpl(props: { event: LiveEvent; active?: boolean }) {
   const setSelected = useSetAtom(liveSelectedEventState)
   const setView = useSetAtom(liveViewState)
 
-  // own clock subscription — this row updates every second independent of
-  // its siblings and independent of the list/sort computation above it
   const now = useTick()
-  // only participates in batched refreshes while actually mounted (i.e.
-  // while Virtuoso renders it, ± overscan) — scrolled-off rows unregister
   useViewportRegistration(event.id)
 
   const elapsed = getElapsedSeconds(event, now)
@@ -41,36 +38,43 @@ function LiveEventRowImpl(props: { event: LiveEvent; active?: boolean }) {
         props.active && 'ring-primary/60 ring-1'
       )}
     >
-      <button type='button' onClick={openSingle} className='contents text-left'>
-        <div className='flex min-w-0 items-center gap-4 lg:contents'>
-          <div className='flex w-34 min-w-0 shrink-0 flex-col gap-1.5 text-xs sm:w-40 sm:text-sm lg:order-3 lg:ml-1 lg:w-60 lg:flex-none'>
-            <Competitor
-              name={event.homeCompetitor}
-              score={event.homeScore}
-              redCards={event.redCards?.filter(c => c.team === 'home')?.length}
-            />
-            <Competitor
-              name={event.awayCompetitor}
-              score={event.awayScore}
-              redCards={event.redCards?.filter(c => c.team === 'away')?.length}
-            />
-          </div>
+      {/* mobile row 1: teams + odds */}
+      <div className='relative flex items-center gap-4 lg:contents'>
+        <button
+          type='button'
+          onClick={openSingle}
+          className='flex w-34 min-w-0 shrink-0 flex-col gap-1 text-left text-xs sm:w-40 sm:gap-2 sm:text-sm lg:order-3 lg:ml-1 lg:w-60 lg:flex-none'
+        >
+          <Competitor
+            name={event.homeCompetitor}
+            score={event.homeScore}
+            redCards={event.redCards?.filter(c => c.team === 'home')?.length}
+          />
+          <Competitor
+            name={event.awayCompetitor}
+            score={event.awayScore}
+            redCards={event.redCards?.filter(c => c.team === 'away')?.length}
+          />
+        </button>
 
-          <div className='text-primary flex shrink-0 items-center gap-1.5 text-xs font-semibold lg:order-1 lg:w-16 lg:flex-col lg:justify-center lg:gap-0.5'>
-            <span className='relative size-2'>
-              <span className='bg-destructive absolute size-2 animate-ping rounded-full' />
-              <span className='bg-destructive absolute size-2 rounded-full' />
-            </span>
-            <span suppressHydrationWarning>{formatPlaytime(elapsed, event.stage)}</span>
-          </div>
+        <div className='ml-auto flex items-center gap-1.5 lg:order-4 lg:ml-0 lg:min-w-0 lg:flex-1 lg:justify-end'>
+          {mainMarket?.outcomes.map(odd => (
+            <OddToggle key={odd.id} odd={odd} />
+          ))}
         </div>
-      </button>
-
-      <div className='ml-auto flex items-center justify-end gap-1.5 lg:order-4'>
-        {mainMarket?.outcomes.map(odd => (
-          <OddToggle key={odd.id} odd={odd} />
-        ))}
       </div>
+
+      {/* mobile row 2: playtime, in the exact slot kickoff time occupies on prematch */}
+      <div className='relative flex items-center justify-between gap-4 lg:contents'>
+        <time
+          suppressHydrationWarning
+          className='text-secondary shrink-0 text-xs leading-relaxed lg:order-1 lg:w-16 lg:text-center'
+        >
+          {formatPlaytime(event.sportKey, elapsed, event.stage)}
+        </time>
+      </div>
+
+      <Separator orientation='vertical' className='hidden lg:order-2 lg:block' />
     </div>
   )
 }
@@ -133,9 +137,6 @@ function OddToggle(props: { odd: LiveOutcome }) {
   )
 }
 
-// with hundreds of rows mounted via Virtuoso overscan, prevent a row from
-// re-rendering when a sibling's identity changes or unrelated parent state
-// updates — this row's own tick/betslip subscriptions handle its own updates
 export default memo(
   LiveEventRowImpl,
   (prev, next) => prev.event === next.event && prev.active === next.active
