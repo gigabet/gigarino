@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<139b249e41de4512710fae4fd122bf45>>
+ * @generated SignedSource<<cbb6c98497ab8e953e02d93f2903c16b>>
  * @lightSyntaxTransform
  */
 
@@ -9,7 +9,7 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type BetRejectionCode = "BOOST_UNAVAILABLE" | "CASHOUT_UNAVAILABLE" | "CUTOFF_PASSED" | "DUPLICATE_EVENT" | "EVENT_NOT_BETTABLE" | "INSUFFICIENT_FUNDS" | "INTERNAL_ERROR" | "LIABILITY_LIMIT" | "MULTI_SINGLE_NOT_SUPPORTED" | "ODDS_LIMIT" | "OUTCOME_NOT_AVAILABLE" | "PRICE_CHANGED" | "PROVIDER_CURRENCY" | "STAKE_LIMIT" | "SYSTEM_NOT_SUPPORTED" | "WALLET_UNAVAILABLE" | "%future added value";
+export type BetRejectionCode = "CASHOUT_UNAVAILABLE" | "CUTOFF_PASSED" | "DUPLICATE_EVENT" | "EVENT_NOT_BETTABLE" | "INSUFFICIENT_FUNDS" | "INTERNAL_ERROR" | "LIABILITY_LIMIT" | "MULTI_SINGLE_NOT_SUPPORTED" | "ODDS_LIMIT" | "OUTCOME_NOT_AVAILABLE" | "PRICE_CHANGED" | "PROVIDER_CURRENCY" | "STAKE_LIMIT" | "SYSTEM_NOT_SUPPORTED" | "WALLET_UNAVAILABLE" | "%future added value";
 export type TicketStatus = "ACCEPTED" | "CASHED_OUT" | "LOST" | "PARTIALLY_CASHED_OUT" | "PENDING_ACCEPTANCE" | "REJECTED" | "VOID" | "WON" | "%future added value";
 export type TicketCardCashoutMutation$variables = {
   ticketId: string;
