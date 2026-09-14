@@ -10,7 +10,7 @@
     "i18n:validate": "tsx scripts/i18n/validate.ts",
     "i18n:prune": "tsx scripts/i18n/prune.ts",
     "i18n:prune:check": "tsx scripts/i18n/prune.ts --dry-run",
-    "prebuild": "pnpm run i18n:extract && pnpm run i18n:translate && pnpm run i18n:validate -- --strict",
+    "prebuild": "pnpm run i18n:extract && pnpm run i18n:translate && pnpm run i18n:validate --strict",
     "build": "next build",
     "start": "next start",
     "lint": "biome check",
