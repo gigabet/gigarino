@@ -3,9 +3,11 @@ import { JetBrains_Mono, Poppins, Rajdhani } from 'next/font/google'
 import Footer from '@/app/footer'
 import Navbar from '@/app/navbar'
 import ParticleBackground from '@/components/particle-background'
-import Providers from '@/context/providers'
+import Providers, { LocaleProvider } from '@/context/providers'
 import { getToken, getUser, getUserWallet } from '@/lib/auth'
 import './globals.css'
+import { resolveLocale } from '@/i18n/t'
+import dict from '@/i18n/translations.json'
 
 const poppins = Poppins({
   variable: '--font-poppins',
@@ -38,6 +40,15 @@ export default async function RootLayout({
   const token = await getToken()
   const user = await getUser()
   const wallet = await getUserWallet()
+  const locale = await resolveLocale()
+
+  // flatten to just this locale, so we don't ship de+tr to a de user
+  const flatDict = Object.fromEntries(
+    Object.entries(dict as Record<string, Record<string, string>>).map(([key, translations]) => [
+      key,
+      translations[locale] ?? '',
+    ])
+  )
 
   return (
     <html lang='en' data-scroll-behavior='smooth'>
@@ -73,9 +84,11 @@ export default async function RootLayout({
         <ParticleBackground />
 
         <Providers user={user} wallet={wallet}>
-          <Navbar token={token} />
-          {children}
-          <Footer />
+          <LocaleProvider locale={locale} dict={flatDict}>
+            <Navbar token={token} locale={locale} />
+            {children}
+            <Footer />
+          </LocaleProvider>
         </Providers>
       </body>
     </html>

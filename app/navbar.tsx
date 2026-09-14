@@ -20,26 +20,26 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import BottomBar from '@/app/bottom-bar'
 import Search from '@/app/search'
+import { LocaleSwitcher } from '@/components/locale-switcher'
 import Logo from '@/components/logo'
 import * as DropdownMenu from '@/components/ui/dropdown-menu'
 import { useBalanceUpdates } from '@/context/hooks'
-import { useUser } from '@/context/providers'
+import { useT, useUser } from '@/context/providers'
+import { tKey } from '@/i18n/tKey'
 import { logout } from '@/lib/auth'
 import { formatBalance } from '@/lib/utils'
 import type { Wallet } from '@/types'
 
 const navLinks = [
-  { label: 'Casino', href: '/', icon: CoinsIcon },
-  { label: 'Live Casino', href: '/casino/live-casino', icon: RadioIcon },
-  { label: 'Sports', href: '/sport', icon: VolleyballIcon },
-  { label: 'In Play', href: '#!', icon: TvMinimalPlayIcon },
-  // { label: 'Virtual Sports', href: '#!', icon: Gamepad2Icon },
-  // { label: 'Bonus', href: '#!', icon: GiftIcon },
+  { label: tKey('Casino'), href: '/', icon: CoinsIcon },
+  { label: tKey('Live Casino'), href: '/casino/live-casino', icon: RadioIcon },
+  { label: tKey('Sports'), href: '/sport', icon: VolleyballIcon },
+  { label: tKey('In Play'), href: '#!', icon: TvMinimalPlayIcon },
 ]
 const navbarMobileMenuState = atom(false)
 export const NAVBAR_HEIGHT = 'h-20'
 
-export default function Navbar(props: { token: string | undefined }) {
+export default function Navbar(props: { token: string | undefined; locale: string }) {
   const router = useRouter()
   const pathname = usePathname()
   const { user, wallet, clearUser } = useUser()
@@ -49,6 +49,8 @@ export default function Navbar(props: { token: string | undefined }) {
     clearUser()
     router.refresh()
   }
+
+  const t = useT()
 
   return (
     <>
@@ -81,7 +83,7 @@ export default function Navbar(props: { token: string | undefined }) {
                           : 'text-gray-400 hover:text-white'
                       )}
                     >
-                      <span>{link.label}</span>
+                      <span>{t(link.label)}</span>
                       <span
                         className={cx(
                           'bg-primary absolute bottom-0 left-1/2 h-0.5 w-0 -translate-x-1/2 transition-all duration-300',
@@ -100,6 +102,8 @@ export default function Navbar(props: { token: string | undefined }) {
 
             {/* Right Actions */}
             <div className='flex items-center gap-2 sm:gap-3'>
+              <LocaleSwitcher current={props.locale} />
+
               <Search />
 
               {!!user && !!wallet && (
@@ -131,28 +135,28 @@ export default function Navbar(props: { token: string | undefined }) {
                         className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'
                       >
                         <UserIcon className='mr-2 size-4' />
-                        Account
+                        {t('Account')}
                       </DropdownMenu.Item>
                       <DropdownMenu.Item
                         onClick={() => router.push('/user/wallet')}
                         className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'
                       >
                         <WalletIcon className='mr-2 size-4' />
-                        Wallet
+                        {t('Wallet')}
                       </DropdownMenu.Item>
                       <DropdownMenu.Item
                         onClick={() => router.push('/user/transactions')}
                         className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'
                       >
                         <CreditCardIcon className='mr-2 size-4' />
-                        Transactions
+                        {t('Transactions')}
                       </DropdownMenu.Item>
                       <DropdownMenu.Item
                         onClick={() => router.push('/user/bonuses')}
                         className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'
                       >
                         <GiftIcon className='mr-2 size-4' />
-                        Bonuses
+                        {t('Bonuses')}
                       </DropdownMenu.Item>
                       <DropdownMenu.Separator className='bg-white/10' />
                       <DropdownMenu.Item
@@ -160,7 +164,7 @@ export default function Navbar(props: { token: string | undefined }) {
                         onClick={handleLogout}
                       >
                         <LogOutIcon className='mr-2 size-4 group-focus/logout:text-red-200' />
-                        Logout
+                        {t('Logout')}
                       </DropdownMenu.Item>
                     </DropdownMenu.Content>
                   </DropdownMenu.Root>
@@ -174,13 +178,13 @@ export default function Navbar(props: { token: string | undefined }) {
                     href='/register'
                     className='hidden cursor-default rounded-full border border-white/20 px-4 py-2 text-sm font-medium text-white uppercase transition-all hover:bg-white/5 sm:block'
                   >
-                    Register
+                    {t('Register')}
                   </Link>
                   <Link
                     href='/login'
                     className='bg-primary hover:shadow-glow flex cursor-default items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-black uppercase transition-all'
                   >
-                    <span className='tracking-wide'>Log in</span>
+                    <span className='tracking-wide'>{t('Log in')}</span>
                   </Link>
                 </>
               )}

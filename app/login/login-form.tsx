@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useT } from '@/context/providers'
 
 export default function LoginForm() {
   const [formData, action, isPending] = useActionState(login, {
@@ -42,6 +43,8 @@ export default function LoginForm() {
     }
   }, [router.replace, searchParams.get])
 
+  const t = useT()
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -59,7 +62,7 @@ export default function LoginForm() {
             transition={{ delay: 0.2 }}
             className='font-display mb-2 text-3xl font-bold text-white'
           >
-            Welcome Back
+            {t('Welcome Back')}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
@@ -67,7 +70,7 @@ export default function LoginForm() {
             transition={{ delay: 0.3 }}
             className='text-secondary'
           >
-            Sign in to your Gigarino account
+            {t('Sign in to your {acc} account', { acc: 'Gigarino' })}
           </motion.p>
         </div>
 
@@ -92,7 +95,7 @@ export default function LoginForm() {
             className='border-primary-500/30 bg-primary-500/10 mb-6 flex items-center gap-3 rounded-lg border p-4'
           >
             <AlertCircleIcon className='text-primary size-5 shrink-0' />
-            <p className='text-primary text-sm'>Registration successful!</p>
+            <p className='text-primary text-sm'>{t('Registration successful!')}</p>
           </motion.div>
         </Activity>
 
@@ -106,7 +109,7 @@ export default function LoginForm() {
             className='space-y-2'
           >
             <Label htmlFor='identifier' className='text-sm font-medium text-gray-300'>
-              Email or Username
+              {t('Email or Username')}
             </Label>
             <div className='relative'>
               <MailIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
@@ -116,7 +119,7 @@ export default function LoginForm() {
                 name='identifier'
                 type='text'
                 defaultValue={formData.identifier}
-                placeholder='Enter your username or email'
+                placeholder={t('Enter your username or email')}
                 required
               />
             </div>
@@ -130,7 +133,7 @@ export default function LoginForm() {
             className='space-y-2'
           >
             <Label htmlFor='password' className='text-sm font-medium text-gray-300'>
-              Password
+              {t('Password')}
             </Label>
             <div className='relative'>
               <LockIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
@@ -140,7 +143,7 @@ export default function LoginForm() {
                 name='password'
                 type={showPassword ? 'text' : 'password'}
                 defaultValue={formData.password}
-                placeholder='Enter your password'
+                placeholder={t('Enter your password')}
                 required
               />
               <button
@@ -163,14 +166,14 @@ export default function LoginForm() {
             <div className='flex items-center space-x-2'>
               <Checkbox id='rememberMe' name='rememberMe' defaultChecked={formData.rememberMe} />
               <Label htmlFor='rememberMe' className='cursor-pointer text-sm text-gray-400'>
-                Remember me
+                {t('Remember me')}
               </Label>
             </div>
             <Link
               href='/forgot-password'
               className='text-primary group relative text-sm transition-colors hover:text-white'
             >
-              Forgot password?
+              {t('Forgot password?')}
               <span className='bg-primary absolute -bottom-0.5 left-0 h-px w-0 transition-all duration-300 group-hover:w-full' />
             </Link>
           </motion.div>
@@ -193,10 +196,10 @@ export default function LoginForm() {
               {isPending ? (
                 <>
                   <Loader2Icon className='mr-2 size-5 animate-spin' />
-                  Logging in...
+                  {t('Logging in')}...
                 </>
               ) : (
-                'Log In'
+                t('Log In')
               )}
             </button>
           </motion.div>
@@ -212,7 +215,7 @@ export default function LoginForm() {
           <div className='grow'>
             <div className='w-full border-t border-white/10' />
           </div>
-          <div className='text-sm text-gray-500'>Or continue with</div>
+          <div className='text-sm text-gray-500'>{t('Or continue with')}</div>
           <div className='grow'>
             <div className='w-full border-t border-white/10' />
           </div>
@@ -271,12 +274,12 @@ export default function LoginForm() {
           transition={{ delay: 0.9 }}
           className='mt-8 text-center text-sm text-gray-400'
         >
-          Don't have an account?{' '}
+          {t("Don't have an account?")}{' '}
           <Link
             href='/register'
             className='text-primary group relative font-medium transition-colors hover:text-white'
           >
-            Register now
+            {t('Register now')}
             <span className='bg-primary absolute -bottom-0.5 left-0 h-px w-0 transition-all duration-300 group-hover:w-full' />
           </Link>
         </motion.p>

@@ -3,6 +3,7 @@
 import { cx } from 'class-variance-authority'
 import { ChevronRightIcon, ShieldCheckIcon, ZapIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
+import { useT } from '@/context/providers'
 
 export default function HeroBanner() {
   const [isVisible, setIsVisible] = useState(false)
@@ -44,6 +45,8 @@ export default function HeroBanner() {
       window.removeEventListener('scroll', handleScroll)
     }
   }, [])
+
+  const t = useT()
 
   return (
     // biome-ignore lint/a11y/noStaticElementInteractions: cosmetic only
@@ -97,23 +100,33 @@ export default function HeroBanner() {
         <div className='absolute inset-0 overflow-hidden'>
           <div
             className='via-primary/30 absolute top-20/100 -left-1/1 h-px w-full bg-linear-to-r from-transparent to-transparent'
-            style={{ animation: '3s linear 0s infinite normal none running shimmer' }}
+            style={{
+              animation: '3s linear 0s infinite normal none running shimmer',
+            }}
           />
           <div
             className='via-primary/30 absolute top-35/100 -left-1/1 h-px w-full bg-linear-to-r from-transparent to-transparent'
-            style={{ animation: '3s linear 0s infinite normal none running shimmer' }}
+            style={{
+              animation: '3s linear 0s infinite normal none running shimmer',
+            }}
           />
           <div
             className='via-primary/30 absolute top-50/100 -left-1/1 h-px w-full bg-linear-to-r from-transparent to-transparent'
-            style={{ animation: '3s linear 0s infinite normal none running shimmer' }}
+            style={{
+              animation: '3s linear 0s infinite normal none running shimmer',
+            }}
           />
           <div
             className='via-primary/30 absolute top-65/100 -left-1/1 h-px w-full bg-linear-to-r from-transparent to-transparent'
-            style={{ animation: '3s linear 0s infinite normal none running shimmer' }}
+            style={{
+              animation: '3s linear 0s infinite normal none running shimmer',
+            }}
           />
           <div
             className='via-primary/30 absolute top-80/100 -left-1/1 h-px w-full bg-linear-to-r from-transparent to-transparent'
-            style={{ animation: '3s linear 0s infinite normal none running shimmer' }}
+            style={{
+              animation: '3s linear 0s infinite normal none running shimmer',
+            }}
           />
         </div>
       </div>
@@ -125,7 +138,7 @@ export default function HeroBanner() {
           )}
         >
           <span className='text-primary text-xs font-medium tracking-wider uppercase'>
-            Welcome Offer
+            {t('Welcome Offer')}
           </span>
         </div>
         <h1
@@ -161,7 +174,7 @@ export default function HeroBanner() {
           >
             <div className='from-primary to-primary absolute inset-0 bg-linear-to-r via-white/30 opacity-0 transition-opacity duration-500 group-hover/button:opacity-100'></div>
             <div className='absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/40 to-transparent transition-transform duration-1000 group-hover/button:translate-x-full'></div>
-            <span className='relative'>JOIN NOW</span>
+            <span className='relative uppercase'>{t('Join now')}</span>
             <ChevronRightIcon className='relative size-5 transition-transform group-hover/button:translate-x-1' />
           </button>
         </div>
@@ -175,13 +188,15 @@ export default function HeroBanner() {
             <div className='bg-primary/10 flex h-8 w-8 items-center justify-center rounded-full'>
               <ShieldCheckIcon className='text-primary size-4' />
             </div>
-            <span className='text-sm'>Secure &amp; Licensed</span>
+            <span className='text-sm'>
+              {t('Secure')} &amp; {t('Licensed')}
+            </span>
           </div>
           <div className='flex items-center gap-2 text-gray-400'>
             <div className='bg-primary/10 flex h-8 w-8 items-center justify-center rounded-full'>
               <ZapIcon className='text-primary size-4' />
             </div>
-            <span className='text-sm'>Fast Payouts</span>
+            <span className='text-sm'>{t('Fast Payouts')}</span>
           </div>
         </div>
       </div>

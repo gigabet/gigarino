@@ -1,0 +1,246 @@
+{
+  "About Us": {
+    "de": "Über uns",
+    "tr": "Hakkımızda"
+  },
+  "Accepted Payment Methods": {
+    "de": "Akzeptierte Zahlungsmethoden",
+    "tr": "Kabul Edilen Ödeme Yöntemleri"
+  },
+  "Account": {
+    "de": "Konto",
+    "tr": "Hesap"
+  },
+  "American Football": {
+    "de": "American Football",
+    "tr": "Amerikan Futbolu"
+  },
+  "Baseball": {
+    "de": "Baseball",
+    "tr": "Beyzbol"
+  },
+  "Basketball": {
+    "de": "Basketball",
+    "tr": "Basketbol"
+  },
+  "Bonuses": {
+    "de": "Bonusse",
+    "tr": "Bonuslar"
+  },
+  "Casino": {
+    "de": "Casino",
+    "tr": "Casino"
+  },
+  "Casino Promotions": {
+    "de": "Casino-Aktionen",
+    "tr": "Kumarhane Promosyonları"
+  },
+  "Challenges": {
+    "de": "Herausforderungen",
+    "tr": "Zorluklar"
+  },
+  "Cookie Notice": {
+    "de": "Hinweis zu Cookies",
+    "tr": "Çerez Bildirimi"
+  },
+  "Create Shortcut": {
+    "de": "Verknüpfung erstellen",
+    "tr": "Kısayol Oluştur"
+  },
+  "Don't have an account?": {
+    "de": "Sie haben noch kein Konto?",
+    "tr": "Hesabınız yok mu?"
+  },
+  "Email or Username": {
+    "de": "E-Mail-Adresse oder Benutzername",
+    "tr": "E-posta veya Kullanıcı Adı"
+  },
+  "Enter your password": {
+    "de": "Ihr Passwort",
+    "tr": "Şifrenizi girin"
+  },
+  "Enter your username or email": {
+    "de": "Geben Sie Ihren Benutzernamen oder Ihre E-Mail-Adresse ein",
+    "tr": "Kullanıcı adınızı veya e-posta adresinizi girin"
+  },
+  "Fast Payouts": {
+    "de": "Schnelle Auszahlungen",
+    "tr": "Hızlı Ödemeler"
+  },
+  "Football": {
+    "de": "Fußball",
+    "tr": "Futbol"
+  },
+  "Forgot password?": {
+    "de": "Passwort vergessen?",
+    "tr": "Şifrenizi mi unuttunuz?"
+  },
+  "Gambling can be addictive. Play responsibly. This platform only accepts customers over 18 years of age.": {
+    "de": "Glücksspiel kann süchtig machen. Spielen Sie verantwortungsbewusst. Diese Plattform akzeptiert ausschließlich Kunden, die mindestens 18 Jahre alt sind.",
+    "tr": "Kumar bağımlılık yapabilir. Sorumlu bir şekilde oynayın. Bu platform yalnızca 18 yaşın üzerindeki müşterileri kabul etmektedir."
+  },
+  "Game unavailable.": {
+    "de": "Spiel nicht verfügbar.",
+    "tr": "Oyun mevcut değil."
+  },
+  "Help Centre": {
+    "de": "Hilfezentrum",
+    "tr": "Yardım Merkezi"
+  },
+  "Ice Hockey": {
+    "de": "Eishockey",
+    "tr": "Buz Hokeyi"
+  },
+  "In Play": {
+    "de": "Livewetten",
+    "tr": "Canlı Bahis"
+  },
+  "Join now": {
+    "de": "Jetzt beitreten",
+    "tr": "Hemen katılın"
+  },
+  "Licensed": {
+    "de": "Zugelassen",
+    "tr": "Lisanslı"
+  },
+  "Live Betting": {
+    "de": "Live-Wetten",
+    "tr": "Canlı Bahis"
+  },
+  "Live Casino": {
+    "de": "Live-Casino",
+    "tr": "Canlı Casino"
+  },
+  "Log In": {
+    "de": "Anmelden",
+    "tr": "Giriş Yap"
+  },
+  "Log in": {
+    "de": "Anmelden",
+    "tr": "Giriş yap"
+  },
+  "Logging in": {
+    "de": "Anmelden",
+    "tr": "Giriş yapılıyor"
+  },
+  "Logout": {
+    "de": "Abmelden",
+    "tr": "Çıkış"
+  },
+  "Mobile Optimized": {
+    "de": "Für Mobilgeräte optimiert",
+    "tr": "Mobil Cihazlar İçin Optimize Edilmiş"
+  },
+  "Or continue with": {
+    "de": "Oder weiter mit",
+    "tr": "Ya da şuna devam edin:"
+  },
+  "Partners": {
+    "de": "Partner",
+    "tr": "Ortaklar"
+  },
+  "Password": {
+    "de": "Passwort",
+    "tr": "Şifre"
+  },
+  "Payments": {
+    "de": "Zahlungen",
+    "tr": "Ödemeler"
+  },
+  "Privacy Notice": {
+    "de": "Datenschutzerklärung",
+    "tr": "Gizlilik Bildirimi"
+  },
+  "Register": {
+    "de": "Registrieren",
+    "tr": "Kayıt Ol"
+  },
+  "Register now": {
+    "de": "Jetzt registrieren",
+    "tr": "Hemen kaydolun"
+  },
+  "Registration successful!": {
+    "de": "Die Registrierung war erfolgreich!",
+    "tr": "Kayıt işlemi başarıyla tamamlandı!"
+  },
+  "Remember me": {
+    "de": "Angemeldet bleiben",
+    "tr": "Beni hatırla"
+  },
+  "Responsible Gaming": {
+    "de": "Verantwortungsbewusstes Spielen",
+    "tr": "Sorumlu Oyun"
+  },
+  "Secure": {
+    "de": "Sicher",
+    "tr": "Güvenli"
+  },
+  "See all {n}": {
+    "de": "Das alles {n}",
+    "tr": "Hepsini göster {n}"
+  },
+  "Shop": {
+    "de": "Shop",
+    "tr": "Mağaza"
+  },
+  "Sign in to your {acc} account": {
+    "de": "Melden Sie sich bei Ihrem {acc}-Konto an",
+    "tr": "{acc} hesabınıza giriş yapın"
+  },
+  "Sitemap": {
+    "de": "Sitemap",
+    "tr": "Site haritası"
+  },
+  "Sport Promotions": {
+    "de": "Sport-Aktionen",
+    "tr": "Spor Kampanyaları"
+  },
+  "Sports": {
+    "de": "Sport",
+    "tr": "Spor"
+  },
+  "Sportsbook": {
+    "de": "Sportwetten",
+    "tr": "Spor Bahis"
+  },
+  "Table Tennis": {
+    "de": "Tischtennis",
+    "tr": "Masa Tenisi"
+  },
+  "Tennis": {
+    "de": "Tennis",
+    "tr": "Tenis"
+  },
+  "Terms and Conditions": {
+    "de": "Allgemeine Geschäftsbedingungen",
+    "tr": "Şartlar ve Koşullar"
+  },
+  "Transactions": {
+    "de": "Transaktionen",
+    "tr": "İşlemler"
+  },
+  "VIP": {
+    "de": "VIP",
+    "tr": "VIP"
+  },
+  "Virtual Sports": {
+    "de": "Virtueller Sport",
+    "tr": "Sanal Sporlar"
+  },
+  "Wallet": {
+    "de": "Geldbörse",
+    "tr": "Cüzdan"
+  },
+  "Welcome Back": {
+    "de": "Willkommen zurück",
+    "tr": "Hoş Geldiniz"
+  },
+  "Welcome Offer": {
+    "de": "Willkommensangebot",
+    "tr": "Hoş Geldiniz Teklifi"
+  },
+  "new": {
+    "de": "neu",
+    "tr": "yeni"
+  }
+}

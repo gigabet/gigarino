@@ -3,7 +3,7 @@ import { environmentManager, QueryClient, QueryClientProvider } from '@tanstack/
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { cx } from 'class-variance-authority'
 import { atom, useAtomValue } from 'jotai'
-import { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { BarLoader } from 'react-spinners'
 import { Toaster } from '@/components/ui/sonner'
 import { RelayProvider } from '@/relay/relay-provider'
@@ -97,4 +97,46 @@ function LoadingOverlay() {
       <BarLoader color='#ffffff' />
     </div>
   )
+}
+
+type Locale = 'en' | 'de' | 'tr'
+type FlatDict = Record<string, string> // key -> translated string, for one locale
+
+const LocaleContext = createContext<{ locale: Locale; dict: FlatDict } | null>(null)
+
+export function LocaleProvider({
+  locale,
+  dict,
+  children,
+}: {
+  locale: Locale
+  dict: FlatDict
+  children: React.ReactNode
+}) {
+  const value = useMemo(() => ({ locale, dict }), [locale, dict])
+  return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>
+}
+
+function substitute(str: string, params?: Record<string, string | number>): string {
+  if (!params) return str
+  return str.replace(/\{(\w+)\}/g, (match, name) =>
+    params[name] !== undefined ? String(params[name]) : match
+  )
+}
+
+export function useT() {
+  const ctx = useContext(LocaleContext)
+  if (!ctx) throw new Error('useT() must be used within a LocaleProvider')
+  const { locale, dict } = ctx
+
+  return function t(key: string, params?: Record<string, string | number>): string {
+    if (locale === 'en') return substitute(key, params)
+    return substitute(dict[key] || key, params)
+  }
+}
+
+export function useLocale(): Locale {
+  const ctx = useContext(LocaleContext)
+  if (!ctx) throw new Error('useLocale() must be used within a LocaleProvider')
+  return ctx.locale
 }

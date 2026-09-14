@@ -3,7 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently \"next dev\" \"pnpm:watch:i18n\"",
+    "watch:i18n": "chokidar \"app/**/*.{ts,tsx}\" \"components/**/*.{ts,tsx}\" -c \"pnpm run i18n:extract\"",
+    "i18n:extract": "tsx scripts/i18n/extract.ts",
+    "i18n:translate": "tsx scripts/i18n/translate.ts",
+    "i18n:validate": "tsx scripts/i18n/validate.ts",
+    "i18n:prune": "tsx scripts/i18n/prune.ts",
+    "i18n:prune:check": "tsx scripts/i18n/prune.ts --dry-run",
+    "prebuild": "pnpm run i18n:extract && pnpm run i18n:translate && pnpm run i18n:validate -- --strict",
     "build": "next build",
     "start": "next start",
     "lint": "biome check",
@@ -78,6 +85,8 @@
     "@types/react-dom": "19.2.3",
     "@types/relay-compiler": "~14.0.4",
     "babel-plugin-react-compiler": "1.0.0",
+    "chokidar-cli": "^3.0.0",
+    "concurrently": "^10.0.5",
     "eslint": "^10.6.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-relay": "^2.0.0",
@@ -87,8 +96,10 @@
     "relay-compiler": "^21.0.1",
     "tailwindcss": "^4.3.0",
     "tailwindcss-animate": "^1.0.7",
+    "ts-morph": "^28.0.0",
+    "tsx": "^4.23.13",
     "typescript": "^5",
     "typescript-eslint": "^8.62.1"
   },
-  "packageManager": "pnpm@12.1.0"
+  "packageManager": "pnpm@12.4.1"
 }

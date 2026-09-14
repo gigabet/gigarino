@@ -23,7 +23,14 @@ export default async function proxy(req: NextRequest) {
   //   return NextResponse.redirect(new URL('/', req.nextUrl))
   // }
 
-  return NextResponse.next()
+  const res = NextResponse.next()
+  if (!req.cookies.get('locale')) {
+    const lang = req.headers.get('accept-language')?.split(',')[0].split('-')[0] ?? 'en'
+    const locale = ['en', 'de', 'tr'].includes(lang) ? lang : 'en'
+    res.cookies.set('locale', locale, { path: '/', maxAge: 60 * 60 * 24 * 365 })
+  }
+
+  return res
 }
 
 // Routes proxy should not run on

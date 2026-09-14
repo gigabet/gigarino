@@ -11,9 +11,16 @@ import {
 import Link from 'next/link'
 import { categories } from '@/app/context'
 import Logo from '@/components/logo'
+import { getT } from '@/i18n/t'
+import { tKey } from '@/i18n/tKey'
 
 const footerLinks = {
-  'GENERAL INFO': [['About Us'], ['Help Centre'], ['Create Shortcut'], ['Sitemap']],
+  'GENERAL INFO': [
+    [tKey('About Us')],
+    [tKey('Help Centre')],
+    [tKey('Create Shortcut')],
+    [tKey('Sitemap')],
+  ],
   CASINO: entries(categories).map(([label, cat]) => [label, `/casino/${cat.slug}`]),
   'LIVE CASINO': [
     ['Top Live Casino'],
@@ -26,31 +33,31 @@ const footerLinks = {
     ['All Live', '/casino/live-casino'],
   ],
   SPORTS: [
-    ['Sportsbook'],
-    ['Live Betting'],
-    ['Virtual Sports'],
-    ['Football'],
-    ['Tennis'],
-    ['Table Tennis'],
-    ['Basketball'],
-    ['Ice Hockey'],
-    ['American Football'],
-    ['Baseball'],
+    [tKey('Sportsbook')],
+    [tKey('Live Betting')],
+    [tKey('Virtual Sports')],
+    [tKey('Football')],
+    [tKey('Tennis')],
+    [tKey('Table Tennis')],
+    [tKey('Basketball')],
+    [tKey('Ice Hockey')],
+    [tKey('American Football')],
+    [tKey('Baseball')],
   ],
   SECURITY: [
-    ['Privacy Notice'],
-    ['Responsible Gaming'],
-    ['Cookie Notice'],
-    ['Terms and Conditions'],
+    [tKey('Privacy Notice')],
+    [tKey('Responsible Gaming')],
+    [tKey('Cookie Notice')],
+    [tKey('Terms and Conditions')],
   ],
   PROMOTIONS: [
-    ['Casino Promotions'],
-    ['Sport Promotions'],
-    ['Challenges'],
-    ['Shop'],
-    ['VIP'],
-    ['Payments'],
-    ['Partners'],
+    [tKey('Casino Promotions')],
+    [tKey('Sport Promotions')],
+    [tKey('Challenges')],
+    [tKey('Shop')],
+    [tKey('VIP')],
+    [tKey('Payments')],
+    [tKey('Partners')],
   ],
 }
 
@@ -61,7 +68,9 @@ const paymentMethods = [
   { name: 'Crypto', icon: 'BTC' },
 ]
 
-export default function Footer() {
+export default async function Footer() {
+  const t = await getT()
+
   return (
     <footer className='relative z-0 pt-16 pb-28 lg:pb-8'>
       {/* Background with subtle pattern */}
@@ -88,7 +97,7 @@ export default function Footer() {
                       href={href ?? ''}
                       className='hover:text-primary group relative text-sm text-gray-500 transition-colors duration-300'
                     >
-                      {label}
+                      {t(label)}
                       <span className='bg-primary absolute bottom-0 left-0 h-px w-0 transition-all duration-300 group-hover:w-full' />
                     </Link>
                   </li>
@@ -104,13 +113,15 @@ export default function Footer() {
             <div className='bg-primary/10 flex h-6 w-6 items-center justify-center rounded-full'>
               <ShieldCheckIcon className='text-primary h-3 w-3' />
             </div>
-            <span className='text-xs text-gray-400'>Secure and Licensed</span>
+            <span className='text-xs text-gray-400'>
+              {t('Secure')} &amp; {t('Licensed')}
+            </span>
           </div>
           <div className='flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2'>
             <div className='bg-primary/10 flex h-6 w-6 items-center justify-center rounded-full'>
               <ZapIcon className='text-primary h-3 w-3' />
             </div>
-            <span className='text-xs text-gray-400'>Fast Payouts</span>
+            <span className='text-xs text-gray-400'>{t('Fast Payouts')}</span>
           </div>
           <div className='flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2'>
             <div className='bg-primary/10 flex h-6 w-6 items-center justify-center rounded-full'>
@@ -122,14 +133,14 @@ export default function Footer() {
             <div className='bg-primary/10 flex h-6 w-6 items-center justify-center rounded-full'>
               <SmartphoneIcon className='text-primary h-3 w-3' />
             </div>
-            <span className='text-xs text-gray-400'>Mobile Optimized</span>
+            <span className='text-xs text-gray-400'>{t('Mobile Optimized')}</span>
           </div>
         </div>
 
         {/* Payment Methods */}
         <div className='mb-8'>
           <p className='mb-4 text-center text-xs tracking-wider text-gray-500 uppercase'>
-            Accepted Payment Methods
+            {t('Accepted Payment Methods')}
           </p>
           <div className='flex flex-wrap items-center justify-center gap-3'>
             {paymentMethods.map(method => (
@@ -171,8 +182,9 @@ export default function Footer() {
         {/* Copyright & Legal */}
         <div className='flex flex-col items-center justify-between gap-4 text-xs text-gray-600 md:flex-row'>
           <p>
-            Gambling can be addictive. Play responsibly. This platform only accepts customers over
-            18 years of age.
+            {t(
+              'Gambling can be addictive. Play responsibly. This platform only accepts customers over 18 years of age.'
+            )}
           </p>
           <p>2024 © GigaRino Gaming. All rights reserved.</p>
         </div>

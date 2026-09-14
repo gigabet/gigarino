@@ -11,7 +11,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useRef, useState } from 'react'
 import { type categories, getGameDemo, getGameQuery } from '@/app/context'
-import { isLoadingOverlayState } from '@/context/providers'
+import { isLoadingOverlayState, useT } from '@/context/providers'
 import type { Game } from '@/types'
 
 // const icons = {
@@ -48,6 +48,8 @@ export default function GameSection({
   const games = take(data?.items, 4)
   // const Icon = icons[category.icon]
 
+  const t = useT()
+
   return (
     <section
       ref={sectionRef}
@@ -71,13 +73,15 @@ export default function GameSection({
               )}
               <h2 className='font-display text-2xl font-bold sm:text-3xl'>{title}</h2>
             </div>
-            <Link
-              href={`/casino/${category.slug}`}
-              className='hover:text-primary group flex items-center gap-1 text-sm text-white/60 transition-colors'
-            >
-              <span>See all ({data?.total})</span>
-              <ChevronRightIcon className='size-4 transition-transform group-hover:translate-x-1' />
-            </Link>
+            {data?.total && (
+              <Link
+                href={`/casino/${category.slug}`}
+                className='hover:text-primary group flex items-center gap-1 text-sm text-white/60 transition-colors'
+              >
+                <span>{t('See all {n}', { n: data.total })}</span>
+                <ChevronRightIcon className='size-4 transition-transform group-hover:translate-x-1' />
+              </Link>
+            )}
           </motion.div>
         )}
 
@@ -96,13 +100,13 @@ export default function GameSection({
           ))}
         </div>
 
-        {props.noHeader && !!category.slug && (
+        {props.noHeader && !!category.slug && data?.total && (
           <div className='flex items-center justify-end pt-6'>
             <Link
               href={`/casino/${category.slug}`}
               className='hover:text-primary group flex items-center gap-1 text-sm text-white/60 transition-colors'
             >
-              <span>See all ({data?.total})</span>
+              <span>{t('See all {n}', { n: data.total })}</span>
               <ChevronRightIcon className='size-4 transition-transform group-hover:translate-x-1' />
             </Link>
           </div>
@@ -143,6 +147,8 @@ export function GameCard({ game }: { game: Game }) {
     setTransform({ rotateX: 0, rotateY: 0 })
   }
 
+  const t = useT()
+
   return (
     <button
       type='button'
@@ -168,7 +174,7 @@ export function GameCard({ game }: { game: Game }) {
             />
           ) : (
             <div className='flex h-full w-full scale-100 items-center justify-center object-cover transition-transform duration-500 group-hover:scale-108'>
-              <span className='pb-10'>Game unavailable.</span>
+              <span className='pb-10'>{t('Game unavailable.')}</span>
             </div>
           )}
 
@@ -179,7 +185,7 @@ export function GameCard({ game }: { game: Game }) {
           <div className='absolute top-2 right-2 flex items-center gap-1'>
             {game.isNew && (
               <div className='bg-dark/70 flex h-5 items-center rounded-full px-2 text-[0.675rem] leading-none font-semibold text-white uppercase'>
-                new
+                {t('new')}
               </div>
             )}
             {/* {game.playCount > 1 && (
