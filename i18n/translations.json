@@ -131,6 +131,10 @@
     "de": "Für Mobilgeräte optimiert",
     "tr": "Mobil Cihazlar İçin Optimize Edilmiş"
   },
+  "new": {
+    "de": "neu",
+    "tr": "yeni"
+  },
   "Or continue with": {
     "de": "Oder weiter mit",
     "tr": "Ya da şuna devam edin:"
@@ -238,9 +242,5 @@
   "Welcome Offer": {
     "de": "Willkommensangebot",
     "tr": "Hoş Geldiniz Teklifi"
-  },
-  "new": {
-    "de": "neu",
-    "tr": "yeni"
   }
 }
