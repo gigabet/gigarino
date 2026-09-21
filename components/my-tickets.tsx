@@ -172,7 +172,7 @@ function FakeTicketRow(props: { status: 'Open' | 'Won' | 'Lost'; combi?: boolean
         </div>
         <div className='flex shrink-0 flex-col items-end'>
           <span className='font-mono text-sm font-semibold text-white'>€25.00</span>
-          <span className='text-secondary text-[0.65rem]'>{t('Today, 18:30')}</span>
+          <span className='text-secondary text-[0.65rem]'>Today, 18:30</span>
         </div>
       </div>
     </div>

@@ -39,7 +39,7 @@ const navLinks = [
 const navbarMobileMenuState = atom(false)
 export const NAVBAR_HEIGHT = 'h-20'
 
-export default function Navbar(props: { token: string | undefined; locale: string }) {
+export default function Navbar(props: { token: string | undefined }) {
   const router = useRouter()
   const pathname = usePathname()
   const { user, wallet, clearUser } = useUser()
@@ -102,8 +102,6 @@ export default function Navbar(props: { token: string | undefined; locale: strin
 
             {/* Right Actions */}
             <div className='flex items-center gap-2 sm:gap-3'>
-              <LocaleSwitcher current={props.locale} />
-
               <Search />
 
               {!!user && !!wallet && (

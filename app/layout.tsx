@@ -85,7 +85,7 @@ export default async function RootLayout({
 
         <Providers user={user} wallet={wallet}>
           <LocaleProvider locale={locale} dict={flatDict}>
-            <Navbar token={token} locale={locale} />
+            <Navbar token={token} />
             {children}
             <Footer />
           </LocaleProvider>

@@ -10,8 +10,9 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { categories } from '@/app/context'
+import { LocaleSwitcher } from '@/components/locale-switcher'
 import Logo from '@/components/logo'
-import { getT } from '@/i18n/t'
+import { getT, resolveLocale } from '@/i18n/t'
 import { tKey } from '@/i18n/tKey'
 
 const footerLinks = {
@@ -70,6 +71,7 @@ const paymentMethods = [
 
 export default async function Footer() {
   const t = await getT()
+  const locale = await resolveLocale()
 
   return (
     <footer className='relative z-0 pt-16 pb-28 lg:pb-8'>
@@ -186,7 +188,10 @@ export default async function Footer() {
               'Gambling can be addictive. Play responsibly. This platform only accepts customers over 18 years of age.'
             )}
           </p>
-          <p>2024 © GigaRino Gaming. All rights reserved.</p>
+          <div className='flex items-center gap-4'>
+            <p>2024 © GigaRino Gaming. All rights reserved.</p>
+            <LocaleSwitcher current={locale} />
+          </div>
         </div>
       </div>
     </footer>

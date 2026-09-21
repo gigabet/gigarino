@@ -1,8 +1,15 @@
-// components/LocaleSwitcher.tsx
 'use client'
 
+import { GlobeIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useTransition } from 'react'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 const LOCALES = [
   { code: 'en', label: 'English' },
@@ -20,13 +27,30 @@ export function LocaleSwitcher({ current }: { current: string }) {
     startTransition(() => router.refresh())
   }
 
+  const currentLabel = LOCALES.find(l => l.code === current)?.label ?? current
+
   return (
-    <select value={current} onChange={e => handleChange(e.target.value)} disabled={isPending}>
-      {LOCALES.map(l => (
-        <option key={l.code} value={l.code}>
-          {l.label}
-        </option>
-      ))}
-    </select>
+    <Select value={current} onValueChange={handleChange} disabled={isPending}>
+      <SelectTrigger
+        size='sm'
+        className='hover:text-primary data-[state=open]:text-primary h-auto gap-1.5 border-none bg-transparent p-0 text-xs text-gray-500 shadow-none transition-colors'
+      >
+        <GlobeIcon className='size-3.5' />
+        <SelectValue>{currentLabel}</SelectValue>
+      </SelectTrigger>
+      <SelectContent
+        side='top'
+        align='end'
+        position='popper'
+        sideOffset={8}
+        className='bg-dark-200 min-w-32 border-white/10 text-xs'
+      >
+        {LOCALES.map(l => (
+          <SelectItem key={l.code} value={l.code} className='text-xs'>
+            {l.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   )
 }
