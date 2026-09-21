@@ -9,12 +9,14 @@ import { useRef } from 'react'
 import { type categories, getGameQuery, providersQuery } from '@/app/context'
 import GameSection from '@/app/game-section'
 import ProviderSection from '@/app/provider-section'
+import { useT } from '@/context/providers'
 
 const categorySectionTabState = atom<keyof typeof categories>('Providers')
 
 export default function CategorySection(props: { categories: typeof categories }) {
   const tab = useAtomValue(categorySectionTabState)
   const sectionRef = useRef<HTMLDivElement>(null)
+  const t = useT()
 
   return (
     <section ref={sectionRef} className='relative py-12 sm:py-20'>
@@ -27,7 +29,7 @@ export default function CategorySection(props: { categories: typeof categories }
           viewport={{ once: true }}
           className='mb-4'
         >
-          <h2 className='font-display text-2xl font-bold sm:text-3xl'>Game Categories</h2>
+          <h2 className='font-display text-2xl font-bold sm:text-3xl'>{t('Game Categories')}</h2>
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 32, z: 1 }}
@@ -43,7 +45,7 @@ export default function CategorySection(props: { categories: typeof categories }
         {tab === 'Providers' ? (
           <ProviderSection noHeader />
         ) : (
-          <GameSection key={tab} category={props.categories[tab]} title={tab} noHeader />
+          <GameSection key={tab} category={props.categories[tab]} title={t(tab)} noHeader />
         )}
       </div>
     </section>
@@ -58,6 +60,7 @@ function Tab({
 } & (typeof categories)[keyof typeof categories]) {
   const [tab, setTab] = useAtom(categorySectionTabState)
   const handleClick = () => setTab(label as keyof typeof categories)
+  const t = useT()
 
   const { data } = useQuery({
     queryKey: ['games', props.query],
@@ -81,7 +84,7 @@ function Tab({
           : 'bg-dark-200 text-white/70 hover:bg-white/10 hover:text-white'
       )}
     >
-      <span>{label}</span>
+      <span>{t(label)}</span>
       <span className='ml-2 text-xs text-current/60'>
         ({label === 'Providers' ? providers?.length : data?.total})
       </span>

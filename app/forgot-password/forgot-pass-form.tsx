@@ -8,6 +8,7 @@ import { Activity, useActionState } from 'react'
 import { forgotPassword } from '@/app/forgot-password/actions'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useT } from '@/context/providers'
 
 export default function ForgotPassForm() {
   const [state, action, isPending] = useActionState(forgotPassword, {
@@ -15,6 +16,7 @@ export default function ForgotPassForm() {
     error: '',
     step: 'email' as const,
   })
+  const t = useT()
 
   return (
     <motion.div
@@ -34,7 +36,7 @@ export default function ForgotPassForm() {
               transition={{ delay: 0.2 }}
               className='font-display mb-2 text-3xl font-bold text-white'
             >
-              Forgot Password?
+              {t('Forgot Password?')}
             </motion.h1>
             <motion.p
               initial={{ opacity: 0 }}
@@ -42,7 +44,7 @@ export default function ForgotPassForm() {
               transition={{ delay: 0.3 }}
               className='text-secondary'
             >
-              Enter your email address and we'll send you a link to reset your password.
+              {t("Enter your email address and we'll send you a link to reset your password.")}
             </motion.p>
           </div>
 
@@ -66,7 +68,7 @@ export default function ForgotPassForm() {
               className='space-y-2'
             >
               <Label htmlFor='email' className='text-sm font-medium text-gray-300'>
-                Email
+                {t('Email')}
               </Label>
               <div className='relative'>
                 <MailIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
@@ -76,7 +78,7 @@ export default function ForgotPassForm() {
                   name='email'
                   type='text'
                   defaultValue={state.email}
-                  placeholder='Enter your email'
+                  placeholder={t('Enter your email')}
                   required
                 />
               </div>
@@ -95,10 +97,10 @@ export default function ForgotPassForm() {
                 {isPending ? (
                   <>
                     <Loader2Icon className='mr-2 size-5 animate-spin' />
-                    Pending...
+                    {t('Pending...')}
                   </>
                 ) : (
-                  'Send Reset Link'
+                  t('Send Reset Link')
                 )}
               </button>
             </motion.div>
@@ -113,7 +115,7 @@ export default function ForgotPassForm() {
                 className='hover:text-primary mx-auto inline-flex items-center justify-center gap-2 px-4 text-sm text-gray-500 transition-colors'
               >
                 <ArrowLeftIcon className='size-4' />
-                <span>Back to Login</span>
+                <span>{t('Back to Login')}</span>
               </Link>
             </motion.div>
           </Form>
@@ -129,7 +131,7 @@ export default function ForgotPassForm() {
               transition={{ delay: 0.2 }}
               className='font-display mb-2 text-3xl font-bold text-white'
             >
-              Password Reset
+              {t('Password Reset')}
             </motion.h1>
             <motion.p
               initial={{ opacity: 0 }}
@@ -137,7 +139,9 @@ export default function ForgotPassForm() {
               transition={{ delay: 0.3 }}
               className='text-secondary'
             >
-              If that email exists, a reset link has been sent. Check your inbox and spam folder.
+              {t(
+                'If that email exists, a reset link has been sent. Check your inbox and spam folder.'
+              )}
             </motion.p>
           </div>
           <motion.div
@@ -149,7 +153,7 @@ export default function ForgotPassForm() {
               href='/login'
               className='bg-primary hover:shadow-glow flex w-full cursor-default items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-black uppercase transition-all'
             >
-              Log in
+              {t('Log in')}
             </Link>
           </motion.div>
         </Activity>

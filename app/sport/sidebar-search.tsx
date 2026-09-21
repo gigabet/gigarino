@@ -3,6 +3,7 @@
 import { SearchIcon, XIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useDebounce, useSidebarSearch } from '@/context/hooks'
+import { useT } from '@/context/providers'
 
 const MIN_CHARS = 3
 
@@ -11,6 +12,7 @@ export default function SidebarSearch() {
   const [value, setValue] = useState(term)
   const debounced = useDebounce(value, 300)
   const lastCommitted = useRef(term)
+  const t = useT()
 
   // only search if 3+ chars
   useEffect(() => {
@@ -35,14 +37,14 @@ export default function SidebarSearch() {
       <input
         value={value}
         onChange={e => setValue(e.target.value)}
-        placeholder='search teams, leagues...'
-        aria-label='Search sports'
+        placeholder={t('search teams, leagues...')}
+        aria-label={t('Search sports')}
         className='text-foreground placeholder:text-muted-foreground w-full min-w-0 bg-transparent text-sm outline-none'
       />
       {value.length > 0 && (
         <button
           type='button'
-          aria-label='Clear search'
+          aria-label={t('Clear search')}
           onClick={() => setValue('')}
           className='text-muted-foreground hover:text-foreground shrink-0'
         >

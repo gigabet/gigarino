@@ -36,6 +36,8 @@ import { Field, FieldGroup } from '@/components/ui/field'
 import { Label } from '@/components/ui/label'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useSelectedTournaments } from '@/context/hooks'
+import { useLocale, useT } from '@/context/providers'
+import { getCountryName } from '@/i18n/countryNames'
 
 const sportOrder = [
   'football',
@@ -47,15 +49,6 @@ const sportOrder = [
   'ebasketball',
   'e-ice-hockey',
 ]
-
-function HotDot() {
-  return (
-    <span className='relative ml-1 inline-flex size-1.5'>
-      <span className='animate-pulse-ring bg-primary/70 absolute inline-flex size-full rounded-full' />
-      <span className='bg-primary relative inline-flex size-1.5 rounded-full' />
-    </span>
-  )
-}
 
 export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayoutQuery> }) {
   const preloaded = usePreloadedQuery<PrematchLayoutQuery>(PrematchLayoutQueryNode, props.queryRef)
@@ -83,6 +76,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
   }).filter(s => s.eventCount > 0)
 
   const [expanded, setExpanded] = useState(false)
+  const t = useT()
 
   const topTournamentsEventCount = data.sb_topTournaments.reduce(
     (acc, curr) => acc + Math.min(4, curr?.eventCount ?? 0),
@@ -100,7 +94,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
             className='bg-dark-300 sport-texture flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-xs whitespace-nowrap transition-colors hover:bg-white/5'
           >
             <SportIcon sport='highlights' colored className='size-4' />
-            Highlights
+            {t('Highlights')}
           </Link>
           {filteredSports.map(sport => (
             <SportSubmenu
@@ -129,7 +123,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
           <button
             type='button'
             onClick={() => setExpanded(e => !e)}
-            aria-label={expanded ? 'Collapse sidebar' : 'Expand sidebar'}
+            aria-label={expanded ? t('Collapse sidebar') : t('Expand sidebar')}
             className='text-secondary hover:bg-dark-300 hover:text-foreground flex size-8 items-center justify-center rounded-full transition-colors'
           >
             {expanded ? (
@@ -185,6 +179,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
 }
 
 export function SidebarSkeleton() {
+  const t = useT()
   return (
     <>
       <div className='bg-dark sticky top-20 z-20 -mx-4 -mt-8 flex gap-2 border-b border-white/5 px-4 py-2 sm:-mx-6 sm:px-6 lg:hidden'>
@@ -209,7 +204,9 @@ export function SidebarSkeleton() {
         <div className='flex w-full flex-col gap-4'>
           <div className='flex h-10 items-center justify-center gap-4 rounded-full border bg-black/50 px-4 xl:justify-start'>
             <SearchIcon className='size-4 shrink-0' />
-            <span className='text-muted-foreground hidden text-sm xl:inline'>search games...</span>
+            <span className='text-muted-foreground hidden text-sm xl:inline'>
+              {t('search games...')}
+            </span>
           </div>
 
           <div className='flex flex-col gap-2'>
@@ -240,6 +237,9 @@ function SportSubmenu(props: {
 }) {
   const [queryRef, loadQuery, disposeQuery] =
     useQueryLoader<SidebarSportDetails>(SidebarSportDetailsNode)
+  // NOTE: sportName comes from the API — if the backend already localises
+  // sport names, leave as-is; otherwise wrap with t() here.
+  const sportName = props.sportName
 
   return (
     <Popover.Root
@@ -258,7 +258,7 @@ function SportSubmenu(props: {
           className='bg-dark-200 z-40 max-h-[70dvh] w-72 overflow-y-auto rounded-2xl border border-white/5 p-3 shadow-2xl'
         >
           <p className='text-secondary mb-2 px-1 text-xs font-semibold tracking-wider uppercase'>
-            {props.sportName}
+            {sportName}
           </p>
           <Suspense fallback={<CategorySkeleton />}>
             {queryRef && <CountryList queryRef={queryRef} />}
@@ -273,6 +273,7 @@ function FullSidebarContent(props: {
   filteredSports: Sidebar$data['sports']
   topTournamentsEventCount: number
 }) {
+  const t = useT()
   return (
     <div className='flex w-full flex-col gap-4'>
       <SidebarSearch />
@@ -290,7 +291,7 @@ function FullSidebarContent(props: {
             prefetch={true}
           >
             <SportIconBadge sport='highlights' size='sm' />
-            <span className='mr-auto text-sm'>Highlights</span>
+            <span className='mr-auto text-sm'>{t('Highlights')}</span>
             <span className='text-secondary flex items-center text-xs'>
               {props.topTournamentsEventCount}
             </span>
@@ -369,6 +370,7 @@ function CountryList(props: { queryRef: PreloadedQuery<SidebarSportDetails> }) {
         categories {
           key
           eventCount
+          countryCode
           ...SidebarCountryItem
         }
       }
@@ -376,10 +378,19 @@ function CountryList(props: { queryRef: PreloadedQuery<SidebarSportDetails> }) {
     preloaded.sport as SidebarCountryList$key
   )
 
+  const locale = useLocale()
+  const t = useT()
+
   return (
     <Accordion.Root type='multiple' className='space-y-0.5'>
       {data.categories
         .filter(c => c.eventCount > 0)
+        .sort((a, b) =>
+          getCountryName(a.countryCode, locale, t).localeCompare(
+            getCountryName(b.countryCode, locale, t),
+            locale
+          )
+        )
         .map((country, i) => (
           <div
             key={country.key}
@@ -422,6 +433,9 @@ function CountryItem(props: { country: SidebarCountryItem$key }) {
     ).subscribe({ error: () => (hasPrefetched.current = false) })
   }
 
+  const locale = useLocale()
+  const t = useT()
+
   return (
     <Accordion.Item value={data.key}>
       <Accordion.Trigger
@@ -437,10 +451,9 @@ function CountryItem(props: { country: SidebarCountryItem$key }) {
           className='w-5 rounded-[3px] ring-1 ring-white/0 transition-all hover:ring-white/40'
           style={{ width: undefined, height: undefined }}
         />{' '}
-        <span className='mr-auto text-[0.8rem] font-normal'>{data.name}</span>
-        {/* <span className='text-secondary text-xs'>
-          {data.eventCount)}
-        </span> */}
+        <span className='mr-auto text-[0.8rem] font-normal'>
+          {getCountryName(data.countryCode, locale, t)}
+        </span>
       </Accordion.Trigger>
       <Accordion.Content
         data-slot='accordion-content'

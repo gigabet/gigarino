@@ -13,6 +13,7 @@ import { Alert, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Empty, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useT } from '@/context/providers'
 
 interface GameListProps {
   title: string
@@ -22,6 +23,7 @@ interface GameListProps {
 export default function GameList({ title, query }: GameListProps) {
   const sectionRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
+  const t = useT()
 
   const { ref, inView } = useInView()
   const { data, hasNextPage, isFetchingNextPage, fetchNextPage, error, isPending } =
@@ -51,10 +53,10 @@ export default function GameList({ title, query }: GameListProps) {
           >
             <Alert className='text-destructive border-destructive bg-destructive/10 inline-flex w-auto min-w-sm items-center [&>svg]:translate-0'>
               <OctagonAlertIcon className='' />
-              <AlertTitle>{error?.message ?? 'Something went wrong.'}</AlertTitle>
+              <AlertTitle>{error?.message ?? t('Something went wrong.')}</AlertTitle>
               <div className='ml-auto'>
                 <Button size='sm' variant='outline' onClick={() => router.refresh()}>
-                  Retry
+                  {t('Retry')}
                 </Button>
               </div>
             </Alert>
@@ -78,7 +80,7 @@ export default function GameList({ title, query }: GameListProps) {
               <EmptyMedia>
                 <Gamepad2Icon />
               </EmptyMedia>
-              <EmptyTitle>No games</EmptyTitle>
+              <EmptyTitle>{t('No games')}</EmptyTitle>
             </EmptyHeader>
           </Empty>
         )}

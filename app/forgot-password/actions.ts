@@ -1,6 +1,7 @@
 'use server'
 
 import { isArray } from 'lodash'
+import { getT } from '@/i18n/t'
 import type { ErrorResponse } from '@/types'
 
 export async function forgotPassword(
@@ -14,11 +15,6 @@ export async function forgotPassword(
   const data = {
     email: formData.get('email') as string,
   }
-
-  console.log('Forgotten password:', {
-    ...data,
-    supervisorId: process.env.SUPERVISOR_ID,
-  })
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/players/forgot-password`, {
     method: 'POST',
@@ -34,11 +30,12 @@ export async function forgotPassword(
   if (!res.ok) {
     const errorData = (await res.json()) as ErrorResponse
     console.log(errorData)
+    const t = await getT()
     return {
       ...data,
       error: isArray(errorData.message)
         ? errorData.message[0]
-        : errorData.message || 'Password reset failed.',
+        : errorData.message || t('Password reset failed.'),
       step: 'email' as const,
     }
   } else {

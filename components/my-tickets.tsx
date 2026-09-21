@@ -13,7 +13,7 @@ import type { MyTicketsQuery } from '@/components/__generated__/MyTicketsQuery.g
 import { SectionErrorFallback } from '@/components/section-error-fallback'
 import TicketCard, { TicketCardSkeleton } from '@/components/ticket-card'
 import { buttonVariants } from '@/components/ui/button'
-import { useUser } from '@/context/providers'
+import { useT, useUser } from '@/context/providers'
 import { isAuthError } from '@/lib/utils'
 
 const OPEN_STATUSES = new Set(['PENDING_ACCEPTANCE', 'ACCEPTED', 'PARTIALLY_CASHED_OUT'])
@@ -99,6 +99,7 @@ function MyTicketsContent() {
     if (inView && hasNext && !isLoadingNext) loadNext(10)
   }, [inView, hasNext, isLoadingNext, loadNext])
 
+  const t = useT()
   const tickets = data.myTickets.edges.map(e => e.node)
   const open = tickets.filter(t => OPEN_STATUSES.has(t.status))
   const settled = tickets.filter(t => !OPEN_STATUSES.has(t.status))
@@ -112,7 +113,7 @@ function MyTicketsContent() {
       {open.length > 0 && (
         <section>
           <h3 className='text-secondary mb-2 text-xs font-semibold tracking-wider uppercase'>
-            Open ({open.length})
+            {t('Open ({n})', { n: open.length })}
           </h3>
           <div className='space-y-3'>
             {open.map(t => (
@@ -125,7 +126,7 @@ function MyTicketsContent() {
       {settled.length > 0 && (
         <section>
           <h3 className='text-secondary mb-2 text-xs font-semibold tracking-wider uppercase'>
-            Recent
+            {t('Recent')}
           </h3>
           <div className='space-y-3'>
             {settled.map(t => (
@@ -145,12 +146,13 @@ function MyTicketsContent() {
 }
 
 function FakeTicketRow(props: { status: 'Open' | 'Won' | 'Lost'; combi?: boolean }) {
+  const t = useT()
   const meta =
     props.status === 'Open'
-      ? { label: 'Open', className: 'bg-sky-500/10 text-sky-400' }
+      ? { label: t('Open'), className: 'bg-sky-500/10 text-sky-400' }
       : props.status === 'Won'
-        ? { label: 'Won', className: 'bg-primary/10 text-primary' }
-        : { label: 'Lost', className: 'bg-red-500/10 text-red-400' }
+        ? { label: t('Won'), className: 'bg-primary/10 text-primary' }
+        : { label: t('Lost'), className: 'bg-red-500/10 text-red-400' }
 
   return (
     <div className='rounded-xl border border-white/5 bg-black/20 p-3'>
@@ -163,14 +165,14 @@ function FakeTicketRow(props: { status: 'Open' | 'Won' | 'Lost'; combi?: boolean
               {meta.label}
             </span>
             <span className='text-secondary text-xs'>
-              {props.combi ? '3-fold Combi' : 'Single'}
+              {props.combi ? t('{n}-fold Combi', { n: 3 }) : t('Single')}
             </span>
           </div>
           <p className='text-secondary mt-1 truncate text-xs'>Team A vs Team B</p>
         </div>
         <div className='flex shrink-0 flex-col items-end'>
           <span className='font-mono text-sm font-semibold text-white'>€25.00</span>
-          <span className='text-secondary text-[0.65rem]'>Today, 18:30</span>
+          <span className='text-secondary text-[0.65rem]'>{t('Today, 18:30')}</span>
         </div>
       </div>
     </div>
@@ -178,12 +180,13 @@ function FakeTicketRow(props: { status: 'Open' | 'Won' | 'Lost'; combi?: boolean
 }
 
 function LoggedOutTickets() {
+  const t = useT()
   return (
     <div className='relative min-h-96.25'>
       <div aria-hidden className='pointer-events-none space-y-6 px-5 py-4 blur-sm select-none'>
         <section>
           <h3 className='text-secondary mb-2 text-xs font-semibold tracking-wider uppercase'>
-            Open (2)
+            {t('Open ({n})', { n: 2 })}
           </h3>
           <div className='space-y-3'>
             <FakeTicketRow status='Open' combi />
@@ -192,7 +195,7 @@ function LoggedOutTickets() {
         </section>
         <section>
           <h3 className='text-secondary mb-2 text-xs font-semibold tracking-wider uppercase'>
-            Recent
+            {t('Recent')}
           </h3>
           <div className='space-y-3'>
             <FakeTicketRow status='Won' />
@@ -206,13 +209,13 @@ function LoggedOutTickets() {
           <LockKeyholeIcon className='text-secondary size-6' />
         </div>
         <div>
-          <p className='font-semibold text-white'>Sign in to view your tickets</p>
+          <p className='font-semibold text-white'>{t('Sign in to view your tickets')}</p>
           <p className='text-secondary mt-1 max-w-56 text-xs'>
-            Track your open bets and betting history once you're logged in.
+            {t("Track your open bets and betting history once you're logged in.")}
           </p>
         </div>
         <Link href={{ pathname: '/login', query: { from: '/sport' } }} className={buttonVariants()}>
-          Log in
+          {t('Log in')}
         </Link>
       </div>
     </div>
@@ -220,14 +223,15 @@ function LoggedOutTickets() {
 }
 
 function EmptyTickets() {
+  const t = useT()
   return (
     <div className='text-secondary flex h-96.25 flex-col items-center justify-center gap-3 px-6 text-center'>
       <div className='bg-dark flex size-14 items-center justify-center rounded-full border border-white/5'>
         <PiTicket className='size-6 opacity-40' />
       </div>
-      <p className='text-sm'>No tickets yet</p>
+      <p className='text-sm'>{t('No tickets yet')}</p>
       <p className='max-w-50 text-xs opacity-60'>
-        Bets you place will show up here, open ones first.
+        {t('Bets you place will show up here, open ones first.')}
       </p>
     </div>
   )

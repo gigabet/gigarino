@@ -1,7 +1,7 @@
 /** Identity function at runtime — exists only so the extractor can find these
  * strings when they're declared outside a component and translated later. */
 
-export function tKey(key: string): string {
+export function tKey<T extends string>(key: T): T {
   return key
 }
 

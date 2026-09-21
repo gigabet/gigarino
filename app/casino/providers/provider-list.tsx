@@ -5,6 +5,7 @@ import { cx } from 'class-variance-authority'
 import { useEffect, useRef, useState } from 'react'
 import { providersQuery } from '@/app/context'
 import { ProviderCard } from '@/app/provider-section'
+import { useT } from '@/context/providers'
 
 export default function GameList() {
   const sectionRef = useRef<HTMLDivElement>(null)
@@ -33,6 +34,8 @@ export default function GameList() {
     queryFn: providersQuery,
   })
 
+  const t = useT()
+
   return (
     <section ref={sectionRef} className={cx('relative pt-8 pb-16 sm:pb-20')}>
       <div className='mx-auto max-w-360 px-6 lg:px-8'>
@@ -44,7 +47,7 @@ export default function GameList() {
           )}
         >
           <div className='flex items-center gap-2'>
-            <h2 className='font-display text-2xl font-bold sm:text-3xl'>Providers</h2>
+            <h2 className='font-display text-2xl font-bold sm:text-3xl'>{t('Providers')}</h2>
           </div>
         </div>
 

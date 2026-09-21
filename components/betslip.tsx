@@ -35,6 +35,7 @@ import { Separator } from '@/components/ui/separator'
 import * as Tabs from '@/components/ui/tabs'
 import { betslipInputAtom, betslipOpenAtom } from '@/context/betslip'
 import { useMediaQuery } from '@/context/hooks'
+import { useT } from '@/context/providers'
 import { cn, formatBalance, nCk } from '@/lib/utils'
 import type { PriceChange, TicketType } from '@/types'
 
@@ -64,6 +65,7 @@ export default function Betslip(props: {
   )
 
   const [input, setInput] = useAtom(betslipInputAtom)
+  const t = useT()
 
   const [mainTab, setMainTab] = useState<MainTab>('betslip')
   const [placed, setPlaced] = useState<{
@@ -181,7 +183,7 @@ export default function Betslip(props: {
         }
       },
       onError: error => {
-        setPlaceError(error.message || 'Failed to place bet. Please try again.')
+        setPlaceError(error.message || t('Failed to place bet. Please try again.'))
         setPriceChanges(null)
       },
     })
@@ -244,14 +246,14 @@ export default function Betslip(props: {
             active={mainTab === 'betslip'}
             onClick={() => setMainTab('betslip')}
             icon={<TicketIcon className='size-4' />}
-            label='Betslip'
+            label={t('Betslip')}
             // count={data?.items.length}
           />
           <MainTabButton
             active={mainTab === 'tickets'}
             onClick={() => setMainTab('tickets')}
             icon={<HistoryIcon className='size-4' />}
-            label='My Tickets'
+            label={t('My Tickets')}
           />
         </div>
         <AnimatePresence>
@@ -315,21 +317,21 @@ export default function Betslip(props: {
                 value='SINGLE'
                 className='data-[state=active]:bg-primary hover:bg-dark-300 transition-colors data-[state=active]:text-black'
               >
-                Singles
+                {t('Singles')}
               </Tabs.Trigger>
               <Tabs.Trigger
                 value='MULTIPLE'
                 disabled={data.items.length < 2}
                 className='data-[state=active]:bg-primary hover:bg-dark-300 transition-colors data-[state=active]:text-black'
               >
-                Combi
+                {t('Combi')}
               </Tabs.Trigger>
               <Tabs.Trigger
                 value='SYSTEM'
                 disabled={data.items.length < 3}
                 className='data-[state=active]:bg-primary hover:bg-dark-300 transition-colors data-[state=active]:text-black'
               >
-                System
+                {t('System')}
               </Tabs.Trigger>
             </Tabs.List>
           </Tabs.Root>
@@ -342,14 +344,21 @@ export default function Betslip(props: {
               >
                 <SelectTrigger size='sm' className='w-full'>
                   <SelectValue>
-                    {input.systemSize} out of {data.items.length} (
-                    {nCk(data.items.length, input.systemSize)} bets)
+                    {t('{k} out of {n} ({b} bets)', {
+                      k: input.systemSize,
+                      n: data.items.length,
+                      b: nCk(data.items.length, input.systemSize),
+                    })}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {systemOptions.map(k => (
                     <SelectItem key={k} value={String(k)}>
-                      {k} out of {data.items.length} ({nCk(data.items.length, k)} bets)
+                      {t('{k} out of {n} ({b} bets)', {
+                        k,
+                        n: data.items.length,
+                        b: nCk(data.items.length, k),
+                      })}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -379,7 +388,9 @@ export default function Betslip(props: {
             <div className='z-1 flex items-center gap-2 bg-red-500/10 p-3 px-6 text-red-400'>
               <AlertTriangleIcon className='size-4 shrink-0' />
               <p className='mr-auto text-xs'>
-                {unavailable.size === 1 ? '1 invalid bet.' : `${unavailable.size} invalid bets.`}
+                {unavailable.size === 1
+                  ? t('1 invalid bet.')
+                  : t('{n} invalid bets.', { n: unavailable.size })}
               </p>
               <Button
                 variant='ghost'
@@ -425,8 +436,8 @@ export default function Betslip(props: {
               <TrendingUpIcon className='size-4 shrink-0' />
               <p className='mr-auto truncate text-xs'>
                 {priceChanges.length === 1
-                  ? '1 odd change.'
-                  : `${priceChanges.length} odds changes.`}
+                  ? t('1 odd change.')
+                  : t('{n} odds changes.', { n: priceChanges.length })}
               </p>
               <Button
                 variant='outline'
@@ -434,7 +445,7 @@ export default function Betslip(props: {
                 className='h-6 shrink-0 px-2 text-[0.7rem]'
                 onClick={() => setPriceChanges(null)}
               >
-                Reject
+                {t('Reject')}
               </Button>
               <Button
                 variant='outline'
@@ -442,7 +453,7 @@ export default function Betslip(props: {
                 className='h-6 shrink-0 px-2 text-[0.7rem]'
                 onClick={handleKeepHigher}
               >
-                Keep higher
+                {t('Keep higher')}
               </Button>
             </div>
           )}
@@ -451,19 +462,19 @@ export default function Betslip(props: {
             {data.betType !== 'SINGLE' && (
               <>
                 <div className='flex items-center justify-between text-sm'>
-                  <span className='text-secondary'>Combined odds</span>
+                  <span className='text-secondary'>{t('Combined odds')}</span>
                   <span className='font-mono font-semibold text-white'>
                     {Number(data.effectiveOdds).toFixed(2)}
                   </span>
                 </div>
 
                 <div className='flex items-center gap-3'>
-                  <span className='text-secondary shrink-0 text-sm'>Stake</span>
+                  <span className='text-secondary shrink-0 text-sm'>{t('Stake')}</span>
                   <InputGroup className='bg-dark flex-1 rounded-full'>
                     <InputGroupInput
                       type='number'
                       inputMode='decimal'
-                      placeholder='Stake'
+                      placeholder={t('Stake')}
                       value={input.stake}
                       onFocus={e => e.target.select()}
                       onChange={e => {
@@ -479,7 +490,7 @@ export default function Betslip(props: {
                 </div>
 
                 <div className='bg-dark flex items-center justify-between rounded-xl border border-white/5 px-4 py-3'>
-                  <span className='text-secondary text-sm'>Potential payout</span>
+                  <span className='text-secondary text-sm'>{t('Potential payout')}</span>
                   <span className='text-primary text-lg font-bold'>
                     {formatBalance(Number(data.potentialPayout) || 0)}
                   </span>
@@ -489,7 +500,7 @@ export default function Betslip(props: {
 
             {data.betType === 'SINGLE' && (
               <div className='bg-dark flex items-center justify-between rounded-xl border border-white/5 px-4 py-3'>
-                <span className='text-secondary text-sm'>Total stake</span>
+                <span className='text-secondary text-sm'>{t('Total stake')}</span>
                 <span className='text-primary text-lg font-bold'>
                   {formatBalance(
                     Object.values(singleStakes).reduce((acc, v) => acc + (Number(v) || 0), 0) ||
@@ -510,11 +521,11 @@ export default function Betslip(props: {
               {isPlacing ? (
                 <span className='relative flex items-center gap-2'>
                   <Loader2Icon className='size-5 animate-spin' />
-                  Placing bet...
+                  {t('Placing bet...')}
                 </span>
               ) : (
                 <span className='relative'>
-                  Place bet ·{' '}
+                  {t('Place bet')} ·{' '}
                   {formatBalance(
                     data.betType === 'SINGLE'
                       ? Object.values(singleStakes).reduce((acc, v) => acc + (Number(v) || 0), 0) ||
@@ -558,12 +569,16 @@ function MainTabButton(props: {
   )
 }
 
-const getLabel = (eventName: string | null | undefined, key: string) => {
+function getLabel(
+  eventName: string | null | undefined,
+  key: string,
+  t: (key: string, params?: Record<string, string | number>) => string
+) {
   const [home, away] = eventName?.split(' vs ') ?? []
   return key
-    .replace('home', home ?? 'Home')
-    .replace('away', away ?? 'Away')
-    .replace('draw', 'Draw')
+    .replace('home', home ?? t('Home'))
+    .replace('away', away ?? t('Away'))
+    .replace('draw', t('Draw'))
 }
 
 function Tip(props: {
@@ -587,9 +602,27 @@ function Tip(props: {
     `,
     props.item
   )
+  const t = useT()
   const change = props.priceChange
   const up = change ? Number(change.currentPrice) > Number(change.expectedPrice) : false
   const blocked = data.availability !== 'AVAILABLE'
+
+  const blockerCopy = (availability: string) => {
+    switch (availability) {
+      case 'SUSPENDED':
+        return t('Market suspended.')
+      case 'CUTOFF_PASSED':
+        return t('Event started.')
+      case 'DUPLICATE_EVENT':
+        return t('One combi bet per event.')
+      case 'EVENT_NOT_BETTABLE':
+        return t('Event not bettable.')
+      case 'NOT_FOUND':
+        return t('Bet not found.')
+      default:
+        return t('Bet unavailable.')
+    }
+  }
 
   return (
     <div
@@ -601,7 +634,7 @@ function Tip(props: {
       <button
         type='button'
         onClick={props.onRemove}
-        aria-label='Remove selection'
+        aria-label={t('Remove selection')}
         className='text-secondary hover:bg-dark-300 absolute top-2 right-2 flex size-6 items-center justify-center rounded-full opacity-0 transition-opacity group-hover:opacity-100 hover:text-white'
       >
         <XIcon className='size-3.5' />
@@ -615,7 +648,7 @@ function Tip(props: {
               blocked ? 'text-secondary line-through' : 'text-primary'
             )}
           >
-            {getLabel(data.eventName, data.key) ?? '—'}
+            {getLabel(data.eventName, data.key, t) ?? '—'}
           </p>
           <p className='truncate text-xs font-medium text-white/80'>{data.marketName ?? '—'}</p>
           <p className='text-secondary truncate text-[0.7rem]'>{data.eventName ?? '—'}</p>
@@ -653,7 +686,7 @@ function Tip(props: {
 
       {!blocked && props.showStake && (
         <div className='mt-2 flex items-center gap-2 border-t border-white/5 pt-2'>
-          <span className='text-secondary text-xs'>Stake</span>
+          <span className='text-secondary text-xs'>{t('Stake')}</span>
           <InputGroup className='bg-dark flex-1 rounded-full'>
             <InputGroupInput
               type='number'
@@ -676,32 +709,16 @@ function Tip(props: {
   )
 }
 
-function blockerCopy(availability: string) {
-  switch (availability) {
-    case 'SUSPENDED':
-      return 'Market suspended.'
-    case 'CUTOFF_PASSED':
-      return 'Event started.'
-    case 'DUPLICATE_EVENT':
-      return 'One combi bet per event.'
-    case 'EVENT_NOT_BETTABLE':
-      return 'Event not bettable.'
-    case 'NOT_FOUND':
-      return 'Bet not found.'
-    default:
-      return 'Bet unavailable.'
-  }
-}
-
 function EmptyState() {
+  const t = useT()
   return (
     <div className='text-secondary flex h-96.25 flex-col items-center justify-center gap-3 px-6 text-center'>
       <div className='bg-dark flex size-14 items-center justify-center rounded-full border border-white/5'>
         <PiTicket className='size-6 opacity-40' />
       </div>
-      <p className='text-sm'>Your betslip is empty</p>
+      <p className='text-sm'>{t('Your betslip is empty')}</p>
       <p className='max-w-50 text-xs opacity-60'>
-        Tap on any odds to add a selection and start building your bet.
+        {t('Tap on any odds to add a selection and start building your bet.')}
       </p>
     </div>
   )
@@ -712,18 +729,19 @@ function PlacedState(props: {
   onNewBet: () => void
   onViewTickets: () => void
 }) {
+  const t = useT()
   return (
     <div className='flex max-h-[calc(100dvh-7rem)] w-full flex-col items-center justify-center gap-4 overflow-hidden px-6 py-16 text-center'>
       <div className='bg-primary/15 flex size-14 items-center justify-center rounded-full'>
         <TicketIcon className='text-primary size-6' />
       </div>
       <div>
-        <p className='font-semibold text-white'>Bet placed!</p>
-        <p className='text-secondary mt-1 text-xs'>Good luck — track it under My Tickets.</p>
+        <p className='font-semibold text-white'>{t('Bet placed!')}</p>
+        <p className='text-secondary mt-1 text-xs'>{t('Good luck — track it under My Tickets.')}</p>
       </div>
       {props.ticket.potentialPayout && (
         <div className='bg-dark flex w-full max-w-60 items-center justify-between rounded-xl border border-white/5 px-4 py-3'>
-          <span className='text-secondary text-sm'>Potential payout</span>
+          <span className='text-secondary text-sm'>{t('Potential payout')}</span>
           <span className='text-primary text-lg font-bold'>
             {formatBalance(Number(props.ticket.potentialPayout))}
           </span>
@@ -731,9 +749,9 @@ function PlacedState(props: {
       )}
       <div className='mt-2 flex gap-2'>
         <Button variant='outline' onClick={props.onNewBet}>
-          Place another bet
+          {t('Place another bet')}
         </Button>
-        <Button onClick={props.onViewTickets}>My Tickets</Button>
+        <Button onClick={props.onViewTickets}>{t('My Tickets')}</Button>
       </div>
     </div>
   )
@@ -753,6 +771,7 @@ export function BetslipMobileBar(props: { query: BetslipMobileBar$key | null }) 
     props.query
   )
   const setOpen = useSetAtom(betslipOpenAtom)
+  const t = useT()
 
   if (!data || data.items.length === 0) return null
 
@@ -764,7 +783,10 @@ export function BetslipMobileBar(props: { query: BetslipMobileBar$key | null }) 
     >
       <span className='flex items-center gap-2 text-sm font-bold'>
         <TicketIcon className='size-4' />
-        {data.items.length} {data.items.length === 1 ? 'Selection' : 'Selections'}
+        {t('{n} {selection}', {
+          n: data.items.length,
+          selection: data.items.length === 1 ? t('Selection') : t('Selections'),
+        })}
       </span>
       <span className='flex items-center gap-1 text-sm font-bold'>
         {Number(data.effectiveOdds).toFixed(2)}
@@ -778,6 +800,7 @@ export function BetslipDrawer(props: { query: Betslip$key | null }) {
   const [open, setOpen] = useAtom(betslipOpenAtom)
   const isWiderThanMobile = useMediaQuery('(min-width: 640px)')
   const direction = isWiderThanMobile ? 'right' : 'bottom'
+  const t = useT()
 
   return (
     <Drawer.Root open={open} onOpenChange={setOpen} direction={direction}>
@@ -792,7 +815,7 @@ export function BetslipDrawer(props: { query: Betslip$key | null }) {
           aria-describedby={undefined}
         >
           <VisuallyHidden.Root>
-            <Drawer.Title>Betslip</Drawer.Title>
+            <Drawer.Title>{t('Betslip')}</Drawer.Title>
           </VisuallyHidden.Root>
           {direction === 'bottom' && (
             <div className='mx-auto mt-3 h-1.5 w-10 shrink-0 rounded-full bg-white/20' />

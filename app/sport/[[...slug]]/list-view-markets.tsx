@@ -17,6 +17,8 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { useHasOdd, useToggleOdd } from '@/context/betslip'
 import { useUpDown } from '@/context/hooks'
+import { useT } from '@/context/providers'
+import { tKey } from '@/i18n/tKey'
 import { cn, swap } from '@/lib/utils'
 
 const marketVisibility = [
@@ -27,13 +29,13 @@ const marketVisibility = [
 ]
 
 const availableMarkets = {
-  match_winner: 'Match Winner',
-  over_under: 'Over/Under',
-  draw_no_bet: 'Draw No Bet',
-  double_chance: 'Double Chance',
-  handicap: 'Handicap',
-  even_odd: 'Even/Odd',
-  both_teams_to_score: 'Both to Score',
+  match_winner: tKey('Match Winner'),
+  over_under: tKey('Over/Under'),
+  draw_no_bet: tKey('Draw No Bet'),
+  double_chance: tKey('Double Chance'),
+  handicap: tKey('Handicap'),
+  even_odd: tKey('Even/Odd'),
+  both_teams_to_score: tKey('Both to Score'),
 }
 const selectedMarketsState = atom(keys(availableMarkets) as (keyof typeof availableMarkets)[])
 
@@ -89,6 +91,7 @@ export function ListViewMarketsSkeleton() {
 
 export function ListViewMarketDropdowns() {
   const [selectedMarkets, setSelectedMarkets] = useAtom(selectedMarketsState)
+  const t = useT()
 
   return (
     <div className='text-foreground @container/markets flex min-w-0 flex-1 items-center justify-end gap-4'>
@@ -109,12 +112,12 @@ export function ListViewMarketDropdowns() {
             className={cn('max-w-50 min-w-42 flex-1 xl:max-w-60', marketVisibility[i] ?? 'hidden')}
             size='sm'
           >
-            <SelectValue>{availableMarkets[market]}</SelectValue>
+            <SelectValue>{t(availableMarkets[market])}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             {entries(availableMarkets).map(([kind, name]) => (
               <SelectItem key={kind} value={kind}>
-                {name}
+                {t(name)}
               </SelectItem>
             ))}
           </SelectContent>

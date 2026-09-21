@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1c1f866f96ef09bf936afc6b19a0bffb>>
+ * @generated SignedSource<<6966177e6c79a5e60e717788d13513c0>>
  * @lightSyntaxTransform
  */
 
@@ -107,7 +107,6 @@ return {
                 "name": "eventCount",
                 "storageKey": null
               },
-              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -115,6 +114,7 @@ return {
                 "name": "countryCode",
                 "storageKey": null
               },
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -132,12 +132,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b445dea556315e3e1645a93ffe5ee459",
+    "cacheID": "534d54082d8e87be982aa33148dc2c23",
     "id": null,
     "metadata": {},
     "name": "SidebarSportDetails",
     "operationKind": "query",
-    "text": "query SidebarSportDetails(\n  $key: String\n) {\n  sport(key: $key) {\n    ...SidebarCountryList\n    id\n  }\n}\n\nfragment SidebarCountryItem on Category {\n  id\n  key\n  countryCode\n  name\n  ...SidebarTournaments\n}\n\nfragment SidebarCountryList on Sport {\n  categories {\n    key\n    eventCount\n    ...SidebarCountryItem\n    id\n  }\n}\n\nfragment SidebarTournaments on Category {\n  id\n}\n"
+    "text": "query SidebarSportDetails(\n  $key: String\n) {\n  sport(key: $key) {\n    ...SidebarCountryList\n    id\n  }\n}\n\nfragment SidebarCountryItem on Category {\n  id\n  key\n  countryCode\n  name\n  ...SidebarTournaments\n}\n\nfragment SidebarCountryList on Sport {\n  categories {\n    key\n    eventCount\n    countryCode\n    ...SidebarCountryItem\n    id\n  }\n}\n\nfragment SidebarTournaments on Category {\n  id\n}\n"
   }
 };
 })();

@@ -17,6 +17,7 @@ import { register } from '@/app/register/actions'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useT } from '@/context/providers'
 
 export default function RegistrationForm() {
   const formRef = useRef<HTMLFormElement>(null)
@@ -28,6 +29,7 @@ export default function RegistrationForm() {
   }
   const [prevState, action, isPending] = useActionState(register, initialState)
   const language = navigator.language
+  const t = useT()
 
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -63,7 +65,7 @@ export default function RegistrationForm() {
             transition={{ delay: 0.2 }}
             className='font-display mb-2 text-3xl font-bold text-white'
           >
-            Create Account
+            {t('Create Account')}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
@@ -71,7 +73,7 @@ export default function RegistrationForm() {
             transition={{ delay: 0.3 }}
             className='text-gray-400'
           >
-            Join Gigarino for exclusive bonuses
+            {t('Join {brand} for exclusive bonuses', { brand: 'Gigarino' })}
           </motion.p>
         </div>
 
@@ -97,7 +99,7 @@ export default function RegistrationForm() {
             className='space-y-2'
           >
             <Label htmlFor='username' className='text-sm font-medium text-gray-300'>
-              Username
+              {t('Username')}
             </Label>
             <div className='relative'>
               <UserIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
@@ -106,7 +108,7 @@ export default function RegistrationForm() {
                 name='username'
                 type='text'
                 defaultValue={prevState.username}
-                placeholder='Choose a username'
+                placeholder={t('Choose a username')}
                 className='pl-10'
                 required
               />
@@ -121,7 +123,7 @@ export default function RegistrationForm() {
             className='space-y-2'
           >
             <Label htmlFor='email' className='text-sm font-medium text-gray-300'>
-              Email
+              {t('Email')}
             </Label>
             <div className='relative'>
               <MailIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
@@ -130,7 +132,7 @@ export default function RegistrationForm() {
                 name='email'
                 type='email'
                 defaultValue={prevState.email}
-                placeholder='Enter your email'
+                placeholder={t('Enter your email')}
                 className='pl-10'
                 required
               />
@@ -145,7 +147,7 @@ export default function RegistrationForm() {
             className='relative space-y-2'
           >
             <Label htmlFor='password' className='text-sm font-medium text-gray-300'>
-              Password
+              {t('Password')}
             </Label>
             <div className='relative'>
               <LockIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
@@ -155,7 +157,7 @@ export default function RegistrationForm() {
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                placeholder='Create a password'
+                placeholder={t('Create a password')}
                 className='px-10'
                 required
               />
@@ -196,7 +198,7 @@ export default function RegistrationForm() {
             className='space-y-2'
           >
             <Label htmlFor='confirmPassword' className='text-sm font-medium text-gray-300'>
-              Confirm Password
+              {t('Confirm Password')}
             </Label>
             <div className='relative'>
               <LockIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
@@ -205,7 +207,7 @@ export default function RegistrationForm() {
                 type={showConfirmPassword ? 'text' : 'password'}
                 value={confirmPassword}
                 onChange={e => setConfirmPassword(e.target.value)}
-                placeholder='Confirm your password'
+                placeholder={t('Confirm your password')}
                 className='px-10'
                 required
               />
@@ -240,7 +242,7 @@ export default function RegistrationForm() {
                 className='mt-1'
               />
               <Label htmlFor='age' className='cursor-pointer text-sm leading-relaxed text-gray-400'>
-                I confirm I am 18+ years old and agree to the responsible gaming terms
+                {t('I confirm I am 18+ years old and agree to the responsible gaming terms')}
               </Label>
             </div>
           </motion.div>
@@ -259,21 +261,21 @@ export default function RegistrationForm() {
               className='bg-primary enabled:hover:shadow-glow disabled:bg-muted disabled:text-muted-foreground flex w-full cursor-default items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-black uppercase transition-all disabled:cursor-not-allowed'
               title={
                 !confirmAge
-                  ? 'Please confirm your age'
+                  ? t('Please confirm your age')
                   : password !== confirmPassword
-                    ? 'Passwords must match'
+                    ? t('Passwords must match')
                     : passwordStrength < 3
-                      ? 'Password is too weak'
+                      ? t('Password is too weak')
                       : undefined
               }
             >
               {isPending ? (
                 <>
                   <Loader2Icon className='mr-2 size-5 animate-spin' />
-                  Creating account...
+                  {t('Creating account...')}
                 </>
               ) : (
-                'Create Account'
+                t('Create Account')
               )}
             </button>
           </motion.div>
@@ -286,12 +288,12 @@ export default function RegistrationForm() {
           transition={{ delay: 0.7 }}
           className='mt-6 text-center text-sm text-gray-400'
         >
-          Already have an account?{' '}
+          {t('Already have an account?')}{' '}
           <Link
             href='/login'
             className='text-primary group relative font-medium transition-colors hover:text-white'
           >
-            Log in
+            {t('Log in')}
             <span className='bg-primary absolute -bottom-0.5 left-0 h-px w-0 transition-all duration-300 group-hover:w-full' />
           </Link>
         </motion.p>

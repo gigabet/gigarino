@@ -2,6 +2,7 @@
 
 import { isArray } from 'lodash'
 import { redirect } from 'next/navigation'
+import { getT } from '@/i18n/t'
 import type { ErrorResponse, RegisterDto } from '@/types'
 
 export async function register(
@@ -29,9 +30,10 @@ export async function register(
   }
 
   if (getPasswordStrength(data.password) < 3) {
+    const t = await getT()
     return {
       ...data,
-      error: 'Password is too weak.',
+      error: t('Password is too weak'),
     }
   }
 
@@ -52,11 +54,12 @@ export async function register(
 
   if (!res.ok) {
     const errorData = (await res.json()) as ErrorResponse
+    const t = await getT()
     return {
       ...data,
       error: isArray(errorData.message)
         ? errorData.message[0]
-        : errorData.message || 'Registration failed.',
+        : errorData.message || t('Registration failed.'),
     }
   } else {
     redirect('/login?registered=true')

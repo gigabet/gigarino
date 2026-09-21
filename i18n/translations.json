@@ -1,4 +1,60 @@
 {
+  "{k} out of {n} ({b} bets)": {
+    "de": "{k} von {n} ({b} Wetten)",
+    "tr": "{k} / {n} ({b} bahis)"
+  },
+  "{n} {selection}": {
+    "de": "{n} {selection}",
+    "tr": "{n} {selection}"
+  },
+  "{n} Games": {
+    "de": "{n} Spiele",
+    "tr": "{n} Oyun"
+  },
+  "{n} invalid bets.": {
+    "de": "{n} ungültige Wetten.",
+    "tr": "{n} geçersiz bahis."
+  },
+  "{n} odds changes.": {
+    "de": "{n} Quotenänderungen.",
+    "tr": "{n} oran değişikliği."
+  },
+  "{n} results for \"{query}\"": {
+    "de": "{n} Ergebnisse für „{query}“",
+    "tr": "\"{query}\" için {n} sonuç"
+  },
+  "{n} selections": {
+    "de": "{n} Auswahlen",
+    "tr": "{n} seçim"
+  },
+  "{n}-fold Combi": {
+    "de": "{n}-fach Kombi",
+    "tr": "{n}'li Kombine"
+  },
+  "1 invalid bet.": {
+    "de": "1 ungültige Wette.",
+    "tr": "1 geçersiz bahis."
+  },
+  "1 odd change.": {
+    "de": "1 Quotenänderung.",
+    "tr": "1 oran değişikliği."
+  },
+  "1 result for \"{query}\"": {
+    "de": "1 Ergebnis für „{query}“",
+    "tr": "\"{query}\" için 1 sonuç"
+  },
+  "1 selection": {
+    "de": "1 Auswahl",
+    "tr": "1 seçim"
+  },
+  "½L": {
+    "de": "½N",
+    "tr": "½M"
+  },
+  "½W": {
+    "de": "½S",
+    "tr": "½K"
+  },
   "About Us": {
     "de": "Über uns",
     "tr": "Hakkımızda"
@@ -11,9 +67,37 @@
     "de": "Konto",
     "tr": "Hesap"
   },
+  "Add": {
+    "de": "Hinzufügen",
+    "tr": "Ekle"
+  },
+  "Added": {
+    "de": "Hinzugefügt",
+    "tr": "Eklendi"
+  },
+  "All Games": {
+    "de": "Alle Spiele",
+    "tr": "Tüm Oyunlar"
+  },
+  "Already have an account?": {
+    "de": "Sie haben bereits ein Konto?",
+    "tr": "Zaten bir hesabınız var mı?"
+  },
   "American Football": {
     "de": "American Football",
     "tr": "Amerikan Futbolu"
+  },
+  "Autoplay": {
+    "de": "Autoplay",
+    "tr": "Otomatik Oynatma"
+  },
+  "Away": {
+    "de": "Auswärts",
+    "tr": "Deplasman"
+  },
+  "Back to Login": {
+    "de": "Zurück zur Anmeldung",
+    "tr": "Girişe Dön"
   },
   "Baseball": {
     "de": "Baseball",
@@ -23,9 +107,61 @@
     "de": "Basketball",
     "tr": "Basketbol"
   },
+  "Bet Boost": {
+    "de": "Wett-Boost",
+    "tr": "Bahis Artışı"
+  },
+  "Bet not found.": {
+    "de": "Wette nicht gefunden.",
+    "tr": "Bahis bulunamadı."
+  },
+  "Bet placed!": {
+    "de": "Wette platziert!",
+    "tr": "Bahis yapıldı!"
+  },
+  "Bet unavailable.": {
+    "de": "Wette nicht verfügbar.",
+    "tr": "Bahis kullanılamıyor."
+  },
+  "Bets you place will show up here, open ones first.": {
+    "de": "Ihre platzierten Wetten erscheinen hier, offene zuerst.",
+    "tr": "Yaptığınız bahisler burada görünür; önce açık olanlar."
+  },
+  "Betslip": {
+    "de": "Wettschein",
+    "tr": "Kupon"
+  },
+  "Bonus Buy": {
+    "de": "Bonus-Kauf",
+    "tr": "Bonus Satın Al"
+  },
   "Bonuses": {
-    "de": "Bonusse",
+    "de": "Boni",
     "tr": "Bonuslar"
+  },
+  "Both to Score": {
+    "de": "Beide treffen",
+    "tr": "Karşılıklı Gol"
+  },
+  "Cash Out": {
+    "de": "Cashout",
+    "tr": "Nakit Çek"
+  },
+  "Cash out failed.": {
+    "de": "Cashout fehlgeschlagen.",
+    "tr": "Nakit çekme başarısız oldu."
+  },
+  "Cash out is not available for this ticket right now.": {
+    "de": "Cashout ist für diesen Wettschein derzeit nicht verfügbar.",
+    "tr": "Bu bilet için şu anda nakit çekme kullanılamıyor."
+  },
+  "Cashed Out": {
+    "de": "Ausgezahlt",
+    "tr": "Nakit Çekildi"
+  },
+  "Cashing out...": {
+    "de": "Cashout läuft...",
+    "tr": "Nakit çekiliyor..."
   },
   "Casino": {
     "de": "Casino",
@@ -33,39 +169,151 @@
   },
   "Casino Promotions": {
     "de": "Casino-Aktionen",
-    "tr": "Kumarhane Promosyonları"
+    "tr": "Casino Promosyonları"
   },
   "Challenges": {
-    "de": "Herausforderungen",
-    "tr": "Zorluklar"
+    "de": "Challenges",
+    "tr": "Görevler"
+  },
+  "Choose a username": {
+    "de": "Benutzernamen wählen",
+    "tr": "Bir kullanıcı adı seçin"
+  },
+  "Classic": {
+    "de": "Klassiker",
+    "tr": "Klasik"
+  },
+  "Clear search": {
+    "de": "Suche löschen",
+    "tr": "Aramayı temizle"
+  },
+  "Collapse sidebar": {
+    "de": "Seitenleiste einklappen",
+    "tr": "Kenar çubuğunu daralt"
+  },
+  "Combi": {
+    "de": "Kombi",
+    "tr": "Kombine"
+  },
+  "Combined odds": {
+    "de": "Gesamtquote",
+    "tr": "Toplam oran"
+  },
+  "Combo of the Week": {
+    "de": "Kombi der Woche",
+    "tr": "Haftanın Kombinesi"
+  },
+  "Confirm cash out": {
+    "de": "Cashout bestätigen",
+    "tr": "Nakit çekmeyi onayla"
+  },
+  "Confirm Password": {
+    "de": "Passwort bestätigen",
+    "tr": "Şifreyi Onayla"
+  },
+  "Confirm your password": {
+    "de": "Passwort bestätigen",
+    "tr": "Şifrenizi onaylayın"
   },
   "Cookie Notice": {
-    "de": "Hinweis zu Cookies",
+    "de": "Cookie-Hinweis",
     "tr": "Çerez Bildirimi"
+  },
+  "Create a password": {
+    "de": "Passwort erstellen",
+    "tr": "Bir şifre oluşturun"
+  },
+  "Create Account": {
+    "de": "Konto erstellen",
+    "tr": "Hesap Oluştur"
   },
   "Create Shortcut": {
     "de": "Verknüpfung erstellen",
     "tr": "Kısayol Oluştur"
   },
+  "Creating account...": {
+    "de": "Konto wird erstellt...",
+    "tr": "Hesap oluşturuluyor..."
+  },
   "Don't have an account?": {
-    "de": "Sie haben noch kein Konto?",
+    "de": "Noch kein Konto?",
     "tr": "Hesabınız yok mu?"
   },
+  "Double Chance": {
+    "de": "Doppelte Chance",
+    "tr": "Çifte Şans"
+  },
+  "Draw": {
+    "de": "Unentschieden",
+    "tr": "Beraberlik"
+  },
+  "Draw No Bet": {
+    "de": "Draw No Bet",
+    "tr": "Beraberlikte İade"
+  },
+  "Email": {
+    "de": "E-Mail",
+    "tr": "E-posta"
+  },
   "Email or Username": {
-    "de": "E-Mail-Adresse oder Benutzername",
+    "de": "E-Mail oder Benutzername",
     "tr": "E-posta veya Kullanıcı Adı"
   },
+  "Ends in {time}": {
+    "de": "Endet in {time}",
+    "tr": "{time} sonra biter"
+  },
+  "Enter your email": {
+    "de": "E-Mail eingeben",
+    "tr": "E-postanızı girin"
+  },
+  "Enter your email address and we'll send you a link to reset your password.": {
+    "de": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts.",
+    "tr": "E-posta adresinizi girin; şifrenizi sıfırlamanız için size bir bağlantı gönderelim."
+  },
   "Enter your password": {
-    "de": "Ihr Passwort",
+    "de": "Passwort eingeben",
     "tr": "Şifrenizi girin"
   },
   "Enter your username or email": {
-    "de": "Geben Sie Ihren Benutzernamen oder Ihre E-Mail-Adresse ein",
-    "tr": "Kullanıcı adınızı veya e-posta adresinizi girin"
+    "de": "Benutzername oder E-Mail eingeben",
+    "tr": "Kullanıcı adınızı veya e-postanızı girin"
+  },
+  "Error connecting to server.": {
+    "de": "Fehler beim Verbinden mit dem Server.",
+    "tr": "Sunucuya bağlanılamadı."
+  },
+  "Even/Odd": {
+    "de": "Gerade/Ungerade",
+    "tr": "Çift/Tek"
+  },
+  "Event not bettable.": {
+    "de": "Ereignis nicht wettbar.",
+    "tr": "Etkinliğe bahis yapılamaz."
+  },
+  "Event started.": {
+    "de": "Ereignis hat begonnen.",
+    "tr": "Etkinlik başladı."
+  },
+  "Expand sidebar": {
+    "de": "Seitenleiste ausklappen",
+    "tr": "Kenar çubuğunu genişlet"
+  },
+  "Failed to fetch games": {
+    "de": "Spiele konnten nicht geladen werden",
+    "tr": "Oyunlar yüklenemedi"
+  },
+  "Failed to place bet. Please try again.": {
+    "de": "Wette konnte nicht platziert werden. Bitte erneut versuchen.",
+    "tr": "Bahis yapılamadı. Lütfen tekrar deneyin."
   },
   "Fast Payouts": {
     "de": "Schnelle Auszahlungen",
     "tr": "Hızlı Ödemeler"
+  },
+  "Featured Bets": {
+    "de": "Top-Wetten",
+    "tr": "Öne Çıkan Bahisler"
   },
   "Football": {
     "de": "Fußball",
@@ -75,33 +323,93 @@
     "de": "Passwort vergessen?",
     "tr": "Şifrenizi mi unuttunuz?"
   },
+  "Forgot Password?": {
+    "de": "Passwort vergessen?",
+    "tr": "Şifrenizi mi unuttunuz?"
+  },
+  "Free Spins (ingame)": {
+    "de": "Freispiele (Ingame)",
+    "tr": "Bedava Çevrim (oyun içi)"
+  },
+  "Full match odds": {
+    "de": "Alle Spielquoten",
+    "tr": "Tüm maç oranları"
+  },
   "Gambling can be addictive. Play responsibly. This platform only accepts customers over 18 years of age.": {
-    "de": "Glücksspiel kann süchtig machen. Spielen Sie verantwortungsbewusst. Diese Plattform akzeptiert ausschließlich Kunden, die mindestens 18 Jahre alt sind.",
-    "tr": "Kumar bağımlılık yapabilir. Sorumlu bir şekilde oynayın. Bu platform yalnızca 18 yaşın üzerindeki müşterileri kabul etmektedir."
+    "de": "Glücksspiel kann süchtig machen. Spielen Sie verantwortungsvoll. Diese Plattform ist nur für Kunden ab 18 Jahren.",
+    "tr": "Kumar bağımlılık yapabilir. Sorumlu oynayın. Bu platform yalnızca 18 yaş üstü müşterileri kabul eder."
+  },
+  "Game Categories": {
+    "de": "Spielkategorien",
+    "tr": "Oyun Kategorileri"
   },
   "Game unavailable.": {
     "de": "Spiel nicht verfügbar.",
     "tr": "Oyun mevcut değil."
   },
+  "Games by {name}": {
+    "de": "Spiele von {name}",
+    "tr": "{name} oyunları"
+  },
+  "Good luck — track it under My Tickets.": {
+    "de": "Viel Glück – verfolgen Sie sie unter Tickets.",
+    "tr": "İyi şanslar — Biletlerim'den takip edin."
+  },
+  "Handicap": {
+    "de": "Handicap",
+    "tr": "Handikap"
+  },
   "Help Centre": {
-    "de": "Hilfezentrum",
+    "de": "Hilfecenter",
     "tr": "Yardım Merkezi"
+  },
+  "Highlights": {
+    "de": "Highlights",
+    "tr": "Öne Çıkanlar"
+  },
+  "Home": {
+    "de": "Heim",
+    "tr": "Ev Sahibi"
+  },
+  "I confirm I am 18+ years old and agree to the responsible gaming terms": {
+    "de": "Ich bestätige, dass ich mindestens 18 Jahre alt bin, und akzeptiere die Bedingungen für verantwortungsvolles Spielen.",
+    "tr": "18 yaşından büyük olduğumu onaylıyor ve sorumlu oyun koşullarını kabul ediyorum"
   },
   "Ice Hockey": {
     "de": "Eishockey",
     "tr": "Buz Hokeyi"
   },
+  "If that email exists, a reset link has been sent. Check your inbox and spam folder.": {
+    "de": "Falls die E-Mail existiert, wurde ein Link zum Zurücksetzen gesendet. Prüfen Sie Posteingang und Spam-Ordner.",
+    "tr": "Bu e-posta mevcutsa, bir sıfırlama bağlantısı gönderildi. Gelen kutunuzu ve spam klasörünüzü kontrol edin."
+  },
   "In Play": {
-    "de": "Livewetten",
-    "tr": "Canlı Bahis"
+    "de": "Live",
+    "tr": "Canlı"
+  },
+  "Join {brand} for exclusive bonuses": {
+    "de": "Registriere dich bei {brand} für exklusive Boni",
+    "tr": "Özel bonuslar için {brand}'a katılın"
   },
   "Join now": {
     "de": "Jetzt beitreten",
-    "tr": "Hemen katılın"
+    "tr": "Hemen katıl"
+  },
+  "Keep higher": {
+    "de": "Höhere Quote behalten",
+    "tr": "Yüksek oranı koru"
+  },
+  "L": {
+    "de": "N",
+    "tr": "M"
   },
   "Licensed": {
-    "de": "Zugelassen",
+    "de": "Lizenziert",
     "tr": "Lisanslı"
+  },
+  "Live": {
+    "de": "Live",
+    "tr": "Canlı"
   },
   "Live Betting": {
     "de": "Live-Wetten",
@@ -120,40 +428,172 @@
     "tr": "Giriş yap"
   },
   "Logging in": {
-    "de": "Anmelden",
+    "de": "Anmeldung läuft",
     "tr": "Giriş yapılıyor"
+  },
+  "Login failed.": {
+    "de": "Anmeldung fehlgeschlagen.",
+    "tr": "Giriş başarısız."
   },
   "Logout": {
     "de": "Abmelden",
-    "tr": "Çıkış"
+    "tr": "Çıkış Yap"
+  },
+  "Lost": {
+    "de": "Verloren",
+    "tr": "Kaybetti"
+  },
+  "Market suspended.": {
+    "de": "Markt ausgesetzt.",
+    "tr": "Piyasa askıya alındı."
+  },
+  "Match Winner": {
+    "de": "Spielsieger",
+    "tr": "Maç Kazananı"
+  },
+  "Max {amount}": {
+    "de": "Max. {amount}",
+    "tr": "Maks. {amount}"
+  },
+  "Mobile Games": {
+    "de": "Mobile Spiele",
+    "tr": "Mobil Oyunlar"
   },
   "Mobile Optimized": {
-    "de": "Für Mobilgeräte optimiert",
-    "tr": "Mobil Cihazlar İçin Optimize Edilmiş"
+    "de": "Mobil optimiert",
+    "tr": "Mobil Uyumlu"
+  },
+  "Most Searched": {
+    "de": "Beliebteste Suchen",
+    "tr": "En Çok Aranan"
+  },
+  "My Tickets": {
+    "de": "Tickets",
+    "tr": "Biletlerim"
   },
   "new": {
-    "de": "neu",
-    "tr": "yeni"
+    "de": "Neu",
+    "tr": "Yeni"
+  },
+  "New Releases": {
+    "de": "Neuheiten",
+    "tr": "Yeni Çıkanlar"
+  },
+  "No games": {
+    "de": "Keine Spiele",
+    "tr": "Oyun yok"
+  },
+  "No matches for \"{query}\"": {
+    "de": "Keine Treffer für „{query}“",
+    "tr": "\"{query}\" için sonuç bulunamadı"
+  },
+  "No tickets yet": {
+    "de": "Noch keine Tickets",
+    "tr": "Henüz bilet yok"
+  },
+  "One combi bet per event.": {
+    "de": "Nur eine Kombiwette pro Ereignis.",
+    "tr": "Etkinlik başına bir kombine bahis."
+  },
+  "Open": {
+    "de": "Offen",
+    "tr": "Açık"
+  },
+  "Open ({n})": {
+    "de": "Offen ({n})",
+    "tr": "Açık ({n})"
   },
   "Or continue with": {
     "de": "Oder weiter mit",
-    "tr": "Ya da şuna devam edin:"
+    "tr": "Veya şununla devam et"
+  },
+  "Over/Under": {
+    "de": "Über/Unter",
+    "tr": "Alt/Üst"
+  },
+  "P": {
+    "de": "P",
+    "tr": "P"
+  },
+  "Partially Cashed Out": {
+    "de": "Teilweise ausgezahlt",
+    "tr": "Kısmen Çekildi"
   },
   "Partners": {
     "de": "Partner",
-    "tr": "Ortaklar"
+    "tr": "İş Ortakları"
   },
   "Password": {
     "de": "Passwort",
     "tr": "Şifre"
   },
+  "Password is too weak": {
+    "de": "Passwort ist zu schwach",
+    "tr": "Şifre çok zayıf"
+  },
+  "Password Reset": {
+    "de": "Passwort zurücksetzen",
+    "tr": "Şifre Sıfırlama"
+  },
+  "Password reset failed.": {
+    "de": "Zurücksetzen des Passworts fehlgeschlagen.",
+    "tr": "Şifre sıfırlama başarısız."
+  },
+  "Passwords must match": {
+    "de": "Passwörter müssen übereinstimmen",
+    "tr": "Şifreler eşleşmeli"
+  },
   "Payments": {
     "de": "Zahlungen",
     "tr": "Ödemeler"
   },
+  "Pending": {
+    "de": "Ausstehend",
+    "tr": "Bekliyor"
+  },
+  "Pending...": {
+    "de": "Wird geladen...",
+    "tr": "Bekliyor..."
+  },
+  "Place another bet": {
+    "de": "Weitere Wette platzieren",
+    "tr": "Yeni bahis yap"
+  },
+  "Place bet": {
+    "de": "Wette platzieren",
+    "tr": "Bahis Yap"
+  },
+  "Placing bet...": {
+    "de": "Wette wird platziert...",
+    "tr": "Bahis yapılıyor..."
+  },
+  "Please confirm your age": {
+    "de": "Bitte Alter bestätigen",
+    "tr": "Lütfen yaşınızı onaylayın"
+  },
+  "Please try again.": {
+    "de": "Bitte erneut versuchen.",
+    "tr": "Lütfen tekrar deneyin."
+  },
+  "Potential payout": {
+    "de": "Möglicher Gewinn",
+    "tr": "Olası kazanç"
+  },
   "Privacy Notice": {
-    "de": "Datenschutzerklärung",
+    "de": "Datenschutzhinweis",
     "tr": "Gizlilik Bildirimi"
+  },
+  "Providers": {
+    "de": "Anbieter",
+    "tr": "Sağlayıcılar"
+  },
+  "Recent": {
+    "de": "Zuletzt",
+    "tr": "Son"
+  },
+  "Refresh": {
+    "de": "Aktualisieren",
+    "tr": "Yenile"
   },
   "Register": {
     "de": "Registrieren",
@@ -161,43 +601,131 @@
   },
   "Register now": {
     "de": "Jetzt registrieren",
-    "tr": "Hemen kaydolun"
+    "tr": "Hemen kaydol"
+  },
+  "Registration failed.": {
+    "de": "Registrierung fehlgeschlagen.",
+    "tr": "Kayıt başarısız."
   },
   "Registration successful!": {
-    "de": "Die Registrierung war erfolgreich!",
-    "tr": "Kayıt işlemi başarıyla tamamlandı!"
+    "de": "Registrierung erfolgreich!",
+    "tr": "Kayıt başarılı!"
+  },
+  "Reject": {
+    "de": "Ablehnen",
+    "tr": "Reddet"
+  },
+  "Rejected": {
+    "de": "Abgelehnt",
+    "tr": "Reddedildi"
   },
   "Remember me": {
     "de": "Angemeldet bleiben",
     "tr": "Beni hatırla"
   },
+  "Remove selection": {
+    "de": "Auswahl entfernen",
+    "tr": "Seçimi kaldır"
+  },
   "Responsible Gaming": {
-    "de": "Verantwortungsbewusstes Spielen",
+    "de": "Verantwortungsvolles Spielen",
     "tr": "Sorumlu Oyun"
+  },
+  "Retry": {
+    "de": "Erneut versuchen",
+    "tr": "Tekrar dene"
+  },
+  "Scroll left": {
+    "de": "Nach links scrollen",
+    "tr": "Sola kaydır"
+  },
+  "Scroll right": {
+    "de": "Nach rechts scrollen",
+    "tr": "Sağa kaydır"
+  },
+  "Search": {
+    "de": "Suche",
+    "tr": "Ara"
+  },
+  "Search games, providers...": {
+    "de": "Spiele, Anbieter suchen...",
+    "tr": "Oyun, sağlayıcı ara..."
+  },
+  "search games...": {
+    "de": "Spiele suchen...",
+    "tr": "oyun ara..."
+  },
+  "Search sports": {
+    "de": "Sport suchen",
+    "tr": "Spor ara"
+  },
+  "search teams, leagues...": {
+    "de": "Teams, Ligen suchen...",
+    "tr": "takım, lig ara..."
   },
   "Secure": {
     "de": "Sicher",
     "tr": "Güvenli"
   },
   "See all {n}": {
-    "de": "Das alles {n}",
-    "tr": "Hepsini göster {n}"
+    "de": "Alle {n} ansehen",
+    "tr": "Tümünü gör ({n})"
+  },
+  "Select": {
+    "de": "Auswählen",
+    "tr": "Seç"
+  },
+  "Selection": {
+    "de": "Auswahl",
+    "tr": "Seçim"
+  },
+  "Selections": {
+    "de": "Auswahlen",
+    "tr": "Seçimler"
+  },
+  "Send Reset Link": {
+    "de": "Link senden",
+    "tr": "Bağlantı Gönder"
+  },
+  "Settled": {
+    "de": "Abgerechnet",
+    "tr": "Sonuçlandı"
   },
   "Shop": {
     "de": "Shop",
     "tr": "Mağaza"
   },
+  "Sign in to view your tickets": {
+    "de": "Anmelden, um Tickets zu sehen",
+    "tr": "Biletleri görmek için giriş yapın"
+  },
   "Sign in to your {acc} account": {
     "de": "Melden Sie sich bei Ihrem {acc}-Konto an",
     "tr": "{acc} hesabınıza giriş yapın"
   },
+  "Single": {
+    "de": "Einzel",
+    "tr": "Tekli"
+  },
+  "Singles": {
+    "de": "Einzelwetten",
+    "tr": "Tekli"
+  },
   "Sitemap": {
     "de": "Sitemap",
-    "tr": "Site haritası"
+    "tr": "Site Haritası"
+  },
+  "Something went wrong loading this section.": {
+    "de": "Fehler beim Laden dieses Abschnitts.",
+    "tr": "Bu bölüm yüklenirken bir hata oluştu."
+  },
+  "Something went wrong.": {
+    "de": "Etwas ist schiefgelaufen.",
+    "tr": "Bir şeyler ters gitti."
   },
   "Sport Promotions": {
     "de": "Sport-Aktionen",
-    "tr": "Spor Kampanyaları"
+    "tr": "Spor Promosyonları"
   },
   "Sports": {
     "de": "Sport",
@@ -205,23 +733,71 @@
   },
   "Sportsbook": {
     "de": "Sportwetten",
-    "tr": "Spor Bahis"
+    "tr": "Spor Bahisleri"
+  },
+  "Stake": {
+    "de": "Einsatz",
+    "tr": "Bahis Miktarı"
+  },
+  "System": {
+    "de": "System",
+    "tr": "Sistem"
   },
   "Table Tennis": {
     "de": "Tischtennis",
     "tr": "Masa Tenisi"
+  },
+  "Tap on any odds to add a selection and start building your bet.": {
+    "de": "Tippen Sie auf eine Quote, um eine Auswahl hinzuzufügen und Ihre Wette zu erstellen.",
+    "tr": "Bahsinizi oluşturmak için bir orana dokunup seçim ekleyin."
   },
   "Tennis": {
     "de": "Tennis",
     "tr": "Tenis"
   },
   "Terms and Conditions": {
-    "de": "Allgemeine Geschäftsbedingungen",
+    "de": "AGB",
     "tr": "Şartlar ve Koşullar"
+  },
+  "This event is no longer available.": {
+    "de": "Dieses Ereignis ist nicht mehr verfügbar.",
+    "tr": "Bu etkinlik artık mevcut değil."
+  },
+  "Top Games": {
+    "de": "Top-Spiele",
+    "tr": "En İyi Oyunlar"
+  },
+  "Top Pick": {
+    "de": "Top-Tipp",
+    "tr": "Öne Çıkan"
+  },
+  "Total stake": {
+    "de": "Gesamteinsatz",
+    "tr": "Toplam bahis"
+  },
+  "Tournament not found": {
+    "de": "Turnier nicht gefunden",
+    "tr": "Turnuva bulunamadı"
+  },
+  "Track your open bets and betting history once you're logged in.": {
+    "de": "Nach der Anmeldung sehen Sie Ihre offenen Wetten und Ihren Wettverlauf.",
+    "tr": "Giriş yaptığınızda açık bahislerinizi ve geçmişinizi görün."
   },
   "Transactions": {
     "de": "Transaktionen",
     "tr": "İşlemler"
+  },
+  "Try a different team, league, or spelling.": {
+    "de": "Versuchen Sie ein anderes Team, eine andere Liga oder Schreibweise.",
+    "tr": "Farklı bir takım, lig veya yazım deneyin."
+  },
+  "Username": {
+    "de": "Benutzername",
+    "tr": "Kullanıcı Adı"
+  },
+  "V": {
+    "de": "U",
+    "tr": "İ"
   },
   "VIP": {
     "de": "VIP",
@@ -229,18 +805,46 @@
   },
   "Virtual Sports": {
     "de": "Virtueller Sport",
-    "tr": "Sanal Sporlar"
+    "tr": "Sanal Spor"
+  },
+  "Void": {
+    "de": "Ungültig",
+    "tr": "Geçersiz"
+  },
+  "vs": {
+    "de": "vs.",
+    "tr": "vs."
+  },
+  "W": {
+    "de": "S",
+    "tr": "K"
   },
   "Wallet": {
-    "de": "Geldbörse",
+    "de": "Guthaben",
     "tr": "Cüzdan"
+  },
+  "We couldn't find this tournament. It may have been removed or is temporarily unavailable.": {
+    "de": "Dieses Turnier wurde nicht gefunden. Es wurde möglicherweise entfernt oder ist vorübergehend nicht verfügbar.",
+    "tr": "Bu turnuva bulunamadı. Kaldırılmış veya geçici olarak kullanılamıyor olabilir."
   },
   "Welcome Back": {
     "de": "Willkommen zurück",
-    "tr": "Hoş Geldiniz"
+    "tr": "Tekrar Hoş Geldiniz"
   },
   "Welcome Offer": {
     "de": "Willkommensangebot",
-    "tr": "Hoş Geldiniz Teklifi"
+    "tr": "Hoş Geldin Teklifi"
+  },
+  "Won": {
+    "de": "Gewonnen",
+    "tr": "Kazandı"
+  },
+  "You'll receive": {
+    "de": "Sie erhalten",
+    "tr": "Alacağınız tutar"
+  },
+  "Your betslip is empty": {
+    "de": "Ihr Wettschein ist leer",
+    "tr": "Kuponunuz boş"
   }
 }

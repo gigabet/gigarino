@@ -1,34 +1,47 @@
 import { isArray } from 'lodash'
+import { tKey } from '@/i18n/tKey'
 import { getToken, getUser } from '@/lib/auth'
 import type { ApiResponse, ErrorResponse, GamesResponse, ProvidersResponse } from '@/types'
 
 export const categories = {
-  Providers: { icon: 'StoreIcon', slug: 'providers', query: '' },
-  'Top Games': { icon: 'Flame', slug: 'top', query: '?category=top' },
-  'New Releases': { icon: 'Sparkles', slug: 'new', query: '?category=new' },
-  'Mobile Games': {
+  [tKey('Providers')]: { icon: 'StoreIcon', slug: 'providers', query: '' },
+  [tKey('Top Games')]: { icon: 'Flame', slug: 'top', query: '?category=top' },
+  [tKey('New Releases')]: {
+    icon: 'Sparkles',
+    slug: 'new',
+    query: '?category=new',
+  },
+  [tKey('Mobile Games')]: {
     icon: 'Smartphone',
     slug: 'mobile',
     query: '?isMobile=true',
   },
-  'Free Spins (ingame)': {
+  [tKey('Free Spins (ingame)')]: {
     icon: 'HandCoins',
     slug: 'free-spins-ingame',
     query: '?tag=free-spins-ingame',
   },
-  Autoplay: { icon: 'RefreshCcwDot', slug: 'autoplay', query: '?tag=autoplay' },
-  'Bonus Buy': {
+  [tKey('Autoplay')]: {
+    icon: 'RefreshCcwDot',
+    slug: 'autoplay',
+    query: '?tag=autoplay',
+  },
+  [tKey('Bonus Buy')]: {
     icon: 'CirclePlus',
     slug: 'bonus-buy',
     query: '?tag=bonus-buy',
   },
-  Classic: { icon: 'Landmark', slug: 'classic', query: '?tag=classic' },
-  'Live Casino': {
+  [tKey('Classic')]: {
+    icon: 'Landmark',
+    slug: 'classic',
+    query: '?tag=classic',
+  },
+  [tKey('Live Casino')]: {
     icon: 'RadioIcon',
     slug: 'live-casino',
     query: '?type=roulette',
   },
-  'All Games': {
+  [tKey('All Games')]: {
     icon: 'GalleryHorizontalEnd',
     slug: 'all',
     query: '?limit=24',
@@ -50,7 +63,7 @@ export const getGameQuery = (query: string) => {
       throw new Error(
         isArray(errorData.message)
           ? errorData.message[0]
-          : errorData.message || 'Failed to fetch games',
+          : errorData.message || tKey('Failed to fetch games'),
         { cause: errorData.error }
       )
     }

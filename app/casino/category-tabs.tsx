@@ -5,9 +5,11 @@ import { entries } from 'lodash'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import type { categories } from '@/app/context'
+import { useT } from '@/context/providers'
 
 export default function CategoryTabs(props: { categories: typeof categories }) {
   const pathname = usePathname()
+  const t = useT()
 
   return (
     <section className='backdrop-blur-[0]'>
@@ -23,7 +25,7 @@ export default function CategoryTabs(props: { categories: typeof categories }) {
                 : 'bg-dark-200 text-white/70 hover:bg-white/10 hover:text-white'
             )}
           >
-            <span>{label}</span>
+            <span>{t(label)}</span>
           </Link>
         ))}
       </div>

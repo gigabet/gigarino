@@ -4,6 +4,7 @@ import { cx } from 'class-variance-authority'
 import type { LucideProps } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useT } from '@/context/providers'
 
 export default function BottomBar(props: {
   links: {
@@ -15,6 +16,7 @@ export default function BottomBar(props: {
   }[]
 }) {
   const pathname = usePathname()
+  const t = useT()
 
   return (
     <div className='glass-dark fixed bottom-0 left-0 z-50 h-20 w-full lg:hidden [body[data-scroll-locked]_&]:pr-2'>
@@ -41,7 +43,7 @@ export default function BottomBar(props: {
                 )}
               />
             </span>
-            <span className='text-xs'>{link.label}</span>
+            <span className='text-xs'>{t(link.label)}</span>
           </Link>
         ))}
       </nav>

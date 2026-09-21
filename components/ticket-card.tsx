@@ -18,6 +18,8 @@ import type { TicketCardCashoutQuoteQuery } from '@/components/__generated__/Tic
 import TicketCardCashoutQuoteQueryNode from '@/components/__generated__/TicketCardCashoutQuoteQuery.graphql'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useT } from '@/context/providers'
+import { tKey } from '@/i18n/tKey'
 import { cn, formatBalance } from '@/lib/utils'
 import type { BetItemStatus, TicketStatus } from '@/types'
 
@@ -25,32 +27,32 @@ const CASHOUT_ELIGIBLE = new Set<TicketStatus>(['ACCEPTED', 'PARTIALLY_CASHED_OU
 
 const STATUS_META: Record<TicketStatus, { label: string; className: string }> = {
   PENDING_ACCEPTANCE: {
-    label: 'Pending',
+    label: tKey('Pending'),
     className: 'bg-yellow-500/10 text-yellow-400',
   },
-  ACCEPTED: { label: 'Open', className: 'bg-sky-500/10 text-sky-400' },
+  ACCEPTED: { label: tKey('Open'), className: 'bg-sky-500/10 text-sky-400' },
   PARTIALLY_CASHED_OUT: {
-    label: 'Partially Cashed Out',
+    label: tKey('Partially Cashed Out'),
     className: 'bg-purple-accent/10 text-purple-accent',
   },
-  WON: { label: 'Won', className: 'bg-primary/10 text-primary' },
-  LOST: { label: 'Lost', className: 'bg-red-500/10 text-red-400' },
-  VOID: { label: 'Void', className: 'bg-white/10 text-secondary' },
-  REJECTED: { label: 'Rejected', className: 'bg-red-500/10 text-red-400' },
+  WON: { label: tKey('Won'), className: 'bg-primary/10 text-primary' },
+  LOST: { label: tKey('Lost'), className: 'bg-red-500/10 text-red-400' },
+  VOID: { label: tKey('Void'), className: 'bg-white/10 text-secondary' },
+  REJECTED: { label: tKey('Rejected'), className: 'bg-red-500/10 text-red-400' },
   CASHED_OUT: {
-    label: 'Cashed Out',
+    label: tKey('Cashed Out'),
     className: 'bg-purple-accent/10 text-purple-accent',
   },
 }
 
 const ITEM_STATUS_META: Record<BetItemStatus, { label: string; className: string }> = {
   PENDING: { label: '', className: 'bg-white/20' },
-  WON: { label: 'W', className: 'bg-primary text-black' },
-  HALF_WON: { label: '½W', className: 'bg-primary/60 text-black' },
-  LOST: { label: 'L', className: 'bg-red-500 text-white' },
-  HALF_LOST: { label: '½L', className: 'bg-red-500/60 text-white' },
-  PUSH: { label: 'P', className: 'bg-white/30 text-white' },
-  VOID: { label: 'V', className: 'bg-white/20 text-secondary' },
+  WON: { label: tKey('W'), className: 'bg-primary text-black' },
+  HALF_WON: { label: tKey('½W'), className: 'bg-primary/60 text-black' },
+  LOST: { label: tKey('L'), className: 'bg-red-500 text-white' },
+  HALF_LOST: { label: tKey('½L'), className: 'bg-red-500/60 text-white' },
+  PUSH: { label: tKey('P'), className: 'bg-white/30 text-white' },
+  VOID: { label: tKey('V'), className: 'bg-white/20 text-secondary' },
 }
 
 export default function TicketCard(props: { ticket: TicketCard$key; action?: () => void }) {
@@ -80,6 +82,7 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
   )
 
   const [expanded, setExpanded] = useState(false)
+  const t = useT()
   const meta = STATUS_META[data.status as TicketStatus]
 
   return (
@@ -97,18 +100,20 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
                 meta.className
               )}
             >
-              {meta.label}
+              {t(meta.label)}
             </span>
             <span className='text-secondary text-xs'>
               {data.betType === 'SINGLE'
-                ? 'Single'
+                ? t('Single')
                 : data.betType === 'SYSTEM'
-                  ? 'System'
-                  : `${data.items.length}-fold Combi`}
+                  ? t('System')
+                  : t('{n}-fold Combi', { n: data.items.length })}
             </span>
           </div>
           <p className='text-secondary mt-1 truncate text-xs'>
-            {data.items.length === 1 ? '1 selection' : `${data.items.length} selections`}
+            {data.items.length === 1
+              ? t('1 selection')
+              : t('{n} selections', { n: data.items.length })}
           </p>
         </div>
 
@@ -143,7 +148,7 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
                         itemMeta.className
                       )}
                     >
-                      {itemMeta.label}
+                      {t(itemMeta.label)}
                     </span>
                   )}
                   <div className='min-w-0'>
@@ -161,18 +166,18 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
           })}
 
           <div className='flex items-center justify-between border-t border-white/5 pt-2 text-xs'>
-            <span className='text-secondary'>Combined odds</span>
+            <span className='text-secondary'>{t('Combined odds')}</span>
             <span className='font-mono text-white'>{Number(data.effectiveOdds).toFixed(2)}</span>
           </div>
           <div className='flex items-center justify-between text-xs'>
-            <span className='text-secondary'>Potential payout</span>
+            <span className='text-secondary'>{t('Potential payout')}</span>
             <span className='text-primary font-mono font-semibold'>
               {formatBalance(Number(data.potentialPayout), data.currency)}
             </span>
           </div>
           {data.settledAt && (
             <div className='flex items-center justify-between text-xs'>
-              <span className='text-secondary'>Settled</span>
+              <span className='text-secondary'>{t('Settled')}</span>
               <span className='text-white/70'>
                 {formatDistanceToNowStrict(new Date(data.settledAt), {
                   addSuffix: true,
@@ -197,6 +202,7 @@ function CashoutButton(props: { ticketId: string; onCashedOut?: () => void }) {
     TicketCardCashoutQuoteQueryNode
   )
   const [open, setOpen] = useState(false)
+  const t = useT()
 
   return (
     <Popover.Root
@@ -209,7 +215,7 @@ function CashoutButton(props: { ticketId: string; onCashedOut?: () => void }) {
     >
       <Popover.Trigger asChild>
         <Button size='sm' variant='accent' className='w-full'>
-          Cash Out
+          {t('Cash Out')}
         </Button>
       </Popover.Trigger>
       <Popover.Portal>
@@ -274,12 +280,13 @@ function CashoutQuote(props: {
   `)
 
   const [error, setError] = useState<string | null>(null)
+  const t = useT()
 
   if (!cashoutQuote.available) {
     return (
       <div className='flex items-start gap-2 text-xs text-red-400'>
         <AlertTriangleIcon className='mt-0.5 size-3.5 shrink-0' />
-        <p>{cashoutQuote.message || 'Cash out is not available for this ticket right now.'}</p>
+        <p>{cashoutQuote.message || t('Cash out is not available for this ticket right now.')}</p>
       </div>
     )
   }
@@ -287,7 +294,7 @@ function CashoutQuote(props: {
   return (
     <div className='space-y-3'>
       <div className='text-center'>
-        <p className='text-secondary text-xs'>You'll receive</p>
+        <p className='text-secondary text-xs'>{t("You'll receive")}</p>
         <p className='text-primary text-2xl font-bold'>
           {formatBalance(Number(cashoutQuote.amount), cashoutQuote.currency)}
         </p>
@@ -303,22 +310,22 @@ function CashoutQuote(props: {
             variables: { ticketId: props.ticketId },
             onCompleted: response => {
               if (response.cashout.rejectionCode) {
-                setError(response.cashout.rejectionMessage || 'Cash out failed.')
+                setError(response.cashout.rejectionMessage || t('Cash out failed.'))
                 return
               }
               props.onDone()
             },
-            onError: err => setError(err.message || 'Cash out failed.'),
+            onError: err => setError(err.message || t('Cash out failed.')),
           })
         }
       >
         {isCashingOut ? (
           <>
             <Loader2Icon className='size-4 animate-spin' />
-            Cashing out...
+            {t('Cashing out...')}
           </>
         ) : (
-          'Confirm cash out'
+          t('Confirm cash out')
         )}
       </Button>
     </div>

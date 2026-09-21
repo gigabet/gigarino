@@ -10,6 +10,7 @@ import { ListViewMarketDropdowns } from '@/app/sport/[[...slug]]/list-view-marke
 import PrematchEvent, { PrematchEventSkeleton } from '@/app/sport/[[...slug]]/prematch-event'
 import { SportIcon, SportIconBadge } from '@/components/sport-icon'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useT } from '@/context/providers'
 import { getSportTheme } from '@/lib/sport-theme'
 
 export default function Tournament(props: { queryRef: Tournament$key }) {
@@ -32,6 +33,8 @@ export default function Tournament(props: { queryRef: Tournament$key }) {
   )
 
   const [isRefreshing, startTransition] = useTransition()
+  const t = useT()
+
   const handleRefresh = useCallback(() => {
     if (data?.id)
       startTransition(() => {
@@ -56,10 +59,11 @@ export default function Tournament(props: { queryRef: Tournament$key }) {
           </div>
 
           <div className='space-y-1'>
-            <h3 className='text-foreground text-sm font-semibold'>Tournament not found</h3>
+            <h3 className='text-foreground text-sm font-semibold'>{t('Tournament not found')}</h3>
             <p className='text-secondary text-xs'>
-              We couldn't find this tournament. It may have been removed or is temporarily
-              unavailable.
+              {t(
+                "We couldn't find this tournament. It may have been removed or is temporarily unavailable."
+              )}
             </p>
           </div>
 
@@ -70,7 +74,7 @@ export default function Tournament(props: { queryRef: Tournament$key }) {
             className='hover:bg-primary/10 hover:border-primary/30 hover:text-primary group inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-medium text-white uppercase transition-all disabled:opacity-60'
           >
             <RotateCwIcon className={isRefreshing ? 'size-3.5 animate-spin' : 'size-3.5'} />
-            Refresh
+            {t('Refresh')}
           </button>
         </div>
       </section>

@@ -11,7 +11,7 @@ import { getGameDemo, getGameQuery, providersQuery } from '@/app/context'
 import GameSection from '@/app/game-section'
 import * as Dialog from '@/components/ui/dialog'
 import { useDebounce } from '@/context/hooks'
-import { isLoadingOverlayState } from '@/context/providers'
+import { isLoadingOverlayState, useT } from '@/context/providers'
 import type { Game, GameProvider } from '@/types'
 
 const searchOpenState = atom(false)
@@ -20,6 +20,7 @@ export default function Search() {
   const [searchQuery, setSearchQuery] = useState('')
   const searchInputRef = useRef<HTMLInputElement>(null)
   const searchRef = useRef<HTMLDivElement>(null)
+  const t = useT()
 
   // Focus input when search opens
   useEffect(() => {
@@ -56,14 +57,14 @@ export default function Search() {
       <Dialog.Portal>
         <Dialog.Overlay />
         <Dialog.Content className='h-dvh w-full max-w-dvw sm:h-[75dvh] sm:max-w-2xl!'>
-          <Dialog.Title className='px-4'>Search</Dialog.Title>
+          <Dialog.Title className='px-4'>{t('Search')}</Dialog.Title>
           {/* Search Content */}
           <div className='flex grow flex-col p-4'>
             <div className='relative'>
               <input
                 ref={searchInputRef}
                 type='text'
-                placeholder='Search games, providers...'
+                placeholder={t('Search games, providers...')}
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 className='focus:border-primary focus:ring-primary/20 border-border w-full rounded-full border bg-black px-10 py-2.5 text-sm text-neutral-200 placeholder-neutral-500 transition-all focus:ring-4 focus:outline-none'
@@ -87,10 +88,10 @@ export default function Search() {
               <div className='@container mt-10 space-y-8'>
                 <div>
                   <h3 className='font-display -mb-6 flex items-center gap-2 text-xl font-bold'>
-                    <FlameIcon className='text-primary size-5' /> Most Searched
+                    <FlameIcon className='text-primary size-5' /> {t('Most Searched')}
                   </h3>
                   <GameSection
-                    title='Most Searched'
+                    title={t('Most Searched')}
                     category={{
                       icon: '',
                       slug: '',
@@ -102,10 +103,10 @@ export default function Search() {
 
                 <div>
                   <h3 className='font-display -mb-6 flex items-center gap-2 text-xl font-bold'>
-                    <SparklesIcon className='text-accent size-5' /> New Releases
+                    <SparklesIcon className='text-accent size-5' /> {t('New Releases')}
                   </h3>
                   <GameSection
-                    title='New Releases'
+                    title={t('New Releases')}
                     category={{
                       icon: '',
                       slug: '',
@@ -126,6 +127,7 @@ export default function Search() {
 function SearchResults(props: { query: string }) {
   const games = useSearchGames(`?search=${encodeURI(props.query)}`)
   const providers = useSearchProviders(props.query)
+  const t = useT()
 
   return (
     <div className='mt-10 max-h-[75dvh] overflow-y-auto pr-2 sm:max-h-[50dvh]'>
@@ -133,7 +135,7 @@ function SearchResults(props: { query: string }) {
       <div className='flex flex-col gap-8'>
         {!isEmpty(providers) && (
           <div>
-            <h3 className='font-display mb-2 text-xl font-bold'>Providers</h3>
+            <h3 className='font-display mb-2 text-xl font-bold'>{t('Providers')}</h3>
             {providers.map(provider => (
               <SearchResultProvider key={provider.providerSlug} {...provider} />
             ))}
@@ -141,7 +143,9 @@ function SearchResults(props: { query: string }) {
         )}
 
         <div>
-          <h3 className='font-display mb-2 text-xl font-bold'>{games.length} Games</h3>
+          <h3 className='font-display mb-2 text-xl font-bold'>
+            {t('{n} Games', { n: games.length })}
+          </h3>
           {games.map(game => (
             <SearchResultCasinoGame key={game.uuid} {...game} />
           ))}
@@ -153,6 +157,7 @@ function SearchResults(props: { query: string }) {
 
 function SearchResultProvider(props: GameProvider) {
   const setSearchOpen = useSetAtom(searchOpenState)
+  const t = useT()
 
   return (
     <Link
@@ -170,7 +175,7 @@ function SearchResultProvider(props: GameProvider) {
       </div>
       <div>
         <p className='text-sm text-neutral-300'>{props.name}</p>
-        <p className='text-xs text-neutral-500'>{props.gamesCount} Games</p>
+        <p className='text-xs text-neutral-500'>{t('{n} Games', { n: props.gamesCount })}</p>
       </div>
     </Link>
   )

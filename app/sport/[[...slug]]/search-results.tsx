@@ -3,6 +3,7 @@
 import { SearchXIcon } from 'lucide-react'
 import type { PrematchEvent$key } from '@/app/sport/[[...slug]]/__generated__/PrematchEvent.graphql'
 import PrematchEvent, { PrematchEventSkeleton } from '@/app/sport/[[...slug]]/prematch-event'
+import { useT } from '@/context/providers'
 
 export default function SearchResults(props: {
   query: string
@@ -10,6 +11,7 @@ export default function SearchResults(props: {
   events?: ReadonlyArray<{ id: string } & PrematchEvent$key>
 }) {
   const events = props.events ?? []
+  const t = useT()
 
   if (events.length === 0) {
     return (
@@ -18,8 +20,12 @@ export default function SearchResults(props: {
           <SearchXIcon className='size-6' />
         </div>
         <div className='space-y-1'>
-          <h3 className='text-foreground text-sm font-semibold'>No matches for "{props.query}"</h3>
-          <p className='text-secondary text-xs'>Try a different team, league, or spelling.</p>
+          <h3 className='text-foreground text-sm font-semibold'>
+            {t('No matches for "{query}"', { query: props.query })}
+          </h3>
+          <p className='text-secondary text-xs'>
+            {t('Try a different team, league, or spelling.')}
+          </p>
         </div>
       </section>
     )
@@ -30,7 +36,9 @@ export default function SearchResults(props: {
   return (
     <section>
       <div className='text-secondary mb-4 border-b py-2 text-sm'>
-        {count} result{count === 1 ? '' : 's'} for "{props.query}"
+        {count === 1
+          ? t('1 result for "{query}"', { query: props.query })
+          : t('{n} results for "{query}"', { n: count, query: props.query })}
       </div>
       <div className='flex flex-col gap-3'>
         {events.map(event => (

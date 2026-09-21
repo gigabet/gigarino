@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6c60cb2d702f1d6454b9355b9dc2d408>>
+ * @generated SignedSource<<3155bcdbf121326c53455bc129a04657>>
  * @lightSyntaxTransform
  */
 
@@ -11,6 +11,7 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SidebarCountryList$data = {
   readonly categories: ReadonlyArray<{
+    readonly countryCode: string | null | undefined;
     readonly eventCount: number;
     readonly key: string;
     readonly " $fragmentSpreads": FragmentRefs<"SidebarCountryItem">;
@@ -51,6 +52,13 @@ const node: ReaderFragment = {
           "storageKey": null
         },
         {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "countryCode",
+          "storageKey": null
+        },
+        {
           "args": null,
           "kind": "FragmentSpread",
           "name": "SidebarCountryItem"
@@ -63,6 +71,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "498558e8eba006ed943962a150ea3f7a";
+(node as any).hash = "6979ca034076cb02bd2ec9776ee1c8c9";
 
 export default node;

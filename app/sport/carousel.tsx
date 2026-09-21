@@ -30,6 +30,7 @@ import { SportIcon } from '@/components/sport-icon'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useCombo, useHasOdd, useToggleOdd } from '@/context/betslip'
 import { useUpDown } from '@/context/hooks'
+import { useT } from '@/context/providers'
 import { cn, formatBalance, getRelativeDayLabel } from '@/lib/utils'
 
 const CARD_SIZE = 'h-72 w-72 sm:w-80'
@@ -78,6 +79,8 @@ function CarouselContent() {
       behavior: 'smooth',
     })
 
+  const t = useT()
+
   if (bets.length === 0) return null
 
   return (
@@ -85,13 +88,13 @@ function CarouselContent() {
       <div className='mb-1 flex items-center justify-between'>
         <h2 className='font-display flex items-center gap-2 text-lg font-bold text-white sm:text-xl'>
           <HiOutlineSparkles className='text-primary size-5' />
-          Featured Bets
+          {t('Featured Bets')}
         </h2>
         <div className='hidden items-center gap-2 sm:flex'>
           <button
             type='button'
             onClick={() => scroll('left')}
-            aria-label='Scroll left'
+            aria-label={t('Scroll left')}
             className='bg-dark-200 hover:bg-dark-300 flex size-8 items-center justify-center rounded-full text-white/60 transition-colors hover:text-white'
           >
             <ChevronLeft className='size-4' />
@@ -99,7 +102,7 @@ function CarouselContent() {
           <button
             type='button'
             onClick={() => scroll('right')}
-            aria-label='Scroll right'
+            aria-label={t('Scroll right')}
             className='bg-dark-200 hover:bg-dark-300 flex size-8 items-center justify-center rounded-full text-white/60 transition-colors hover:text-white'
           >
             <ChevronRight className='size-4' />
@@ -135,20 +138,44 @@ function useEndsIn(validTo: string | null | undefined) {
     : null
 }
 
+/**
+ * Splits a full promo wordmark phrase into two visual lines. Translators
+ * receive the *whole* phrase as a single key (e.g. `t('Bet Boost')`), and
+ * we split at render time so word order / articles survive translation.
+ *
+ * Default: split on the last space, so the final word becomes the accent
+ * line. Override with `splitAt` if a locale needs a different break
+ * (e.g. `splitAt="first"` for languages where the accent word leads).
+ */
+function splitWordmark(
+  phrase: string,
+  splitAt: 'first' | 'last' = 'last'
+): { top: string; bottom: string } {
+  const parts = phrase.trim().split(/\s+/)
+  if (parts.length < 2) return { top: '', bottom: phrase }
+
+  const idx = splitAt === 'first' ? 1 : parts.length - 1
+  return {
+    top: parts.slice(0, idx).join(' '),
+    bottom: parts.slice(idx).join(' '),
+  }
+}
+
 function PromoWordmark(props: {
-  top: string
-  bottom: string
+  phrase: string
   accentClassName: string
   icon: React.ReactNode
+  splitAt?: 'first' | 'last'
 }) {
+  const { top, bottom } = splitWordmark(props.phrase, props.splitAt)
   return (
     <div className='relative flex items-start justify-between gap-2'>
       <div className='leading-[0.82]'>
-        <p className='font-display text-xl font-black text-white uppercase italic'>{props.top}</p>
+        <p className='font-display text-xl font-black text-white uppercase italic'>{top}</p>
         <p
           className={cn('font-display text-3xl font-black uppercase italic', props.accentClassName)}
         >
-          {props.bottom}
+          {bottom}
         </p>
       </div>
       <div className='shrink-0 pt-1'>{props.icon}</div>
@@ -179,6 +206,7 @@ function BetBoostCard(props: { bet: BetBoostCard$key }) {
   const endsIn = useEndsIn(data.validTo)
   const hasOdd = useHasOdd()
   const toggleOdd = useToggleOdd()
+  const t = useT()
 
   const availableSelections = data.selections.filter(s => s.available)
   const allAdded =
@@ -206,8 +234,7 @@ function BetBoostCard(props: { bet: BetBoostCard$key }) {
       <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_100%_0%,rgba(209,243,102,0.14),transparent_55%)]' />
 
       <PromoWordmark
-        top='Bet'
-        bottom='Boost'
+        phrase={t('Bet Boost')}
         accentClassName='text-primary text-shadow-[0_0_16px_rgba(209,243,102,0.55)]'
         icon={
           <ChevronsUp
@@ -219,7 +246,7 @@ function BetBoostCard(props: { bet: BetBoostCard$key }) {
 
       {endsIn && (
         <p className='text-secondary relative -mt-1 text-right text-[0.6rem] tracking-wide uppercase'>
-          Ends in {endsIn}
+          {t('Ends in {time}', { time: endsIn })}
         </p>
       )}
 
@@ -228,7 +255,7 @@ function BetBoostCard(props: { bet: BetBoostCard$key }) {
           {home || leg?.eventName || '—'}
           {away && (
             <>
-              <span className='text-secondary mx-1 text-xs font-normal normal-case'>vs</span>
+              <span className='text-secondary mx-1 text-xs font-normal normal-case'>{t('vs')}</span>
               {away}
             </>
           )}
@@ -251,7 +278,7 @@ function BetBoostCard(props: { bet: BetBoostCard$key }) {
       <div className='relative flex items-center gap-2'>
         {data.maxStake && (
           <span className='text-secondary shrink-0 text-[0.6rem]'>
-            Max {formatBalance(Number(data.maxStake))}
+            {t('Max {amount}', { amount: formatBalance(Number(data.maxStake)) })}
           </span>
         )}
         <button
@@ -268,11 +295,11 @@ function BetBoostCard(props: { bet: BetBoostCard$key }) {
           {allAdded ? (
             <>
               <CheckIcon className='size-3.5' />
-              Added
+              {t('Added')}
             </>
           ) : (
             <>
-              Select
+              {t('Select')}
               <ArrowRightIcon className='size-3.5 transition-transform group-hover/cta:translate-x-0.5' />
             </>
           )}
@@ -306,6 +333,7 @@ function ComboOfWeekCard(props: { bet: ComboOfWeekCard$key }) {
   const endsIn = useEndsIn(data.validTo)
   const hasOdd = useHasOdd()
   const combo = useCombo()
+  const t = useT()
 
   const availableSelections = data.selections.filter(s => s.available)
   const allAdded =
@@ -325,8 +353,7 @@ function ComboOfWeekCard(props: { bet: ComboOfWeekCard$key }) {
       <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_100%_0%,rgba(127,92,255,0.16),transparent_55%)]' />
 
       <PromoWordmark
-        top='Combo of the'
-        bottom='Week'
+        phrase={t('Combo of the Week')}
         accentClassName='text-purple-accent text-shadow-[0_0_16px_rgba(127,92,255,0.55)]'
         icon={
           <HiSquare3Stack3D className='text-purple-accent size-8 drop-shadow-[0_0_10px_rgba(127,92,255,0.7)]' />
@@ -337,7 +364,9 @@ function ComboOfWeekCard(props: { bet: ComboOfWeekCard$key }) {
         {data.title && (
           <span className='min-w-0 truncate text-white/80 normal-case'>{data.title}</span>
         )}
-        {endsIn && <span className='ml-auto shrink-0'>Ends in {endsIn}</span>}
+        {endsIn && (
+          <span className='ml-auto shrink-0'>{t('Ends in {time}', { time: endsIn })}</span>
+        )}
       </div>
 
       <div className='relative flex flex-1 flex-col justify-center gap-1'>
@@ -365,7 +394,7 @@ function ComboOfWeekCard(props: { bet: ComboOfWeekCard$key }) {
       <div className='relative flex items-center justify-between gap-3'>
         <div className='flex flex-col'>
           <span className='text-purple-accent text-[0.55rem] font-bold tracking-wide uppercase'>
-            Combined odds
+            {t('Combined odds')}
           </span>
           <span className='text-purple-accent text-2xl leading-none font-black'>
             {data.combinedPrice ? Number(data.combinedPrice).toFixed(2) : '—'}
@@ -385,12 +414,12 @@ function ComboOfWeekCard(props: { bet: ComboOfWeekCard$key }) {
           {allAdded ? (
             <>
               <CheckIcon className='size-3.5' />
-              Added
+              {t('Added')}
             </>
           ) : (
             <>
               <PlusIcon className='size-3.5' />
-              Add
+              {t('Add')}
             </>
           )}
         </button>
@@ -436,6 +465,7 @@ function FeaturedGameCard(props: { bet: FeaturedGameCard$key }) {
     props.bet
   )
 
+  const t = useT()
   const event = data.selections.find(s => s.event)?.event ?? null
   const matchWinner =
     event?.markets.find(m => m.kind === 'match_winner') ?? event?.markets[0] ?? null
@@ -450,8 +480,7 @@ function FeaturedGameCard(props: { bet: FeaturedGameCard$key }) {
       <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_100%_0%,rgba(56,189,248,0.16),transparent_55%)]' />
 
       <PromoWordmark
-        top='Top'
-        bottom='Pick'
+        phrase={t('Top Pick')}
         accentClassName='text-sky-400 text-shadow-[0_0_16px_rgba(56,189,248,0.55)]'
         icon={
           <GiLaurelCrown className='size-8 text-sky-400 drop-shadow-[0_0_10px_rgba(56,189,248,0.7)]' />
@@ -469,7 +498,7 @@ function FeaturedGameCard(props: { bet: FeaturedGameCard$key }) {
                   <span className='bg-destructive absolute inline-flex size-full animate-ping rounded-full opacity-75' />
                   <span className='bg-destructive relative inline-flex size-1.5 rounded-full' />
                 </span>
-                Live
+                {t('Live')}
               </span>
             ) : (
               <span className='ml-auto shrink-0'>{getRelativeDayLabel(event.startTime)}</span>
@@ -480,7 +509,7 @@ function FeaturedGameCard(props: { bet: FeaturedGameCard$key }) {
             <p className='truncate text-base leading-tight font-bold text-white'>
               {event.homeCompetitor}
             </p>
-            <p className='text-secondary text-[0.65rem] uppercase'>vs</p>
+            <p className='text-secondary text-[0.65rem] uppercase'>{t('vs')}</p>
             <p className='truncate text-base leading-tight font-bold text-white'>
               {event.awayCompetitor}
             </p>
@@ -498,7 +527,7 @@ function FeaturedGameCard(props: { bet: FeaturedGameCard$key }) {
             href={`/sport/event/${event.id}`}
             className='text-secondary relative flex items-center justify-end gap-1 text-[0.65rem] font-semibold uppercase transition-colors hover:text-sky-400'
           >
-            Full match odds
+            {t('Full match odds')}
             <ChevronRight className='size-3' />
           </Link>
         </>
@@ -507,7 +536,7 @@ function FeaturedGameCard(props: { bet: FeaturedGameCard$key }) {
           <div className='bg-dark-300 text-muted-foreground flex size-10 items-center justify-center rounded-full'>
             <SearchXIcon className='size-5' />
           </div>
-          <p className='text-secondary text-xs'>This event is no longer available.</p>
+          <p className='text-secondary text-xs'>{t('This event is no longer available.')}</p>
         </div>
       )}
     </div>

@@ -3,6 +3,7 @@
 import { isArray } from 'lodash'
 import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
+import { getT } from '@/i18n/t'
 import type { ErrorResponse } from '@/types'
 
 export async function login(
@@ -50,21 +51,22 @@ export async function login(
       }),
     })
   } catch (error) {
-    console.error('Login error:', error)
+    const t = await getT()
     return {
       ...data,
-      error: 'Error connecting to server.',
+      error: t('Error connecting to server.'),
     }
   }
 
   if (!res.ok) {
     const errorData = (await res.json()) as ErrorResponse
     console.log(errorData)
+    const t = await getT()
     return {
       ...data,
       error: isArray(errorData.message)
         ? errorData.message[0]
-        : errorData.message || 'Login failed.',
+        : errorData.message || t('Login failed.'),
     }
   } else {
     cookieStore.set({
