@@ -33,6 +33,7 @@ type BetRejection {
 }
 
 enum BetRejectionCode {
+  BOOST_UNAVAILABLE
   CASHOUT_UNAVAILABLE
   CUTOFF_PASSED
   DUPLICATE_EVENT
@@ -250,6 +251,10 @@ interface Event implements Node {
   """
   homeScore: Int
   id: ID!
+
+  """
+  All markets on this event; filter via a concrete-type fragment.
+  """
   markets: [Market!]!
   sport: Sport!
 
@@ -651,6 +656,7 @@ type PageInfo {
 
 input PlaceBetInput {
   betType: TicketType!
+  boostId: ID
 
   """
   Client-generated token making the mutation idempotent - resubmitting with the same value returns the original ticket instead of placing twice.
@@ -685,9 +691,19 @@ A fixture open for prematch betting.
 """
 type PrematchEvent implements Event & Node {
   awayCompetitor: String!
+
+  """
+  Away team crest URL; null when unavailable.
+  """
+  awayImageUrl: String
   awayScore: Int
   category: Category!
   homeCompetitor: String!
+
+  """
+  Home team crest URL; null when unavailable.
+  """
+  homeImageUrl: String
 
   """
   Null until scores start reporting.
@@ -802,6 +818,11 @@ type Query {
   Active curated carousel bets — combo of the week, bet boost, featured game — each live-priced. Optionally filter by kind. Public: builds a betslip, moves no money.
   """
   featuredBets(kind: FeaturedBetKind): [FeaturedBet!]!
+
+  """
+  Currently in-play events, priority-ordered by tournament weight (optionally filtered by `sport`). Each carries its live scoreline; subscribe to `eventStateUpdated`/`oddsUpdated` with these ids for live score and price changes.
+  """
+  liveEvents(sport: String): [PrematchEvent!]!
 
   """
   The caller's tickets, newest first (forward-only pagination).
@@ -1032,6 +1053,11 @@ type Tournament implements Node {
   key: String!
   name: String!
   sport: Sport!
+
+  """
+  Editorial importance on one global cross-sport scale (0 = unranked, higher = more important). Sort tournaments or their events by this to surface marquee competitions first. Reflects the admin/back-office weight table.
+  """
+  weight: Int!
 }
 
 """
