@@ -1,4 +1,3 @@
-// scripts/i18n/translate.ts
 import fs from 'node:fs'
 import path from 'node:path'
 
@@ -13,7 +12,7 @@ function protect(str: string): { text: string; tokens: string[] } {
   const tokens: string[] = []
   const text = str.replace(PLACEHOLDER_RE, match => {
     tokens.push(match)
-    return `⟦${tokens.length - 1}⟧` // unlikely to be touched by MT
+    return `⟦${tokens.length - 1}⟧` // HACK: unlikely to be messed by machine translations
   })
   return { text, tokens }
 }
@@ -23,11 +22,10 @@ function restore(str: string, tokens: string[]): string {
 }
 
 async function translateBatch(strings: string[], target: string): Promise<string[]> {
-  // swap in whatever provider you're using (DeepL, Google, Azure...)
   const res = await fetch('https://api-free.deepl.com/v2/translate', {
     method: 'POST',
     headers: {
-      Authorization: `DeepL-Auth-Key 3b6cc30c-e3fa-4c20-a464-3ce9470c6464:fx`,
+      Authorization: `DeepL-Auth-Key ${process.env.DEEPL_API_KEY}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({

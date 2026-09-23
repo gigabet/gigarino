@@ -1,4 +1,3 @@
-// lib/i18n/countryNames.ts
 import type { Locale } from './t'
 
 export function getCountryName(

@@ -1,4 +1,3 @@
-// i18n/t.ts
 import { cookies, headers } from 'next/headers'
 import dict from '@/i18n/translations.json'
 
