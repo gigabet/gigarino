@@ -103,7 +103,7 @@ export function ListViewMarketDropdowns() {
             setSelectedMarkets(markets => {
               const targetIndex = markets.indexOf(value)
               return targetIndex === -1
-                ? markets.map((m, idx) => (idx === i ? value : m))
+                ? markets.map((m, mi) => (mi === i ? value : m))
                 : swap(markets, i, targetIndex)
             })
           }

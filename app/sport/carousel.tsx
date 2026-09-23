@@ -154,10 +154,10 @@ function splitWordmark(
   const parts = phrase.trim().split(/\s+/)
   if (parts.length < 2) return { top: '', bottom: phrase }
 
-  const idx = splitAt === 'first' ? 1 : parts.length - 1
+  const i = splitAt === 'first' ? 1 : parts.length - 1
   return {
-    top: parts.slice(0, idx).join(' '),
-    bottom: parts.slice(idx).join(' '),
+    top: parts.slice(0, i).join(' '),
+    bottom: parts.slice(i).join(' '),
   }
 }
 

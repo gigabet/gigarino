@@ -18,7 +18,7 @@ function protect(str: string): { text: string; tokens: string[] } {
 }
 
 function restore(str: string, tokens: string[]): string {
-  return str.replace(/⟦(\d+)⟧/g, (_, idx) => tokens[Number(idx)] ?? '')
+  return str.replace(/⟦(\d+)⟧/g, (_, i) => tokens[Number(i)] ?? '')
 }
 
 async function translateBatch(strings: string[], target: string): Promise<string[]> {
@@ -54,8 +54,8 @@ export async function fillMissing() {
         locale
       )
 
-      chunk.forEach(([key], idx) => {
-        dict[key][locale] = restore(translated[idx], protectedInputs[idx].tokens)
+      chunk.forEach(([key], i) => {
+        dict[key][locale] = restore(translated[i], protectedInputs[i].tokens)
       })
     }
   }
