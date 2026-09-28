@@ -37,7 +37,9 @@ const availableMarkets = {
   even_odd: tKey('Even/Odd'),
   both_teams_to_score: tKey('Both to Score'),
 }
-const selectedMarketsState = atom(keys(availableMarkets) as (keyof typeof availableMarkets)[])
+export const selectedMarketsState = atom(
+  keys(availableMarkets) as (keyof typeof availableMarkets)[]
+)
 
 export function ListViewMarkets(props: { event: ListViewMarkets$key }) {
   const data = useFragment(

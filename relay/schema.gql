@@ -253,9 +253,9 @@ interface Event implements Node {
   id: ID!
 
   """
-  All markets on this event; filter via a concrete-type fragment.
+  This event's markets, optionally narrowed to UI groups.
   """
-  markets: [Market!]!
+  markets(groups: [MarketGroup!]): [Market!]!
   sport: Sport!
 
   """
@@ -409,6 +409,56 @@ type FeaturedBetSelection {
   Live price; null when unavailable.
   """
   price: Decimal
+}
+
+"""
+A fixture currently in play.
+"""
+type LiveEvent implements Event & Node {
+  awayCompetitor: String!
+
+  """
+  Away team crest URL; null when unavailable.
+  """
+  awayImageUrl: String
+  awayScore: Int
+  category: Category!
+  homeCompetitor: String!
+
+  """
+  Home team crest URL; null when unavailable.
+  """
+  homeImageUrl: String
+
+  """
+  Live home score; also streamed via eventStateUpdated.
+  """
+  homeScore: Int
+  id: ID!
+
+  """
+  Materialized markets available on this event.
+  """
+  marketCount: Int!
+
+  """
+  This event's markets, optionally narrowed to UI groups.
+  """
+  markets(groups: [MarketGroup!]): [Market!]!
+
+  """
+  Total odds (outcomes) across this event's markets.
+  """
+  oddCount: Int!
+  sport: Sport!
+
+  """
+  Kick-off (UTC).
+  """
+  startTime: DateTimeISO!
+  status: EventStatus!
+  tournament: Tournament!
+  tradingStatus: TradingStatus!
 }
 
 """
@@ -717,7 +767,7 @@ type PrematchEvent implements Event & Node {
   marketCount: Int!
 
   """
-  Markets published for this event - typically match winner + totals (+ BTTS on some providers) in v1.
+  This event's markets, optionally narrowed to UI groups.
   """
   markets(groups: [MarketGroup!]): [Market!]!
 
@@ -822,7 +872,7 @@ type Query {
   """
   Currently in-play events, priority-ordered by tournament weight (optionally filtered by `sport`). Each carries its live scoreline; subscribe to `eventStateUpdated`/`oddsUpdated` with these ids for live score and price changes.
   """
-  liveEvents(sport: String): [PrematchEvent!]!
+  liveEvents(sport: String): [LiveEvent!]!
 
   """
   The caller's tickets, newest first (forward-only pagination).

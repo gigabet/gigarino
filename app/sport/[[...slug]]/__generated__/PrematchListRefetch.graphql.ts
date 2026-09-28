@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<71c3295aea5c0c5d25019889ed273d75>>
+ * @generated SignedSource<<bc678996ad32492829838ee601dcbe9e>>
  * @lightSyntaxTransform
  */
 
@@ -112,7 +112,21 @@ v5 = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
+          "name": "homeImageUrl",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
           "name": "awayCompetitor",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "awayImageUrl",
           "storageKey": null
         },
         {
@@ -398,12 +412,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f85f4c8b0b190d05a4b2767fd4582f70",
+    "cacheID": "2369fc557437f4a2fbd96b7db0ded02f",
     "id": null,
     "metadata": {},
     "name": "PrematchListRefetch",
     "operationKind": "query",
-    "text": "query PrematchListRefetch(\n  $eventCount: Int\n  $filterActive: Boolean!\n  $hasAny: Boolean!\n  $hasSearch: Boolean!\n  $search: String\n  $tournamentKeys: [String!]!\n) {\n  ...PrematchList_kbUTV\n}\n\nfragment ListViewMarkets on PrematchEvent {\n  markets {\n    id\n    kind\n    ...PrematchMarket\n  }\n}\n\nfragment PrematchEvent on PrematchEvent {\n  id\n  homeCompetitor\n  awayCompetitor\n  startTime\n  oddCount\n  ...ListViewMarkets @defer(label: \"PrematchEvent$defer$ListViewMarkets\")\n}\n\nfragment PrematchList_kbUTV on Query {\n  topTournaments(first: 4) @skip(if: $hasAny) @stream(label: \"PrematchList$stream$topTournaments_3z2gQm\", initialCount: 1) {\n    id\n    ...Tournament\n  }\n  tournaments(keys: $tournamentKeys) @include(if: $filterActive) @skip(if: $hasSearch) @stream(label: \"PrematchList$stream$tournaments_1FDLHx\", initialCount: 1) {\n    id\n    ...Tournament\n  }\n  searchResults: events(search: $search, first: 20) @include(if: $hasSearch) {\n    totalCount\n    edges {\n      node {\n        id\n        ...PrematchEvent\n      }\n    }\n  }\n}\n\nfragment PrematchMarket on Market {\n  outcomes {\n    id\n    index\n    name\n    key\n    price\n  }\n}\n\nfragment Tournament on Tournament {\n  id\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n  name\n  ...TournamentEventList @defer(label: \"Tournament$defer$TournamentEventList\")\n}\n\nfragment TournamentEventList on Tournament {\n  events(first: $eventCount) {\n    edges {\n      node {\n        id\n        ...PrematchEvent\n      }\n    }\n  }\n}\n"
+    "text": "query PrematchListRefetch(\n  $eventCount: Int\n  $filterActive: Boolean!\n  $hasAny: Boolean!\n  $hasSearch: Boolean!\n  $search: String\n  $tournamentKeys: [String!]!\n) {\n  ...PrematchList_kbUTV\n}\n\nfragment ListViewMarkets on PrematchEvent {\n  markets {\n    id\n    kind\n    ...PrematchMarket\n  }\n}\n\nfragment PrematchEvent on PrematchEvent {\n  id\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  oddCount\n  ...ListViewMarkets @defer(label: \"PrematchEvent$defer$ListViewMarkets\")\n}\n\nfragment PrematchList_kbUTV on Query {\n  topTournaments(first: 4) @skip(if: $hasAny) @stream(label: \"PrematchList$stream$topTournaments_3z2gQm\", initialCount: 1) {\n    id\n    ...Tournament\n  }\n  tournaments(keys: $tournamentKeys) @include(if: $filterActive) @skip(if: $hasSearch) @stream(label: \"PrematchList$stream$tournaments_1FDLHx\", initialCount: 1) {\n    id\n    ...Tournament\n  }\n  searchResults: events(search: $search, first: 20) @include(if: $hasSearch) {\n    totalCount\n    edges {\n      node {\n        id\n        ...PrematchEvent\n      }\n    }\n  }\n}\n\nfragment PrematchMarket on Market {\n  outcomes {\n    id\n    index\n    name\n    key\n    price\n  }\n}\n\nfragment Tournament on Tournament {\n  id\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n  name\n  ...TournamentEventList @defer(label: \"Tournament$defer$TournamentEventList\")\n}\n\nfragment TournamentEventList on Tournament {\n  events(first: $eventCount) {\n    edges {\n      node {\n        id\n        ...PrematchEvent\n      }\n    }\n  }\n}\n"
   }
 };
 })();

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4bef5e8bd9b80b955f5fb908482ab8dc>>
+ * @generated SignedSource<<c259df0a27ea064d10b765169eadf9e6>>
  * @lightSyntaxTransform
  */
 
@@ -11,7 +11,9 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PrematchEvent$data = {
   readonly awayCompetitor: string;
+  readonly awayImageUrl: string | null | undefined;
   readonly homeCompetitor: string;
+  readonly homeImageUrl: string | null | undefined;
   readonly id: string;
   readonly oddCount: number;
   readonly startTime: string;
@@ -47,7 +49,21 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
+      "name": "homeImageUrl",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
       "name": "awayCompetitor",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "awayImageUrl",
       "storageKey": null
     },
     {
@@ -79,6 +95,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "2bc326b8a2145189333b5489870d0099";
+(node as any).hash = "99f5793d0d828a7577f5f316731e1a71";
 
 export default node;

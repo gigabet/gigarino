@@ -6,7 +6,7 @@
     "dev": "concurrently \"next dev\" \"pnpm:watch:i18n\"",
     "watch:i18n": "chokidar \"app/**/*.{ts,tsx}\" \"components/**/*.{ts,tsx}\" -c \"pnpm run i18n:extract\"",
     "i18n:extract": "tsx scripts/i18n/extract.ts",
-    "i18n:translate": "tsx scripts/i18n/translate.ts",
+    "i18n:translate": "tsx --env-file=.env.development scripts/i18n/translate.ts",
     "i18n:validate": "tsx scripts/i18n/validate.ts",
     "i18n:prune": "tsx scripts/i18n/prune.ts",
     "i18n:prune:check": "tsx scripts/i18n/prune.ts --dry-run",

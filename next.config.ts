@@ -14,6 +14,9 @@ const nextConfig: NextConfig = {
       language: 'typescript',
     },
   },
+  images: {
+    remotePatterns: [new URL('https://assets.b365api.com/images/team/m/**')],
+  },
   async rewrites() {
     return [
       {

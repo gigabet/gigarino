@@ -1,6 +1,7 @@
 'use client'
 import { format } from 'date-fns'
 import { ChartNoAxesColumnIcon } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { fetchQuery, graphql, useFragment, useRelayEnvironment } from 'react-relay'
@@ -18,7 +19,9 @@ export default function PrematchEvent(props: { node: PrematchEvent$key }) {
       fragment PrematchEvent on PrematchEvent {
         id
         homeCompetitor
+        homeImageUrl
         awayCompetitor
+        awayImageUrl
         startTime
         oddCount
         ...ListViewMarkets @defer
@@ -44,16 +47,30 @@ export default function PrematchEvent(props: { node: PrematchEvent$key }) {
 
       {/* mobile row 1: teams + odds */}
       <div className='relative flex items-center gap-4 lg:contents'>
-        <div className='flex w-34 min-w-0 shrink-0 flex-col gap-1 text-xs sm:w-40 sm:gap-2 sm:text-sm lg:order-3 lg:ml-1 lg:w-60 lg:flex-none'>
+        <Link
+          className='flex w-34 min-w-0 shrink-0 flex-col gap-1 text-xs sm:w-40 sm:gap-2 sm:text-sm lg:order-3 lg:ml-1 lg:w-60 lg:flex-none'
+          href={`/sport/event/${data.id}`}
+          onMouseEnter={prefetch}
+          onMouseDown={prefetch}
+          onFocus={prefetch}
+        >
           <div className='flex items-center gap-2'>
-            <TeamBadge name={data.homeCompetitor} />
+            {data.homeImageUrl ? (
+              <Image src={data.homeImageUrl} alt='' className='size-6' width={24} height={24} />
+            ) : (
+              <TeamBadge name={data.homeCompetitor} />
+            )}
             <span className='truncate'>{data.homeCompetitor}</span>
           </div>
           <div className='flex items-center gap-2'>
-            <TeamBadge name={data.awayCompetitor} />
+            {data.awayImageUrl ? (
+              <Image src={data.awayImageUrl} alt='' className='size-6' width={24} height={24} />
+            ) : (
+              <TeamBadge name={data.awayCompetitor} />
+            )}
             <span className='truncate'>{data.awayCompetitor}</span>
           </div>
-        </div>
+        </Link>
 
         <Suspense fallback={<ListViewMarketsSkeleton />}>
           <ListViewMarkets event={data} />

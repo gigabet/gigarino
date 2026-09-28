@@ -75,6 +75,10 @@
     "de": "Hinzugefügt",
     "tr": "Eklendi"
   },
+  "All": {
+    "de": "Alle",
+    "tr": "Tümü"
+  },
   "All Games": {
     "de": "Alle Spiele",
     "tr": "Tüm Oyunlar"
@@ -491,6 +495,10 @@
     "de": "Noch keine Tickets",
     "tr": "Henüz bilet yok"
   },
+  "Odds": {
+    "de": "Quoten",
+    "tr": "Oranlar"
+  },
   "One combi bet per event.": {
     "de": "Nur eine Kombiwette pro Ereignis.",
     "tr": "Etkinlik başına bir kombine bahis."
@@ -738,6 +746,10 @@
   "Stake": {
     "de": "Einsatz",
     "tr": "Bahis Miktarı"
+  },
+  "Suspended": {
+    "de": "Ausgesetzt",
+    "tr": "Askıya alınmış"
   },
   "System": {
     "de": "System",
