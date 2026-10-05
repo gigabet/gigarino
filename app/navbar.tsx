@@ -34,7 +34,7 @@ const navLinks = [
   { label: tKey('Casino'), href: '/', icon: CoinsIcon },
   { label: tKey('Live Casino'), href: '/casino/live-casino', icon: RadioIcon },
   { label: tKey('Sports'), href: '/sport', icon: VolleyballIcon },
-  { label: tKey('In Play'), href: '#!', icon: TvMinimalPlayIcon },
+  { label: tKey('In Play'), href: '/live', icon: TvMinimalPlayIcon },
 ]
 const navbarMobileMenuState = atom(false)
 export const NAVBAR_HEIGHT = 'h-20'
