@@ -12,12 +12,10 @@ import { useT } from '@/context/providers'
 import { getSportTheme } from '@/lib/sport-theme'
 
 export default function LiveSportTabs(props: {
-  queryRef: PreloadedQuery<LiveEventsQuery>
+  query: LiveSportTabs$key
   active: string | null
   onChangeAction: (sportKey: string | null) => void
 }) {
-  const preloaded = usePreloadedQuery<LiveEventsQuery>(LiveEventsQueryNode, props.queryRef)
-
   const data = useFragment(
     graphql`
       fragment LiveSportTabs on Query {
@@ -29,7 +27,7 @@ export default function LiveSportTabs(props: {
         }
       }
     `,
-    preloaded as LiveSportTabs$key
+    props.query
   )
 
   const t = useT()

@@ -40,7 +40,7 @@ export default function LiveSingleView(props: { queryRef: PreloadedQuery<LiveSin
   if (!data) return <EventNotFound />
 
   return (
-    <main className='mx-auto flex w-full max-w-7xl flex-col gap-4 sm:gap-6'>
+    <main className='flex min-w-0 flex-col gap-4 sm:gap-6'>
       <section className='flex flex-col gap-3 rounded-2xl border border-white/5 bg-black/20 p-4 sm:gap-4 sm:p-6'>
         <LiveSingleHeader event={data} />
         <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-4'>
@@ -183,7 +183,7 @@ function KickoffTime(props: { startTime: string }) {
 
 function EventNotFound() {
   return (
-    <main className='mx-auto flex w-full max-w-7xl flex-col items-center justify-center gap-4 px-4 py-16 text-center sm:py-24'>
+    <main className='flex min-w-0 flex-col items-center justify-center gap-4 px-4 py-16 text-center sm:py-24'>
       <div className='bg-dark-300 text-muted-foreground flex size-14 items-center justify-center rounded-full'>
         <SearchXIcon className='size-6' />
       </div>

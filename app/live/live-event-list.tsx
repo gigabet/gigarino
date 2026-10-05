@@ -1,15 +1,15 @@
 'use client'
 
-import { groupBy, sortBy } from 'lodash'
 import { useMemo } from 'react'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
-import { GroupedVirtuoso, Virtuoso } from 'react-virtuoso'
+import { Virtuoso } from 'react-virtuoso'
 import type { LiveEventList$key } from '@/app/live/__generated__/LiveEventList.graphql'
 import type { LiveEventsQuery } from '@/app/live/__generated__/LiveEventsQuery.graphql'
 import LiveEventsQueryNode from '@/app/live/__generated__/LiveEventsQuery.graphql'
 import LiveEvent, { LiveEventSkeleton } from '@/app/live/live-event'
+import { orderLiveEvents } from '@/app/live/live-state'
 import type { LiveSort } from '@/app/live/live-toolbar'
-import LiveTournament from '@/app/live/live-tournament'
+import LiveTournament, { LiveMarketsHeader } from '@/app/live/live-tournament'
 
 export default function LiveEventList(props: {
   queryRef: PreloadedQuery<LiveEventsQuery>
@@ -22,55 +22,65 @@ export default function LiveEventList(props: {
     graphql`
       fragment LiveEventList on Query {
         liveEvents {
-          startTime
-          sport {
-            key
-          }
+          ...LiveOrder
+          ...LiveEvent
           tournament {
-            key
             ...LiveTournament
           }
-          ...LiveEvent
         }
       }
     `,
     preloaded as LiveEventList$key
   )
 
-  const events = props.sportFilter
-    ? data.liveEvents.filter(e => e.sport.key === props.sportFilter)
-    : data.liveEvents
+  const { events, groups } = useMemo(
+    () => orderLiveEvents(data.liveEvents, props.sort, props.sportFilter),
+    [data.liveEvents, props.sort, props.sportFilter]
+  )
 
-  // groupBy/sortBy here operate on data this component already unmasked via
-  // its own fragment above — this is view arrangement, not a second
-  // component reaching into a parent's resolved fields, so it stays inline
-  // rather than being split into its own function taking plain props
-  const groups = useMemo(() => Object.values(groupBy(events, e => e.tournament.key)), [events])
+  // Tournament mode: headers are plain rows in a flat list, so nothing sticks
+  const rows = useMemo(
+    () =>
+      groups?.flatMap(g => [
+        { kind: 'header' as const, key: `h:${g[0].id}`, event: g[0].event },
+        ...g.map(e => ({ kind: 'event' as const, key: e.id, event: e.event })),
+      ]) ?? null,
+    [groups]
+  )
 
   if (events.length === 0) return <EmptyLive />
 
-  if (props.sort === 'chronological') {
-    const sorted = sortBy(events, e => Date.parse(e.startTime))
+  // Start-time mode: one sticky market header above a flat list. The wrapper is
+  // the sticky element's containing block, so it stays stuck for the whole list.
+  if (!rows)
     return (
-      <Virtuoso
-        useWindowScroll
-        data={sorted}
-        itemContent={(_i, event) => <LiveEvent eventRef={event} />}
-        overscan={800}
-      />
+      <div>
+        <LiveMarketsHeader />
+        <Virtuoso
+          key='chronological'
+          useWindowScroll
+          totalCount={events.length}
+          overscan={800}
+          computeItemKey={i => events[i].id}
+          itemContent={i => <LiveEvent eventRef={events[i].event} />}
+        />
+      </div>
     )
-  }
-
-  const groupCounts = groups.map(g => g.length)
-  const flatEvents = groups.flat()
 
   return (
-    <GroupedVirtuoso
+    <Virtuoso
+      key='grouped'
       useWindowScroll
-      groupCounts={groupCounts}
+      totalCount={rows.length}
       overscan={800}
-      groupContent={index => <LiveTournament tournamentRef={groups[index][0].tournament} />}
-      itemContent={index => <LiveEvent eventRef={flatEvents[index]} />}
+      computeItemKey={i => rows[i].key}
+      itemContent={i =>
+        rows[i].kind === 'header' ? (
+          <LiveTournament tournamentRef={rows[i].event.tournament} />
+        ) : (
+          <LiveEvent eventRef={rows[i].event} />
+        )
+      }
     />
   )
 }

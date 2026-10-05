@@ -5,7 +5,7 @@ import type { LiveScore$key } from '@/app/live/__generated__/LiveScore.graphql'
 import type { LiveTeams$key } from '@/app/live/__generated__/LiveTeams.graphql'
 import type { LiveTime$key } from '@/app/live/__generated__/LiveTime.graphql'
 import { getPeriod } from '@/app/live/helpers'
-import { useLiveRowRegistration } from '@/app/live/refetch-context'
+import { useLiveRowRegistration } from '@/app/live/live-subscriptions'
 import { ListViewMarkets } from '@/components/list-view-markets'
 import { TeamBadge } from '@/components/team-badge'
 import { Button, buttonVariants } from '@/components/ui/button'
@@ -88,7 +88,7 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
   )
 }
 
-function LiveTime(props: { event: LiveTime$key }) {
+export function LiveTime(props: { event: LiveTime$key }) {
   const data = useFragment(
     graphql`
       fragment LiveTime on LiveEvent {
@@ -144,7 +144,7 @@ function LiveTime(props: { event: LiveTime$key }) {
   )
 }
 
-function LiveTeams(props: { event: LiveTeams$key }) {
+export function LiveTeams(props: { event: LiveTeams$key }) {
   const data = useFragment(
     graphql`
       fragment LiveTeams on LiveEvent {
@@ -173,7 +173,7 @@ function LiveTeams(props: { event: LiveTeams$key }) {
   )
 }
 
-function LiveScore(props: { event: LiveScore$key }) {
+export function LiveScore(props: { event: LiveScore$key }) {
   const data = useFragment(
     graphql`
       fragment LiveScore on LiveEvent {

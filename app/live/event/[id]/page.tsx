@@ -7,9 +7,11 @@ import { graphql } from 'relay-runtime'
 import SingleViewSkeleton from '@/app/live/event/[id]/loading'
 import LiveSingleView from '@/app/live/event/[id]/live-single-view'
 import type { LiveSingleViewQuery } from '@/app/live/event/[id]/__generated__/LiveSingleViewQuery.graphql'
+import { useLiveRowRegistration } from '@/app/live/live-subscriptions'
 
 export default function LiveEventPage() {
   const { id } = useParams<{ id: string }>()
+  useLiveRowRegistration(decodeURIComponent(id))
 
   const [queryRef, loadQuery, disposeQuery] = useQueryLoader<LiveSingleViewQuery>(graphql`
     query LiveSingleViewQuery($id: ID!) {

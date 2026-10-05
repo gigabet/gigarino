@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<12198c3163c342f20132d33172d05a8a>>
+ * @generated SignedSource<<f7c4b53878f4af919d778b0ddc1703df>>
  * @lightSyntaxTransform
  */
 
@@ -11,7 +11,7 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type LiveEventsQuery$variables = Record<PropertyKey, never>;
 export type LiveEventsQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"LiveEventList" | "LiveSportTabs">;
+  readonly " $fragmentSpreads": FragmentRefs<"LiveEventList">;
 };
 export type LiveEventsQuery = {
   response: LiveEventsQuery$data;
@@ -23,17 +23,30 @@ var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "key",
+  "name": "id",
   "storageKey": null
 },
 v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "key",
   "storageKey": null
 },
 v2 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "Sport",
+  "kind": "LinkedField",
+  "name": "sport",
+  "plural": false,
+  "selections": [
+    (v1/*:: as any*/),
+    (v0/*:: as any*/)
+  ],
+  "storageKey": null
+},
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -51,11 +64,6 @@ return {
         "args": null,
         "kind": "FragmentSpread",
         "name": "LiveEventList"
-      },
-      {
-        "args": null,
-        "kind": "FragmentSpread",
-        "name": "LiveSportTabs"
       }
     ],
     "type": "Query",
@@ -75,6 +83,7 @@ return {
         "name": "liveEvents",
         "plural": true,
         "selections": [
+          (v0/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -82,20 +91,7 @@ return {
             "name": "startTime",
             "storageKey": null
           },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Sport",
-            "kind": "LinkedField",
-            "name": "sport",
-            "plural": false,
-            "selections": [
-              (v0/*:: as any*/),
-              (v1/*:: as any*/),
-              (v2/*:: as any*/)
-            ],
-            "storageKey": null
-          },
+          (v2/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -104,21 +100,10 @@ return {
             "name": "tournament",
             "plural": false,
             "selections": [
+              (v1/*:: as any*/),
               (v0/*:: as any*/),
+              (v3/*:: as any*/),
               (v2/*:: as any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Sport",
-                "kind": "LinkedField",
-                "name": "sport",
-                "plural": false,
-                "selections": [
-                  (v0/*:: as any*/),
-                  (v1/*:: as any*/)
-                ],
-                "storageKey": null
-              },
               {
                 "alias": null,
                 "args": null,
@@ -127,7 +112,7 @@ return {
                 "name": "category",
                 "plural": false,
                 "selections": [
-                  (v2/*:: as any*/),
+                  (v3/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -135,15 +120,13 @@ return {
                     "name": "countryCode",
                     "storageKey": null
                   },
-                  (v1/*:: as any*/)
+                  (v0/*:: as any*/)
                 ],
                 "storageKey": null
-              },
-              (v1/*:: as any*/)
+              }
             ],
             "storageKey": null
           },
-          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -239,7 +222,7 @@ return {
                 "name": "markets",
                 "plural": true,
                 "selections": [
-                  (v1/*:: as any*/),
+                  (v0/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -255,7 +238,7 @@ return {
                     "name": "outcomes",
                     "plural": true,
                     "selections": [
-                      (v1/*:: as any*/),
+                      (v0/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -263,8 +246,8 @@ return {
                         "name": "index",
                         "storageKey": null
                       },
-                      (v2/*:: as any*/),
-                      (v0/*:: as any*/),
+                      (v3/*:: as any*/),
+                      (v1/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -288,16 +271,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2c83ff1115db940b1c93e42a17ed18b9",
+    "cacheID": "2f052201217fda2c1921c3d979f3f4fc",
     "id": null,
     "metadata": {},
     "name": "LiveEventsQuery",
     "operationKind": "query",
-    "text": "query LiveEventsQuery {\n  ...LiveEventList\n  ...LiveSportTabs\n}\n\nfragment ListViewMarket on Market {\n  outcomes {\n    id\n    index\n    name\n    key\n    price\n  }\n}\n\nfragment ListViewMarkets on Event {\n  __isEvent: __typename\n  markets {\n    id\n    kind\n    ...ListViewMarket\n  }\n}\n\nfragment LiveEvent on LiveEvent {\n  id\n  homeCompetitor\n  awayCompetitor\n  homeScore\n  awayScore\n  tradingStatus\n  oddCount\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...ListViewMarkets\n}\n\nfragment LiveEventList on Query {\n  liveEvents {\n    startTime\n    sport {\n      key\n      id\n    }\n    tournament {\n      key\n      ...LiveTournament\n      id\n    }\n    ...LiveEvent\n    id\n  }\n}\n\nfragment LiveScore on LiveEvent {\n  homeScore\n  awayScore\n}\n\nfragment LiveSportTabs on Query {\n  liveEvents {\n    sport {\n      key\n      name\n      id\n    }\n    id\n  }\n}\n\nfragment LiveTeams on LiveEvent {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on LiveEvent {\n  period\n  clockRunning\n  clockElapsedSeconds\n  clockAnchorAt\n}\n\nfragment LiveTournament on Tournament {\n  name\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n}\n"
+    "text": "query LiveEventsQuery {\n  ...LiveEventList\n}\n\nfragment ListViewMarket on Market {\n  outcomes {\n    id\n    index\n    name\n    key\n    price\n  }\n}\n\nfragment ListViewMarkets on Event {\n  __isEvent: __typename\n  markets {\n    id\n    kind\n    ...ListViewMarket\n  }\n}\n\nfragment LiveEvent on LiveEvent {\n  id\n  homeCompetitor\n  awayCompetitor\n  homeScore\n  awayScore\n  tradingStatus\n  oddCount\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...ListViewMarkets\n}\n\nfragment LiveEventList on Query {\n  liveEvents {\n    ...LiveOrder\n    ...LiveEvent\n    tournament {\n      ...LiveTournament\n      id\n    }\n    id\n  }\n}\n\nfragment LiveOrder on LiveEvent {\n  id\n  startTime\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveScore on LiveEvent {\n  homeScore\n  awayScore\n}\n\nfragment LiveTeams on LiveEvent {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on LiveEvent {\n  period\n  clockRunning\n  clockElapsedSeconds\n  clockAnchorAt\n}\n\nfragment LiveTournament on Tournament {\n  name\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "385c23253140ab00cf61d70389c20484";
+(node as any).hash = "f798315e1a9f9e3a5752553a5573af42";
 
 export default node;
