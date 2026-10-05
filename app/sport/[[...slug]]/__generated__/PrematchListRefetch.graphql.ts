@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bc678996ad32492829838ee601dcbe9e>>
+ * @generated SignedSource<<3cc8a1ddfd34419fe7770967adbba555>>
  * @lightSyntaxTransform
  */
 
@@ -149,27 +149,14 @@ v5 = {
           "label": "PrematchEvent$defer$ListViewMarkets",
           "selections": [
             {
-              "alias": null,
-              "args": null,
-              "concreteType": "Market",
-              "kind": "LinkedField",
-              "name": "markets",
-              "plural": true,
+              "kind": "InlineFragment",
               "selections": [
-                (v2/*:: as any*/),
                 {
                   "alias": null,
                   "args": null,
-                  "kind": "ScalarField",
-                  "name": "kind",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "Outcome",
+                  "concreteType": "Market",
                   "kind": "LinkedField",
-                  "name": "outcomes",
+                  "name": "markets",
                   "plural": true,
                   "selections": [
                     (v2/*:: as any*/),
@@ -177,23 +164,43 @@ v5 = {
                       "alias": null,
                       "args": null,
                       "kind": "ScalarField",
-                      "name": "index",
+                      "name": "kind",
                       "storageKey": null
                     },
-                    (v4/*:: as any*/),
-                    (v3/*:: as any*/),
                     {
                       "alias": null,
                       "args": null,
-                      "kind": "ScalarField",
-                      "name": "price",
+                      "concreteType": "Outcome",
+                      "kind": "LinkedField",
+                      "name": "outcomes",
+                      "plural": true,
+                      "selections": [
+                        (v2/*:: as any*/),
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "index",
+                          "storageKey": null
+                        },
+                        (v4/*:: as any*/),
+                        (v3/*:: as any*/),
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "price",
+                          "storageKey": null
+                        }
+                      ],
                       "storageKey": null
                     }
                   ],
                   "storageKey": null
                 }
               ],
-              "storageKey": null
+              "type": "Event",
+              "abstractKey": "__isEvent"
             }
           ]
         }
@@ -412,12 +419,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2369fc557437f4a2fbd96b7db0ded02f",
+    "cacheID": "70f10281b2d38cffa863094b8dc9526e",
     "id": null,
     "metadata": {},
     "name": "PrematchListRefetch",
     "operationKind": "query",
-    "text": "query PrematchListRefetch(\n  $eventCount: Int\n  $filterActive: Boolean!\n  $hasAny: Boolean!\n  $hasSearch: Boolean!\n  $search: String\n  $tournamentKeys: [String!]!\n) {\n  ...PrematchList_kbUTV\n}\n\nfragment ListViewMarkets on PrematchEvent {\n  markets {\n    id\n    kind\n    ...PrematchMarket\n  }\n}\n\nfragment PrematchEvent on PrematchEvent {\n  id\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  oddCount\n  ...ListViewMarkets @defer(label: \"PrematchEvent$defer$ListViewMarkets\")\n}\n\nfragment PrematchList_kbUTV on Query {\n  topTournaments(first: 4) @skip(if: $hasAny) @stream(label: \"PrematchList$stream$topTournaments_3z2gQm\", initialCount: 1) {\n    id\n    ...Tournament\n  }\n  tournaments(keys: $tournamentKeys) @include(if: $filterActive) @skip(if: $hasSearch) @stream(label: \"PrematchList$stream$tournaments_1FDLHx\", initialCount: 1) {\n    id\n    ...Tournament\n  }\n  searchResults: events(search: $search, first: 20) @include(if: $hasSearch) {\n    totalCount\n    edges {\n      node {\n        id\n        ...PrematchEvent\n      }\n    }\n  }\n}\n\nfragment PrematchMarket on Market {\n  outcomes {\n    id\n    index\n    name\n    key\n    price\n  }\n}\n\nfragment Tournament on Tournament {\n  id\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n  name\n  ...TournamentEventList @defer(label: \"Tournament$defer$TournamentEventList\")\n}\n\nfragment TournamentEventList on Tournament {\n  events(first: $eventCount) {\n    edges {\n      node {\n        id\n        ...PrematchEvent\n      }\n    }\n  }\n}\n"
+    "text": "query PrematchListRefetch(\n  $eventCount: Int\n  $filterActive: Boolean!\n  $hasAny: Boolean!\n  $hasSearch: Boolean!\n  $search: String\n  $tournamentKeys: [String!]!\n) {\n  ...PrematchList_kbUTV\n}\n\nfragment ListViewMarket on Market {\n  outcomes {\n    id\n    index\n    name\n    key\n    price\n  }\n}\n\nfragment ListViewMarkets on Event {\n  __isEvent: __typename\n  markets {\n    id\n    kind\n    ...ListViewMarket\n  }\n}\n\nfragment PrematchEvent on PrematchEvent {\n  id\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  oddCount\n  ...ListViewMarkets @defer(label: \"PrematchEvent$defer$ListViewMarkets\")\n}\n\nfragment PrematchList_kbUTV on Query {\n  topTournaments(first: 4) @skip(if: $hasAny) @stream(label: \"PrematchList$stream$topTournaments_3z2gQm\", initialCount: 1) {\n    id\n    ...Tournament\n  }\n  tournaments(keys: $tournamentKeys) @include(if: $filterActive) @skip(if: $hasSearch) @stream(label: \"PrematchList$stream$tournaments_1FDLHx\", initialCount: 1) {\n    id\n    ...Tournament\n  }\n  searchResults: events(search: $search, first: 20) @include(if: $hasSearch) {\n    totalCount\n    edges {\n      node {\n        id\n        ...PrematchEvent\n      }\n    }\n  }\n}\n\nfragment Tournament on Tournament {\n  id\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n  name\n  ...TournamentEventList @defer(label: \"Tournament$defer$TournamentEventList\")\n}\n\nfragment TournamentEventList on Tournament {\n  events(first: $eventCount) {\n    edges {\n      node {\n        id\n        ...PrematchEvent\n      }\n    }\n  }\n}\n"
   }
 };
 })();

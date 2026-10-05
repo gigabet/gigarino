@@ -41,11 +41,14 @@ enum BetRejectionCode {
   INSUFFICIENT_FUNDS
   INTERNAL_ERROR
   LIABILITY_LIMIT
+  LIVE_STATE_CHANGED
   MULTI_SINGLE_NOT_SUPPORTED
   ODDS_LIMIT
+  ODDS_UNAVAILABLE
   OUTCOME_NOT_AVAILABLE
   PRICE_CHANGED
   PROVIDER_CURRENCY
+  RESPONSIBLE_GAMING
   STAKE_LIMIT
   SYSTEM_NOT_SUPPORTED
   WALLET_UNAVAILABLE
@@ -223,6 +226,14 @@ type Category implements Node {
 }
 
 """
+Why a ticket was corrected after acceptance.
+"""
+enum CorrectionKind {
+  PALPABLE_ERROR
+  RESULT_CORRECTION
+}
+
+"""
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
@@ -300,38 +311,10 @@ type EventEdge {
 Live score, clock and trading state for one in-play event.
 """
 type EventStateUpdate {
-  awayScore: Int
-
   """
-  Clock ANCHOR: the instant the book set the clock - NOT the current minute. Pair with `clockElapsedSeconds`; the client derives the live value: clockRunning ? elapsed + (now - clockAnchorAt) : elapsed. Costs zero messages while running and freezes exactly on pause. Null for sports without a clock (e.g. tennis).
+  The updated LiveEvent. Select the live fields (homeScore, awayScore, clock*, status, tradingStatus, period) and the node merges into the cached record by id.
   """
-  clockAnchorAt: DateTimeISO
-
-  """
-  Match-clock reading in whole seconds at `clockAnchorAt`. Null for sports without a clock.
-  """
-  clockElapsedSeconds: Int
-
-  """
-  False when the clock is paused (half-time, stoppage) - the displayed time freezes at `clockElapsedSeconds`.
-  """
-  clockRunning: Boolean!
-
-  """
-  Global ID of the affected Event node.
-  """
-  eventId: ID!
-
-  """
-  Null for sports we do not flatten to integers (e.g. tennis).
-  """
-  homeScore: Int
-
-  """
-  Phase of the match (half/period). Currently always null pending a confirmed source field from the live feed; wired through so clients can bind to it now.
-  """
-  period: MatchPeriod
-  state: LiveEventState!
+  event: LiveEvent!
   updatedAt: DateTimeISO!
 }
 
@@ -423,6 +406,21 @@ type LiveEvent implements Event & Node {
   awayImageUrl: String
   awayScore: Int
   category: Category!
+
+  """
+  Clock ANCHOR: the instant the book set the clock - NOT the current minute. Pair with `clockElapsedSeconds`; the client derives the live value: clockRunning ? elapsed + (now - clockAnchorAt) : elapsed. Costs zero messages while running and freezes exactly on pause. Null for sports without a clock (e.g. tennis) or before the first live frame.
+  """
+  clockAnchorAt: DateTimeISO
+
+  """
+  Match-clock reading in whole seconds at `clockAnchorAt`. Null for sports without a clock.
+  """
+  clockElapsedSeconds: Int
+
+  """
+  False when the clock is paused (half-time, stoppage) - the displayed time freezes at `clockElapsedSeconds`.
+  """
+  clockRunning: Boolean!
   homeCompetitor: String!
 
   """
@@ -450,6 +448,11 @@ type LiveEvent implements Event & Node {
   Total odds (outcomes) across this event's markets.
   """
   oddCount: Int!
+
+  """
+  Phase of the match (half/period). Currently always null pending a confirmed source field from the live feed; wired through so clients can bind to it now.
+  """
+  period: MatchPeriod
   sport: Sport!
 
   """
@@ -459,15 +462,6 @@ type LiveEvent implements Event & Node {
   status: EventStatus!
   tournament: Tournament!
   tradingStatus: TradingStatus!
-}
-
-"""
-In-play trading state of a match that is under way.
-"""
-enum LiveEventState {
-  ENDED
-  LIVE
-  SUSPENDED
 }
 
 """
@@ -511,10 +505,12 @@ UI grouping for markets (the market-tab set: Main, Goals, Cards, …).
 enum MarketGroup {
   CARDS
   CORNERS
+  GAMES
   GOALS
   MAIN
   PENALTIES
   PLAYERS
+  POINTS
   SPECIAL
 }
 
@@ -561,6 +557,11 @@ enum MatchPeriod {
 
 type Mutation {
   """
+  Marks resettlement notifications as seen - the given tickets, or all when omitted - and returns the updated tickets.
+  """
+  acknowledgeResettlements(ticketIds: [ID!]): [Ticket!]!
+
+  """
   Sell an open ticket back to the book at the current quote.
   """
   cashout(ticketId: ID!): CashoutPayload!
@@ -591,57 +592,21 @@ enum OddsChangePolicy {
 }
 
 """
-One outcome whose price changed in this update.
-"""
-type OddsOutcomeChange {
-  """
-  Line/handicap for lined markets (over/under); null otherwise.
-  """
-  line: Decimal
-
-  """
-  Global ID of the affected Market node.
-  """
-  marketId: ID!
-  marketKind: String!
-
-  """
-  Global ID of the affected Outcome node.
-  """
-  outcomeId: ID!
-  outcomeKey: String!
-  outcomeName: String!
-  period: MarketPeriod!
-
-  """
-  Previous odds; null when the outcome first appeared.
-  """
-  previousPrice: Decimal
-
-  """
-  New decimal odds.
-  """
-  price: Decimal!
-
-  """
-  True when the book has pulled this selection. A market can be suspended without its price moving, so this is pushed independently of `price`.
-  """
-  suspended: Boolean!
-}
-
-"""
-A batch of price changes on one event, pushed when the provider moves its odds.
+A batch of price changes on one event, pushed when the book moves its odds.
 """
 type OddsUpdate {
-  changes: [OddsOutcomeChange!]!
-
   """
-  Global ID of the affected Event node.
+  Global ID of the affected event node.
   """
   eventId: ID!
 
   """
-  Instant the detecting poll cycle ran.
+  The outcomes whose price or suspension changed, as the nodes themselves.
+  """
+  outcomes: [Outcome!]!
+
+  """
+  Instant the change was detected.
   """
   updatedAt: DateTimeISO!
 }
@@ -662,6 +627,11 @@ type Outcome implements Node {
   """
   key: String!
   name: String!
+
+  """
+  Price before the latest move, for up/down indicators. Set on `oddsUpdated` pushes; null when read by query or when the outcome is new.
+  """
+  previousPrice: Decimal
 
   """
   Decimal odds (e.g. "1.850").
@@ -811,9 +781,9 @@ type Query {
   cashoutQuote(ticketId: ID!): CashoutQuote!
 
   """
-  Fetch a single event by its global `id`.
+  Fetch a single event by its global `id`: a LiveEvent id resolves to LiveEvent, an Event id to PrematchEvent.
   """
-  event(id: ID!): PrematchEvent
+  event(id: ID!): Event
 
   """
   Cursor-paginated event feed with optional filters.
@@ -860,9 +830,9 @@ type Query {
   ): EventConnection!
 
   """
-  Batched re-fetch: one round trip for many event ids. Preserves input order, drops missing rows.
+  Batched re-fetch: one round trip for many event ids (PrematchEvent or LiveEvent). Preserves input order, drops missing rows.
   """
-  eventsByIds(ids: [ID!]!): [PrematchEvent!]!
+  eventsByIds(ids: [ID!]!): [Event!]!
 
   """
   Active curated carousel bets — combo of the week, bet boost, featured game — each live-priced. Optionally filter by kind. Public: builds a betslip, moves no money.
@@ -870,9 +840,15 @@ type Query {
   featuredBets(kind: FeaturedBetKind): [FeaturedBet!]!
 
   """
-  Currently in-play events, priority-ordered by tournament weight (optionally filtered by `sport`). Each carries its live scoreline; subscribe to `eventStateUpdated`/`oddsUpdated` with these ids for live score and price changes.
+  Currently in-play events that offer at least one market (open or suspended), priority-ordered by tournament weight (optionally filtered by `sport`). Each carries its live scoreline; subscribe to `eventStateUpdated`/`oddsUpdated` with these ids for live score and price changes.
   """
-  liveEvents(sport: String): [LiveEvent!]!
+  liveEvents(
+    """
+    Free-text search over competitor and tournament names.
+    """
+    search: String
+    sport: String
+  ): [LiveEvent!]!
 
   """
   The caller's tickets, newest first (forward-only pagination).
@@ -908,6 +884,11 @@ type Query {
   The selected tournaments, each with its own paginated `events` connection - so a multi-tournament view renders one group per tournament instead of one flat, interleaved feed. Selection can span sports: `keys` accepts the self-describing compound form `sportKey:tournamentKey` (e.g. `["basketball:l1942","football:premier-league"]`), OR bare `keys` plus a single `sport` when they share one (`?sport=football&t=premier-league,la-liga`), OR opaque global `ids`. A tournament key is only unique within its sport, hence the sport prefix. Preserves input order; drops entries that no longer resolve.
   """
   tournaments(ids: [ID!], keys: [String!], sport: String): [Tournament!]!
+
+  """
+  How many of the caller's tickets were corrected since last acknowledged - the resettlement notification badge.
+  """
+  unseenResettlementCount: Int!
 }
 
 """
@@ -939,12 +920,17 @@ type Subscription {
   betslipUpdated(input: BetslipQuoteInput!): BetslipQuote!
 
   """
-  Pushes live score, clock and trading state for the given events. Separate from `oddsUpdated` because match state moves independently of prices - a scoreboard should not have to consume every price tick.
+  Pushes the LiveEvent node whenever its score, clock or trading state changes, so a normalized client cache updates in place. Separate from `oddsUpdated` because match state moves independently of prices - a scoreboard should not have to consume every price tick.
   """
   eventStateUpdated(eventIds: [ID!]!): EventStateUpdate!
 
   """
-  Pushes price changes for the given events. Subscribe with the events visible in the viewport + those in the betslip.
+  Pushes one of the caller's tickets when it settles or an operator corrects it (reason RESETTLED), so bet history updates in place and the client can notify the player.
+  """
+  myTicketUpdated: TicketUpdate!
+
+  """
+  Pushes price changes for the given events as the changed Outcome nodes, so a normalized client cache updates in place. Subscribe with the events visible in the viewport + those in the betslip.
   """
   oddsUpdated(eventIds: [ID!]!): OddsUpdate!
 }
@@ -955,6 +941,11 @@ A player's placed bet.
 type Ticket {
   acceptedAt: DateTimeISO
   betType: TicketType!
+
+  """
+  Corrections, oldest first.
+  """
+  corrections: [TicketCorrection!]!
   createdAt: DateTimeISO!
 
   """
@@ -970,10 +961,30 @@ type Ticket {
   items: [TicketItem!]!
 
   """
+  Total paid to the player for this ticket (winnings, refunds, cash out and any corrections). Null while open.
+  """
+  payout: Decimal
+
+  """
   stake × effectiveOdds if every item wins.
   """
   potentialPayout: Decimal!
   rejectReason: String
+
+  """
+  True when an operator corrected this ticket after acceptance (see `corrections`).
+  """
+  resettled: Boolean!
+
+  """
+  Time of the latest correction.
+  """
+  resettledAt: DateTimeISO
+
+  """
+  False until the player acknowledges the latest correction (acknowledgeResettlements); drives the notification.
+  """
+  resettlementSeen: Boolean!
   settledAt: DateTimeISO
   stake: Decimal!
   status: TicketStatus!
@@ -983,6 +994,28 @@ type TicketConnection {
   edges: [TicketEdge!]!
   pageInfo: PageInfo!
   totalCount: Int!
+}
+
+"""
+An operator correction to one selection after acceptance, applied under the house rules for obvious price errors and result corrections.
+"""
+type TicketCorrection {
+  """
+  Change to what the ticket pays: positive was credited to the player, negative taken back. 0 when the ticket was still open.
+  """
+  amount: Decimal!
+  createdAt: DateTimeISO!
+  id: ID!
+
+  """
+  Global ID of the corrected TicketItem.
+  """
+  itemId: ID!
+  kind: CorrectionKind!
+  newPrice: Decimal!
+  newStatus: BetItemStatus!
+  previousPrice: Decimal!
+  previousStatus: BetItemStatus!
 }
 
 type TicketEdge {
@@ -1027,6 +1060,7 @@ type TicketItem {
 enum TicketStatus {
   ACCEPTED
   CASHED_OUT
+  CASHOUT_PENDING
   LOST
   PARTIALLY_CASHED_OUT
   PENDING_ACCEPTANCE
@@ -1039,6 +1073,19 @@ enum TicketType {
   MULTIPLE
   SINGLE
   SYSTEM
+}
+
+"""
+A change to one of the caller's tickets.
+"""
+type TicketUpdate {
+  reason: TicketUpdateReason!
+  ticket: Ticket!
+}
+
+enum TicketUpdateReason {
+  RESETTLED
+  SETTLED
 }
 
 """

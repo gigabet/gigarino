@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<31f63ce9b62e489d49e7464c89819300>>
+ * @generated SignedSource<<5782cec8f45233d59fabca34b8e47ab1>>
  * @lightSyntaxTransform
  */
 
@@ -8,7 +8,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type TicketStatus = "ACCEPTED" | "CASHED_OUT" | "LOST" | "PARTIALLY_CASHED_OUT" | "PENDING_ACCEPTANCE" | "REJECTED" | "VOID" | "WON" | "%future added value";
+export type TicketStatus = "ACCEPTED" | "CASHED_OUT" | "CASHOUT_PENDING" | "LOST" | "PARTIALLY_CASHED_OUT" | "PENDING_ACCEPTANCE" | "REJECTED" | "VOID" | "WON" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type MyTicketsList$data = {
   readonly myTickets: {

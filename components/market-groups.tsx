@@ -7,13 +7,15 @@ import type {
   MarketGroups$data,
   MarketGroups$key,
 } from '@/app/sport/event/[id]/__generated__/MarketGroups.graphql'
-import MarketCard from '@/app/sport/event/[id]/market-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import * as Tabs from '@/components/ui/tabs'
+import MarketCard from '@/components/market-card'
 
 const GROUP_ORDER: MarketGroup[] = [
   'MAIN',
   'GOALS',
+  'GAMES',
+  'POINTS',
   'CORNERS',
   'CARDS',
   'PENALTIES',
@@ -24,6 +26,8 @@ const GROUP_ORDER: MarketGroup[] = [
 const GROUP_LABEL: Record<MarketGroup, string> = {
   MAIN: 'Main',
   GOALS: 'Goals',
+  GAMES: 'Games',
+  POINTS: 'Points',
   CORNERS: 'Corners',
   CARDS: 'Cards',
   PENALTIES: 'Penalties',

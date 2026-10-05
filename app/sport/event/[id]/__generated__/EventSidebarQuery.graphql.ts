@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1414f6bfe664ffe8b0fa810e799752c5>>
+ * @generated SignedSource<<2ee323911d3d6c988bb813d0e8e2d05b>>
  * @lightSyntaxTransform
  */
 
@@ -78,7 +78,7 @@ return {
       {
         "alias": null,
         "args": (v2/*:: as any*/),
-        "concreteType": "PrematchEvent",
+        "concreteType": null,
         "kind": "LinkedField",
         "name": "event",
         "plural": false,
@@ -119,11 +119,18 @@ return {
       {
         "alias": null,
         "args": (v2/*:: as any*/),
-        "concreteType": "PrematchEvent",
+        "concreteType": null,
         "kind": "LinkedField",
         "name": "event",
         "plural": false,
         "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "__typename",
+            "storageKey": null
+          },
           (v3/*:: as any*/),
           {
             "alias": null,
@@ -280,12 +287,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "40062999246007b00a1d098bd41961ff",
+    "cacheID": "8f591f1820590f306ff9a0efe38ecec2",
     "id": null,
     "metadata": {},
     "name": "EventSidebarQuery",
     "operationKind": "query",
-    "text": "query EventSidebarQuery(\n  $id: ID!\n  $first: Int!\n) {\n  event(id: $id) {\n    id\n    tournament {\n      ...EventSidebarTournament\n      id\n    }\n  }\n}\n\nfragment EventSidebarMarket on Market {\n  id\n  kind\n  outcomes {\n    id\n    index\n    ...EventSidebarOdd\n  }\n}\n\nfragment EventSidebarOdd on Outcome {\n  id\n  name\n  price\n  status\n}\n\nfragment EventSidebarTournament on Tournament {\n  id\n  name\n  sport {\n    key\n    id\n  }\n  events(first: $first) {\n    edges {\n      node {\n        id\n        ...EventStripCard\n      }\n    }\n  }\n}\n\nfragment EventStripCard on PrematchEvent {\n  id\n  homeCompetitor\n  awayCompetitor\n  startTime\n  status\n  markets(groups: [MAIN]) {\n    id\n    kind\n    ...EventSidebarMarket\n  }\n}\n"
+    "text": "query EventSidebarQuery(\n  $id: ID!\n  $first: Int!\n) {\n  event(id: $id) {\n    __typename\n    id\n    tournament {\n      ...EventSidebarTournament\n      id\n    }\n  }\n}\n\nfragment EventSidebarMarket on Market {\n  id\n  kind\n  outcomes {\n    id\n    index\n    ...EventSidebarOdd\n  }\n}\n\nfragment EventSidebarOdd on Outcome {\n  id\n  name\n  price\n  status\n}\n\nfragment EventSidebarTournament on Tournament {\n  id\n  name\n  sport {\n    key\n    id\n  }\n  events(first: $first) {\n    edges {\n      node {\n        id\n        ...EventStripCard\n      }\n    }\n  }\n}\n\nfragment EventStripCard on PrematchEvent {\n  id\n  homeCompetitor\n  awayCompetitor\n  startTime\n  status\n  markets(groups: [MAIN]) {\n    id\n    kind\n    ...EventSidebarMarket\n  }\n}\n"
   }
 };
 })();

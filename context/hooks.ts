@@ -71,7 +71,7 @@ export const useDelta = (value: number) => {
       clearTimeout(highlight.current)
     }
     setPrevValue(value)
-    highlight.current = window.setTimeout(() => setDelta(0), 1500)
+    highlight.current = window.setTimeout(() => setDelta(0), 2000)
     return () => {
       clearTimeout(highlight.current)
     }

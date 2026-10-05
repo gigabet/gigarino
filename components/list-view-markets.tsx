@@ -2,11 +2,13 @@
 
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { entries, keys, sortBy } from 'lodash'
-import { TrendingUpIcon } from 'lucide-react'
+import { ChevronsUpIcon, PlusIcon, TrendingUpIcon } from 'lucide-react'
+import { motion } from 'motion/react'
 import { Toggle } from 'radix-ui'
+import { FaCaretDown, FaCaretUp } from 'react-icons/fa'
 import { graphql, useFragment } from 'react-relay'
-import type { ListViewMarkets$key } from '@/app/sport/[[...slug]]/__generated__/ListViewMarkets.graphql'
-import type { PrematchMarket$key } from '@/app/sport/[[...slug]]/__generated__/PrematchMarket.graphql'
+import type { ListViewMarket$key } from '@/components/__generated__/ListViewMarket.graphql'
+import type { ListViewMarkets$key } from '@/components/__generated__/ListViewMarkets.graphql'
 import {
   Select,
   SelectContent,
@@ -16,7 +18,7 @@ import {
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useHasOdd, useToggleOdd } from '@/context/betslip'
-import { useUpDown } from '@/context/hooks'
+import { useDelta, useUpDown } from '@/context/hooks'
 import { useT } from '@/context/providers'
 import { tKey } from '@/i18n/tKey'
 import { cn, swap } from '@/lib/utils'
@@ -44,11 +46,11 @@ export const selectedMarketsState = atom(
 export function ListViewMarkets(props: { event: ListViewMarkets$key }) {
   const data = useFragment(
     graphql`
-      fragment ListViewMarkets on PrematchEvent {
+      fragment ListViewMarkets on Event {
         markets {
           id
           kind
-          ...PrematchMarket
+          ...ListViewMarket
         }
       }
     `,
@@ -129,10 +131,10 @@ export function ListViewMarketDropdowns() {
   )
 }
 
-function Market(props: { className?: string; market: PrematchMarket$key }) {
+function Market(props: { className?: string; market: ListViewMarket$key }) {
   const data = useFragment(
     graphql`
-      fragment PrematchMarket on Market {
+      fragment ListViewMarket on Market {
         outcomes {
           id
           index
@@ -160,6 +162,7 @@ function OddToggle(props: { odd: { id: string; name: string; key: string; price:
   const hasOdd = useHasOdd()
   const toggleOdd = useToggleOdd()
   const upDown = useUpDown(Number(props.odd.price))
+  const delta = useDelta(Number(props.odd.price))
 
   return (
     <Toggle.Root
@@ -180,10 +183,23 @@ function OddToggle(props: { odd: { id: string; name: string; key: string; price:
           props.odd.name
         )}
       </span>
-      <span className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground flex items-center gap-1 text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'>
-        {upDown === 'up' && <TrendingUpIcon className='text-primary size-3' />}
-        {upDown === 'down' && <TrendingUpIcon className='size-3 rotate-180 text-red-400' />}
+      <span className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground relative flex flex-col items-center justify-center gap-1 text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'>
         <span suppressHydrationWarning>{Number(props.odd.price).toFixed(2)}</span>
+        {delta !== 0 && (
+          <motion.span
+            initial={{ opacity: 0, y: 0 }}
+            whileInView={{ opacity: 1, y: 18 }}
+            exit={{ opacity: 0, y: 48 }}
+            transition={{ duration: 0.4 }}
+            className={cn(
+              'absolute text-[0.6rem]',
+              delta > 0 ? 'text-primary' : 'text-destructive'
+            )}
+          >
+            {delta > 0 && '+'}
+            {delta.toFixed(2)}
+          </motion.span>
+        )}
       </span>
     </Toggle.Root>
   )

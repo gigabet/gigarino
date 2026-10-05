@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0ddf29e66a3aa5ed222f9da5a79eb0f5>>
+ * @generated SignedSource<<71a50a62f5d9e09226480e93d0dfdb5d>>
  * @lightSyntaxTransform
  */
 
@@ -8,35 +8,34 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type MarketGroup = "CARDS" | "CORNERS" | "GAMES" | "GOALS" | "MAIN" | "PENALTIES" | "PLAYERS" | "POINTS" | "SPECIAL" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type MarketGroups$data = {
-  readonly markets: ReadonlyArray<{
-    readonly groups: ReadonlyArray<MarketGroup>;
+export type ListViewMarket$data = {
+  readonly outcomes: ReadonlyArray<{
     readonly id: string;
     readonly index: number;
-    readonly kind: string;
-    readonly " $fragmentSpreads": FragmentRefs<"MarketCard">;
+    readonly key: string;
+    readonly name: string;
+    readonly price: any;
   }>;
-  readonly " $fragmentType": "MarketGroups";
+  readonly " $fragmentType": "ListViewMarket";
 };
-export type MarketGroups$key = {
-  readonly " $data"?: MarketGroups$data;
-  readonly " $fragmentSpreads": FragmentRefs<"MarketGroups">;
+export type ListViewMarket$key = {
+  readonly " $data"?: ListViewMarket$data;
+  readonly " $fragmentSpreads": FragmentRefs<"ListViewMarket">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "MarketGroups",
+  "name": "ListViewMarket",
   "selections": [
     {
       "alias": null,
       "args": null,
-      "concreteType": "Market",
+      "concreteType": "Outcome",
       "kind": "LinkedField",
-      "name": "markets",
+      "name": "outcomes",
       "plural": true,
       "selections": [
         {
@@ -50,36 +49,38 @@ const node: ReaderFragment = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "groups",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "kind",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
           "name": "index",
           "storageKey": null
         },
         {
+          "alias": null,
           "args": null,
-          "kind": "FragmentSpread",
-          "name": "MarketCard"
+          "kind": "ScalarField",
+          "name": "name",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "key",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "price",
+          "storageKey": null
         }
       ],
       "storageKey": null
     }
   ],
-  "type": "Event",
-  "abstractKey": "__isEvent"
+  "type": "Market",
+  "abstractKey": null
 };
 
-(node as any).hash = "5121b65b02b4cd13bf369cfcf4659458";
+(node as any).hash = "0b2465214d8ed8aeae0e52cc879fbaed";
 
 export default node;

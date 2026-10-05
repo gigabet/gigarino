@@ -1,17 +1,17 @@
 'use client'
 import { format } from 'date-fns'
 import { ChartNoAxesColumnIcon } from 'lucide-react'
-import Image from 'next/image'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { fetchQuery, graphql, useFragment, useRelayEnvironment } from 'react-relay'
 import type { PrematchEvent$key } from '@/app/sport/[[...slug]]/__generated__/PrematchEvent.graphql'
-import { ListViewMarkets, ListViewMarketsSkeleton } from '@/app/sport/[[...slug]]/list-view-markets'
 import PrematchSingleViewQueryNode from '@/app/sport/event/[id]/__generated__/PrematchSingleViewQuery.graphql'
+import { ListViewMarkets, ListViewMarketsSkeleton } from '@/components/list-view-markets'
+import { TeamBadge } from '@/components/team-badge'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
-import { getRelativeDayLabel, initials, stringToHue } from '@/lib/utils'
+import { getRelativeDayLabel } from '@/lib/utils'
 
 export default function PrematchEvent(props: { node: PrematchEvent$key }) {
   const data = useFragment(
@@ -55,19 +55,11 @@ export default function PrematchEvent(props: { node: PrematchEvent$key }) {
           onFocus={prefetch}
         >
           <div className='flex items-center gap-2'>
-            {data.homeImageUrl ? (
-              <Image src={data.homeImageUrl} alt='' className='size-6' width={24} height={24} />
-            ) : (
-              <TeamBadge name={data.homeCompetitor} />
-            )}
+            <TeamBadge name={data.homeCompetitor} imageUrl={data.homeImageUrl} />
             <span className='truncate'>{data.homeCompetitor}</span>
           </div>
           <div className='flex items-center gap-2'>
-            {data.awayImageUrl ? (
-              <Image src={data.awayImageUrl} alt='' className='size-6' width={24} height={24} />
-            ) : (
-              <TeamBadge name={data.awayCompetitor} />
-            )}
+            <TeamBadge name={data.awayCompetitor} imageUrl={data.awayImageUrl} />
             <span className='truncate'>{data.awayCompetitor}</span>
           </div>
         </Link>
@@ -107,24 +99,6 @@ export default function PrematchEvent(props: { node: PrematchEvent$key }) {
       </div>
 
       <Separator orientation='vertical' className='hidden lg:order-2 lg:block' />
-    </div>
-  )
-}
-
-/** Hash-based colored initials avatar — gives every matchup its own
- * identity without real team logos or thumbnail-style imagery. */
-function TeamBadge(props: { name: string }) {
-  const hue = stringToHue(props.name)
-
-  return (
-    <div
-      className='flex size-6 min-w-6 shrink-0 items-center justify-center rounded-full text-[0.55rem] font-bold text-white'
-      style={{
-        background: `linear-gradient(135deg, hsl(${hue} 70% 42%), hsl(${(hue + 40) % 360} 70% 30%))`,
-        boxShadow: `0 0 8px hsla(${hue}, 70%, 55%, 0.35)`,
-      }}
-    >
-      {initials(props.name)}
     </div>
   )
 }

@@ -137,6 +137,18 @@ export type EventStatus = 'ABANDONED' | 'CANCELLED' | 'ENDED' | 'LIVE' | 'POSTPO
 
 export type LiveEventState = 'ENDED' | 'LIVE' | 'SUSPENDED'
 
+export type MatchPeriod =
+  | 'BREAK'
+  | 'EXTRA_TIME'
+  | 'FIRST_HALF'
+  | 'FIRST_PERIOD'
+  | 'HALF_TIME'
+  | 'PENALTIES'
+  | 'SECOND_HALF'
+  | 'SECOND_PERIOD'
+  | 'THIRD_PERIOD'
+  | '%future added value'
+
 export type MarketGroup =
   | 'CARDS'
   | 'CORNERS'

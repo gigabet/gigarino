@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8a7a402c39cb3465aa0983fa696114e1>>
+ * @generated SignedSource<<2fc351b6813d7210b205cbe52e2fe42c>>
  * @lightSyntaxTransform
  */
 
@@ -8,28 +8,57 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type MarketStatus = "CLOSED" | "OPEN" | "SUSPENDED" | "%future added value";
+export type OutcomeStatus = "OPEN" | "REMOVED" | "SUSPENDED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type PrematchMarket$data = {
+export type MarketCard$data = {
+  readonly line: any | null | undefined;
+  readonly name: string;
   readonly outcomes: ReadonlyArray<{
     readonly id: string;
     readonly index: number;
-    readonly key: string;
     readonly name: string;
     readonly price: any;
+    readonly status: OutcomeStatus;
   }>;
-  readonly " $fragmentType": "PrematchMarket";
+  readonly status: MarketStatus;
+  readonly " $fragmentType": "MarketCard";
 };
-export type PrematchMarket$key = {
-  readonly " $data"?: PrematchMarket$data;
-  readonly " $fragmentSpreads": FragmentRefs<"PrematchMarket">;
+export type MarketCard$key = {
+  readonly " $data"?: MarketCard$data;
+  readonly " $fragmentSpreads": FragmentRefs<"MarketCard">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "status",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "PrematchMarket",
+  "name": "MarketCard",
   "selections": [
+    (v0/*:: as any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "line",
+      "storageKey": null
+    },
+    (v1/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -52,27 +81,15 @@ const node: ReaderFragment = {
           "name": "index",
           "storageKey": null
         },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "name",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "key",
-          "storageKey": null
-        },
+        (v0/*:: as any*/),
         {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
           "name": "price",
           "storageKey": null
-        }
+        },
+        (v1/*:: as any*/)
       ],
       "storageKey": null
     }
@@ -80,7 +97,8 @@ const node: ReaderFragment = {
   "type": "Market",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "408a6bf94944f8725ede3df03e11b3f6";
+(node as any).hash = "42a25f475d241ac4e7783815a9fa6768";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c0f9e93aba4fd8cfc1822ff3366d56fd>>
+ * @generated SignedSource<<71b410e1bab200a621cf637a124aabb9>>
  * @lightSyntaxTransform
  */
 
@@ -9,7 +9,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type BetItemStatus = "HALF_LOST" | "HALF_WON" | "LOST" | "PENDING" | "PUSH" | "VOID" | "WON" | "%future added value";
-export type TicketStatus = "ACCEPTED" | "CASHED_OUT" | "LOST" | "PARTIALLY_CASHED_OUT" | "PENDING_ACCEPTANCE" | "REJECTED" | "VOID" | "WON" | "%future added value";
+export type TicketStatus = "ACCEPTED" | "CASHED_OUT" | "CASHOUT_PENDING" | "LOST" | "PARTIALLY_CASHED_OUT" | "PENDING_ACCEPTANCE" | "REJECTED" | "VOID" | "WON" | "%future added value";
 export type TicketType = "MULTIPLE" | "SINGLE" | "SYSTEM" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type TicketCard$data = {

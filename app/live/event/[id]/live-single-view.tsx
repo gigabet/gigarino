@@ -5,36 +5,32 @@ import { ExternalLinkIcon, ImageIcon, SearchXIcon } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense, useEffect } from 'react'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
-import type { EventLiveState$key } from '@/app/sport/event/[id]/__generated__/EventLiveState.graphql'
-import type { PrematchSingleHeader$key } from '@/app/sport/event/[id]/__generated__/PrematchSingleHeader.graphql'
-import type { PrematchSingleView$key } from '@/app/sport/event/[id]/__generated__/PrematchSingleView.graphql'
-import type { PrematchSingleViewQuery } from '@/app/sport/event/[id]/__generated__/PrematchSingleViewQuery.graphql'
-import PrematchSingleViewQueryNode from '@/app/sport/event/[id]/__generated__/PrematchSingleViewQuery.graphql'
-import StatisticsWidget from '@/app/sport/event/[id]/statistics-widget'
+import type { EventState$key } from '@/app/live/event/[id]/__generated__/EventState.graphql'
+import type { LiveSingleHeader$key } from '@/app/live/event/[id]/__generated__/LiveSingleHeader.graphql'
+import type { LiveSingleView$key } from '@/app/live/event/[id]/__generated__/LiveSingleView.graphql'
+import type { LiveSingleViewQuery } from '@/app/live/event/[id]/__generated__/LiveSingleViewQuery.graphql'
+import LiveSingleViewQueryNode from '@/app/live/event/[id]/__generated__/LiveSingleViewQuery.graphql'
+import MarketGroups, { MarketGroupsSkeleton } from '@/components/market-groups'
+import StatisticsWidget from '@/app/live/event/[id]/statistics-widget'
 import { SportIcon } from '@/components/sport-icon'
 import { getRelativeDayLabel } from '@/lib/utils'
-import MarketGroups, { MarketGroupsSkeleton } from '@/components/market-groups'
+import { useT } from '@/context/providers'
 
-export default function PrematchSingleView(props: {
-  queryRef: PreloadedQuery<PrematchSingleViewQuery>
-}) {
-  const preloaded = usePreloadedQuery<PrematchSingleViewQuery>(
-    PrematchSingleViewQueryNode,
-    props.queryRef
-  )
+export default function LiveSingleView(props: { queryRef: PreloadedQuery<LiveSingleViewQuery> }) {
+  const preloaded = usePreloadedQuery<LiveSingleViewQuery>(LiveSingleViewQueryNode, props.queryRef)
 
   const data = useFragment(
     graphql`
-      fragment PrematchSingleView on PrematchEvent {
+      fragment LiveSingleView on LiveEvent {
         homeCompetitor
         awayCompetitor
         startTime
-        ...PrematchSingleHeader
-        ...EventLiveState
+        ...LiveSingleHeader
+        ...EventState
         ...MarketGroups @defer
       }
     `,
-    preloaded.event as PrematchSingleView$key | null
+    preloaded.event as LiveSingleView$key | null
   )
 
   useEffect(() => {
@@ -46,12 +42,12 @@ export default function PrematchSingleView(props: {
   return (
     <main className='mx-auto flex w-full max-w-7xl flex-col gap-4 sm:gap-6'>
       <section className='flex flex-col gap-3 rounded-2xl border border-white/5 bg-black/20 p-4 sm:gap-4 sm:p-6'>
-        <PrematchSingleHeader event={data} />
+        <LiveSingleHeader event={data} />
         <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-4'>
           <Competitor name={data.homeCompetitor} />
 
           <Suspense fallback={<EventLiveStateFallback startTime={data.startTime} />}>
-            <EventLiveState event={data} startTime={data.startTime} />
+            <EventState event={data} startTime={data.startTime} />
           </Suspense>
 
           <Competitor name={data.awayCompetitor} reverse />
@@ -67,10 +63,10 @@ export default function PrematchSingleView(props: {
   )
 }
 
-function PrematchSingleHeader(props: { event: PrematchSingleHeader$key }) {
+function LiveSingleHeader(props: { event: LiveSingleHeader$key }) {
   const data = useFragment(
     graphql`
-      fragment PrematchSingleHeader on PrematchEvent {
+      fragment LiveSingleHeader on LiveEvent {
         sport {
           key
         }
@@ -87,6 +83,8 @@ function PrematchSingleHeader(props: { event: PrematchSingleHeader$key }) {
     props.event
   )
 
+  const t = useT()
+
   return (
     <div className='text-secondary flex flex-wrap items-center gap-x-2 gap-y-1 text-xs uppercase'>
       {data.status === 'LIVE' && (
@@ -95,13 +93,13 @@ function PrematchSingleHeader(props: { event: PrematchSingleHeader$key }) {
             <div className='bg-destructive absolute size-2 animate-ping rounded-full' />
             <div className='bg-destructive absolute size-2 rounded-full' />
           </div>
-          Live
+          {t('Live')}
         </div>
       )}
       <SportIcon sport={data.sport.key} className='size-3.5 shrink-0' />
       <Link
         href={{
-          pathname: '/sport',
+          pathname: '/live',
           query: { tournaments: `${data.sport.key}:${data.tournament.key}` },
         }}
         className='group relative flex min-w-0 items-center gap-2 text-current transition-colors hover:text-white'
@@ -131,10 +129,10 @@ function Competitor(props: { name: string; reverse?: boolean }) {
   )
 }
 
-function EventLiveState(props: { event: EventLiveState$key; startTime: string }) {
+function EventState(props: { event: EventState$key; startTime: string }) {
   const data = useFragment(
     graphql`
-      fragment EventLiveState on Event {
+      fragment EventState on Event {
         status
         tradingStatus
         homeScore
@@ -159,7 +157,7 @@ function EventLiveState(props: { event: EventLiveState$key; startTime: string })
 }
 
 /**
- * Suspense fallback while `EventLiveState` resolves. `startTime` is a plain
+ * Suspense fallback while `EventState` resolves. `startTime` is a plain
  * prop (already available from the cached, non-suspending part of the
  * fragment tree) so we can show the correct kick-off time immediately
  * instead of a generic skeleton — it only needs correcting in the rare case

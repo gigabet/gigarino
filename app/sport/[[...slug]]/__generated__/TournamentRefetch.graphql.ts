@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a1395b6a848bd1c30c935a9310d7a659>>
+ * @generated SignedSource<<36bae10672dd63434fadd18025f23f45>>
  * @lightSyntaxTransform
  */
 
@@ -234,27 +234,14 @@ return {
                                 "label": "PrematchEvent$defer$ListViewMarkets",
                                 "selections": [
                                   {
-                                    "alias": null,
-                                    "args": null,
-                                    "concreteType": "Market",
-                                    "kind": "LinkedField",
-                                    "name": "markets",
-                                    "plural": true,
+                                    "kind": "InlineFragment",
                                     "selections": [
-                                      (v2/*:: as any*/),
                                       {
                                         "alias": null,
                                         "args": null,
-                                        "kind": "ScalarField",
-                                        "name": "kind",
-                                        "storageKey": null
-                                      },
-                                      {
-                                        "alias": null,
-                                        "args": null,
-                                        "concreteType": "Outcome",
+                                        "concreteType": "Market",
                                         "kind": "LinkedField",
-                                        "name": "outcomes",
+                                        "name": "markets",
                                         "plural": true,
                                         "selections": [
                                           (v2/*:: as any*/),
@@ -262,23 +249,43 @@ return {
                                             "alias": null,
                                             "args": null,
                                             "kind": "ScalarField",
-                                            "name": "index",
+                                            "name": "kind",
                                             "storageKey": null
                                           },
-                                          (v4/*:: as any*/),
-                                          (v3/*:: as any*/),
                                           {
                                             "alias": null,
                                             "args": null,
-                                            "kind": "ScalarField",
-                                            "name": "price",
+                                            "concreteType": "Outcome",
+                                            "kind": "LinkedField",
+                                            "name": "outcomes",
+                                            "plural": true,
+                                            "selections": [
+                                              (v2/*:: as any*/),
+                                              {
+                                                "alias": null,
+                                                "args": null,
+                                                "kind": "ScalarField",
+                                                "name": "index",
+                                                "storageKey": null
+                                              },
+                                              (v4/*:: as any*/),
+                                              (v3/*:: as any*/),
+                                              {
+                                                "alias": null,
+                                                "args": null,
+                                                "kind": "ScalarField",
+                                                "name": "price",
+                                                "storageKey": null
+                                              }
+                                            ],
                                             "storageKey": null
                                           }
                                         ],
                                         "storageKey": null
                                       }
                                     ],
-                                    "storageKey": null
+                                    "type": "Event",
+                                    "abstractKey": "__isEvent"
                                   }
                                 ]
                               }
@@ -303,12 +310,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "db8a1d03993eae53f27ccc259f6e2e12",
+    "cacheID": "d2764462fb63287137ca04455f093213",
     "id": null,
     "metadata": {},
     "name": "TournamentRefetch",
     "operationKind": "query",
-    "text": "query TournamentRefetch(\n  $eventCount: Int\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...Tournament\n    id\n  }\n}\n\nfragment ListViewMarkets on PrematchEvent {\n  markets {\n    id\n    kind\n    ...PrematchMarket\n  }\n}\n\nfragment PrematchEvent on PrematchEvent {\n  id\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  oddCount\n  ...ListViewMarkets @defer(label: \"PrematchEvent$defer$ListViewMarkets\")\n}\n\nfragment PrematchMarket on Market {\n  outcomes {\n    id\n    index\n    name\n    key\n    price\n  }\n}\n\nfragment Tournament on Tournament {\n  id\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n  name\n  ...TournamentEventList @defer(label: \"Tournament$defer$TournamentEventList\")\n}\n\nfragment TournamentEventList on Tournament {\n  events(first: $eventCount) {\n    edges {\n      node {\n        id\n        ...PrematchEvent\n      }\n    }\n  }\n}\n"
+    "text": "query TournamentRefetch(\n  $eventCount: Int\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...Tournament\n    id\n  }\n}\n\nfragment ListViewMarket on Market {\n  outcomes {\n    id\n    index\n    name\n    key\n    price\n  }\n}\n\nfragment ListViewMarkets on Event {\n  __isEvent: __typename\n  markets {\n    id\n    kind\n    ...ListViewMarket\n  }\n}\n\nfragment PrematchEvent on PrematchEvent {\n  id\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  oddCount\n  ...ListViewMarkets @defer(label: \"PrematchEvent$defer$ListViewMarkets\")\n}\n\nfragment Tournament on Tournament {\n  id\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n  name\n  ...TournamentEventList @defer(label: \"Tournament$defer$TournamentEventList\")\n}\n\nfragment TournamentEventList on Tournament {\n  events(first: $eventCount) {\n    edges {\n      node {\n        id\n        ...PrematchEvent\n      }\n    }\n  }\n}\n"
   }
 };
 })();

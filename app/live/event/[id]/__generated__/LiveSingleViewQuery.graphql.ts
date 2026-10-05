@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<993a4092a2ea92f65376677e266f3516>>
+ * @generated SignedSource<<83c1bf8b687717b6021fc53249679566>>
  * @lightSyntaxTransform
  */
 
@@ -9,17 +9,17 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PrematchSingleViewQuery$variables = {
+export type LiveSingleViewQuery$variables = {
   id: string;
 };
-export type PrematchSingleViewQuery$data = {
+export type LiveSingleViewQuery$data = {
   readonly event: {
-    readonly " $fragmentSpreads": FragmentRefs<"PrematchSingleView">;
+    readonly " $fragmentSpreads": FragmentRefs<"LiveSingleView">;
   } | null | undefined;
 };
-export type PrematchSingleViewQuery = {
-  response: PrematchSingleViewQuery$data;
-  variables: PrematchSingleViewQuery$variables;
+export type LiveSingleViewQuery = {
+  response: LiveSingleViewQuery$data;
+  variables: LiveSingleViewQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -77,7 +77,7 @@ return {
     "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "PrematchSingleViewQuery",
+    "name": "LiveSingleViewQuery",
     "selections": [
       {
         "alias": null,
@@ -90,7 +90,7 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "PrematchSingleView"
+            "name": "LiveSingleView"
           }
         ],
         "storageKey": null
@@ -103,7 +103,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
-    "name": "PrematchSingleViewQuery",
+    "name": "LiveSingleViewQuery",
     "selections": [
       {
         "alias": null,
@@ -217,7 +217,7 @@ return {
               {
                 "if": null,
                 "kind": "Defer",
-                "label": "PrematchSingleView$defer$MarketGroups",
+                "label": "LiveSingleView$defer$MarketGroups",
                 "selections": [
                   {
                     "kind": "InlineFragment",
@@ -287,7 +287,7 @@ return {
                 ]
               }
             ],
-            "type": "PrematchEvent",
+            "type": "LiveEvent",
             "abstractKey": null
           }
         ],
@@ -296,16 +296,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "28aeaacc1fadbb78595d2cc0a5cd046c",
+    "cacheID": "8415df07aa00a65b9a38479d83c862e5",
     "id": null,
     "metadata": {},
-    "name": "PrematchSingleViewQuery",
+    "name": "LiveSingleViewQuery",
     "operationKind": "query",
-    "text": "query PrematchSingleViewQuery(\n  $id: ID!\n) {\n  event(id: $id) {\n    __typename\n    ...PrematchSingleView\n    id\n  }\n}\n\nfragment EventLiveState on Event {\n  __isEvent: __typename\n  status\n  tradingStatus\n  homeScore\n  awayScore\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  outcomes {\n    id\n    index\n    name\n    price\n    status\n  }\n}\n\nfragment MarketGroups on Event {\n  __isEvent: __typename\n  markets {\n    id\n    groups\n    kind\n    index\n    ...MarketCard\n  }\n}\n\nfragment PrematchSingleHeader on PrematchEvent {\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    name\n    id\n  }\n  category {\n    name\n    id\n  }\n  status\n}\n\nfragment PrematchSingleView on PrematchEvent {\n  homeCompetitor\n  awayCompetitor\n  startTime\n  ...PrematchSingleHeader\n  ...EventLiveState\n  ...MarketGroups @defer(label: \"PrematchSingleView$defer$MarketGroups\")\n}\n"
+    "text": "query LiveSingleViewQuery(\n  $id: ID!\n) {\n  event(id: $id) {\n    __typename\n    ...LiveSingleView\n    id\n  }\n}\n\nfragment EventState on Event {\n  __isEvent: __typename\n  status\n  tradingStatus\n  homeScore\n  awayScore\n}\n\nfragment LiveSingleHeader on LiveEvent {\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    name\n    id\n  }\n  category {\n    name\n    id\n  }\n  status\n}\n\nfragment LiveSingleView on LiveEvent {\n  homeCompetitor\n  awayCompetitor\n  startTime\n  ...LiveSingleHeader\n  ...EventState\n  ...MarketGroups @defer(label: \"LiveSingleView$defer$MarketGroups\")\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  outcomes {\n    id\n    index\n    name\n    price\n    status\n  }\n}\n\nfragment MarketGroups on Event {\n  __isEvent: __typename\n  markets {\n    id\n    groups\n    kind\n    index\n    ...MarketCard\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "51ec2d36bc032ead1523aea548f94673";
+(node as any).hash = "cc451ada2ebe33a7a30cd088a457f082";
 
 export default node;

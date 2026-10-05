@@ -55,6 +55,46 @@
     "de": "½S",
     "tr": "½K"
   },
+  "1H": {
+    "de": "",
+    "tr": ""
+  },
+  "1P": {
+    "de": "",
+    "tr": ""
+  },
+  "1st Half": {
+    "de": "",
+    "tr": ""
+  },
+  "1st Period": {
+    "de": "",
+    "tr": ""
+  },
+  "2H": {
+    "de": "",
+    "tr": ""
+  },
+  "2nd Half": {
+    "de": "",
+    "tr": ""
+  },
+  "2nd Period": {
+    "de": "",
+    "tr": ""
+  },
+  "2P": {
+    "de": "",
+    "tr": ""
+  },
+  "3P": {
+    "de": "",
+    "tr": ""
+  },
+  "3rd Period": {
+    "de": "",
+    "tr": ""
+  },
   "About Us": {
     "de": "Über uns",
     "tr": "Hakkımızda"
@@ -146,6 +186,10 @@
   "Both to Score": {
     "de": "Beide treffen",
     "tr": "Karşılıklı Gol"
+  },
+  "Break": {
+    "de": "",
+    "tr": ""
   },
   "Cash Out": {
     "de": "Cashout",
@@ -287,6 +331,10 @@
     "de": "Fehler beim Verbinden mit dem Server.",
     "tr": "Sunucuya bağlanılamadı."
   },
+  "ET": {
+    "de": "",
+    "tr": ""
+  },
   "Even/Odd": {
     "de": "Gerade/Ungerade",
     "tr": "Çift/Tek"
@@ -302,6 +350,10 @@
   "Expand sidebar": {
     "de": "Seitenleiste ausklappen",
     "tr": "Kenar çubuğunu genişlet"
+  },
+  "Extra Time": {
+    "de": "",
+    "tr": ""
   },
   "Failed to fetch games": {
     "de": "Spiele konnten nicht geladen werden",
@@ -359,6 +411,10 @@
     "de": "Viel Glück – verfolgen Sie sie unter Tickets.",
     "tr": "İyi şanslar — Biletlerim'den takip edin."
   },
+  "Half Time": {
+    "de": "",
+    "tr": ""
+  },
   "Handicap": {
     "de": "Handicap",
     "tr": "Handikap"
@@ -374,6 +430,10 @@
   "Home": {
     "de": "Heim",
     "tr": "Ev Sahibi"
+  },
+  "HT": {
+    "de": "",
+    "tr": ""
   },
   "I confirm I am 18+ years old and agree to the responsible gaming terms": {
     "de": "Ich bestätige, dass ich mindestens 18 Jahre alt bin, und akzeptiere die Bedingungen für verantwortungsvolles Spielen.",
@@ -554,6 +614,14 @@
   "Payments": {
     "de": "Zahlungen",
     "tr": "Ödemeler"
+  },
+  "PEN": {
+    "de": "",
+    "tr": ""
+  },
+  "Penalties": {
+    "de": "",
+    "tr": ""
   },
   "Pending": {
     "de": "Ausstehend",

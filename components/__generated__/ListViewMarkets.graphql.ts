@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6621355626e770a125dc93516415172c>>
+ * @generated SignedSource<<81a6428cb03147b3e39b7a53d7e8c5d8>>
  * @lightSyntaxTransform
  */
 
@@ -13,7 +13,7 @@ export type ListViewMarkets$data = {
   readonly markets: ReadonlyArray<{
     readonly id: string;
     readonly kind: string;
-    readonly " $fragmentSpreads": FragmentRefs<"PrematchMarket">;
+    readonly " $fragmentSpreads": FragmentRefs<"ListViewMarket">;
   }>;
   readonly " $fragmentType": "ListViewMarkets";
 };
@@ -53,16 +53,16 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "PrematchMarket"
+          "name": "ListViewMarket"
         }
       ],
       "storageKey": null
     }
   ],
-  "type": "PrematchEvent",
-  "abstractKey": null
+  "type": "Event",
+  "abstractKey": "__isEvent"
 };
 
-(node as any).hash = "f8a773da0316f08bb21823b7951ba83a";
+(node as any).hash = "3bab0d46874caa713f2022feaebb9f8d";
 
 export default node;
