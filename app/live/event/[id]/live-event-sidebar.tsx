@@ -70,7 +70,9 @@ function LiveEventSidebarContent(props: { eventId: string }) {
           groupCounts={groups.map(g => g.length)}
           overscan={400}
           initialTopMostItemIndex={initialIndex}
-          groupContent={i => <LiveStripTournament tournament={groups[i][0].event.tournament} />}
+          groupContent={i => (
+            <LiveStripTournament tournament={groups[i][0].event.tournament} pad={i > 0} />
+          )}
           itemContent={item}
         />
       ) : (

@@ -12,8 +12,6 @@ import { cn } from '@/lib/utils'
 
 const NAVBAR_PX = 80 // NAVBAR_HEIGHT = 'h-20'; keep in sync with `top-20` below
 
-// The left slot and trailing spacer must match PrematchEvent's row so the
-// dropdowns line up with the odds columns underneath.
 function HeaderRow(props: { left?: React.ReactNode; accent?: string }) {
   return (
     <div className='text-secondary relative flex items-end gap-4 border-b border-white/5 py-2 text-sm'>
@@ -30,12 +28,9 @@ function HeaderRow(props: { left?: React.ReactNode; accent?: string }) {
   )
 }
 
-/** Start-time mode: market dropdowns, sticky under the navbar, opaque only once stuck. */
 export function LiveMarketsHeader() {
   const [stuck, setStuck] = useState(false)
 
-  // 1px sentinel right above the header. Once it scrolls above the navbar line
-  // (not just out of view below), the header is stuck.
   const { ref } = useInView({
     rootMargin: `-${NAVBAR_PX}px 0px 0px 0px`,
     onChange: (inView, entry) => setStuck(!inView && entry.boundingClientRect.top < NAVBAR_PX),

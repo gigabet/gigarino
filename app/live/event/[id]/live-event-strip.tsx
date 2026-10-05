@@ -55,7 +55,7 @@ export default function LiveEventStrip(props: { event: LiveEventStrip$key; activ
         className={cn('flex flex-col gap-2 text-xs', props.active && 'pointer-events-none')}
       >
         <div className='text-secondary text-[0.65rem]'>
-          <LiveTime event={data} />
+          <LiveTime event={data} aside />
         </div>
         <div className='flex min-w-0 justify-between gap-2'>
           <LiveTeams event={data} />

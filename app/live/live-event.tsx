@@ -88,7 +88,7 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
   )
 }
 
-export function LiveTime(props: { event: LiveTime$key }) {
+export function LiveTime(props: { event: LiveTime$key; aside?: boolean }) {
   const data = useFragment(
     graphql`
       fragment LiveTime on LiveEvent {
@@ -126,7 +126,12 @@ export function LiveTime(props: { event: LiveTime$key }) {
   }
 
   return (
-    <div className='flex flex-col items-center gap-1'>
+    <div
+      className={cn(
+        'flex items-center justify-between gap-1',
+        props.aside ? 'flex-row' : 'flex-col'
+      )}
+    >
       <div className='text-foreground flex gap-1.5'>
         <div className='relative flex items-center justify-center'>
           <div className='absolute size-2 animate-ping rounded-full bg-red-500' />
