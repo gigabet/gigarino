@@ -1,8 +1,8 @@
 'use client'
 
-import { useMemo } from 'react'
+import { forwardRef, useMemo } from 'react'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
-import { Virtuoso } from 'react-virtuoso'
+import { GroupedVirtuoso, type ListProps, type TopItemListProps } from 'react-virtuoso'
 import type { LiveEventList$key } from '@/app/live/__generated__/LiveEventList.graphql'
 import type { LiveEventsQuery } from '@/app/live/__generated__/LiveEventsQuery.graphql'
 import LiveEventsQueryNode from '@/app/live/__generated__/LiveEventsQuery.graphql'
@@ -10,6 +10,18 @@ import LiveEvent, { LiveEventSkeleton } from '@/app/live/live-event'
 import { orderLiveEvents } from '@/app/live/live-state'
 import type { LiveSort } from '@/app/live/live-toolbar'
 import LiveTournament, { LiveMarketsHeader } from '@/app/live/live-tournament'
+
+// Virtuoso's sticky wrapper defaults to top: 0, which is under the h-20 navbar
+const BelowNavbar = forwardRef<HTMLDivElement, TopItemListProps>(function BelowNavbar(
+  { style, children },
+  ref
+) {
+  return (
+    <div ref={ref} style={{ ...style, top: '5rem' }}>
+      {children}
+    </div>
+  )
+})
 
 export default function LiveEventList(props: {
   queryRef: PreloadedQuery<LiveEventsQuery>
@@ -38,49 +50,33 @@ export default function LiveEventList(props: {
     [data.liveEvents, props.sort, props.sportFilter]
   )
 
-  // Tournament mode: headers are plain rows in a flat list, so nothing sticks
-  const rows = useMemo(
-    () =>
-      groups?.flatMap(g => [
-        { kind: 'header' as const, key: `h:${g[0].id}`, event: g[0].event },
-        ...g.map(e => ({ kind: 'event' as const, key: e.id, event: e.event })),
-      ]) ?? null,
-    [groups]
-  )
-
   if (events.length === 0) return <EmptyLive />
 
-  // Start-time mode: one sticky market header above a flat list. The wrapper is
-  // the sticky element's containing block, so it stays stuck for the whole list.
-  if (!rows)
+  // index-based callbacks: GroupedVirtuoso's itemContent is (index, groupIndex, data)
+  const item = (i: number) => <LiveEvent eventRef={events[i].event} />
+
+  if (!groups)
     return (
-      <div>
-        <LiveMarketsHeader />
-        <Virtuoso
-          key='chronological'
-          useWindowScroll
-          totalCount={events.length}
-          overscan={800}
-          computeItemKey={i => events[i].id}
-          itemContent={i => <LiveEvent eventRef={events[i].event} />}
-        />
-      </div>
+      // one group whose sticky header is the market dropdown row
+      <GroupedVirtuoso
+        key='chronological'
+        useWindowScroll
+        groupCounts={[events.length]}
+        overscan={800}
+        components={{ TopItemList: BelowNavbar }}
+        groupContent={() => <LiveMarketsHeader />}
+        itemContent={item}
+      />
     )
 
   return (
-    <Virtuoso
+    <GroupedVirtuoso
       key='grouped'
       useWindowScroll
-      totalCount={rows.length}
+      groupCounts={groups.map(g => g.length)}
       overscan={800}
-      computeItemKey={i => rows[i].key}
-      itemContent={i =>
-        rows[i].kind === 'header' ? (
-          <LiveTournament tournamentRef={rows[i].event.tournament} />
-        ) : (
-          <LiveEvent eventRef={rows[i].event} />
-        )
-      }
+      groupContent={i => <LiveTournament tournamentRef={groups[i][0].event.tournament} />}
+      itemContent={item}
     />
   )
 }
