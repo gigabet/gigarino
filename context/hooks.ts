@@ -60,22 +60,18 @@ export const useUpDown = (value: number) => {
   return upDown
 }
 
-export const useDelta = (value: number) => {
-  const [prevValue, setPrevValue] = useState(value)
+export const useDelta = (value: number, ttl = 2000) => {
+  const prev = useRef(value)
   const [delta, setDelta] = useState(0)
-  const highlight = useRef(0)
 
   useEffect(() => {
-    if (prevValue !== value) {
-      setDelta(value - prevValue)
-      clearTimeout(highlight.current)
-    }
-    setPrevValue(value)
-    highlight.current = window.setTimeout(() => setDelta(0), 2000)
-    return () => {
-      clearTimeout(highlight.current)
-    }
-  }, [prevValue, value])
+    const d = Math.round((value - prev.current) * 100) / 100
+    prev.current = value
+    if (d === 0) return
+    setDelta(d)
+    const id = setTimeout(() => setDelta(0), ttl)
+    return () => clearTimeout(id)
+  }, [value, ttl])
 
   return delta
 }

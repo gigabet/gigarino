@@ -14,6 +14,7 @@ import { useHasOdd, useToggleOdd } from '@/context/betslip'
 import { useUpDown } from '@/context/hooks'
 import { cn } from '@/lib/utils'
 import { useT } from '@/context/providers'
+import { OddDelta } from '@/components/odd-delta'
 
 export default function LiveEventStrip(props: { event: LiveEventStrip$key; active: boolean }) {
   const data = useFragment(
@@ -145,10 +146,11 @@ function LiveStripOdd(props: { outcome: LiveStripOdd$key; suspended: boolean }) 
         {outcome.name}
       </span>
       <span
-        className='text-foreground group-data-[state=on]/odd:text-primary text-xs font-semibold'
+        className='text-foreground group-data-[state=on]/odd:text-primary relative text-xs font-semibold'
         suppressHydrationWarning
       >
         {Number(outcome.price).toFixed(2)}
+        <OddDelta price={Number(outcome.price)} placement='side' className='text-[0.55rem]' />
       </span>
     </Toggle.Root>
   )

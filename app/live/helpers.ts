@@ -1,5 +1,30 @@
 import { tKeysObj } from '@/i18n/tKey'
 import type { MatchPeriod } from '@/types'
+import { useSyncExternalStore } from 'react'
+
+const listeners = new Set<() => void>()
+let timer: ReturnType<typeof setInterval> | undefined
+
+function subscribe(cb: () => void) {
+  listeners.add(cb)
+  timer ??= setInterval(() => listeners.forEach(l => l()), 250)
+  return () => {
+    listeners.delete(cb)
+    if (listeners.size === 0) {
+      clearInterval(timer)
+      timer = undefined
+    }
+  }
+}
+
+const noop = () => () => {}
+// floored to the second so the snapshot is stable between ticks
+const snapshot = () => Math.floor(Date.now() / 1000) * 1000
+
+/** Current time, re-rendering once a second while `active`. Remount-safe: always fresh. */
+export function useNow(active = true) {
+  return useSyncExternalStore(active ? subscribe : noop, snapshot, snapshot)
+}
 
 export function getPeriod(period: MatchPeriod | null | undefined) {
   switch (period) {

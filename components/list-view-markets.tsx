@@ -22,6 +22,7 @@ import { useDelta, useUpDown } from '@/context/hooks'
 import { useT } from '@/context/providers'
 import { tKey } from '@/i18n/tKey'
 import { cn, swap } from '@/lib/utils'
+import { OddDelta } from '@/components/odd-delta'
 
 const marketVisibility = [
   '', // (10.5 + 1 + 10.5) + 11.5 + 11.5...
@@ -162,7 +163,6 @@ function OddToggle(props: { odd: { id: string; name: string; key: string; price:
   const hasOdd = useHasOdd()
   const toggleOdd = useToggleOdd()
   const upDown = useUpDown(Number(props.odd.price))
-  const delta = useDelta(Number(props.odd.price))
 
   return (
     <Toggle.Root
@@ -185,21 +185,7 @@ function OddToggle(props: { odd: { id: string; name: string; key: string; price:
       </span>
       <span className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground relative flex flex-col items-center justify-center gap-1 text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'>
         <span suppressHydrationWarning>{Number(props.odd.price).toFixed(2)}</span>
-        {delta !== 0 && (
-          <motion.span
-            initial={{ opacity: 0, y: 0 }}
-            whileInView={{ opacity: 1, y: 18 }}
-            exit={{ opacity: 0, y: 48 }}
-            transition={{ duration: 0.4 }}
-            className={cn(
-              'absolute text-[0.6rem]',
-              delta > 0 ? 'text-primary' : 'text-destructive'
-            )}
-          >
-            {delta > 0 && '+'}
-            {delta.toFixed(2)}
-          </motion.span>
-        )}
+        <OddDelta price={Number(props.odd.price)} />
       </span>
     </Toggle.Root>
   )

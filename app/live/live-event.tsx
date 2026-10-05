@@ -4,7 +4,7 @@ import type { LiveEvent$key } from '@/app/live/__generated__/LiveEvent.graphql'
 import type { LiveScore$key } from '@/app/live/__generated__/LiveScore.graphql'
 import type { LiveTeams$key } from '@/app/live/__generated__/LiveTeams.graphql'
 import type { LiveTime$key } from '@/app/live/__generated__/LiveTime.graphql'
-import { getPeriod } from '@/app/live/helpers'
+import { getPeriod, useNow } from '@/app/live/helpers'
 import { useLiveRowRegistration } from '@/app/live/live-subscriptions'
 import { ListViewMarkets } from '@/components/list-view-markets'
 import { TeamBadge } from '@/components/team-badge'
@@ -66,7 +66,7 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
               <span className='bg-destructive relative inline-flex size-1.5 rounded-full' />
             </span> */}
 
-            <LiveTime event={event} key={event.id} />
+            <LiveTime event={event} />
           </div>
         </div>
 
@@ -100,30 +100,15 @@ export function LiveTime(props: { event: LiveTime$key; aside?: boolean }) {
     `,
     props.event
   )
-
-  const timeRaw = data.clockRunning
-    ? // biome-ignore lint/style/noNonNullAssertion: never null
-      data.clockElapsedSeconds! + (Date.now() - Date.parse(data.clockAnchorAt!)) * 0.001
-    : data.clockElapsedSeconds
-  const [time, setTime] = useState(timeRaw)
-
-  useEffect(() => {
-    const timer = window.setInterval(() => setTime(timeRaw), 1000)
-
-    return () => {
-      clearInterval(timer)
-    }
-  }, [timeRaw])
-
+  const now = useNow(data.clockRunning)
   const t = useT()
 
-  let mins = 0
-  let secs = 0
+  let seconds = data.clockElapsedSeconds
+  if (seconds != null && data.clockRunning && data.clockAnchorAt)
+    seconds += Math.max(0, (now - Date.parse(data.clockAnchorAt)) / 1000)
 
-  if (time) {
-    mins = Math.floor(time / 60)
-    secs = Math.floor(time % 60)
-  }
+  const mins = Math.floor((seconds ?? 0) / 60)
+  const secs = Math.floor((seconds ?? 0) % 60)
 
   return (
     <div
@@ -139,8 +124,7 @@ export function LiveTime(props: { event: LiveTime$key; aside?: boolean }) {
         </div>
         {t(getPeriod(data.period).long)}
       </div>
-      {/* timer */}
-      {!!time && (
+      {seconds !== null && (
         <time className='text-foreground font-mono'>
           {String(mins).padStart(2, '0')}:{String(secs).padStart(2, '0')}
         </time>
