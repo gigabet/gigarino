@@ -1,40 +1,20 @@
 'use client'
 
 import type { LiveHeaderQuery } from '@/app/live/__generated__/LiveHeaderQuery.graphql'
+import LiveHeaderQueryNode from '@/app/live/__generated__/LiveHeaderQuery.graphql'
 import LiveSportTabs from '@/app/live/live-sport-tabs'
 import { liveSortState, liveSportFilterState, orderLiveEvents } from '@/app/live/live-state'
 import LiveToolbar, { type LiveView } from '@/app/live/live-toolbar'
-import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/navigation'
-import { Suspense } from 'react'
-import { ErrorBoundary } from 'react-error-boundary'
-import { graphql, useLazyLoadQuery } from 'react-relay'
+import { usePreloadedQuery, type PreloadedQuery } from 'react-relay'
 
-export default function LiveHeader(props: { eventId: string | null }) {
-  return (
-    <ErrorBoundary FallbackComponent={SectionErrorFallback}>
-      <Suspense fallback={<LiveHeaderSkeleton />}>
-        <LiveHeaderContent eventId={props.eventId} />
-      </Suspense>
-    </ErrorBoundary>
-  )
-}
-
-function LiveHeaderContent(props: { eventId: string | null }) {
-  const data = useLazyLoadQuery<LiveHeaderQuery>(
-    graphql`
-      query LiveHeaderQuery {
-        liveEvents {
-          ...LiveOrder
-        }
-        ...LiveSportTabs
-      }
-    `,
-    {},
-    { fetchPolicy: 'store-and-network' }
-  )
+export default function LiveHeaderContent(props: {
+  queryRef: PreloadedQuery<LiveHeaderQuery>
+  eventId: string | null
+}) {
+  const data = usePreloadedQuery<LiveHeaderQuery>(LiveHeaderQueryNode, props.queryRef)
 
   const router = useRouter()
   const [sort, setSort] = useAtom(liveSortState)
@@ -67,7 +47,7 @@ function LiveHeaderContent(props: { eventId: string | null }) {
   )
 }
 
-function LiveHeaderSkeleton() {
+export function LiveHeaderSkeleton() {
   return (
     <div className='flex flex-col gap-4'>
       <Skeleton className='h-9 w-full max-w-md rounded-full' />
