@@ -47,6 +47,18 @@
     "de": "1 Auswahl",
     "tr": "1 seçim"
   },
+  "1. Half": {
+    "de": "1. Die Hälfte",
+    "tr": "1. Yarı"
+  },
+  "1. Period": {
+    "de": "1. Zeitraum",
+    "tr": "1. Dönem"
+  },
+  "1. Set": {
+    "de": "1. Satz",
+    "tr": "1. Set"
+  },
   "½L": {
     "de": "½N",
     "tr": "½M"
@@ -56,56 +68,92 @@
     "tr": "½K"
   },
   "1H": {
-    "de": "",
-    "tr": ""
+    "de": "Eine Stunde",
+    "tr": "Bir saat"
   },
   "1P": {
-    "de": "",
-    "tr": ""
+    "de": "Ein Pfund",
+    "tr": "Bir Pound"
   },
-  "1st Half": {
-    "de": "",
-    "tr": ""
+  "1S": {
+    "de": "Ein S",
+    "tr": "Bir S"
   },
-  "1st Period": {
-    "de": "",
-    "tr": ""
+  "2. Half": {
+    "de": "2. Die Hälfte",
+    "tr": "2. Yarı"
+  },
+  "2. Period": {
+    "de": "2. Zeitraum",
+    "tr": "2. Dönem"
+  },
+  "2. Set": {
+    "de": "2. Satz",
+    "tr": "2. Set"
   },
   "2H": {
-    "de": "",
-    "tr": ""
-  },
-  "2nd Half": {
-    "de": "",
-    "tr": ""
-  },
-  "2nd Period": {
-    "de": "",
-    "tr": ""
+    "de": "Zwei Stunden",
+    "tr": "İki saat"
   },
   "2P": {
-    "de": "",
-    "tr": ""
+    "de": "Zwei Pence",
+    "tr": "İki peni"
+  },
+  "2S": {
+    "de": "2S",
+    "tr": "2S"
+  },
+  "3. Period": {
+    "de": "3. Zeitraum",
+    "tr": "3. Dönem"
+  },
+  "3. Set": {
+    "de": "3. Satz",
+    "tr": "3. Set"
   },
   "3P": {
-    "de": "",
-    "tr": ""
+    "de": "Die drei Ps",
+    "tr": "Üç P"
   },
-  "3rd Period": {
-    "de": "",
-    "tr": ""
+  "3S": {
+    "de": "Die drei S",
+    "tr": "Üç S"
+  },
+  "4. Period": {
+    "de": "4. Zeitraum",
+    "tr": "4. Dönem"
+  },
+  "4. Set": {
+    "de": "4. Satz",
+    "tr": "4. Set"
+  },
+  "4P": {
+    "de": "Für die Menschen",
+    "tr": "Halk için"
+  },
+  "4S": {
+    "de": "Die vier S",
+    "tr": "Dört S"
+  },
+  "5. Set": {
+    "de": "5. Satz",
+    "tr": "5. Set"
+  },
+  "5S": {
+    "de": "Die fünf S",
+    "tr": "Beş S"
   },
   "About Us": {
     "de": "Über uns",
     "tr": "Hakkımızda"
   },
   "Accept all": {
-    "de": "",
-    "tr": ""
+    "de": "Alle akzeptieren",
+    "tr": "Hepsini kabul et"
   },
   "Accept higher": {
-    "de": "",
-    "tr": ""
+    "de": "Höher akzeptieren",
+    "tr": "Daha yüksek bir rakamı kabul et"
   },
   "Accepted Payment Methods": {
     "de": "Akzeptierte Zahlungsmethoden",
@@ -163,10 +211,6 @@
     "de": "Wett-Boost",
     "tr": "Bahis Artışı"
   },
-  "Bet not found.": {
-    "de": "Wette nicht gefunden.",
-    "tr": "Bahis bulunamadı."
-  },
   "Bet placed!": {
     "de": "Wette platziert!",
     "tr": "Bahis yapıldı!"
@@ -192,16 +236,16 @@
     "tr": "Bonuslar"
   },
   "Boost applies up to {max}. Lower your stake to use it.": {
-    "de": "",
-    "tr": ""
+    "de": "Der Boost gilt bis zu {max}. Verringern Sie Ihren Einsatz, um ihn zu nutzen.",
+    "tr": "Boost, en fazla {max} değerine kadar uygulanır. Bunu kullanmak için bahis tutarınızı düşürün."
   },
   "Both to Score": {
     "de": "Beide treffen",
     "tr": "Karşılıklı Gol"
   },
   "Break": {
-    "de": "",
-    "tr": ""
+    "de": "Pause",
+    "tr": "Ara"
   },
   "Cash Out": {
     "de": "Cashout",
@@ -224,8 +268,8 @@
     "tr": "Nakit çekiliyor..."
   },
   "Cashout pending": {
-    "de": "",
-    "tr": ""
+    "de": "Ausstehende Auszahlung",
+    "tr": "Bekleyen para çekme işlemi"
   },
   "Casino": {
     "de": "Casino",
@@ -284,12 +328,12 @@
     "tr": "Çerez Bildirimi"
   },
   "Corrected": {
-    "de": "",
-    "tr": ""
+    "de": "Korrigiert",
+    "tr": "Düzeltildi"
   },
   "Corrections": {
-    "de": "",
-    "tr": ""
+    "de": "Korrekturen",
+    "tr": "Düzeltmeler"
   },
   "Create a password": {
     "de": "Passwort erstellen",
@@ -308,12 +352,12 @@
     "tr": "Hesap oluşturuluyor..."
   },
   "Deposit": {
-    "de": "",
-    "tr": ""
+    "de": "Einzahlung",
+    "tr": "Para yatırma"
   },
   "Dismiss": {
-    "de": "",
-    "tr": ""
+    "de": "Schließen",
+    "tr": "Kapat"
   },
   "Don't have an account?": {
     "de": "Noch kein Konto?",
@@ -364,28 +408,20 @@
     "tr": "Sunucuya bağlanılamadı."
   },
   "ET": {
-    "de": "",
-    "tr": ""
+    "de": "UND",
+    "tr": "VE"
   },
   "Even/Odd": {
     "de": "Gerade/Ungerade",
     "tr": "Çift/Tek"
-  },
-  "Event not bettable.": {
-    "de": "Ereignis nicht wettbar.",
-    "tr": "Etkinliğe bahis yapılamaz."
-  },
-  "Event started.": {
-    "de": "Ereignis hat begonnen.",
-    "tr": "Etkinlik başladı."
   },
   "Expand sidebar": {
     "de": "Seitenleiste ausklappen",
     "tr": "Kenar çubuğunu genişlet"
   },
   "Extra Time": {
-    "de": "",
-    "tr": ""
+    "de": "Verlängerung",
+    "tr": "Uzatma"
   },
   "Failed to fetch games": {
     "de": "Spiele konnten nicht geladen werden",
@@ -443,9 +479,9 @@
     "de": "Viel Glück – verfolgen Sie sie unter Tickets.",
     "tr": "İyi şanslar — Biletlerim'den takip edin."
   },
-  "Half Time": {
-    "de": "",
-    "tr": ""
+  "Halftime": {
+    "de": "Halbzeit",
+    "tr": "İlk yarı"
   },
   "Handicap": {
     "de": "Handicap",
@@ -464,8 +500,8 @@
     "tr": "Ev Sahibi"
   },
   "HT": {
-    "de": "",
-    "tr": ""
+    "de": "Hohe Temperatur",
+    "tr": "Yüksek sıcaklık"
   },
   "I confirm I am 18+ years old and agree to the responsible gaming terms": {
     "de": "Ich bestätige, dass ich mindestens 18 Jahre alt bin, und akzeptiere die Bedingungen für verantwortungsvolles Spielen.",
@@ -490,10 +526,6 @@
   "Join now": {
     "de": "Jetzt beitreten",
     "tr": "Hemen katıl"
-  },
-  "Keep higher": {
-    "de": "Höhere Quote behalten",
-    "tr": "Yüksek oranı koru"
   },
   "L": {
     "de": "N",
@@ -539,10 +571,6 @@
     "de": "Verloren",
     "tr": "Kaybetti"
   },
-  "Market suspended.": {
-    "de": "Markt ausgesetzt.",
-    "tr": "Piyasa askıya alındı."
-  },
   "Match Winner": {
     "de": "Spielsieger",
     "tr": "Maç Kazananı"
@@ -587,14 +615,6 @@
     "de": "Noch keine Tickets",
     "tr": "Henüz bilet yok"
   },
-  "Odds": {
-    "de": "Quoten",
-    "tr": "Oranlar"
-  },
-  "One combi bet per event.": {
-    "de": "Nur eine Kombiwette pro Ereignis.",
-    "tr": "Etkinlik başına bir kombine bahis."
-  },
   "Open": {
     "de": "Offen",
     "tr": "Açık"
@@ -607,9 +627,17 @@
     "de": "Oder weiter mit",
     "tr": "Veya şununla devam et"
   },
+  "OT": {
+    "de": "Altes Testament",
+    "tr": "Eski Ahit"
+  },
   "Over/Under": {
     "de": "Über/Unter",
     "tr": "Alt/Üst"
+  },
+  "Overtime": {
+    "de": "Überstunden",
+    "tr": "Fazla mesai"
   },
   "P": {
     "de": "P",
@@ -648,16 +676,16 @@
     "tr": "Ödemeler"
   },
   "Payout": {
-    "de": "",
-    "tr": ""
+    "de": "Auszahlung",
+    "tr": "Ödeme"
   },
   "PEN": {
-    "de": "",
-    "tr": ""
+    "de": "Stift",
+    "tr": "Kalem"
   },
   "Penalties": {
-    "de": "",
-    "tr": ""
+    "de": "Strafen",
+    "tr": "Cezalar"
   },
   "Pending": {
     "de": "Ausstehend",
@@ -692,8 +720,8 @@
     "tr": "Olası kazanç"
   },
   "Price error corrected": {
-    "de": "",
-    "tr": ""
+    "de": "Preisfehler korrigiert",
+    "tr": "Fiyat hatası düzeltildi"
   },
   "Privacy Notice": {
     "de": "Datenschutzhinweis",
@@ -727,10 +755,6 @@
     "de": "Registrierung erfolgreich!",
     "tr": "Kayıt başarılı!"
   },
-  "Reject": {
-    "de": "Ablehnen",
-    "tr": "Reddet"
-  },
   "Rejected": {
     "de": "Abgelehnt",
     "tr": "Reddedildi"
@@ -748,8 +772,8 @@
     "tr": "Sorumlu Oyun"
   },
   "Result corrected": {
-    "de": "",
-    "tr": ""
+    "de": "Ergebnis korrigiert",
+    "tr": "Sonuç düzeltildi"
   },
   "Retry": {
     "de": "Erneut versuchen",
@@ -859,10 +883,6 @@
     "de": "Einsatz",
     "tr": "Bahis Miktarı"
   },
-  "Suspended": {
-    "de": "Ausgesetzt",
-    "tr": "Askıya alınmış"
-  },
   "System": {
     "de": "System",
     "tr": "Sistem"
@@ -924,8 +944,8 @@
     "tr": "İ"
   },
   "Viewing": {
-    "de": "",
-    "tr": ""
+    "de": "Anzeigen",
+    "tr": "Görüntüleme"
   },
   "VIP": {
     "de": "VIP",

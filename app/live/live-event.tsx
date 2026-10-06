@@ -124,6 +124,7 @@ export function LiveTime(props: { event: LiveTime$key; aside?: boolean }) {
           <div className='absolute size-2 animate-ping rounded-full bg-red-500' />
           <div className='size-2 rounded-full bg-red-500' />
         </div>
+        {/* @ts-expect-error: %future added value */}
         {t(getPeriod(data.period).long)}
       </div>
       {seconds !== null && (

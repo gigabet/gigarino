@@ -1,4 +1,4 @@
-import { MarketGroupsSkeleton } from '@/app/sport/event/[id]/market-groups'
+import { MarketGroupsSkeleton } from '@/components/market-groups'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export default function PrematchSingleViewSkeleton() {
