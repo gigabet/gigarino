@@ -20,7 +20,7 @@ export default function LiveSportTabs(props: {
   const data = useFragment(
     graphql`
       fragment LiveSportTabs on Query {
-        liveEvents(first: 20) {
+        liveEvents(first: 100) {
           totalCount
           edges {
             node {

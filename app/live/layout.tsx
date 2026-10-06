@@ -6,6 +6,7 @@ import { Suspense, useEffect, useMemo, useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { graphql, requestSubscription, useQueryLoader, useRelayEnvironment } from 'react-relay'
 import type { LiveHeaderQuery } from '@/app/live/__generated__/LiveHeaderQuery.graphql'
+import LiveHeaderQueryNode from '@/app/live/__generated__/LiveHeaderQuery.graphql'
 import LiveEventSidebar from '@/app/live/event/[id]/live-event-sidebar'
 import LiveHeader, { LiveHeaderSkeleton } from '@/app/live/live-header'
 import { LiveSubscriptionsProvider } from '@/app/live/live-subscriptions'
@@ -46,18 +47,7 @@ export default function LiveLayout({ children }: React.PropsWithChildren) {
     return dispose
   }, [environment, betslipInput])
 
-  const [queryRef, loadQuery] = useQueryLoader<LiveHeaderQuery>(graphql`
-    query LiveHeaderQuery {
-      liveEvents(first: 20) {
-        edges {
-          node {
-            ...LiveOrder
-          }
-        }
-      }
-      ...LiveSportTabs
-    }
-  `)
+  const [queryRef, loadQuery] = useQueryLoader<LiveHeaderQuery>(LiveHeaderQueryNode)
 
   useEffect(() => {
     loadQuery({}, { fetchPolicy: 'store-or-network' })

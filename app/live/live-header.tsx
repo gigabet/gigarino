@@ -2,9 +2,8 @@
 
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/navigation'
-import { type PreloadedQuery, usePreloadedQuery } from 'react-relay'
+import { graphql, type PreloadedQuery, usePreloadedQuery } from 'react-relay'
 import type { LiveHeaderQuery } from '@/app/live/__generated__/LiveHeaderQuery.graphql'
-import LiveHeaderQueryNode from '@/app/live/__generated__/LiveHeaderQuery.graphql'
 import LiveSportTabs from '@/app/live/live-sport-tabs'
 import { liveSortState, liveSportFilterState, orderLiveEvents } from '@/app/live/live-state'
 import LiveToolbar, { type LiveView } from '@/app/live/live-toolbar'
@@ -14,7 +13,21 @@ export default function LiveHeaderContent(props: {
   queryRef: PreloadedQuery<LiveHeaderQuery>
   eventId: string | null
 }) {
-  const data = usePreloadedQuery<LiveHeaderQuery>(LiveHeaderQueryNode, props.queryRef)
+  const data = usePreloadedQuery<LiveHeaderQuery>(
+    graphql`
+      query LiveHeaderQuery {
+        liveEvents(first: 100) {
+          edges {
+            node {
+              ...LiveOrder
+            }
+          }
+        }
+        ...LiveSportTabs
+      }
+    `,
+    props.queryRef
+  )
 
   const router = useRouter()
   const [sort, setSort] = useAtom(liveSortState)

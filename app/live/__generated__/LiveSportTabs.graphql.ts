@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bf328569370ac7f368a136b950671cca>>
+ * @generated SignedSource<<ee8e0fa600c04b137e4deb7eab0b2695>>
  * @lightSyntaxTransform
  */
 
@@ -40,7 +40,7 @@ const node: ReaderFragment = {
         {
           "kind": "Literal",
           "name": "first",
-          "value": 20
+          "value": 100
         }
       ],
       "concreteType": "EventConnection",
@@ -103,13 +103,13 @@ const node: ReaderFragment = {
           "storageKey": null
         }
       ],
-      "storageKey": "liveEvents(first:20)"
+      "storageKey": "liveEvents(first:100)"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 
-(node as any).hash = "c9354ac70f7246890c224b1025226e21";
+(node as any).hash = "8e606aa341816459e1e4b780b47238ac";
 
 export default node;

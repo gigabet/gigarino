@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<89b93c6547f51afeb7770f2547620167>>
+ * @generated SignedSource<<5e4b3046fa80d326f1a2a406dad426b0>>
  * @lightSyntaxTransform
  */
 
@@ -30,7 +30,7 @@ var v0 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 20
+    "value": 100
   }
 ],
 v1 = {
@@ -125,7 +125,7 @@ return {
             "storageKey": null
           }
         ],
-        "storageKey": "liveEvents(first:20)"
+        "storageKey": "liveEvents(first:100)"
       },
       {
         "args": null,
@@ -215,21 +215,21 @@ return {
             "storageKey": null
           }
         ],
-        "storageKey": "liveEvents(first:20)"
+        "storageKey": "liveEvents(first:100)"
       }
     ]
   },
   "params": {
-    "cacheID": "64549c84472728b0fa40dfda7c62dd5f",
+    "cacheID": "6f6f8c4af72cb54b5212735dd8f61e23",
     "id": null,
     "metadata": {},
     "name": "LiveHeaderQuery",
     "operationKind": "query",
-    "text": "query LiveHeaderQuery {\n  liveEvents(first: 20) {\n    edges {\n      node {\n        ...LiveOrder\n        id\n      }\n    }\n  }\n  ...LiveSportTabs\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveSportTabs on Query {\n  liveEvents(first: 20) {\n    totalCount\n    edges {\n      node {\n        sport {\n          key\n          name\n          id\n        }\n        id\n      }\n    }\n  }\n}\n"
+    "text": "query LiveHeaderQuery {\n  liveEvents(first: 100) {\n    edges {\n      node {\n        ...LiveOrder\n        id\n      }\n    }\n  }\n  ...LiveSportTabs\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveSportTabs on Query {\n  liveEvents(first: 100) {\n    totalCount\n    edges {\n      node {\n        sport {\n          key\n          name\n          id\n        }\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "14d8bdade0275ca3fd7d1096b5e2cc12";
+(node as any).hash = "c69392d16dab00d0c0f6de818b1b19e3";
 
 export default node;
