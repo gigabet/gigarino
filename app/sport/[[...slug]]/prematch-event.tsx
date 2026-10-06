@@ -16,7 +16,7 @@ import { getRelativeDayLabel } from '@/lib/utils'
 export default function PrematchEvent(props: { node: PrematchEvent$key }) {
   const data = useFragment(
     graphql`
-      fragment PrematchEvent on PrematchEvent {
+      fragment PrematchEvent on Event {
         id
         homeCompetitor
         homeImageUrl

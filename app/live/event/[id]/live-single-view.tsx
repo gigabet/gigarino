@@ -10,18 +10,18 @@ import type { LiveSingleHeader$key } from '@/app/live/event/[id]/__generated__/L
 import type { LiveSingleView$key } from '@/app/live/event/[id]/__generated__/LiveSingleView.graphql'
 import type { LiveSingleViewQuery } from '@/app/live/event/[id]/__generated__/LiveSingleViewQuery.graphql'
 import LiveSingleViewQueryNode from '@/app/live/event/[id]/__generated__/LiveSingleViewQuery.graphql'
-import MarketGroups, { MarketGroupsSkeleton } from '@/components/market-groups'
 import StatisticsWidget from '@/app/live/event/[id]/statistics-widget'
+import MarketGroups, { MarketGroupsSkeleton } from '@/components/market-groups'
 import { SportIcon } from '@/components/sport-icon'
-import { getRelativeDayLabel } from '@/lib/utils'
 import { useT } from '@/context/providers'
+import { getRelativeDayLabel } from '@/lib/utils'
 
 export default function LiveSingleView(props: { queryRef: PreloadedQuery<LiveSingleViewQuery> }) {
   const preloaded = usePreloadedQuery<LiveSingleViewQuery>(LiveSingleViewQueryNode, props.queryRef)
 
   const data = useFragment(
     graphql`
-      fragment LiveSingleView on LiveEvent {
+      fragment LiveSingleView on Event {
         homeCompetitor
         awayCompetitor
         startTime
@@ -66,7 +66,7 @@ export default function LiveSingleView(props: { queryRef: PreloadedQuery<LiveSin
 function LiveSingleHeader(props: { event: LiveSingleHeader$key }) {
   const data = useFragment(
     graphql`
-      fragment LiveSingleHeader on LiveEvent {
+      fragment LiveSingleHeader on Event {
         sport {
           key
         }

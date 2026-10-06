@@ -115,7 +115,7 @@ function EventSidebarTournament(props: {
 function EventStripCard(props: { event: EventStripCard$key; active: boolean }) {
   const event = useFragment(
     graphql`
-      fragment EventStripCard on PrematchEvent {
+      fragment EventStripCard on Event {
         id
         homeCompetitor
         awayCompetitor

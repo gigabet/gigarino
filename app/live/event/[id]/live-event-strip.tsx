@@ -10,16 +10,16 @@ import type { LiveStripOdd$key } from '@/app/live/event/[id]/__generated__/LiveS
 import type { LiveStripOdds$key } from '@/app/live/event/[id]/__generated__/LiveStripOdds.graphql'
 import { LiveScore, LiveTeams, LiveTime } from '@/app/live/live-event'
 import { useLiveRowRegistration } from '@/app/live/live-subscriptions'
+import { OddDelta } from '@/components/odd-delta'
 import { useHasOdd, useToggleOdd } from '@/context/betslip'
 import { useUpDown } from '@/context/hooks'
-import { cn } from '@/lib/utils'
 import { useT } from '@/context/providers'
-import { OddDelta } from '@/components/odd-delta'
+import { cn } from '@/lib/utils'
 
 export default function LiveEventStrip(props: { event: LiveEventStrip$key; active: boolean }) {
   const data = useFragment(
     graphql`
-      fragment LiveEventStrip on LiveEvent {
+      fragment LiveEventStrip on Event {
         id
         tradingStatus
         ...LiveTime
@@ -72,7 +72,7 @@ export default function LiveEventStrip(props: { event: LiveEventStrip$key; activ
 function LiveStripOdds(props: { event: LiveStripOdds$key }) {
   const data = useFragment(
     graphql`
-      fragment LiveStripOdds on LiveEvent {
+      fragment LiveStripOdds on Event {
         tradingStatus
         markets(groups: [MAIN]) {
           id

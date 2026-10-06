@@ -11,9 +11,9 @@ import type { PrematchSingleView$key } from '@/app/sport/event/[id]/__generated_
 import type { PrematchSingleViewQuery } from '@/app/sport/event/[id]/__generated__/PrematchSingleViewQuery.graphql'
 import PrematchSingleViewQueryNode from '@/app/sport/event/[id]/__generated__/PrematchSingleViewQuery.graphql'
 import StatisticsWidget from '@/app/sport/event/[id]/statistics-widget'
+import MarketGroups, { MarketGroupsSkeleton } from '@/components/market-groups'
 import { SportIcon } from '@/components/sport-icon'
 import { getRelativeDayLabel } from '@/lib/utils'
-import MarketGroups, { MarketGroupsSkeleton } from '@/components/market-groups'
 
 export default function PrematchSingleView(props: {
   queryRef: PreloadedQuery<PrematchSingleViewQuery>
@@ -25,7 +25,7 @@ export default function PrematchSingleView(props: {
 
   const data = useFragment(
     graphql`
-      fragment PrematchSingleView on PrematchEvent {
+      fragment PrematchSingleView on Event {
         homeCompetitor
         awayCompetitor
         startTime
@@ -70,7 +70,7 @@ export default function PrematchSingleView(props: {
 function PrematchSingleHeader(props: { event: PrematchSingleHeader$key }) {
   const data = useFragment(
     graphql`
-      fragment PrematchSingleHeader on PrematchEvent {
+      fragment PrematchSingleHeader on Event {
         sport {
           key
         }

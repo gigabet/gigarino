@@ -1,5 +1,9 @@
 'use client'
 
+import { ChartNoAxesColumnIcon } from 'lucide-react'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { graphql, useFragment } from 'react-relay'
 import type { LiveEvent$key } from '@/app/live/__generated__/LiveEvent.graphql'
 import type { LiveScore$key } from '@/app/live/__generated__/LiveScore.graphql'
 import type { LiveTeams$key } from '@/app/live/__generated__/LiveTeams.graphql'
@@ -12,15 +16,11 @@ import { Button, buttonVariants } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useT } from '@/context/providers'
 import { cn } from '@/lib/utils'
-import { ChartNoAxesColumnIcon } from 'lucide-react'
-import Link from 'next/link'
-import { useEffect, useState } from 'react'
-import { graphql, useFragment } from 'react-relay'
 
 export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
   const event = useFragment(
     graphql`
-      fragment LiveEvent on LiveEvent {
+      fragment LiveEvent on Event {
         id
         homeCompetitor
         awayCompetitor
@@ -91,7 +91,7 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
 export function LiveTime(props: { event: LiveTime$key; aside?: boolean }) {
   const data = useFragment(
     graphql`
-      fragment LiveTime on LiveEvent {
+      fragment LiveTime on Event {
         period
         clockRunning
         clockElapsedSeconds
@@ -136,7 +136,7 @@ export function LiveTime(props: { event: LiveTime$key; aside?: boolean }) {
 export function LiveTeams(props: { event: LiveTeams$key }) {
   const data = useFragment(
     graphql`
-      fragment LiveTeams on LiveEvent {
+      fragment LiveTeams on Event {
         homeCompetitor
         homeImageUrl
         awayCompetitor
@@ -165,7 +165,7 @@ export function LiveTeams(props: { event: LiveTeams$key }) {
 export function LiveScore(props: { event: LiveScore$key }) {
   const data = useFragment(
     graphql`
-      fragment LiveScore on LiveEvent {
+      fragment LiveScore on Event {
         homeScore
         awayScore
       }

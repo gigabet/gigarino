@@ -8,7 +8,7 @@ export const liveSortState = atom<LiveSort>('tournament')
 export const liveSportFilterState = atom<string | null>(null)
 
 const orderFragment = graphql`
-  fragment LiveOrder on LiveEvent @inline {
+  fragment LiveOrder on Event @inline {
     id
     startTime
     sport {

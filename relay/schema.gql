@@ -184,6 +184,11 @@ type Category implements Node {
     category: String
 
     """
+    Only the signed-in player's bookmarked events. Requires a session.
+    """
+    favourites: Boolean
+
+    """
     Take up to N edges after `after` (default 20, max 100).
     """
     first: Int
@@ -226,6 +231,14 @@ type Category implements Node {
 }
 
 """
+Which way a match clock runs: UP = elapsed time (football), DOWN = time remaining in the period (basketball, ice hockey).
+"""
+enum ClockDirection {
+  DOWN
+  UP
+}
+
+"""
 Why a ticket was corrected after acceptance.
 """
 enum CorrectionKind {
@@ -249,24 +262,94 @@ Arbitrary-precision decimal represented as a JSON string. Never a JS number to p
 scalar Decimal
 
 """
-A bettable fixture. Concrete types: PrematchEvent (and LiveEvent when in-play lands).
+A match, with one id for its whole lifecycle. `isLive` flips when it goes in play; the live fields (clock, period, scoreboard) are set only then, and `markets` switch from prematch to live prices.
 """
-interface Event implements Node {
+type Event implements Node {
   awayCompetitor: String!
+
+  """
+  Away team crest URL; null when unavailable.
+  """
+  awayImageUrl: String
   awayScore: Int
   category: Category!
+
+  """
+  Clock ANCHOR: the instant the book set the clock - NOT the current minute. Pair with `clockElapsedSeconds` and `clockDirection`; the client derives the live value: delta = now - clockAnchorAt; display = !clockRunning ? reading : clockDirection == UP ? reading + delta : max(0, reading - delta). Null when not live or for sports without a clock (tennis).
+  """
+  clockAnchorAt: DateTimeISO
+
+  """
+  Which way the clock runs: UP counts elapsed time (football), DOWN counts the time remaining in the period (basketball, ice hockey). Null when not live or for sports without a clock.
+  """
+  clockDirection: ClockDirection
+
+  """
+  Match-clock reading in whole seconds at `clockAnchorAt`: time elapsed when `clockDirection` is UP, time remaining in the period when DOWN. Null when not live or for sports without a clock.
+  """
+  clockElapsedSeconds: Int
+
+  """
+  False when the clock is paused (half-time, stoppage) or the match is not live - the displayed time freezes at `clockElapsedSeconds`.
+  """
+  clockRunning: Boolean!
   homeCompetitor: String!
 
   """
-  Null until scores start reporting.
+  Home team crest URL; null when unavailable.
+  """
+  homeImageUrl: String
+
+  """
+  Null until scores start reporting; streamed via eventStateUpdated while live.
   """
   homeScore: Int
   id: ID!
 
   """
-  This event's markets, optionally narrowed to UI groups.
+  Whether the signed-in player bookmarked this event; false when signed out.
+  """
+  isFavourite: Boolean!
+
+  """
+  True while the match is in play. Prematch views should skip events where this is true; live views list only these.
+  """
+  isLive: Boolean!
+
+  """
+  Markets currently offered: live markets while live, prematch otherwise.
+  """
+  marketCount: Int!
+
+  """
+  Markets currently offered (live prices while live, prematch otherwise), optionally narrowed to UI groups.
   """
   markets(groups: [MarketGroup!]): [Market!]!
+
+  """
+  Total odds (outcomes) across the markets currently offered.
+  """
+  oddCount: Int!
+
+  """
+  Current phase of the match (half, quarter, hockey period, tennis set). Null when not live or the feed does not say.
+  """
+  period: MatchPeriod
+
+  """
+  Score per period so far, in order: football half-time, basketball quarters, hockey periods, tennis sets (games). Empty when not live or unknown.
+  """
+  periodScores: [PeriodScore!]!
+
+  """
+  Tennis game points (0, 15, 30, 40, A). Null when not live or for other sports.
+  """
+  pointScore: PointScore
+
+  """
+  Who is serving (tennis). Null when not live or for other sports.
+  """
+  serving: Side
   sport: Sport!
 
   """
@@ -304,7 +387,7 @@ type EventEdge {
   Opaque cursor; feed it back as `after` / `before` to page from here.
   """
   cursor: String!
-  node: PrematchEvent!
+  node: Event!
 }
 
 """
@@ -312,9 +395,9 @@ Live score, clock and trading state for one in-play event.
 """
 type EventStateUpdate {
   """
-  The updated LiveEvent. Select the live fields (homeScore, awayScore, clock*, status, tradingStatus, period) and the node merges into the cached record by id.
+  The updated Event. Select the live fields (homeScore, awayScore, clock*, status, tradingStatus, period) and the node merges into the cached record by id.
   """
-  event: LiveEvent!
+  event: Event!
   updatedAt: DateTimeISO!
 }
 
@@ -381,7 +464,7 @@ type FeaturedBetSelection {
   """
   The full event this selection belongs to — spread your event/markets fragment here to show its odds.
   """
-  event: PrematchEvent
+  event: Event
   eventId: ID
   eventName: String
   marketName: String
@@ -395,73 +478,18 @@ type FeaturedBetSelection {
 }
 
 """
-A fixture currently in play.
+Sort order of the live list. Cursors belong to one order: switching order restarts from the first page.
 """
-type LiveEvent implements Event & Node {
-  awayCompetitor: String!
+enum LiveEventOrder {
+  """
+  Kick-off, earliest first.
+  """
+  START_TIME
 
   """
-  Away team crest URL; null when unavailable.
+  Tournament weight (highest first), each tournament kept together, then kick-off.
   """
-  awayImageUrl: String
-  awayScore: Int
-  category: Category!
-
-  """
-  Clock ANCHOR: the instant the book set the clock - NOT the current minute. Pair with `clockElapsedSeconds`; the client derives the live value: clockRunning ? elapsed + (now - clockAnchorAt) : elapsed. Costs zero messages while running and freezes exactly on pause. Null for sports without a clock (e.g. tennis) or before the first live frame.
-  """
-  clockAnchorAt: DateTimeISO
-
-  """
-  Match-clock reading in whole seconds at `clockAnchorAt`. Null for sports without a clock.
-  """
-  clockElapsedSeconds: Int
-
-  """
-  False when the clock is paused (half-time, stoppage) - the displayed time freezes at `clockElapsedSeconds`.
-  """
-  clockRunning: Boolean!
-  homeCompetitor: String!
-
-  """
-  Home team crest URL; null when unavailable.
-  """
-  homeImageUrl: String
-
-  """
-  Live home score; also streamed via eventStateUpdated.
-  """
-  homeScore: Int
-  id: ID!
-
-  """
-  Materialized markets available on this event.
-  """
-  marketCount: Int!
-
-  """
-  This event's markets, optionally narrowed to UI groups.
-  """
-  markets(groups: [MarketGroup!]): [Market!]!
-
-  """
-  Total odds (outcomes) across this event's markets.
-  """
-  oddCount: Int!
-
-  """
-  Phase of the match (half/period). Currently always null pending a confirmed source field from the live feed; wired through so clients can bind to it now.
-  """
-  period: MatchPeriod
-  sport: Sport!
-
-  """
-  Kick-off (UTC).
-  """
-  startTime: DateTimeISO!
-  status: EventStatus!
-  tournament: Tournament!
-  tradingStatus: TradingStatus!
+  TOURNAMENT
 }
 
 """
@@ -546,13 +574,20 @@ Phase of a live match (half/period/break).
 enum MatchPeriod {
   BREAK
   EXTRA_TIME
+  FIFTH_SET
   FIRST_HALF
   FIRST_PERIOD
+  FIRST_SET
+  FOURTH_PERIOD
+  FOURTH_SET
   HALF_TIME
+  OVERTIME
   PENALTIES
   SECOND_HALF
   SECOND_PERIOD
+  SECOND_SET
   THIRD_PERIOD
+  THIRD_SET
 }
 
 type Mutation {
@@ -570,6 +605,11 @@ type Mutation {
   Place a bet. Business rejections (price change, limits, insufficient funds) come back typed on `rejection`; only transport/auth failures surface as GraphQL errors.
   """
   placeBet(input: PlaceBetInput!): PlaceBetPayload!
+
+  """
+  Bookmark or un-bookmark an event. Returns the event, so `isFavourite` updates in the client cache.
+  """
+  setEventFavourite(eventId: ID!, favourite: Boolean!): Event!
 }
 
 """
@@ -674,6 +714,19 @@ type PageInfo {
   startCursor: String
 }
 
+"""
+Score within one period: a half, quarter, hockey period or tennis set (games).
+"""
+type PeriodScore {
+  away: String!
+  home: String!
+
+  """
+  1-based period number.
+  """
+  period: Int!
+}
+
 input PlaceBetInput {
   betType: TicketType!
   boostId: ID
@@ -707,53 +760,11 @@ type PlaceBetPayload {
 }
 
 """
-A fixture open for prematch betting.
+Tennis game points, e.g. 40 / A.
 """
-type PrematchEvent implements Event & Node {
-  awayCompetitor: String!
-
-  """
-  Away team crest URL; null when unavailable.
-  """
-  awayImageUrl: String
-  awayScore: Int
-  category: Category!
-  homeCompetitor: String!
-
-  """
-  Home team crest URL; null when unavailable.
-  """
-  homeImageUrl: String
-
-  """
-  Null until scores start reporting.
-  """
-  homeScore: Int
-  id: ID!
-
-  """
-  Materialized markets available on this event.
-  """
-  marketCount: Int!
-
-  """
-  This event's markets, optionally narrowed to UI groups.
-  """
-  markets(groups: [MarketGroup!]): [Market!]!
-
-  """
-  Total odds (outcomes) across this event's markets.
-  """
-  oddCount: Int!
-  sport: Sport!
-
-  """
-  Kick-off (UTC).
-  """
-  startTime: DateTimeISO!
-  status: EventStatus!
-  tournament: Tournament!
-  tradingStatus: TradingStatus!
+type PointScore {
+  away: String!
+  home: String!
 }
 
 """
@@ -781,7 +792,7 @@ type Query {
   cashoutQuote(ticketId: ID!): CashoutQuote!
 
   """
-  Fetch a single event by its global `id`: a LiveEvent id resolves to LiveEvent, an Event id to PrematchEvent.
+  Fetch a single event by its global `id`, prematch or in play.
   """
   event(id: ID!): Event
 
@@ -796,6 +807,11 @@ type Query {
     Filter by category `key` (e.g. `england`).
     """
     category: String
+
+    """
+    Only the signed-in player's bookmarked events. Requires a session.
+    """
+    favourites: Boolean
 
     """
     Take up to N edges after `after` (default 20, max 100).
@@ -830,7 +846,7 @@ type Query {
   ): EventConnection!
 
   """
-  Batched re-fetch: one round trip for many event ids (PrematchEvent or LiveEvent). Preserves input order, drops missing rows.
+  Batched re-fetch: one round trip for many event ids. Preserves input order, drops missing rows.
   """
   eventsByIds(ids: [ID!]!): [Event!]!
 
@@ -840,15 +856,28 @@ type Query {
   featuredBets(kind: FeaturedBetKind): [FeaturedBet!]!
 
   """
-  Currently in-play events that offer at least one market (open or suspended), priority-ordered by tournament weight (optionally filtered by `sport`). Each carries its live scoreline; subscribe to `eventStateUpdated`/`oddsUpdated` with these ids for live score and price changes.
+  Events in play now that offer at least one market (open or suspended), as a cursor connection. Default order: tournament weight with each tournament kept together, then kick-off. Subscribe to `eventStateUpdated`/`oddsUpdated` with these ids for live changes.
   """
   liveEvents(
+    after: String
+
+    """
+    Only the signed-in player's bookmarked events. Requires a session.
+    """
+    favourites: Boolean
+
+    """
+    Take up to N edges after `after` (default 20, max 100).
+    """
+    first: Int
+    orderBy: LiveEventOrder = TOURNAMENT
+
     """
     Free-text search over competitor and tournament names.
     """
     search: String
     sport: String
-  ): [LiveEvent!]!
+  ): EventConnection!
 
   """
   The caller's tickets, newest first (forward-only pagination).
@@ -892,6 +921,14 @@ type Query {
 }
 
 """
+One side of a fixture.
+"""
+enum Side {
+  AWAY
+  HOME
+}
+
+"""
 A top-level sport (football, tennis, basketball, ice hockey, …).
 """
 type Sport implements Node {
@@ -920,7 +957,7 @@ type Subscription {
   betslipUpdated(input: BetslipQuoteInput!): BetslipQuote!
 
   """
-  Pushes the LiveEvent node whenever its score, clock or trading state changes, so a normalized client cache updates in place. Separate from `oddsUpdated` because match state moves independently of prices - a scoreboard should not have to consume every price tick.
+  Pushes the Event node whenever its score, clock or trading state changes, so a normalized client cache updates in place. Separate from `oddsUpdated` because match state moves independently of prices - a scoreboard should not have to consume every price tick.
   """
   eventStateUpdated(eventIds: [ID!]!): EventStateUpdate!
 
@@ -1110,6 +1147,11 @@ type Tournament implements Node {
     Filter by category `key` (e.g. `england`).
     """
     category: String
+
+    """
+    Only the signed-in player's bookmarked events. Requires a session.
+    """
+    favourites: Boolean
 
     """
     Take up to N edges after `after` (default 20, max 100).
