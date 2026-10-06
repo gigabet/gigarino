@@ -140,3 +140,8 @@ export function useLocale(): Locale {
   if (!ctx) throw new Error('useLocale() must be used within a LocaleProvider')
   return ctx.locale
 }
+
+export function useCurrency() {
+  const { wallet } = useUser()
+  return wallet?.currency ?? process.env.NEXT_PUBLIC_APP_CURRENCY ?? 'EUR'
+}

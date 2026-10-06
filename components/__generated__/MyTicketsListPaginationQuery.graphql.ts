@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f2f776dac0e9ada521fbb3922719ed6c>>
+ * @generated SignedSource<<8769bdb2a0114dd469632bee047ecd36>>
  * @lightSyntaxTransform
  */
 
@@ -58,6 +58,13 @@ v3 = {
   "args": null,
   "kind": "ScalarField",
   "name": "status",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "createdAt",
   "storageKey": null
 };
 return {
@@ -140,21 +147,98 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "currency",
+                    "name": "payout",
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "createdAt",
+                    "name": "currency",
                     "storageKey": null
                   },
+                  (v4/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
                     "name": "settledAt",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "resettled",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "resettlementSeen",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "TicketCorrection",
+                    "kind": "LinkedField",
+                    "name": "corrections",
+                    "plural": true,
+                    "selections": [
+                      (v2/*:: as any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "itemId",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "kind",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "amount",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "previousPrice",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "newPrice",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "previousStatus",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "newStatus",
+                        "storageKey": null
+                      },
+                      (v4/*:: as any*/)
+                    ],
                     "storageKey": null
                   },
                   {
@@ -258,12 +342,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6201a14fce7a7878af0c230229a5ca52",
+    "cacheID": "e20b04d4f665a351b9d3dfe2076515cf",
     "id": null,
     "metadata": {},
     "name": "MyTicketsListPaginationQuery",
     "operationKind": "query",
-    "text": "query MyTicketsListPaginationQuery(\n  $after: String\n  $first: Int = 10\n) {\n  ...MyTicketsList_2HEEH6\n}\n\nfragment MyTicketsList_2HEEH6 on Query {\n  myTickets(first: $first, after: $after) {\n    edges {\n      node {\n        id\n        status\n        ...TicketCard\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment TicketCard on Ticket {\n  id\n  betType\n  stake\n  effectiveOdds\n  potentialPayout\n  currency\n  status\n  createdAt\n  settledAt\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n  }\n}\n"
+    "text": "query MyTicketsListPaginationQuery(\n  $after: String\n  $first: Int = 10\n) {\n  ...MyTicketsList_2HEEH6\n}\n\nfragment MyTicketsList_2HEEH6 on Query {\n  myTickets(first: $first, after: $after) {\n    edges {\n      node {\n        id\n        status\n        ...TicketCard\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment TicketCard on Ticket {\n  id\n  betType\n  stake\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  createdAt\n  settledAt\n  resettled\n  resettlementSeen\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n  }\n}\n"
   }
 };
 })();

@@ -28,7 +28,7 @@ import type { FeaturedGameCard$key } from '@/app/sport/__generated__/FeaturedGam
 import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { SportIcon } from '@/components/sport-icon'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useCombo, useHasOdd, useToggleOdd } from '@/context/betslip'
+import { useActiveBoost, useApplyBoost, useCombo, useHasOdd, useToggleOdd } from '@/context/betslip'
 import { useUpDown } from '@/context/hooks'
 import { useT } from '@/context/providers'
 import { cn, formatBalance, getRelativeDayLabel } from '@/lib/utils'
@@ -124,7 +124,7 @@ function CarouselContent() {
 function FeaturedBetCard({ bet }: { bet: FeaturedBetRow }) {
   switch (bet.kind) {
     case 'BET_BOOST':
-      return <BetBoostCard bet={bet} />
+      return <BetBoostCard bet={bet} id={bet.id} />
     case 'FEATURED_GAME':
       return <FeaturedGameCard bet={bet} />
     default:
@@ -183,7 +183,7 @@ function PromoWordmark(props: {
   )
 }
 
-function BetBoostCard(props: { bet: BetBoostCard$key }) {
+function BetBoostCard(props: { bet: BetBoostCard$key; id: string }) {
   const data = useFragment(
     graphql`
       fragment BetBoostCard on FeaturedBet {
@@ -204,23 +204,27 @@ function BetBoostCard(props: { bet: BetBoostCard$key }) {
   )
 
   const endsIn = useEndsIn(data.validTo)
-  const hasOdd = useHasOdd()
-  const toggleOdd = useToggleOdd()
   const t = useT()
 
   const availableSelections = data.selections.filter(s => s.available)
-  const allAdded =
-    availableSelections.length > 0 && availableSelections.every(s => hasOdd(s.outcomeId))
   const leg = data.selections[0]
 
   const boosted = data.boostedPrice ? Number(data.boostedPrice) : null
   const was = data.combinedPrice ? Number(data.combinedPrice) : null
 
-  const handleSelect = () => {
-    availableSelections.forEach(s => {
-      if (!hasOdd(s.outcomeId)) toggleOdd(s.outcomeId)
+  const applyBoost = useApplyBoost()
+  const active = useActiveBoost()
+  const allAdded = active?.id === props.id
+
+  const handleSelect = () =>
+    applyBoost({
+      id: props.id,
+      outcomeIds: availableSelections.map(s => s.outcomeId),
+      boostedPrice: String(data.boostedPrice),
+      combinedPrice: String(data.combinedPrice),
+      maxStake: data.maxStake ? String(data.maxStake) : null,
+      validTo: data.validTo ? String(data.validTo) : null,
     })
-  }
 
   const [home, away] = (leg?.eventName ?? '').split(' vs ')
 
@@ -284,7 +288,11 @@ function BetBoostCard(props: { bet: BetBoostCard$key }) {
         <button
           type='button'
           onClick={handleSelect}
-          disabled={allAdded || availableSelections.length === 0}
+          disabled={
+            allAdded ||
+            availableSelections.length === 0 ||
+            availableSelections.length !== data.selections.length
+          }
           className={cn(
             'group/cta ml-auto flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold uppercase transition-all',
             allAdded

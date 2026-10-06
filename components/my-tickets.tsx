@@ -16,7 +16,12 @@ import { buttonVariants } from '@/components/ui/button'
 import { useT, useUser } from '@/context/providers'
 import { isAuthError } from '@/lib/utils'
 
-const OPEN_STATUSES = new Set(['PENDING_ACCEPTANCE', 'ACCEPTED', 'PARTIALLY_CASHED_OUT'])
+const OPEN_STATUSES = new Set([
+  'PENDING_ACCEPTANCE',
+  'ACCEPTED',
+  'PARTIALLY_CASHED_OUT',
+  'CASHOUT_PENDING',
+])
 
 export default function MyTickets() {
   const { user } = useUser()

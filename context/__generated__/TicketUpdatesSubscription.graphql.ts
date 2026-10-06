@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<82aa92bda91c6de8a23d4adbdeb7763e>>
+ * @generated SignedSource<<17a1033b0e77b5e42c2481fb82a11ef4>>
  * @lightSyntaxTransform
  */
 
@@ -9,79 +9,45 @@
 
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type BetRejectionCode = "BOOST_UNAVAILABLE" | "CASHOUT_UNAVAILABLE" | "CUTOFF_PASSED" | "DUPLICATE_EVENT" | "EVENT_NOT_BETTABLE" | "INSUFFICIENT_FUNDS" | "INTERNAL_ERROR" | "LIABILITY_LIMIT" | "LIVE_STATE_CHANGED" | "MULTI_SINGLE_NOT_SUPPORTED" | "ODDS_LIMIT" | "ODDS_UNAVAILABLE" | "OUTCOME_NOT_AVAILABLE" | "PRICE_CHANGED" | "PROVIDER_CURRENCY" | "RESPONSIBLE_GAMING" | "STAKE_LIMIT" | "SYSTEM_NOT_SUPPORTED" | "WALLET_UNAVAILABLE" | "%future added value";
-export type TicketStatus = "ACCEPTED" | "CASHED_OUT" | "CASHOUT_PENDING" | "LOST" | "PARTIALLY_CASHED_OUT" | "PENDING_ACCEPTANCE" | "REJECTED" | "VOID" | "WON" | "%future added value";
-export type TicketCardCashoutMutation$variables = {
-  ticketId: string;
-};
-export type TicketCardCashoutMutation$data = {
-  readonly cashout: {
-    readonly amount: any | null | undefined;
-    readonly rejectionCode: BetRejectionCode | null | undefined;
-    readonly rejectionMessage: string | null | undefined;
+export type TicketUpdateReason = "RESETTLED" | "SETTLED" | "%future added value";
+export type TicketUpdatesSubscription$variables = Record<PropertyKey, never>;
+export type TicketUpdatesSubscription$data = {
+  readonly myTicketUpdated: {
+    readonly reason: TicketUpdateReason;
     readonly ticket: {
       readonly id: string;
-      readonly status: TicketStatus;
       readonly " $fragmentSpreads": FragmentRefs<"TicketCard">;
-    } | null | undefined;
+    };
   };
 };
-export type TicketCardCashoutMutation = {
-  response: TicketCardCashoutMutation$data;
-  variables: TicketCardCashoutMutation$variables;
+export type TicketUpdatesSubscription = {
+  response: TicketUpdatesSubscription$data;
+  variables: TicketUpdatesSubscription$variables;
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "ticketId"
-  }
-],
-v1 = [
-  {
-    "kind": "Variable",
-    "name": "ticketId",
-    "variableName": "ticketId"
-  }
-],
-v2 = {
+var v0 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "amount",
+  "name": "reason",
   "storageKey": null
 },
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "rejectionCode",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "rejectionMessage",
-  "storageKey": null
-},
-v5 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v6 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "status",
   "storageKey": null
 },
-v7 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -90,22 +56,20 @@ v7 = {
 };
 return {
   "fragment": {
-    "argumentDefinitions": (v0/*:: as any*/),
+    "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "TicketCardCashoutMutation",
+    "name": "TicketUpdatesSubscription",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*:: as any*/),
-        "concreteType": "CashoutPayload",
+        "args": null,
+        "concreteType": "TicketUpdate",
         "kind": "LinkedField",
-        "name": "cashout",
+        "name": "myTicketUpdated",
         "plural": false,
         "selections": [
-          (v2/*:: as any*/),
-          (v3/*:: as any*/),
-          (v4/*:: as any*/),
+          (v0/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -114,8 +78,7 @@ return {
             "name": "ticket",
             "plural": false,
             "selections": [
-              (v5/*:: as any*/),
-              (v6/*:: as any*/),
+              (v1/*:: as any*/),
               {
                 "args": null,
                 "kind": "FragmentSpread",
@@ -128,26 +91,24 @@ return {
         "storageKey": null
       }
     ],
-    "type": "Mutation",
+    "type": "Subscription",
     "abstractKey": null
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": (v0/*:: as any*/),
+    "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "TicketCardCashoutMutation",
+    "name": "TicketUpdatesSubscription",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*:: as any*/),
-        "concreteType": "CashoutPayload",
+        "args": null,
+        "concreteType": "TicketUpdate",
         "kind": "LinkedField",
-        "name": "cashout",
+        "name": "myTicketUpdated",
         "plural": false,
         "selections": [
-          (v2/*:: as any*/),
-          (v3/*:: as any*/),
-          (v4/*:: as any*/),
+          (v0/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -156,8 +117,7 @@ return {
             "name": "ticket",
             "plural": false,
             "selections": [
-              (v5/*:: as any*/),
-              (v6/*:: as any*/),
+              (v1/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -200,7 +160,8 @@ return {
                 "name": "currency",
                 "storageKey": null
               },
-              (v7/*:: as any*/),
+              (v2/*:: as any*/),
+              (v3/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -230,7 +191,7 @@ return {
                 "name": "corrections",
                 "plural": true,
                 "selections": [
-                  (v5/*:: as any*/),
+                  (v1/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -245,7 +206,13 @@ return {
                     "name": "kind",
                     "storageKey": null
                   },
-                  (v2/*:: as any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "amount",
+                    "storageKey": null
+                  },
                   {
                     "alias": null,
                     "args": null,
@@ -274,7 +241,7 @@ return {
                     "name": "newStatus",
                     "storageKey": null
                   },
-                  (v7/*:: as any*/)
+                  (v3/*:: as any*/)
                 ],
                 "storageKey": null
               },
@@ -286,7 +253,7 @@ return {
                 "name": "items",
                 "plural": true,
                 "selections": [
-                  (v5/*:: as any*/),
+                  (v1/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -315,7 +282,7 @@ return {
                     "name": "priceAtAcceptance",
                     "storageKey": null
                   },
-                  (v6/*:: as any*/)
+                  (v2/*:: as any*/)
                 ],
                 "storageKey": null
               }
@@ -328,16 +295,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4fa831f3ebb65659b920ec722817de22",
+    "cacheID": "4126aa82cdc91d0b6ec4cce2b8e7f701",
     "id": null,
     "metadata": {},
-    "name": "TicketCardCashoutMutation",
-    "operationKind": "mutation",
-    "text": "mutation TicketCardCashoutMutation(\n  $ticketId: ID!\n) {\n  cashout(ticketId: $ticketId) {\n    amount\n    rejectionCode\n    rejectionMessage\n    ticket {\n      id\n      status\n      ...TicketCard\n    }\n  }\n}\n\nfragment TicketCard on Ticket {\n  id\n  betType\n  stake\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  createdAt\n  settledAt\n  resettled\n  resettlementSeen\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n  }\n}\n"
+    "name": "TicketUpdatesSubscription",
+    "operationKind": "subscription",
+    "text": "subscription TicketUpdatesSubscription {\n  myTicketUpdated {\n    reason\n    ticket {\n      id\n      ...TicketCard\n    }\n  }\n}\n\nfragment TicketCard on Ticket {\n  id\n  betType\n  stake\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  createdAt\n  settledAt\n  resettled\n  resettlementSeen\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "bc0dd62b2a811447265d47de8e894bcd";
+(node as any).hash = "78ff295f459eb1cb82896f8a1b71a4cf";
 
 export default node;

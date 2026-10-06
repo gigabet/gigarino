@@ -1,9 +1,10 @@
 'use client'
 
-import { useAtom, useSetAtom } from 'jotai'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import {
   AlertTriangleIcon,
   ChevronDownIcon,
+  ChevronsUpIcon,
   HistoryIcon,
   Loader2Icon,
   LockKeyhole,
@@ -12,8 +13,9 @@ import {
   XIcon,
 } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
+import Link from 'next/link'
 import { VisuallyHidden } from 'radix-ui'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { PiTicket, PiTrash } from 'react-icons/pi'
 import { graphql, useFragment, useMutation } from 'react-relay'
 import { Drawer } from 'vaul'
@@ -33,11 +35,20 @@ import {
 } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import * as Tabs from '@/components/ui/tabs'
-import { betslipInputAtom, betslipOpenAtom } from '@/context/betslip'
+import {
+  betCodeCopy,
+  betslipInputAtom,
+  betslipOpenAtom,
+  boostAtom,
+  useActiveBoost,
+  useBetslipPrices,
+  useSetLegStake,
+} from '@/context/betslip'
 import { useMediaQuery } from '@/context/hooks'
-import { useT } from '@/context/providers'
+import { useCurrency, useT } from '@/context/providers'
+import { unseenResettlementsAtom } from '@/context/tickets'
 import { cn, formatBalance, nCk } from '@/lib/utils'
-import type { PriceChange, TicketType } from '@/types'
+import type { TicketType } from '@/types'
 
 type MainTab = 'betslip' | 'tickets'
 
@@ -53,10 +64,13 @@ export default function Betslip(props: {
         potentialPayout
         placeable
         betType
+        blockers
         items {
           outcomeId
           availability
           price
+          expectedPrice
+          priceChanged
           ...Tip
         }
       }
@@ -74,11 +88,26 @@ export default function Betslip(props: {
     potentialPayout: string | null
   } | null>(null)
   const [placeError, setPlaceError] = useState<string | null>(null)
-  const [priceChanges, setPriceChanges] = useState<PriceChange[] | null>(null)
-  const priceChangeMap = new Map((priceChanges ?? []).map(c => [c.outcomeId, c]))
   const [ticketsKey, setTicketsKey] = useState(0)
 
-  const [singleStakes, setSingleStakes] = useState<Record<string, string>>({})
+  const currency = useCurrency()
+  const fmt = (n: number) => formatBalance(n, currency)
+  const boost = useActiveBoost()
+  const setBoost = useSetAtom(boostAtom)
+  const setLegStake = useSetLegStake()
+  const unseen = useAtomValue(unseenResettlementsAtom)
+
+  const legStake = (id: string) =>
+    Number(input.items.find(i => i.outcomeId === id)?.stake ?? input.stake) || 0
+  const singlesTotal = (data?.items ?? [])
+    .filter(i => i.availability === 'AVAILABLE')
+    .reduce((a, i) => a + legStake(i.outcomeId), 0)
+  const stakeNum = data?.betType === 'SINGLE' ? singlesTotal : Number(input.stake) || 0
+  const overBoostMax = !!boost?.maxStake && stakeNum > Number(boost.maxStake)
+  const shownOdds = boost ? Number(boost.boostedPrice) : Number(data?.effectiveOdds)
+  const shownPayout = boost
+    ? stakeNum * Number(boost.boostedPrice)
+    : Number(data?.potentialPayout) || 0
 
   const clientRequestId = useRef<string>(crypto.randomUUID())
 
@@ -125,13 +154,15 @@ export default function Betslip(props: {
       }
     })
 
-  const clearAll = () =>
+  const clearAll = () => {
     setInput(prev => ({
       ...prev,
       items: [],
       systemSize: null,
       betType: 'SINGLE',
     }))
+    setBoost(null)
+  }
 
   const unavailable = new Set(
     (data?.items ?? []).filter(i => i.availability !== 'AVAILABLE').map(i => i.outcomeId)
@@ -139,15 +170,16 @@ export default function Betslip(props: {
 
   const handlePlace = () => {
     if (!data) return
-    setPlaceError(null)
-    setPriceChanges(null)
-
+    const byId = new Map(input.items.map(i => [i.outcomeId, i]))
     const items = data.items
       .filter(i => i.availability === 'AVAILABLE')
       .map(i => ({
         outcomeId: i.outcomeId,
-        expectedPrice: i.price,
-        stake: data.betType === 'SINGLE' ? (singleStakes[i.outcomeId] ?? '10.00') : undefined,
+        expectedPrice: byId.get(i.outcomeId)?.expectedPrice ?? i.price,
+        stake:
+          data.betType === 'SINGLE'
+            ? String(byId.get(i.outcomeId)?.stake ?? input.stake)
+            : undefined,
       }))
 
     commitPlaceBet({
@@ -159,21 +191,24 @@ export default function Betslip(props: {
           systemSize: input.systemSize ?? null,
           clientRequestId: clientRequestId.current,
           oddsPolicy: 'REJECT',
+          boostId: boost?.id,
         },
       },
       onCompleted: response => {
-        if (response.placeBet.rejection) {
-          const { code, message, priceChanges: changes } = response.placeBet.rejection
-          if (code === 'PRICE_CHANGED' && changes?.length) {
-            setPriceChanges([...changes])
+        const rej = response.placeBet.rejection
+        if (rej) {
+          if (rej.code === 'PRICE_CHANGED') {
+            setDismissedSig(null)
             setPlaceError(null)
           } else {
-            setPlaceError(message)
-            setPriceChanges(null)
+            if (rej.code === 'BOOST_UNAVAILABLE') setBoost(null)
+            setPlaceError(betCodeCopy(rej.code, t) ?? rej.message)
           }
           return
         }
+
         if (response.placeBet.ticket) {
+          setBoost(null)
           setPlaced({
             id: response.placeBet.ticket.id,
             stake: response.placeBet.ticket.stake,
@@ -184,43 +219,27 @@ export default function Betslip(props: {
       },
       onError: error => {
         setPlaceError(error.message || t('Failed to place bet. Please try again.'))
-        setPriceChanges(null)
       },
     })
   }
 
-  const handleKeepHigher = () => {
-    if (!priceChanges) return
+  const { stamp, accept } = useBetslipPrices()
+  const [dismissedSig, setDismissedSig] = useState<string | null>(null)
 
-    const droppedIds = new Set(
-      priceChanges
-        .filter(c => Number(c.currentPrice) < Number(c.expectedPrice))
-        .map(c => c.outcomeId)
+  useEffect(() => {
+    if (!data) return
+    const unseen = new Map(
+      data.items.filter(i => i.price && !i.expectedPrice).map(i => [i.outcomeId, i.price as string])
     )
+    if (unseen.size) stamp(unseen)
+  }, [data, stamp])
 
-    if (droppedIds.size > 0) {
-      setInput(prev => {
-        let { systemSize, betType } = prev
-        const items = prev.items.filter(i => !droppedIds.has(i.outcomeId))
+  const changed = (data?.items ?? []).filter(i => i.priceChanged && i.price && i.expectedPrice)
+  const higher = changed.filter(i => Number(i.price) > Number(i.expectedPrice))
+  const signature = changed.map(i => `${i.outcomeId}:${i.price}`).join('|')
+  const showChanges = changed.length > 0 && signature !== dismissedSig // moves again => re-shows
 
-        if (systemSize && systemSize > items.length - 1) {
-          systemSize = items.length - 2
-          if (systemSize < 2) {
-            systemSize = null
-            betType = 'MULTIPLE'
-          }
-        }
-        if (items.length <= 2) betType = 'SINGLE'
-
-        return { ...prev, items, systemSize, betType }
-      })
-    }
-
-    // Prices that went up are already reflected live via data.items[].price
-    // (fed by the betslipUpdated subscription) — nothing to reconcile there,
-    // just clear the banner so the user can review and press Place bet again.
-    setPriceChanges(null)
-  }
+  const toMap = (items: typeof changed) => new Map(items.map(i => [i.outcomeId, i.price as string]))
 
   const startNewBet = () => {
     clientRequestId.current = crypto.randomUUID()
@@ -290,7 +309,8 @@ export default function Betslip(props: {
       </div>
 
       {mainTab === 'tickets' ? (
-        <MyTickets key={ticketsKey} />
+        // TODO: unseen badge
+        <MyTickets key={ticketsKey} /> //count={unseen} />
       ) : placed ? (
         <PlacedState
           ticket={placed}
@@ -371,12 +391,11 @@ export default function Betslip(props: {
               <Tip
                 key={item.outcomeId}
                 item={item}
-                priceChange={priceChangeMap.get(item.outcomeId)}
                 showStake={data.betType === 'SINGLE'}
-                stakeValue={singleStakes[item.outcomeId] ?? '10.00'}
-                onStakeChange={value =>
-                  setSingleStakes(prev => ({ ...prev, [item.outcomeId]: value }))
-                }
+                stakeValue={String(
+                  input.items.find(i => i.outcomeId === item.outcomeId)?.stake ?? input.stake
+                )}
+                onStakeChange={v => setLegStake(item.outcomeId, v)}
                 onRemove={() => remove(item.outcomeId)}
               />
             ))}
@@ -431,89 +450,120 @@ export default function Betslip(props: {
             </div>
           )}
 
-          {priceChanges && (
-            <div className='z-1 flex items-center gap-2 bg-yellow-500/10 p-3 px-6 text-yellow-400'>
-              <TrendingUpIcon className='size-4 shrink-0' />
-              <p className='mr-auto truncate text-xs'>
-                {priceChanges.length === 1
-                  ? t('1 odd change.')
-                  : t('{n} odds changes.', { n: priceChanges.length })}
-              </p>
-              <Button
-                variant='outline'
-                size='sm'
-                className='h-6 shrink-0 px-2 text-[0.7rem]'
-                onClick={() => setPriceChanges(null)}
-              >
-                {t('Reject')}
-              </Button>
-              <Button
-                variant='outline'
-                size='sm'
-                className='h-6 shrink-0 px-2 text-[0.7rem]'
-                onClick={handleKeepHigher}
-              >
-                {t('Keep higher')}
-              </Button>
+          {!data.placeable &&
+            unavailable.size === 0 &&
+            !showChanges &&
+            data.blockers.length > 0 && (
+              <div className='z-1 flex items-start gap-2 bg-red-500/10 p-3 px-6 text-red-400'>
+                <AlertTriangleIcon className='mt-0.5 size-4 shrink-0' />
+                <div className='mr-auto space-y-0.5 text-xs'>
+                  {[...new Set(data.blockers)].map(b => (
+                    <p key={b}>{betCodeCopy(b, t) ?? t('Bet unavailable.')}</p>
+                  ))}
+                </div>
+                {data.blockers.includes('INSUFFICIENT_FUNDS') && (
+                  <Link href='/user/wallet' className='shrink-0 text-xs underline'>
+                    {t('Deposit')}
+                  </Link>
+                )}
+              </div>
+            )}
+
+          {showChanges && (
+            <div className='z-1 flex flex-col gap-2 bg-amber-500/10 p-3 px-6 text-amber-400'>
+              <div className='flex items-center gap-2'>
+                <TrendingUpIcon className='size-4 shrink-0' />
+                <p className='mr-auto text-xs'>
+                  {changed.length === 1
+                    ? t('1 odd change.')
+                    : t('{n} odds changes.', { n: changed.length })}
+                </p>
+                <Button
+                  variant='ghost'
+                  size='icon-sm'
+                  aria-label={t('Dismiss')}
+                  className='-mx-2 size-6 rounded-full text-xs text-amber-400 hover:bg-amber-400/30 hover:text-white'
+                  onClick={() => setDismissedSig(signature)}
+                >
+                  <XIcon />
+                </Button>
+              </div>
+              <div className='flex gap-2'>
+                {higher.length > 0 && higher.length < changed.length && (
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    className='h-6 flex-1 px-2 text-[0.7rem]'
+                    onClick={() => accept(toMap(higher))}
+                  >
+                    {t('Accept higher')}
+                  </Button>
+                )}
+                <Button
+                  variant='outline'
+                  size='sm'
+                  className='h-6 flex-1 px-2 text-[0.7rem]'
+                  onClick={() => accept(toMap(changed))}
+                >
+                  {t('Accept all')}
+                </Button>
+              </div>
             </div>
           )}
 
           <div className='space-y-4 px-5 py-4'>
+            {boost && (
+              <div className='border-primary/40 bg-primary/10 flex items-center justify-between rounded-xl border px-4 py-2 text-xs'>
+                <span className='text-primary flex items-center gap-1.5 font-bold uppercase'>
+                  <ChevronsUpIcon className='size-4' />
+                  {t('Bet Boost')}
+                </span>
+                <span className='font-mono'>
+                  <span className='text-secondary mr-1 line-through'>
+                    {Number(boost.combinedPrice).toFixed(2)}
+                  </span>
+                  {Number(boost.boostedPrice).toFixed(2)}
+                </span>
+              </div>
+            )}
+
             {data.betType !== 'SINGLE' && (
               <>
-                <div className='flex items-center justify-between text-sm'>
-                  <span className='text-secondary'>{t('Combined odds')}</span>
-                  <span className='font-mono font-semibold text-white'>
-                    {Number(data.effectiveOdds).toFixed(2)}
-                  </span>
-                </div>
-
+                <SummaryRow label={t('Combined odds')} value={shownOdds.toFixed(2)} mono />
                 <div className='flex items-center gap-3'>
                   <span className='text-secondary shrink-0 text-sm'>{t('Stake')}</span>
-                  <InputGroup className='bg-dark flex-1 rounded-full'>
-                    <InputGroupInput
-                      type='number'
-                      inputMode='decimal'
-                      placeholder={t('Stake')}
-                      value={input.stake}
-                      onFocus={e => e.target.select()}
-                      onChange={e => {
-                        const stake = e.target.value
-                        if (/^\d*\.?\d{0,2}$/.test(stake)) setInput(prev => ({ ...prev, stake }))
-                      }}
-                      className='appearance-none text-right font-mono text-sm [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'
-                    />
-                    <InputGroupAddon align='inline-end' className='text-xs'>
-                      EUR
-                    </InputGroupAddon>
-                  </InputGroup>
-                </div>
-
-                <div className='bg-dark flex items-center justify-between rounded-xl border border-white/5 px-4 py-3'>
-                  <span className='text-secondary text-sm'>{t('Potential payout')}</span>
-                  <span className='text-primary text-lg font-bold'>
-                    {formatBalance(Number(data.potentialPayout) || 0)}
-                  </span>
+                  <StakeInput
+                    value={input.stake}
+                    placeholder={t('Stake')}
+                    onCommit={stake => setInput(prev => ({ ...prev, stake }))}
+                  />
                 </div>
               </>
             )}
 
             {data.betType === 'SINGLE' && (
-              <div className='bg-dark flex items-center justify-between rounded-xl border border-white/5 px-4 py-3'>
-                <span className='text-secondary text-sm'>{t('Total stake')}</span>
-                <span className='text-primary text-lg font-bold'>
-                  {formatBalance(
-                    Object.values(singleStakes).reduce((acc, v) => acc + (Number(v) || 0), 0) ||
-                      data.items.length * 10
-                  )}
-                </span>
-              </div>
+              <SummaryRow label={t('Total stake')} value={fmt(singlesTotal)} />
             )}
+
+            {overBoostMax && boost?.maxStake && (
+              <p className='text-xs text-amber-400'>
+                {t('Boost applies up to {max}. Lower your stake to use it.', {
+                  max: fmt(Number(boost.maxStake)),
+                })}
+              </p>
+            )}
+
+            <div className='bg-dark flex items-center justify-between rounded-xl border border-white/5 px-4 py-3'>
+              <span className='text-secondary text-sm'>{t('Potential payout')}</span>
+              <span className='text-primary text-lg font-bold'>{fmt(shownPayout)}</span>
+            </div>
 
             <button
               type='button'
-              disabled={isPlacing || !data.placeable || unavailable.size > 0}
-              onClick={() => handlePlace()}
+              disabled={
+                isPlacing || !data.placeable || unavailable.size > 0 || showChanges || overBoostMax
+              }
+              onClick={handlePlace}
               className='group/button bg-primary hover:shadow-glow-lg text-primary-foreground relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-full px-10 py-4 text-base font-bold tracking-wide uppercase transition-all duration-300 select-none disabled:pointer-events-none disabled:bg-neutral-400 disabled:text-neutral-700'
             >
               <div className='from-primary to-primary absolute inset-0 bg-linear-to-r via-white/30 opacity-0 transition-opacity duration-500 group-hover/button:opacity-100' />
@@ -525,13 +575,7 @@ export default function Betslip(props: {
                 </span>
               ) : (
                 <span className='relative'>
-                  {t('Place bet')} ·{' '}
-                  {formatBalance(
-                    data.betType === 'SINGLE'
-                      ? Object.values(singleStakes).reduce((acc, v) => acc + (Number(v) || 0), 0) ||
-                          data.items.length * 10
-                      : Number(input.stake) || 0
-                  )}
+                  {t('Place bet')} · {fmt(stakeNum)}
                 </span>
               )}
             </button>
@@ -583,7 +627,6 @@ function getLabel(
 
 function Tip(props: {
   item: Tip$key
-  priceChange?: { expectedPrice: string; currentPrice: string }
   showStake: boolean
   stakeValue: string
   onStakeChange: (v: string) => void
@@ -597,32 +640,19 @@ function Tip(props: {
         marketName
         key
         price
+        expectedPrice
+        priceChanged
         availability
       }
     `,
     props.item
   )
   const t = useT()
-  const change = props.priceChange
-  const up = change ? Number(change.currentPrice) > Number(change.expectedPrice) : false
+  const changed = data.priceChanged && !!data.expectedPrice && !!data.price
+  const up = changed && Number(data.price) > Number(data.expectedPrice)
   const blocked = data.availability !== 'AVAILABLE'
 
-  const blockerCopy = (availability: string) => {
-    switch (availability) {
-      case 'SUSPENDED':
-        return t('Market suspended.')
-      case 'CUTOFF_PASSED':
-        return t('Event started.')
-      case 'DUPLICATE_EVENT':
-        return t('One combi bet per event.')
-      case 'EVENT_NOT_BETTABLE':
-        return t('Event not bettable.')
-      case 'NOT_FOUND':
-        return t('Bet not found.')
-      default:
-        return t('Bet unavailable.')
-    }
-  }
+  const currency = useCurrency()
 
   return (
     <div
@@ -656,16 +686,16 @@ function Tip(props: {
 
         <div className='flex shrink-0 flex-col items-end self-center pt-0.5'>
           <span className='flex items-center gap-1 font-mono text-base font-semibold text-white'>
-            {change ? (
+            {changed ? (
               <span className='flex items-center gap-1'>
                 <span className='text-secondary text-xs line-through'>
-                  {Number(change.expectedPrice).toFixed(2)}
+                  {Number(data.expectedPrice).toFixed(2)}
                 </span>
                 <TrendingUpIcon
                   className={cn('size-3', up ? 'text-primary' : 'rotate-90 text-red-400')}
                 />
                 <span className={up ? 'text-primary' : 'text-red-400'}>
-                  {Number(change.currentPrice).toFixed(2)}
+                  {Number(data.price).toFixed(2)}
                 </span>
               </span>
             ) : data.price ? (
@@ -680,32 +710,68 @@ function Tip(props: {
       {blocked && (
         <p className='mt-2 flex items-center gap-1.5 text-xs text-red-400'>
           <AlertTriangleIcon className='size-3.5' />
-          {blockerCopy(data.availability)}
+          {betCodeCopy(data.availability, t)}
         </p>
       )}
 
       {!blocked && props.showStake && (
         <div className='mt-2 flex items-center gap-2 border-t border-white/5 pt-2'>
           <span className='text-secondary text-xs'>{t('Stake')}</span>
-          <InputGroup className='bg-dark flex-1 rounded-full'>
-            <InputGroupInput
-              type='number'
-              placeholder='0'
-              value={props.stakeValue}
-              onFocus={e => e.target.select()}
-              onChange={e => props.onStakeChange(e.target.value)}
-              className='appearance-none text-right font-mono text-sm [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'
-            />
-            <InputGroupAddon align='inline-end' className='text-xs'>
-              EUR
-            </InputGroupAddon>
-          </InputGroup>
+          <StakeInput value={props.stakeValue} onCommit={props.onStakeChange} />
           <span className='text-primary w-20 shrink-0 text-right text-xs font-semibold'>
-            → {formatBalance((Number(props.stakeValue) || 0) * (Number(data.price) || 0))}
+            → {formatBalance((Number(props.stakeValue) || 0) * (Number(data.price) || 0), currency)}
           </span>
         </div>
       )}
     </div>
+  )
+}
+
+function SummaryRow(props: { label: string; value: string; mono?: boolean }) {
+  return (
+    <div className='flex items-center justify-between text-sm'>
+      <span className='text-secondary'>{props.label}</span>
+      <span className={cn('font-semibold text-white', props.mono && 'font-mono')}>
+        {props.value}
+      </span>
+    </div>
+  )
+}
+
+function StakeInput(props: { value: string; onCommit: (v: string) => void; placeholder?: string }) {
+  const currency = useCurrency()
+  const [text, setText] = useState(props.value)
+  const timer = useRef<number>(undefined)
+
+  useEffect(() => setText(props.value), [props.value])
+  useEffect(() => () => clearTimeout(timer.current), [])
+
+  return (
+    <InputGroup className='bg-dark flex-1 rounded-full'>
+      <InputGroupInput
+        type='number'
+        inputMode='decimal'
+        placeholder={props.placeholder ?? '0'}
+        value={text}
+        onFocus={e => e.target.select()}
+        onChange={e => {
+          const v = e.target.value
+          if (!/^\d*\.?\d{0,2}$/.test(v)) return
+          setText(v)
+          clearTimeout(timer.current)
+          if (v !== '') timer.current = window.setTimeout(() => props.onCommit(v), 400)
+        }}
+        onBlur={() => {
+          clearTimeout(timer.current)
+          if (text === '') setText(props.value)
+          else if (text !== props.value) props.onCommit(text)
+        }}
+        className='appearance-none text-right font-mono text-sm [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'
+      />
+      <InputGroupAddon align='inline-end' className='text-xs'>
+        {currency}
+      </InputGroupAddon>
+    </InputGroup>
   )
 }
 

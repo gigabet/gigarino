@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export const formatBalance = (
   balance: number,
-  currency: string = process.env.NEXT_APP_CURRENCY ?? 'EUR'
+  currency: string = process.env.NEXT_PUBLIC_CURRENCY ?? 'EUR'
 ) =>
   new Intl.NumberFormat(navigator.language, {
     style: 'currency',
@@ -18,7 +18,7 @@ export const formatBalance = (
 
 export const formatBalanceBasic = (
   balance: number,
-  currency: string = process.env.NEXT_APP_CURRENCY ?? 'EUR'
+  currency: string = process.env.NEXT_PUBLIC_CURRENCY ?? 'EUR'
 ) =>
   new Intl.NumberFormat(navigator.language, {
     style: 'currency',

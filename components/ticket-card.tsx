@@ -1,9 +1,10 @@
 'use client'
 
 import { format, formatDistanceToNowStrict } from 'date-fns'
+import { useSetAtom } from 'jotai'
 import { AlertTriangleIcon, ChevronDownIcon, Loader2Icon } from 'lucide-react'
 import { Popover } from 'radix-ui'
-import { Suspense, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import {
   graphql,
   type PreloadedQuery,
@@ -13,12 +14,14 @@ import {
   useQueryLoader,
 } from 'react-relay'
 import type { TicketCard$key } from '@/components/__generated__/TicketCard.graphql'
+import type { TicketCardAcknowledgeMutation } from '@/components/__generated__/TicketCardAcknowledgeMutation.graphql'
 import type { TicketCardCashoutMutation } from '@/components/__generated__/TicketCardCashoutMutation.graphql'
 import type { TicketCardCashoutQuoteQuery } from '@/components/__generated__/TicketCardCashoutQuoteQuery.graphql'
 import TicketCardCashoutQuoteQueryNode from '@/components/__generated__/TicketCardCashoutQuoteQuery.graphql'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useT } from '@/context/providers'
+import { unseenResettlementsAtom } from '@/context/tickets'
 import { tKey } from '@/i18n/tKey'
 import { cn, formatBalance } from '@/lib/utils'
 import type { BetItemStatus, TicketStatus } from '@/types'
@@ -38,7 +41,14 @@ const STATUS_META: Record<TicketStatus, { label: string; className: string }> = 
   WON: { label: tKey('Won'), className: 'bg-primary/10 text-primary' },
   LOST: { label: tKey('Lost'), className: 'bg-red-500/10 text-red-400' },
   VOID: { label: tKey('Void'), className: 'bg-white/10 text-secondary' },
-  REJECTED: { label: tKey('Rejected'), className: 'bg-red-500/10 text-red-400' },
+  REJECTED: {
+    label: tKey('Rejected'),
+    className: 'bg-red-500/10 text-red-400',
+  },
+  CASHOUT_PENDING: {
+    label: tKey('Cashout pending'),
+    className: 'bg-purple-accent/10 text-purple-accent',
+  },
   CASHED_OUT: {
     label: tKey('Cashed Out'),
     className: 'bg-purple-accent/10 text-purple-accent',
@@ -64,10 +74,24 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
         stake
         effectiveOdds
         potentialPayout
+        payout
         currency
         status
         createdAt
         settledAt
+        resettled
+        resettlementSeen
+        corrections {
+          id
+          itemId
+          kind
+          amount
+          previousPrice
+          newPrice
+          previousStatus
+          newStatus
+          createdAt
+        }
         items {
           id
           eventName
@@ -83,7 +107,33 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
 
   const [expanded, setExpanded] = useState(false)
   const t = useT()
-  const meta = STATUS_META[data.status as TicketStatus]
+  const meta = STATUS_META[data.status as TicketStatus] ?? {
+    label: data.status,
+    className: 'bg-white/10 text-secondary',
+  }
+
+  const CORRECTION_LABEL: Record<string, string> = {
+    PALPABLE_ERROR: tKey('Price error corrected'),
+    RESULT_CORRECTION: tKey('Result corrected'),
+  }
+
+  const [ack] = useMutation<TicketCardAcknowledgeMutation>(graphql`
+    mutation TicketCardAcknowledgeMutation($ticketIds: [ID!]) {
+      acknowledgeResettlements(ticketIds: $ticketIds) {
+        id
+        resettlementSeen
+      }
+    }
+  `)
+  const setUnseen = useSetAtom(unseenResettlementsAtom)
+
+  useEffect(() => {
+    if (!expanded || !data.resettled || data.resettlementSeen) return
+    ack({
+      variables: { ticketIds: [data.id] },
+      onCompleted: () => setUnseen(n => Math.max(0, n - 1)),
+    })
+  }, [expanded, data.id, data.resettled, data.resettlementSeen, ack, setUnseen])
 
   return (
     <div className='rounded-xl border border-white/5 bg-black/20 p-3'>
@@ -102,6 +152,11 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
             >
               {t(meta.label)}
             </span>
+            {data.resettled && !data.resettlementSeen && (
+              <span className='rounded-full bg-amber-500/10 px-2 py-0.5 text-[0.65rem] font-bold text-amber-400 uppercase'>
+                {t('Corrected')}
+              </span>
+            )}
             <span className='text-secondary text-xs'>
               {data.betType === 'SINGLE'
                 ? t('Single')
@@ -175,6 +230,7 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
               {formatBalance(Number(data.potentialPayout), data.currency)}
             </span>
           </div>
+
           {data.settledAt && (
             <div className='flex items-center justify-between text-xs'>
               <span className='text-secondary'>{t('Settled')}</span>
@@ -183,6 +239,48 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
                   addSuffix: true,
                 })}
               </span>
+            </div>
+          )}
+
+          {data.payout != null && (
+            <div className='flex items-center justify-between text-xs'>
+              <span className='text-secondary'>{t('Payout')}</span>
+              <span className='font-mono font-semibold text-white'>
+                {formatBalance(Number(data.payout), data.currency)}
+              </span>
+            </div>
+          )}
+
+          {data.resettled && (
+            <div className='space-y-2 rounded-lg bg-amber-500/5 p-2 text-xs'>
+              <p className='font-semibold text-amber-400'>{t('Corrections')}</p>
+              {data.corrections.map(c => {
+                const item = data.items.find(i => i.id === c.itemId)
+                const amount = Number(c.amount)
+                return (
+                  <div key={c.id} className='space-y-0.5'>
+                    <p className='text-white/90'>
+                      {t(CORRECTION_LABEL[c.kind] ?? c.kind)} · {item?.outcomeName}
+                    </p>
+                    <div className='text-secondary flex justify-between font-mono'>
+                      <span>
+                        {Number(c.previousPrice).toFixed(2)} → {Number(c.newPrice).toFixed(2)}
+                        {c.previousStatus !== c.newStatus &&
+                          ` · ${c.previousStatus} → ${c.newStatus}`}
+                      </span>
+                      {amount !== 0 && (
+                        <span className={amount > 0 ? 'text-primary' : 'text-red-400'}>
+                          {amount > 0 && '+'}
+                          {formatBalance(amount, data.currency)}
+                        </span>
+                      )}
+                    </div>
+                    <p className='text-secondary text-[0.65rem]'>
+                      {format(new Date(c.createdAt), 'dd MMM, HH:mm')}
+                    </p>
+                  </div>
+                )
+              })}
             </div>
           )}
 

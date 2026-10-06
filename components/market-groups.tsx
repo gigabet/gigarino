@@ -7,9 +7,9 @@ import type {
   MarketGroups$data,
   MarketGroups$key,
 } from '@/app/sport/event/[id]/__generated__/MarketGroups.graphql'
+import MarketCard from '@/components/market-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import * as Tabs from '@/components/ui/tabs'
-import MarketCard from '@/components/market-card'
 
 const GROUP_ORDER: MarketGroup[] = [
   'MAIN',

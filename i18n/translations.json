@@ -99,6 +99,14 @@
     "de": "Über uns",
     "tr": "Hakkımızda"
   },
+  "Accept all": {
+    "de": "",
+    "tr": ""
+  },
+  "Accept higher": {
+    "de": "",
+    "tr": ""
+  },
   "Accepted Payment Methods": {
     "de": "Akzeptierte Zahlungsmethoden",
     "tr": "Kabul Edilen Ödeme Yöntemleri"
@@ -183,6 +191,10 @@
     "de": "Boni",
     "tr": "Bonuslar"
   },
+  "Boost applies up to {max}. Lower your stake to use it.": {
+    "de": "",
+    "tr": ""
+  },
   "Both to Score": {
     "de": "Beide treffen",
     "tr": "Karşılıklı Gol"
@@ -210,6 +222,10 @@
   "Cashing out...": {
     "de": "Cashout läuft...",
     "tr": "Nakit çekiliyor..."
+  },
+  "Cashout pending": {
+    "de": "",
+    "tr": ""
   },
   "Casino": {
     "de": "Casino",
@@ -267,6 +283,14 @@
     "de": "Cookie-Hinweis",
     "tr": "Çerez Bildirimi"
   },
+  "Corrected": {
+    "de": "",
+    "tr": ""
+  },
+  "Corrections": {
+    "de": "",
+    "tr": ""
+  },
   "Create a password": {
     "de": "Passwort erstellen",
     "tr": "Bir şifre oluşturun"
@@ -282,6 +306,14 @@
   "Creating account...": {
     "de": "Konto wird erstellt...",
     "tr": "Hesap oluşturuluyor..."
+  },
+  "Deposit": {
+    "de": "",
+    "tr": ""
+  },
+  "Dismiss": {
+    "de": "",
+    "tr": ""
   },
   "Don't have an account?": {
     "de": "Noch kein Konto?",
@@ -615,6 +647,10 @@
     "de": "Zahlungen",
     "tr": "Ödemeler"
   },
+  "Payout": {
+    "de": "",
+    "tr": ""
+  },
   "PEN": {
     "de": "",
     "tr": ""
@@ -654,6 +690,10 @@
   "Potential payout": {
     "de": "Möglicher Gewinn",
     "tr": "Olası kazanç"
+  },
+  "Price error corrected": {
+    "de": "",
+    "tr": ""
   },
   "Privacy Notice": {
     "de": "Datenschutzhinweis",
@@ -706,6 +746,10 @@
   "Responsible Gaming": {
     "de": "Verantwortungsvolles Spielen",
     "tr": "Sorumlu Oyun"
+  },
+  "Result corrected": {
+    "de": "",
+    "tr": ""
   },
   "Retry": {
     "de": "Erneut versuchen",

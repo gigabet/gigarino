@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8f9984543abc19fe7dd5ae929df3b700>>
+ * @generated SignedSource<<dda58d5237add00d569a70c25dfb1d64>>
  * @lightSyntaxTransform
  */
 
@@ -133,6 +133,13 @@ return {
           {
             "alias": null,
             "args": null,
+            "kind": "ScalarField",
+            "name": "blockers",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "BetslipQuoteItem",
             "kind": "LinkedField",
             "name": "items",
@@ -157,6 +164,20 @@ return {
                 "args": null,
                 "kind": "ScalarField",
                 "name": "price",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "expectedPrice",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "priceChanged",
                 "storageKey": null
               },
               {
@@ -196,12 +217,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "fab693020925998cb46135688494a30c",
+    "cacheID": "6f69d7794d592eed90eb2674018daba2",
     "id": null,
     "metadata": {},
     "name": "BetslipSubscription",
     "operationKind": "subscription",
-    "text": "subscription BetslipSubscription(\n  $input: BetslipQuoteInput!\n) {\n  betslipUpdated(input: $input) {\n    ...Betslip\n    ...BetslipMobileBar\n  }\n}\n\nfragment Betslip on BetslipQuote {\n  stake\n  effectiveOdds\n  potentialPayout\n  placeable\n  betType\n  items {\n    outcomeId\n    availability\n    price\n    ...Tip\n    id\n  }\n}\n\nfragment BetslipMobileBar on BetslipQuote {\n  effectiveOdds\n  items {\n    id\n  }\n}\n\nfragment Tip on BetslipQuoteItem {\n  outcomeId\n  eventName\n  marketName\n  key\n  price\n  availability\n}\n"
+    "text": "subscription BetslipSubscription(\n  $input: BetslipQuoteInput!\n) {\n  betslipUpdated(input: $input) {\n    ...Betslip\n    ...BetslipMobileBar\n  }\n}\n\nfragment Betslip on BetslipQuote {\n  stake\n  effectiveOdds\n  potentialPayout\n  placeable\n  betType\n  blockers\n  items {\n    outcomeId\n    availability\n    price\n    expectedPrice\n    priceChanged\n    ...Tip\n    id\n  }\n}\n\nfragment BetslipMobileBar on BetslipQuote {\n  effectiveOdds\n  items {\n    id\n  }\n}\n\nfragment Tip on BetslipQuoteItem {\n  outcomeId\n  eventName\n  marketName\n  key\n  price\n  expectedPrice\n  priceChanged\n  availability\n}\n"
   }
 };
 })();

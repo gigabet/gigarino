@@ -110,6 +110,7 @@ export type LossCashbackPromotion = ReplaceKeys<
 export type BetItemStatus = 'LOST' | 'PENDING' | 'PUSH' | 'VOID' | 'WON' | 'HALF_WON' | 'HALF_LOST'
 
 export type BetRejectionCode =
+  | 'BOOST_UNAVAILABLE'
   | 'CASHOUT_UNAVAILABLE'
   | 'CUTOFF_PASSED'
   | 'DUPLICATE_EVENT'
@@ -117,10 +118,14 @@ export type BetRejectionCode =
   | 'INSUFFICIENT_FUNDS'
   | 'INTERNAL_ERROR'
   | 'LIABILITY_LIMIT'
+  | 'LIVE_STATE_CHANGED'
+  | 'MULTI_SINGLE_NOT_SUPPORTED'
   | 'ODDS_LIMIT'
+  | 'ODDS_UNAVAILABLE'
   | 'OUTCOME_NOT_AVAILABLE'
   | 'PRICE_CHANGED'
   | 'PROVIDER_CURRENCY'
+  | 'RESPONSIBLE_GAMING'
   | 'STAKE_LIMIT'
   | 'SYSTEM_NOT_SUPPORTED'
   | 'WALLET_UNAVAILABLE'
@@ -147,7 +152,6 @@ export type MatchPeriod =
   | 'SECOND_HALF'
   | 'SECOND_PERIOD'
   | 'THIRD_PERIOD'
-  | '%future added value'
 
 export type MarketGroup =
   | 'CARDS'
@@ -186,6 +190,7 @@ export type PriceChange = {
 export type TicketStatus =
   | 'ACCEPTED'
   | 'CASHED_OUT'
+  | 'CASHOUT_PENDING'
   | 'LOST'
   | 'PARTIALLY_CASHED_OUT'
   | 'PENDING_ACCEPTANCE'
