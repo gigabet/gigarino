@@ -48,12 +48,12 @@
     "tr": "1 seçim"
   },
   "1. Half": {
-    "de": "1. Die Hälfte",
+    "de": "1. Halbzeit",
     "tr": "1. Yarı"
   },
   "1. Period": {
-    "de": "1. Zeitraum",
-    "tr": "1. Dönem"
+    "de": "1. Periode",
+    "tr": "1. Periyot"
   },
   "1. Set": {
     "de": "1. Satz",
@@ -68,80 +68,80 @@
     "tr": "½K"
   },
   "1H": {
-    "de": "Eine Stunde",
-    "tr": "Bir saat"
+    "de": "1H",
+    "tr": "1Y"
   },
   "1P": {
-    "de": "Ein Pfund",
-    "tr": "Bir Pound"
+    "de": "1P",
+    "tr": "1P"
   },
   "1S": {
-    "de": "Ein S",
-    "tr": "Bir S"
+    "de": "1S",
+    "tr": "1S"
   },
   "2. Half": {
-    "de": "2. Die Hälfte",
+    "de": "2. Halbzeit",
     "tr": "2. Yarı"
   },
   "2. Period": {
-    "de": "2. Zeitraum",
-    "tr": "2. Dönem"
+    "de": "2. Periode",
+    "tr": "2. Periyot"
   },
   "2. Set": {
     "de": "2. Satz",
     "tr": "2. Set"
   },
   "2H": {
-    "de": "Zwei Stunden",
-    "tr": "İki saat"
+    "de": "2H",
+    "tr": "2Y"
   },
   "2P": {
-    "de": "Zwei Pence",
-    "tr": "İki peni"
+    "de": "2P",
+    "tr": "2P"
   },
   "2S": {
     "de": "2S",
     "tr": "2S"
   },
   "3. Period": {
-    "de": "3. Zeitraum",
-    "tr": "3. Dönem"
+    "de": "3. Periode",
+    "tr": "3. Periyot"
   },
   "3. Set": {
     "de": "3. Satz",
     "tr": "3. Set"
   },
   "3P": {
-    "de": "Die drei Ps",
-    "tr": "Üç P"
+    "de": "3P",
+    "tr": "3P"
   },
   "3S": {
-    "de": "Die drei S",
-    "tr": "Üç S"
+    "de": "3S",
+    "tr": "3S"
   },
   "4. Period": {
-    "de": "4. Zeitraum",
-    "tr": "4. Dönem"
+    "de": "4. Periode",
+    "tr": "4. Periyot"
   },
   "4. Set": {
     "de": "4. Satz",
     "tr": "4. Set"
   },
   "4P": {
-    "de": "Für die Menschen",
-    "tr": "Halk için"
+    "de": "4P",
+    "tr": "4P"
   },
   "4S": {
-    "de": "Die vier S",
-    "tr": "Dört S"
+    "de": "4S",
+    "tr": "4S"
   },
   "5. Set": {
     "de": "5. Satz",
     "tr": "5. Set"
   },
   "5S": {
-    "de": "Die fünf S",
-    "tr": "Beş S"
+    "de": "5S",
+    "tr": "5S"
   },
   "About Us": {
     "de": "Über uns",
@@ -153,7 +153,7 @@
   },
   "Accept higher": {
     "de": "Höher akzeptieren",
-    "tr": "Daha yüksek bir rakamı kabul et"
+    "tr": "Yüksek oranı kabul et"
   },
   "Accepted Payment Methods": {
     "de": "Akzeptierte Zahlungsmethoden",
@@ -268,8 +268,8 @@
     "tr": "Nakit çekiliyor..."
   },
   "Cashout pending": {
-    "de": "Ausstehende Auszahlung",
-    "tr": "Bekleyen para çekme işlemi"
+    "de": "Cashout ausstehend",
+    "tr": "Nakit çekme bekliyor"
   },
   "Casino": {
     "de": "Casino",
@@ -408,8 +408,8 @@
     "tr": "Sunucuya bağlanılamadı."
   },
   "ET": {
-    "de": "UND",
-    "tr": "VE"
+    "de": "Verl.",
+    "tr": "Uzat."
   },
   "Even/Odd": {
     "de": "Gerade/Ungerade",
@@ -500,8 +500,8 @@
     "tr": "Ev Sahibi"
   },
   "HT": {
-    "de": "Hohe Temperatur",
-    "tr": "Yüksek sıcaklık"
+    "de": "HZ",
+    "tr": "İY"
   },
   "I confirm I am 18+ years old and agree to the responsible gaming terms": {
     "de": "Ich bestätige, dass ich mindestens 18 Jahre alt bin, und akzeptiere die Bedingungen für verantwortungsvolles Spielen.",
@@ -628,16 +628,16 @@
     "tr": "Veya şununla devam et"
   },
   "OT": {
-    "de": "Altes Testament",
-    "tr": "Eski Ahit"
+    "de": "Verl.",
+    "tr": "UZ"
   },
   "Over/Under": {
     "de": "Über/Unter",
     "tr": "Alt/Üst"
   },
   "Overtime": {
-    "de": "Überstunden",
-    "tr": "Fazla mesai"
+    "de": "Verlängerung",
+    "tr": "Uzatma"
   },
   "P": {
     "de": "P",
@@ -680,19 +680,19 @@
     "tr": "Ödeme"
   },
   "PEN": {
-    "de": "Stift",
-    "tr": "Kalem"
+    "de": "Elfm.",
+    "tr": "Pen."
   },
   "Penalties": {
-    "de": "Strafen",
-    "tr": "Cezalar"
+    "de": "Elfmeter",
+    "tr": "Penaltılar"
   },
   "Pending": {
     "de": "Ausstehend",
     "tr": "Bekliyor"
   },
   "Pending...": {
-    "de": "Wird geladen...",
+    "de": "Ausstehend...",
     "tr": "Bekliyor..."
   },
   "Place another bet": {
