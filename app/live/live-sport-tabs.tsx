@@ -21,9 +21,9 @@ export default function LiveSportTabs(props: {
     graphql`
       fragment LiveSportTabs on Query {
         liveEvents(first: 100) {
-          totalCount
           edges {
             node {
+              status
               sport {
                 key
                 name
@@ -36,8 +36,9 @@ export default function LiveSportTabs(props: {
     props.query
   )
 
-  const nodes = data.liveEvents.edges.map(e => e.node)
-  const partial = nodes.length < data.liveEvents.totalCount
+  const nodes = data.liveEvents.edges
+    .map(e => e.node)
+    .filter(n => !['ENDED', 'CANCELLED', 'ABANDONED', 'POSTPONED'].includes(n.status))
 
   const bySport = useMemo(() => {
     const counts = countBy(nodes, e => e.sport.key)
@@ -49,7 +50,7 @@ export default function LiveSportTabs(props: {
     }))
   }, [nodes])
 
-  const total = data.liveEvents.totalCount
+  const total = nodes.length
 
   return (
     <div className='flex scrollbar-none items-center gap-2 overflow-x-auto'>

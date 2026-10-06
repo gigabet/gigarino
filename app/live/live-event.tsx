@@ -10,6 +10,7 @@ import type { LiveTeams$key } from '@/app/live/__generated__/LiveTeams.graphql'
 import type { LiveTime$key } from '@/app/live/__generated__/LiveTime.graphql'
 import { getPeriod, useNow } from '@/app/live/helpers'
 import { useLiveRowRegistration } from '@/app/live/live-subscriptions'
+import { useRefetchRegistration } from '@/app/live/refetch-context'
 import { ListViewMarkets } from '@/components/list-view-markets'
 import { TeamBadge } from '@/components/team-badge'
 import { Button, buttonVariants } from '@/components/ui/button'
@@ -41,6 +42,7 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
   // keeps this row's id in the batcher's currently-visible set for as long
   // as it's mounted; Virtuoso mounts/unmounts rows as they scroll in and out
   useLiveRowRegistration(event.id)
+  useRefetchRegistration(event.id)
 
   const t = useT()
   const suspended = event.tradingStatus === 'SUSPENDED'

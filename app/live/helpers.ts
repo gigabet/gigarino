@@ -1,13 +1,19 @@
+import { useSyncExternalStore } from 'react'
 import { tKeysObj } from '@/i18n/tKey'
 import type { MatchPeriod } from '@/types'
-import { useSyncExternalStore } from 'react'
 
 const listeners = new Set<() => void>()
 let timer: ReturnType<typeof setInterval> | undefined
 
 function subscribe(cb: () => void) {
   listeners.add(cb)
-  timer ??= setInterval(() => listeners.forEach(l => l()), 250)
+  timer ??= setInterval(
+    () =>
+      listeners.forEach(l => {
+        l()
+      }),
+    250
+  )
   return () => {
     listeners.delete(cb)
     if (listeners.size === 0) {

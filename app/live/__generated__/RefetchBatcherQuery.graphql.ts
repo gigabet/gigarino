@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e5583d743a75ab8fef270daee04d675f>>
+ * @generated SignedSource<<13e9264119f08bf67fe7162ded3382c7>>
  * @lightSyntaxTransform
  */
 
@@ -14,7 +14,7 @@ export type RefetchBatcherQuery$variables = {
 };
 export type RefetchBatcherQuery$data = {
   readonly eventsByIds: ReadonlyArray<{
-    readonly " $fragmentSpreads": FragmentRefs<"LiveEvent">;
+    readonly " $fragmentSpreads": FragmentRefs<"LiveEvent" | "LiveOrder">;
   }>;
 };
 export type RefetchBatcherQuery = {
@@ -43,7 +43,35 @@ v2 = {
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
-};
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "startTime",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "status",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "key",
+  "storageKey": null
+},
+v6 = [
+  (v5/*:: as any*/)
+],
+v7 = [
+  (v5/*:: as any*/),
+  (v2/*:: as any*/)
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*:: as any*/),
@@ -63,6 +91,37 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "LiveEvent"
+          },
+          {
+            "kind": "InlineDataFragmentSpread",
+            "name": "LiveOrder",
+            "selections": [
+              (v2/*:: as any*/),
+              (v3/*:: as any*/),
+              (v4/*:: as any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Sport",
+                "kind": "LinkedField",
+                "name": "sport",
+                "plural": false,
+                "selections": (v6/*:: as any*/),
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Tournament",
+                "kind": "LinkedField",
+                "name": "tournament",
+                "plural": false,
+                "selections": (v6/*:: as any*/),
+                "storageKey": null
+              }
+            ],
+            "args": null,
+            "argumentDefinitions": []
           }
         ],
         "storageKey": null
@@ -209,13 +268,7 @@ return {
                     "name": "name",
                     "storageKey": null
                   },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "key",
-                    "storageKey": null
-                  },
+                  (v5/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -228,6 +281,28 @@ return {
               }
             ],
             "storageKey": null
+          },
+          (v3/*:: as any*/),
+          (v4/*:: as any*/),
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Sport",
+            "kind": "LinkedField",
+            "name": "sport",
+            "plural": false,
+            "selections": (v7/*:: as any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Tournament",
+            "kind": "LinkedField",
+            "name": "tournament",
+            "plural": false,
+            "selections": (v7/*:: as any*/),
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -235,16 +310,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c8a0facc64fe702f53d083ab2378d539",
+    "cacheID": "21622271bded4aae87eb367aa099effb",
     "id": null,
     "metadata": {},
     "name": "RefetchBatcherQuery",
     "operationKind": "query",
-    "text": "query RefetchBatcherQuery(\n  $ids: [ID!]!\n) {\n  eventsByIds(ids: $ids) {\n    ...LiveEvent\n    id\n  }\n}\n\nfragment ListViewMarket on Market {\n  outcomes {\n    id\n    index\n    name\n    key\n    price\n  }\n}\n\nfragment ListViewMarkets on Event {\n  markets {\n    id\n    kind\n    ...ListViewMarket\n  }\n}\n\nfragment LiveEvent on Event {\n  id\n  homeCompetitor\n  awayCompetitor\n  homeScore\n  awayScore\n  tradingStatus\n  oddCount\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...ListViewMarkets\n}\n\nfragment LiveScore on Event {\n  homeScore\n  awayScore\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on Event {\n  period\n  clockRunning\n  clockElapsedSeconds\n  clockAnchorAt\n}\n"
+    "text": "query RefetchBatcherQuery(\n  $ids: [ID!]!\n) {\n  eventsByIds(ids: $ids) {\n    ...LiveEvent\n    ...LiveOrder\n    id\n  }\n}\n\nfragment ListViewMarket on Market {\n  outcomes {\n    id\n    index\n    name\n    key\n    price\n  }\n}\n\nfragment ListViewMarkets on Event {\n  markets {\n    id\n    kind\n    ...ListViewMarket\n  }\n}\n\nfragment LiveEvent on Event {\n  id\n  homeCompetitor\n  awayCompetitor\n  homeScore\n  awayScore\n  tradingStatus\n  oddCount\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...ListViewMarkets\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  status\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  homeScore\n  awayScore\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on Event {\n  period\n  clockRunning\n  clockElapsedSeconds\n  clockAnchorAt\n}\n"
   }
 };
 })();
 
-(node as any).hash = "f5a9b808f601041f743eec2264359357";
+(node as any).hash = "9ac8631e1ceaae8837582f854ec984d6";
 
 export default node;

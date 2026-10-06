@@ -10,6 +10,7 @@ import LiveHeaderQueryNode from '@/app/live/__generated__/LiveHeaderQuery.graphq
 import LiveEventSidebar from '@/app/live/event/[id]/live-event-sidebar'
 import LiveHeader, { LiveHeaderSkeleton } from '@/app/live/live-header'
 import { LiveSubscriptionsProvider } from '@/app/live/live-subscriptions'
+import { RefetchBatcherProvider } from '@/app/live/refetch-context'
 import BetslipSubscriptionNode, {
   type BetslipSubscription,
   type BetslipSubscription$data,
@@ -55,39 +56,41 @@ export default function LiveLayout({ children }: React.PropsWithChildren) {
 
   return (
     <LiveSubscriptionsProvider>
-      <div className='z-1 mx-auto min-h-screen w-full max-w-480 px-4 py-6 pb-24 sm:px-6 lg:px-8'>
-        <div
-          className={cn(
-            'grid grid-cols-1 gap-8',
-            eventId
-              ? 'xl:grid-cols-[16rem_minmax(auto,1fr)_20rem]'
-              : 'md:grid-cols-[minmax(auto,1fr)_20rem]'
-          )}
-        >
-          {eventId && <LiveEventSidebar eventId={eventId} />}
+      <RefetchBatcherProvider>
+        <div className='z-1 mx-auto min-h-screen w-full max-w-480 px-4 py-6 pb-24 sm:px-6 lg:px-8'>
+          <div
+            className={cn(
+              'grid grid-cols-1 gap-8',
+              eventId
+                ? 'xl:grid-cols-[16rem_minmax(auto,1fr)_20rem]'
+                : 'md:grid-cols-[minmax(auto,1fr)_20rem]'
+            )}
+          >
+            {eventId && <LiveEventSidebar eventId={eventId} />}
 
-          <div className='flex min-w-0 flex-col gap-4'>
-            <Suspense fallback={<LiveHeaderSkeleton />}>
-              {queryRef ? (
-                <LiveHeader queryRef={queryRef} eventId={eventId} />
-              ) : (
-                <LiveHeaderSkeleton />
-              )}
-            </Suspense>
-            {children}
-          </div>
+            <div className='flex min-w-0 flex-col gap-4'>
+              <Suspense fallback={<LiveHeaderSkeleton />}>
+                {queryRef ? (
+                  <LiveHeader queryRef={queryRef} eventId={eventId} />
+                ) : (
+                  <LiveHeaderSkeleton />
+                )}
+              </Suspense>
+              {children}
+            </div>
 
-          <div className='sticky top-26.25 hidden self-start xl:flex'>
-            <ErrorBoundary FallbackComponent={SectionErrorFallback}>
-              <Betslip query={betslip} />
-            </ErrorBoundary>
-          </div>
-          <div className='xl:hidden'>
-            <BetslipMobileBar query={betslip} />
-            <BetslipDrawer query={betslip} />
+            <div className='sticky top-26.25 hidden self-start xl:flex'>
+              <ErrorBoundary FallbackComponent={SectionErrorFallback}>
+                <Betslip query={betslip} />
+              </ErrorBoundary>
+            </div>
+            <div className='xl:hidden'>
+              <BetslipMobileBar query={betslip} />
+              <BetslipDrawer query={betslip} />
+            </div>
           </div>
         </div>
-      </div>
+      </RefetchBatcherProvider>
     </LiveSubscriptionsProvider>
   )
 }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<988045c24834d84de5e23b1028be5199>>
+ * @generated SignedSource<<923efe61c7e4c6979d433c07ec4042a5>>
  * @lightSyntaxTransform
  */
 
@@ -8,6 +8,7 @@
 // @ts-nocheck
 
 import { ReaderInlineDataFragment } from 'relay-runtime';
+export type EventStatus = "ABANDONED" | "CANCELLED" | "ENDED" | "LIVE" | "POSTPONED" | "SCHEDULED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type LiveOrder$data = {
   readonly id: string;
@@ -15,6 +16,7 @@ export type LiveOrder$data = {
     readonly key: string;
   };
   readonly startTime: string;
+  readonly status: EventStatus;
   readonly tournament: {
     readonly key: string;
   };
@@ -30,6 +32,6 @@ const node: ReaderInlineDataFragment = {
   "name": "LiveOrder"
 };
 
-(node as any).hash = "cf03fc0e66a28f2c302531c6bcba2dc8";
+(node as any).hash = "87ca26b091c82a7b5369c098671c255f";
 
 export default node;

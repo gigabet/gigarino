@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5e4b3046fa80d326f1a2a406dad426b0>>
+ * @generated SignedSource<<1a914e61f8a50db42c26be66a2de6696>>
  * @lightSyntaxTransform
  */
 
@@ -51,11 +51,18 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "status",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "key",
   "storageKey": null
 },
-v4 = [
-  (v3/*:: as any*/)
+v5 = [
+  (v4/*:: as any*/)
 ];
 return {
   "fragment": {
@@ -94,6 +101,7 @@ return {
                     "selections": [
                       (v1/*:: as any*/),
                       (v2/*:: as any*/),
+                      (v3/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -101,7 +109,7 @@ return {
                         "kind": "LinkedField",
                         "name": "sport",
                         "plural": false,
-                        "selections": (v4/*:: as any*/),
+                        "selections": (v5/*:: as any*/),
                         "storageKey": null
                       },
                       {
@@ -111,7 +119,7 @@ return {
                         "kind": "LinkedField",
                         "name": "tournament",
                         "plural": false,
-                        "selections": (v4/*:: as any*/),
+                        "selections": (v5/*:: as any*/),
                         "storageKey": null
                       }
                     ],
@@ -168,6 +176,7 @@ return {
                 "selections": [
                   (v1/*:: as any*/),
                   (v2/*:: as any*/),
+                  (v3/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -176,7 +185,7 @@ return {
                     "name": "sport",
                     "plural": false,
                     "selections": [
-                      (v3/*:: as any*/),
+                      (v4/*:: as any*/),
                       (v1/*:: as any*/),
                       {
                         "alias": null,
@@ -196,7 +205,7 @@ return {
                     "name": "tournament",
                     "plural": false,
                     "selections": [
-                      (v3/*:: as any*/),
+                      (v4/*:: as any*/),
                       (v1/*:: as any*/)
                     ],
                     "storageKey": null
@@ -206,13 +215,6 @@ return {
               }
             ],
             "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "totalCount",
-            "storageKey": null
           }
         ],
         "storageKey": "liveEvents(first:100)"
@@ -220,12 +222,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6f6f8c4af72cb54b5212735dd8f61e23",
+    "cacheID": "782ef77114cca33ca42423b978ef4a70",
     "id": null,
     "metadata": {},
     "name": "LiveHeaderQuery",
     "operationKind": "query",
-    "text": "query LiveHeaderQuery {\n  liveEvents(first: 100) {\n    edges {\n      node {\n        ...LiveOrder\n        id\n      }\n    }\n  }\n  ...LiveSportTabs\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveSportTabs on Query {\n  liveEvents(first: 100) {\n    totalCount\n    edges {\n      node {\n        sport {\n          key\n          name\n          id\n        }\n        id\n      }\n    }\n  }\n}\n"
+    "text": "query LiveHeaderQuery {\n  liveEvents(first: 100) {\n    edges {\n      node {\n        ...LiveOrder\n        id\n      }\n    }\n  }\n  ...LiveSportTabs\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  status\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveSportTabs on Query {\n  liveEvents(first: 100) {\n    edges {\n      node {\n        status\n        sport {\n          key\n          name\n          id\n        }\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();

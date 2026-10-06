@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ee8e0fa600c04b137e4deb7eab0b2695>>
+ * @generated SignedSource<<927bcdfeab9f19c03e0650573db2e51a>>
  * @lightSyntaxTransform
  */
 
@@ -8,6 +8,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type EventStatus = "ABANDONED" | "CANCELLED" | "ENDED" | "LIVE" | "POSTPONED" | "SCHEDULED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type LiveSportTabs$data = {
   readonly liveEvents: {
@@ -17,9 +18,9 @@ export type LiveSportTabs$data = {
           readonly key: string;
           readonly name: string;
         };
+        readonly status: EventStatus;
       };
     }>;
-    readonly totalCount: number;
   };
   readonly " $fragmentType": "LiveSportTabs";
 };
@@ -51,13 +52,6 @@ const node: ReaderFragment = {
         {
           "alias": null,
           "args": null,
-          "kind": "ScalarField",
-          "name": "totalCount",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
           "concreteType": "EventEdge",
           "kind": "LinkedField",
           "name": "edges",
@@ -71,6 +65,13 @@ const node: ReaderFragment = {
               "name": "node",
               "plural": false,
               "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "status",
+                  "storageKey": null
+                },
                 {
                   "alias": null,
                   "args": null,
@@ -110,6 +111,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "8e606aa341816459e1e4b780b47238ac";
+(node as any).hash = "bf86a4f78d4ff0bcf999bb03afa44f74";
 
 export default node;

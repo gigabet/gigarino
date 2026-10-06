@@ -4,14 +4,7 @@ import { createContext, useContext, useEffect, useMemo, useRef } from 'react'
 import { useRelayEnvironment } from 'react-relay'
 import { type Environment, fetchQuery, graphql } from 'relay-runtime'
 
-/**
- * How often we sweep the currently-mounted rows for a refresh. Kept coarse
- * on purpose: a live list can hold hundreds of rows on a busy weekend, and
- * per-row subscriptions (eventStateUpdated) at that scale would open
- * hundreds of concurrent SSE streams. Instead we batch every mounted id
- * into a single `eventsByIds` round trip.
- */
-const SWEEP_INTERVAL_MS = 3000
+const SWEEP_INTERVAL_MS = 30_000
 
 export function createRefetchBatcher(environment: Environment) {
   // ids currently mounted on screen (Virtuoso's rendered window + overscan).
@@ -28,7 +21,8 @@ export function createRefetchBatcher(environment: Environment) {
       graphql`
         query RefetchBatcherQuery($ids: [ID!]!) {
           eventsByIds(ids: $ids) {
-            ...LiveEvent @dangerously_unaliased_fixme
+            ...LiveEvent
+            ...LiveOrder
           }
         }
       `,
@@ -73,12 +67,8 @@ export function useRefetchBatcher() {
   return batcher
 }
 
-/** Registers this row's id with the batcher for as long as it's mounted. */
-export function useLiveRowRegistration(id: string) {
+export function useRefetchRegistration(id: string) {
   const batcher = useRefetchBatcher()
-  // guards against StrictMode's mount→unmount→mount dev double-invoke
-  // registering/unregistering the same id twice in a way that's still correct
-  // either way, since register/unregister are idempotent Set ops.
   const idRef = useRef(id)
   idRef.current = id
 

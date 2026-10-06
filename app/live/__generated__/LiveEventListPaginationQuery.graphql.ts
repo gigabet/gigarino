@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<37c41e10dfe6de26f6fbccd05bfd73dc>>
+ * @generated SignedSource<<863afa74b2dc1f461bba356fae0f27c0>>
  * @lightSyntaxTransform
  */
 
@@ -155,6 +155,13 @@ return {
                     "args": null,
                     "kind": "ScalarField",
                     "name": "startTime",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "status",
                     "storageKey": null
                   },
                   (v4/*:: as any*/),
@@ -387,12 +394,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "95c189166f6b875c0ea58777b1dfbe0e",
+    "cacheID": "134fa899ba10b8391eabda10451a01b7",
     "id": null,
     "metadata": {},
     "name": "LiveEventListPaginationQuery",
     "operationKind": "query",
-    "text": "query LiveEventListPaginationQuery(\n  $after: String\n  $first: Int = 20\n  $orderBy: LiveEventOrder = TOURNAMENT\n  $sport: String\n) {\n  ...LiveEventList_2dsFoV\n}\n\nfragment ListViewMarket on Market {\n  outcomes {\n    id\n    index\n    name\n    key\n    price\n  }\n}\n\nfragment ListViewMarkets on Event {\n  markets {\n    id\n    kind\n    ...ListViewMarket\n  }\n}\n\nfragment LiveEvent on Event {\n  id\n  homeCompetitor\n  awayCompetitor\n  homeScore\n  awayScore\n  tradingStatus\n  oddCount\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...ListViewMarkets\n}\n\nfragment LiveEventList_2dsFoV on Query {\n  liveEvents(first: $first, after: $after, orderBy: $orderBy, sport: $sport) {\n    edges {\n      node {\n        ...LiveOrder\n        ...LiveEvent\n        tournament {\n          ...LiveTournament\n          id\n        }\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  homeScore\n  awayScore\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on Event {\n  period\n  clockRunning\n  clockElapsedSeconds\n  clockAnchorAt\n}\n\nfragment LiveTournament on Tournament {\n  name\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n}\n"
+    "text": "query LiveEventListPaginationQuery(\n  $after: String\n  $first: Int = 20\n  $orderBy: LiveEventOrder = TOURNAMENT\n  $sport: String\n) {\n  ...LiveEventList_2dsFoV\n}\n\nfragment ListViewMarket on Market {\n  outcomes {\n    id\n    index\n    name\n    key\n    price\n  }\n}\n\nfragment ListViewMarkets on Event {\n  markets {\n    id\n    kind\n    ...ListViewMarket\n  }\n}\n\nfragment LiveEvent on Event {\n  id\n  homeCompetitor\n  awayCompetitor\n  homeScore\n  awayScore\n  tradingStatus\n  oddCount\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...ListViewMarkets\n}\n\nfragment LiveEventList_2dsFoV on Query {\n  liveEvents(first: $first, after: $after, orderBy: $orderBy, sport: $sport) {\n    edges {\n      node {\n        ...LiveOrder\n        ...LiveEvent\n        tournament {\n          ...LiveTournament\n          id\n        }\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  status\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  homeScore\n  awayScore\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on Event {\n  period\n  clockRunning\n  clockElapsedSeconds\n  clockAnchorAt\n}\n\nfragment LiveTournament on Tournament {\n  name\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n}\n"
   }
 };
 })();

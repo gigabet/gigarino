@@ -11,6 +11,7 @@ const orderFragment = graphql`
   fragment LiveOrder on Event @inline {
     id
     startTime
+    status
     sport {
       key
     }
@@ -19,6 +20,8 @@ const orderFragment = graphql`
     }
   }
 `
+
+const FINISHED = new Set(['ENDED', 'CANCELLED', 'ABANDONED', 'POSTPONED'])
 
 export type OrderedLiveEvent<T> = { id: string; event: T }
 
@@ -33,12 +36,13 @@ export function orderLiveEvents<T extends LiveOrder$key>(
       return {
         id: o.id,
         event,
+        status: o.status,
         sport: o.sport.key,
-        // tournament keys are only unique within a sport
         group: `${o.sport.key}:${o.tournament.key}`,
         start: Date.parse(o.startTime),
       }
     })
+    .filter(r => !FINISHED.has(r.status))
     .filter(r => !sportFilter || r.sport === sportFilter)
 
   const toOut = (r: (typeof rows)[number]): OrderedLiveEvent<T> => ({ id: r.id, event: r.event })
