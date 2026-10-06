@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d0b0ee4c0e0082558444f1bea302775b>>
+ * @generated SignedSource<<48a34b2c914284eca6530736d179851b>>
  * @lightSyntaxTransform
  */
 
@@ -10,12 +10,16 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type LiveEventList$data = {
-  readonly liveEvents: ReadonlyArray<{
-    readonly tournament: {
-      readonly " $fragmentSpreads": FragmentRefs<"LiveTournament">;
-    };
-    readonly " $fragmentSpreads": FragmentRefs<"LiveEvent" | "LiveOrder">;
-  }>;
+  readonly liveEvents: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly tournament: {
+          readonly " $fragmentSpreads": FragmentRefs<"LiveTournament">;
+        };
+        readonly " $fragmentSpreads": FragmentRefs<"LiveEvent" | "LiveOrder">;
+      };
+    }>;
+  };
   readonly " $fragmentType": "LiveEventList";
 };
 export type LiveEventList$key = {
@@ -23,8 +27,13 @@ export type LiveEventList$key = {
   readonly " $fragmentSpreads": FragmentRefs<"LiveEventList">;
 };
 
+import LiveEventListPaginationQuery_graphql from './LiveEventListPaginationQuery.graphql';
+
 const node: ReaderFragment = (function(){
 var v0 = [
+  "liveEvents"
+],
+v1 = [
   {
     "alias": null,
     "args": null,
@@ -34,78 +43,192 @@ var v0 = [
   }
 ];
 return {
-  "argumentDefinitions": [],
+  "argumentDefinitions": [
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "after"
+    },
+    {
+      "defaultValue": 20,
+      "kind": "LocalArgument",
+      "name": "first"
+    },
+    {
+      "defaultValue": "TOURNAMENT",
+      "kind": "LocalArgument",
+      "name": "orderBy"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "sport"
+    }
+  ],
   "kind": "Fragment",
-  "metadata": null,
+  "metadata": {
+    "connection": [
+      {
+        "count": "first",
+        "cursor": "after",
+        "direction": "forward",
+        "path": (v0/*:: as any*/)
+      }
+    ],
+    "refetch": {
+      "connection": {
+        "forward": {
+          "count": "first",
+          "cursor": "after"
+        },
+        "backward": null,
+        "path": (v0/*:: as any*/)
+      },
+      "fragmentPathInResult": [],
+      "operation": LiveEventListPaginationQuery_graphql
+    }
+  },
   "name": "LiveEventList",
   "selections": [
     {
-      "alias": null,
-      "args": null,
-      "concreteType": "LiveEvent",
+      "alias": "liveEvents",
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "orderBy",
+          "variableName": "orderBy"
+        },
+        {
+          "kind": "Variable",
+          "name": "sport",
+          "variableName": "sport"
+        }
+      ],
+      "concreteType": "EventConnection",
       "kind": "LinkedField",
-      "name": "liveEvents",
-      "plural": true,
+      "name": "__LiveEventList_liveEvents_connection",
+      "plural": false,
       "selections": [
         {
-          "kind": "InlineDataFragmentSpread",
-          "name": "LiveOrder",
+          "alias": null,
+          "args": null,
+          "concreteType": "EventEdge",
+          "kind": "LinkedField",
+          "name": "edges",
+          "plural": true,
           "selections": [
             {
               "alias": null,
               "args": null,
-              "kind": "ScalarField",
-              "name": "id",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "startTime",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "Sport",
+              "concreteType": "Event",
               "kind": "LinkedField",
-              "name": "sport",
+              "name": "node",
               "plural": false,
-              "selections": (v0/*:: as any*/),
+              "selections": [
+                {
+                  "kind": "InlineDataFragmentSpread",
+                  "name": "LiveOrder",
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "id",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "startTime",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "concreteType": "Sport",
+                      "kind": "LinkedField",
+                      "name": "sport",
+                      "plural": false,
+                      "selections": (v1/*:: as any*/),
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "concreteType": "Tournament",
+                      "kind": "LinkedField",
+                      "name": "tournament",
+                      "plural": false,
+                      "selections": (v1/*:: as any*/),
+                      "storageKey": null
+                    }
+                  ],
+                  "args": null,
+                  "argumentDefinitions": []
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "LiveEvent"
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "Tournament",
+                  "kind": "LinkedField",
+                  "name": "tournament",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "args": null,
+                      "kind": "FragmentSpread",
+                      "name": "LiveTournament"
+                    }
+                  ],
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
+                }
+              ],
               "storageKey": null
             },
             {
               "alias": null,
               "args": null,
-              "concreteType": "Tournament",
-              "kind": "LinkedField",
-              "name": "tournament",
-              "plural": false,
-              "selections": (v0/*:: as any*/),
+              "kind": "ScalarField",
+              "name": "cursor",
               "storageKey": null
             }
           ],
-          "args": null,
-          "argumentDefinitions": []
-        },
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "LiveEvent"
+          "storageKey": null
         },
         {
           "alias": null,
           "args": null,
-          "concreteType": "Tournament",
+          "concreteType": "PageInfo",
           "kind": "LinkedField",
-          "name": "tournament",
+          "name": "pageInfo",
           "plural": false,
           "selections": [
             {
+              "alias": null,
               "args": null,
-              "kind": "FragmentSpread",
-              "name": "LiveTournament"
+              "kind": "ScalarField",
+              "name": "endCursor",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "hasNextPage",
+              "storageKey": null
             }
           ],
           "storageKey": null
@@ -119,6 +242,6 @@ return {
 };
 })();
 
-(node as any).hash = "bfcde1eb528f7fa116d83fbd58587433";
+(node as any).hash = "5df45c58419787b890ebd94a5f98998b";
 
 export default node;

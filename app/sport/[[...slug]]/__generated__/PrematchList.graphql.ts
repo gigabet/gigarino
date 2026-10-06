@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9f232e5933001a47bbbbd8ef108448fd>>
+ * @generated SignedSource<<88b969d690276568b5757d422a55fef9>>
  * @lightSyntaxTransform
  */
 
@@ -14,6 +14,7 @@ export type PrematchList$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
+        readonly isLive: boolean;
         readonly " $fragmentSpreads": FragmentRefs<"PrematchEvent">;
       };
     }>;
@@ -199,12 +200,19 @@ return {
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "PrematchEvent",
+                  "concreteType": "Event",
                   "kind": "LinkedField",
                   "name": "node",
                   "plural": false,
                   "selections": [
                     (v0/*:: as any*/),
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "isLive",
+                      "storageKey": null
+                    },
                     {
                       "args": null,
                       "kind": "FragmentSpread",
@@ -227,6 +235,6 @@ return {
 };
 })();
 
-(node as any).hash = "4602f0a60e5b954a0c24ced3f1cfec7e";
+(node as any).hash = "6accf748dc22df42189c33e5a5856f26";
 
 export default node;

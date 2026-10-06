@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<095264bcb6b3f301ceadaf3dfaf8bcd5>>
+ * @generated SignedSource<<89b93c6547f51afeb7770f2547620167>>
  * @lightSyntaxTransform
  */
 
@@ -11,9 +11,13 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type LiveHeaderQuery$variables = Record<PropertyKey, never>;
 export type LiveHeaderQuery$data = {
-  readonly liveEvents: ReadonlyArray<{
-    readonly " $fragmentSpreads": FragmentRefs<"LiveOrder">;
-  }>;
+  readonly liveEvents: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly " $fragmentSpreads": FragmentRefs<"LiveOrder">;
+      };
+    }>;
+  };
   readonly " $fragmentSpreads": FragmentRefs<"LiveSportTabs">;
 };
 export type LiveHeaderQuery = {
@@ -22,29 +26,36 @@ export type LiveHeaderQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
+var v0 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 20
+  }
+],
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v1 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "startTime",
   "storageKey": null
 },
-v2 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "key",
   "storageKey": null
 },
-v3 = [
-  (v2/*:: as any*/)
+v4 = [
+  (v3/*:: as any*/)
 ];
 return {
   "fragment": {
@@ -55,44 +66,66 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": null,
-        "concreteType": "LiveEvent",
+        "args": (v0/*:: as any*/),
+        "concreteType": "EventConnection",
         "kind": "LinkedField",
         "name": "liveEvents",
-        "plural": true,
+        "plural": false,
         "selections": [
           {
-            "kind": "InlineDataFragmentSpread",
-            "name": "LiveOrder",
+            "alias": null,
+            "args": null,
+            "concreteType": "EventEdge",
+            "kind": "LinkedField",
+            "name": "edges",
+            "plural": true,
             "selections": [
-              (v0/*:: as any*/),
-              (v1/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "Sport",
+                "concreteType": "Event",
                 "kind": "LinkedField",
-                "name": "sport",
+                "name": "node",
                 "plural": false,
-                "selections": (v3/*:: as any*/),
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Tournament",
-                "kind": "LinkedField",
-                "name": "tournament",
-                "plural": false,
-                "selections": (v3/*:: as any*/),
+                "selections": [
+                  {
+                    "kind": "InlineDataFragmentSpread",
+                    "name": "LiveOrder",
+                    "selections": [
+                      (v1/*:: as any*/),
+                      (v2/*:: as any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Sport",
+                        "kind": "LinkedField",
+                        "name": "sport",
+                        "plural": false,
+                        "selections": (v4/*:: as any*/),
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Tournament",
+                        "kind": "LinkedField",
+                        "name": "tournament",
+                        "plural": false,
+                        "selections": (v4/*:: as any*/),
+                        "storageKey": null
+                      }
+                    ],
+                    "args": null,
+                    "argumentDefinitions": []
+                  }
+                ],
                 "storageKey": null
               }
             ],
-            "args": null,
-            "argumentDefinitions": []
+            "storageKey": null
           }
         ],
-        "storageKey": null
+        "storageKey": "liveEvents(first:20)"
       },
       {
         "args": null,
@@ -111,29 +144,64 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": null,
-        "concreteType": "LiveEvent",
+        "args": (v0/*:: as any*/),
+        "concreteType": "EventConnection",
         "kind": "LinkedField",
         "name": "liveEvents",
-        "plural": true,
+        "plural": false,
         "selections": [
-          (v0/*:: as any*/),
-          (v1/*:: as any*/),
           {
             "alias": null,
             "args": null,
-            "concreteType": "Sport",
+            "concreteType": "EventEdge",
             "kind": "LinkedField",
-            "name": "sport",
-            "plural": false,
+            "name": "edges",
+            "plural": true,
             "selections": [
-              (v2/*:: as any*/),
-              (v0/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "name",
+                "concreteType": "Event",
+                "kind": "LinkedField",
+                "name": "node",
+                "plural": false,
+                "selections": [
+                  (v1/*:: as any*/),
+                  (v2/*:: as any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Sport",
+                    "kind": "LinkedField",
+                    "name": "sport",
+                    "plural": false,
+                    "selections": [
+                      (v3/*:: as any*/),
+                      (v1/*:: as any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "name",
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Tournament",
+                    "kind": "LinkedField",
+                    "name": "tournament",
+                    "plural": false,
+                    "selections": [
+                      (v3/*:: as any*/),
+                      (v1/*:: as any*/)
+                    ],
+                    "storageKey": null
+                  }
+                ],
                 "storageKey": null
               }
             ],
@@ -142,32 +210,26 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "Tournament",
-            "kind": "LinkedField",
-            "name": "tournament",
-            "plural": false,
-            "selections": [
-              (v2/*:: as any*/),
-              (v0/*:: as any*/)
-            ],
+            "kind": "ScalarField",
+            "name": "totalCount",
             "storageKey": null
           }
         ],
-        "storageKey": null
+        "storageKey": "liveEvents(first:20)"
       }
     ]
   },
   "params": {
-    "cacheID": "8c25049bb090068a9c51f808ac49ac27",
+    "cacheID": "64549c84472728b0fa40dfda7c62dd5f",
     "id": null,
     "metadata": {},
     "name": "LiveHeaderQuery",
     "operationKind": "query",
-    "text": "query LiveHeaderQuery {\n  liveEvents {\n    ...LiveOrder\n    id\n  }\n  ...LiveSportTabs\n}\n\nfragment LiveOrder on LiveEvent {\n  id\n  startTime\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveSportTabs on Query {\n  liveEvents {\n    sport {\n      key\n      name\n      id\n    }\n    id\n  }\n}\n"
+    "text": "query LiveHeaderQuery {\n  liveEvents(first: 20) {\n    edges {\n      node {\n        ...LiveOrder\n        id\n      }\n    }\n  }\n  ...LiveSportTabs\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveSportTabs on Query {\n  liveEvents(first: 20) {\n    totalCount\n    edges {\n      node {\n        sport {\n          key\n          name\n          id\n        }\n        id\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "348cb1b1c6a1145b826d1446c95b4442";
+(node as any).hash = "14d8bdade0275ca3fd7d1096b5e2cc12";
 
 export default node;

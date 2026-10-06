@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a6f514ead0b37d94f5bc392cd05be6ab>>
+ * @generated SignedSource<<bf328569370ac7f368a136b950671cca>>
  * @lightSyntaxTransform
  */
 
@@ -10,12 +10,17 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type LiveSportTabs$data = {
-  readonly liveEvents: ReadonlyArray<{
-    readonly sport: {
-      readonly key: string;
-      readonly name: string;
-    };
-  }>;
+  readonly liveEvents: {
+    readonly edges: ReadonlyArray<{
+      readonly node: {
+        readonly sport: {
+          readonly key: string;
+          readonly name: string;
+        };
+      };
+    }>;
+    readonly totalCount: number;
+  };
   readonly " $fragmentType": "LiveSportTabs";
 };
 export type LiveSportTabs$key = {
@@ -31,45 +36,80 @@ const node: ReaderFragment = {
   "selections": [
     {
       "alias": null,
-      "args": null,
-      "concreteType": "LiveEvent",
+      "args": [
+        {
+          "kind": "Literal",
+          "name": "first",
+          "value": 20
+        }
+      ],
+      "concreteType": "EventConnection",
       "kind": "LinkedField",
       "name": "liveEvents",
-      "plural": true,
+      "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
-          "concreteType": "Sport",
+          "kind": "ScalarField",
+          "name": "totalCount",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "EventEdge",
           "kind": "LinkedField",
-          "name": "sport",
-          "plural": false,
+          "name": "edges",
+          "plural": true,
           "selections": [
             {
               "alias": null,
               "args": null,
-              "kind": "ScalarField",
-              "name": "key",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "name",
+              "concreteType": "Event",
+              "kind": "LinkedField",
+              "name": "node",
+              "plural": false,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "Sport",
+                  "kind": "LinkedField",
+                  "name": "sport",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "key",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "name",
+                      "storageKey": null
+                    }
+                  ],
+                  "storageKey": null
+                }
+              ],
               "storageKey": null
             }
           ],
           "storageKey": null
         }
       ],
-      "storageKey": null
+      "storageKey": "liveEvents(first:20)"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 
-(node as any).hash = "a3503ba41504962c0c129c359faaa6d9";
+(node as any).hash = "c9354ac70f7246890c224b1025226e21";
 
 export default node;

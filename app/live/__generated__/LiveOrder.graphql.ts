@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<09d972597410a487365bb62fb9f94f55>>
+ * @generated SignedSource<<988045c24834d84de5e23b1028be5199>>
  * @lightSyntaxTransform
  */
 
@@ -30,6 +30,6 @@ const node: ReaderInlineDataFragment = {
   "name": "LiveOrder"
 };
 
-(node as any).hash = "8c71151d89f7c27ab0ac6e3a049c2936";
+(node as any).hash = "cf03fc0e66a28f2c302531c6bcba2dc8";
 
 export default node;

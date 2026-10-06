@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bb7e2ae5a614658cd1734e7e39cb17b9>>
+ * @generated SignedSource<<37c41e10dfe6de26f6fbccd05bfd73dc>>
  * @lightSyntaxTransform
  */
 
@@ -10,22 +10,34 @@
 import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type LiveEventOrder = "START_TIME" | "TOURNAMENT" | "%future added value";
-export type LiveEventsQuery$variables = {
-  orderBy: LiveEventOrder;
+export type LiveEventListPaginationQuery$variables = {
+  after?: string | null | undefined;
+  first?: number | null | undefined;
+  orderBy?: LiveEventOrder | null | undefined;
   sport?: string | null | undefined;
 };
-export type LiveEventsQuery$data = {
+export type LiveEventListPaginationQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"LiveEventList">;
 };
-export type LiveEventsQuery = {
-  response: LiveEventsQuery$data;
-  variables: LiveEventsQuery$variables;
+export type LiveEventListPaginationQuery = {
+  response: LiveEventListPaginationQuery$data;
+  variables: LiveEventListPaginationQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
 var v0 = [
   {
     "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "after"
+  },
+  {
+    "defaultValue": 20,
+    "kind": "LocalArgument",
+    "name": "first"
+  },
+  {
+    "defaultValue": "TOURNAMENT",
     "kind": "LocalArgument",
     "name": "orderBy"
   },
@@ -35,40 +47,43 @@ var v0 = [
     "name": "sport"
   }
 ],
-v1 = {
-  "kind": "Variable",
-  "name": "orderBy",
-  "variableName": "orderBy"
-},
-v2 = {
-  "kind": "Variable",
-  "name": "sport",
-  "variableName": "sport"
-},
-v3 = [
+v1 = [
   {
-    "kind": "Literal",
-    "name": "first",
-    "value": 20
+    "kind": "Variable",
+    "name": "after",
+    "variableName": "after"
   },
-  (v1/*:: as any*/),
-  (v2/*:: as any*/)
+  {
+    "kind": "Variable",
+    "name": "first",
+    "variableName": "first"
+  },
+  {
+    "kind": "Variable",
+    "name": "orderBy",
+    "variableName": "orderBy"
+  },
+  {
+    "kind": "Variable",
+    "name": "sport",
+    "variableName": "sport"
+  }
 ],
-v4 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v5 = {
+v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "key",
   "storageKey": null
 },
-v6 = {
+v4 = {
   "alias": null,
   "args": null,
   "concreteType": "Sport",
@@ -76,12 +91,12 @@ v6 = {
   "name": "sport",
   "plural": false,
   "selections": [
-    (v5/*:: as any*/),
-    (v4/*:: as any*/)
+    (v3/*:: as any*/),
+    (v2/*:: as any*/)
   ],
   "storageKey": null
 },
-v7 = {
+v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -93,13 +108,10 @@ return {
     "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "LiveEventsQuery",
+    "name": "LiveEventListPaginationQuery",
     "selections": [
       {
-        "args": [
-          (v1/*:: as any*/),
-          (v2/*:: as any*/)
-        ],
+        "args": (v1/*:: as any*/),
         "kind": "FragmentSpread",
         "name": "LiveEventList"
       }
@@ -111,11 +123,11 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*:: as any*/),
     "kind": "Operation",
-    "name": "LiveEventsQuery",
+    "name": "LiveEventListPaginationQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v3/*:: as any*/),
+        "args": (v1/*:: as any*/),
         "concreteType": "EventConnection",
         "kind": "LinkedField",
         "name": "liveEvents",
@@ -137,7 +149,7 @@ return {
                 "name": "node",
                 "plural": false,
                 "selections": [
-                  (v4/*:: as any*/),
+                  (v2/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -145,7 +157,7 @@ return {
                     "name": "startTime",
                     "storageKey": null
                   },
-                  (v6/*:: as any*/),
+                  (v4/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -154,10 +166,10 @@ return {
                     "name": "tournament",
                     "plural": false,
                     "selections": [
+                      (v3/*:: as any*/),
+                      (v2/*:: as any*/),
                       (v5/*:: as any*/),
                       (v4/*:: as any*/),
-                      (v7/*:: as any*/),
-                      (v6/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -166,7 +178,7 @@ return {
                         "name": "category",
                         "plural": false,
                         "selections": [
-                          (v7/*:: as any*/),
+                          (v5/*:: as any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -174,7 +186,7 @@ return {
                             "name": "countryCode",
                             "storageKey": null
                           },
-                          (v4/*:: as any*/)
+                          (v2/*:: as any*/)
                         ],
                         "storageKey": null
                       }
@@ -273,7 +285,7 @@ return {
                     "name": "markets",
                     "plural": true,
                     "selections": [
-                      (v4/*:: as any*/),
+                      (v2/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -289,7 +301,7 @@ return {
                         "name": "outcomes",
                         "plural": true,
                         "selections": [
-                          (v4/*:: as any*/),
+                          (v2/*:: as any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -297,8 +309,8 @@ return {
                             "name": "index",
                             "storageKey": null
                           },
-                          (v7/*:: as any*/),
                           (v5/*:: as any*/),
+                          (v3/*:: as any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -362,7 +374,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v3/*:: as any*/),
+        "args": (v1/*:: as any*/),
         "filters": [
           "orderBy",
           "sport"
@@ -375,16 +387,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "730371681a4c09d34e3fdfd733210ebe",
+    "cacheID": "95c189166f6b875c0ea58777b1dfbe0e",
     "id": null,
     "metadata": {},
-    "name": "LiveEventsQuery",
+    "name": "LiveEventListPaginationQuery",
     "operationKind": "query",
-    "text": "query LiveEventsQuery(\n  $orderBy: LiveEventOrder!\n  $sport: String\n) {\n  ...LiveEventList_2NLrvA\n}\n\nfragment ListViewMarket on Market {\n  outcomes {\n    id\n    index\n    name\n    key\n    price\n  }\n}\n\nfragment ListViewMarkets on Event {\n  markets {\n    id\n    kind\n    ...ListViewMarket\n  }\n}\n\nfragment LiveEvent on Event {\n  id\n  homeCompetitor\n  awayCompetitor\n  homeScore\n  awayScore\n  tradingStatus\n  oddCount\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...ListViewMarkets\n}\n\nfragment LiveEventList_2NLrvA on Query {\n  liveEvents(first: 20, orderBy: $orderBy, sport: $sport) {\n    edges {\n      node {\n        ...LiveOrder\n        ...LiveEvent\n        tournament {\n          ...LiveTournament\n          id\n        }\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  homeScore\n  awayScore\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on Event {\n  period\n  clockRunning\n  clockElapsedSeconds\n  clockAnchorAt\n}\n\nfragment LiveTournament on Tournament {\n  name\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n}\n"
+    "text": "query LiveEventListPaginationQuery(\n  $after: String\n  $first: Int = 20\n  $orderBy: LiveEventOrder = TOURNAMENT\n  $sport: String\n) {\n  ...LiveEventList_2dsFoV\n}\n\nfragment ListViewMarket on Market {\n  outcomes {\n    id\n    index\n    name\n    key\n    price\n  }\n}\n\nfragment ListViewMarkets on Event {\n  markets {\n    id\n    kind\n    ...ListViewMarket\n  }\n}\n\nfragment LiveEvent on Event {\n  id\n  homeCompetitor\n  awayCompetitor\n  homeScore\n  awayScore\n  tradingStatus\n  oddCount\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...ListViewMarkets\n}\n\nfragment LiveEventList_2dsFoV on Query {\n  liveEvents(first: $first, after: $after, orderBy: $orderBy, sport: $sport) {\n    edges {\n      node {\n        ...LiveOrder\n        ...LiveEvent\n        tournament {\n          ...LiveTournament\n          id\n        }\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  homeScore\n  awayScore\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on Event {\n  period\n  clockRunning\n  clockElapsedSeconds\n  clockAnchorAt\n}\n\nfragment LiveTournament on Tournament {\n  name\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "590dee14650cda2a03da7edf1d8dac06";
+(node as any).hash = "5df45c58419787b890ebd94a5f98998b";
 
 export default node;

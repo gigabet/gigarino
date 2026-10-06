@@ -8,10 +8,12 @@ import type { LiveEventsQuery } from '@/app/live/__generated__/LiveEventsQuery.g
 import LiveEventList, { LiveListSkeleton } from '@/app/live/live-event-list'
 import { liveSortState, liveSportFilterState } from '@/app/live/live-state'
 
+const ORDER = { tournament: 'TOURNAMENT', chronological: 'START_TIME' } as const
+
 export default function LivePage() {
-  const [queryRef, loadQuery] = useQueryLoader<LiveEventsQuery>(graphql`
-    query LiveEventsQuery {
-      ...LiveEventList
+  const [queryRef, loadQuery, disposeQuery] = useQueryLoader<LiveEventsQuery>(graphql`
+    query LiveEventsQuery($orderBy: LiveEventOrder!, $sport: String) {
+      ...LiveEventList @arguments(orderBy: $orderBy, sport: $sport)
     }
   `)
 
@@ -19,17 +21,15 @@ export default function LivePage() {
   const sportFilter = useAtomValue(liveSportFilterState)
 
   useEffect(() => {
-    loadQuery({}, { fetchPolicy: 'store-or-network' })
-  }, [loadQuery])
+    loadQuery({ orderBy: ORDER[sort], sport: sportFilter }, { fetchPolicy: 'store-or-network' })
+  }, [loadQuery, sort, sportFilter])
+
+  useEffect(() => () => disposeQuery(), [disposeQuery])
 
   return (
     <main className='flex min-w-0 flex-col gap-4'>
       <Suspense fallback={<LiveListSkeleton />}>
-        {queryRef ? (
-          <LiveEventList queryRef={queryRef} sort={sort} sportFilter={sportFilter} />
-        ) : (
-          <LiveListSkeleton />
-        )}
+        {queryRef ? <LiveEventList queryRef={queryRef} sort={sort} /> : <LiveListSkeleton />}
       </Suspense>
     </main>
   )

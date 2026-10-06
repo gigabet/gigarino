@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3cc8a1ddfd34419fe7770967adbba555>>
+ * @generated SignedSource<<98c2516543df5db48feaa26791bc00c2>>
  * @lightSyntaxTransform
  */
 
@@ -95,12 +95,19 @@ v5 = {
     {
       "alias": null,
       "args": null,
-      "concreteType": "PrematchEvent",
+      "concreteType": "Event",
       "kind": "LinkedField",
       "name": "node",
       "plural": false,
       "selections": [
         (v2/*:: as any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "isLive",
+          "storageKey": null
+        },
         {
           "alias": null,
           "args": null,
@@ -149,14 +156,27 @@ v5 = {
           "label": "PrematchEvent$defer$ListViewMarkets",
           "selections": [
             {
-              "kind": "InlineFragment",
+              "alias": null,
+              "args": null,
+              "concreteType": "Market",
+              "kind": "LinkedField",
+              "name": "markets",
+              "plural": true,
               "selections": [
+                (v2/*:: as any*/),
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "Market",
+                  "kind": "ScalarField",
+                  "name": "kind",
+                  "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": "Outcome",
                   "kind": "LinkedField",
-                  "name": "markets",
+                  "name": "outcomes",
                   "plural": true,
                   "selections": [
                     (v2/*:: as any*/),
@@ -164,43 +184,23 @@ v5 = {
                       "alias": null,
                       "args": null,
                       "kind": "ScalarField",
-                      "name": "kind",
+                      "name": "index",
                       "storageKey": null
                     },
+                    (v4/*:: as any*/),
+                    (v3/*:: as any*/),
                     {
                       "alias": null,
                       "args": null,
-                      "concreteType": "Outcome",
-                      "kind": "LinkedField",
-                      "name": "outcomes",
-                      "plural": true,
-                      "selections": [
-                        (v2/*:: as any*/),
-                        {
-                          "alias": null,
-                          "args": null,
-                          "kind": "ScalarField",
-                          "name": "index",
-                          "storageKey": null
-                        },
-                        (v4/*:: as any*/),
-                        (v3/*:: as any*/),
-                        {
-                          "alias": null,
-                          "args": null,
-                          "kind": "ScalarField",
-                          "name": "price",
-                          "storageKey": null
-                        }
-                      ],
+                      "kind": "ScalarField",
+                      "name": "price",
                       "storageKey": null
                     }
                   ],
                   "storageKey": null
                 }
               ],
-              "type": "Event",
-              "abstractKey": "__isEvent"
+              "storageKey": null
             }
           ]
         }
@@ -419,16 +419,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "70f10281b2d38cffa863094b8dc9526e",
+    "cacheID": "a627b557805033ae1f4a91d5a91b89c9",
     "id": null,
     "metadata": {},
     "name": "PrematchListRefetch",
     "operationKind": "query",
-    "text": "query PrematchListRefetch(\n  $eventCount: Int\n  $filterActive: Boolean!\n  $hasAny: Boolean!\n  $hasSearch: Boolean!\n  $search: String\n  $tournamentKeys: [String!]!\n) {\n  ...PrematchList_kbUTV\n}\n\nfragment ListViewMarket on Market {\n  outcomes {\n    id\n    index\n    name\n    key\n    price\n  }\n}\n\nfragment ListViewMarkets on Event {\n  __isEvent: __typename\n  markets {\n    id\n    kind\n    ...ListViewMarket\n  }\n}\n\nfragment PrematchEvent on PrematchEvent {\n  id\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  oddCount\n  ...ListViewMarkets @defer(label: \"PrematchEvent$defer$ListViewMarkets\")\n}\n\nfragment PrematchList_kbUTV on Query {\n  topTournaments(first: 4) @skip(if: $hasAny) @stream(label: \"PrematchList$stream$topTournaments_3z2gQm\", initialCount: 1) {\n    id\n    ...Tournament\n  }\n  tournaments(keys: $tournamentKeys) @include(if: $filterActive) @skip(if: $hasSearch) @stream(label: \"PrematchList$stream$tournaments_1FDLHx\", initialCount: 1) {\n    id\n    ...Tournament\n  }\n  searchResults: events(search: $search, first: 20) @include(if: $hasSearch) {\n    totalCount\n    edges {\n      node {\n        id\n        ...PrematchEvent\n      }\n    }\n  }\n}\n\nfragment Tournament on Tournament {\n  id\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n  name\n  ...TournamentEventList @defer(label: \"Tournament$defer$TournamentEventList\")\n}\n\nfragment TournamentEventList on Tournament {\n  events(first: $eventCount) {\n    edges {\n      node {\n        id\n        ...PrematchEvent\n      }\n    }\n  }\n}\n"
+    "text": "query PrematchListRefetch(\n  $eventCount: Int\n  $filterActive: Boolean!\n  $hasAny: Boolean!\n  $hasSearch: Boolean!\n  $search: String\n  $tournamentKeys: [String!]!\n) {\n  ...PrematchList_kbUTV\n}\n\nfragment ListViewMarket on Market {\n  outcomes {\n    id\n    index\n    name\n    key\n    price\n  }\n}\n\nfragment ListViewMarkets on Event {\n  markets {\n    id\n    kind\n    ...ListViewMarket\n  }\n}\n\nfragment PrematchEvent on Event {\n  id\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  oddCount\n  ...ListViewMarkets @defer(label: \"PrematchEvent$defer$ListViewMarkets\")\n}\n\nfragment PrematchList_kbUTV on Query {\n  topTournaments(first: 4) @skip(if: $hasAny) @stream(label: \"PrematchList$stream$topTournaments_3z2gQm\", initialCount: 1) {\n    id\n    ...Tournament\n  }\n  tournaments(keys: $tournamentKeys) @include(if: $filterActive) @skip(if: $hasSearch) @stream(label: \"PrematchList$stream$tournaments_1FDLHx\", initialCount: 1) {\n    id\n    ...Tournament\n  }\n  searchResults: events(search: $search, first: 20) @include(if: $hasSearch) {\n    totalCount\n    edges {\n      node {\n        id\n        isLive\n        ...PrematchEvent\n      }\n    }\n  }\n}\n\nfragment Tournament on Tournament {\n  id\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n  name\n  ...TournamentEventList @defer(label: \"Tournament$defer$TournamentEventList\")\n}\n\nfragment TournamentEventList on Tournament {\n  events(first: $eventCount) {\n    edges {\n      node {\n        id\n        isLive\n        ...PrematchEvent\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "4602f0a60e5b954a0c24ced3f1cfec7e";
+(node as any).hash = "6accf748dc22df42189c33e5a5856f26";
 
 export default node;

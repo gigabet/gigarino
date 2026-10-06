@@ -1,14 +1,14 @@
 'use client'
 
+import { useAtom } from 'jotai'
+import { useRouter } from 'next/navigation'
+import { type PreloadedQuery, usePreloadedQuery } from 'react-relay'
 import type { LiveHeaderQuery } from '@/app/live/__generated__/LiveHeaderQuery.graphql'
 import LiveHeaderQueryNode from '@/app/live/__generated__/LiveHeaderQuery.graphql'
 import LiveSportTabs from '@/app/live/live-sport-tabs'
 import { liveSortState, liveSportFilterState, orderLiveEvents } from '@/app/live/live-state'
 import LiveToolbar, { type LiveView } from '@/app/live/live-toolbar'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useAtom } from 'jotai'
-import { useRouter } from 'next/navigation'
-import { usePreloadedQuery, type PreloadedQuery } from 'react-relay'
 
 export default function LiveHeaderContent(props: {
   queryRef: PreloadedQuery<LiveHeaderQuery>
@@ -20,16 +20,18 @@ export default function LiveHeaderContent(props: {
   const [sort, setSort] = useAtom(liveSortState)
   const [sportFilter, setSportFilter] = useAtom(liveSportFilterState)
 
+  const liveEvents = data.liveEvents.edges.map(e => e.node)
+
   const handleView = (view: LiveView) => {
     if (view === 'list') return router.push('/live')
-    const first = orderLiveEvents(data.liveEvents, sort, sportFilter).events[0]
+    const first = orderLiveEvents(liveEvents, sort, sportFilter).events[0]
     if (first) router.push(`/live/event/${first.id}`)
   }
 
   const handleSport = (sport: string | null) => {
     setSportFilter(sport)
     if (!props.eventId) return
-    const next = orderLiveEvents(data.liveEvents, sort, sport).events
+    const next = orderLiveEvents(liveEvents, sort, sport === null ? null : sport).events
     if (!next.some(e => e.id === props.eventId))
       router.replace(next[0] ? `/live/event/${next[0].id}` : '/live')
   }

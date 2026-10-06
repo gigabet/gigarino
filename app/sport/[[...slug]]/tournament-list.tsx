@@ -65,6 +65,7 @@ export default function TournamentList(props: { queryRef: PreloadedQuery<Prematc
           edges {
             node {
               id
+              isLive
               ...PrematchEvent
             }
           }
@@ -128,7 +129,7 @@ export default function TournamentList(props: { queryRef: PreloadedQuery<Prematc
         <SearchResults
           query={search}
           totalCount={data.searchResults?.totalCount}
-          events={data.searchResults?.edges.map(e => e.node)}
+          events={data.searchResults?.edges.filter(e => !e.node.isLive).map(e => e.node)}
         />
       ) : (
         <>

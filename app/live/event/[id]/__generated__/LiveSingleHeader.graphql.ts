@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7607b4ceb9ada8803c1181492c5b5cd3>>
+ * @generated SignedSource<<c406059a5f726f7a4c68ca0ca17cbb0c>>
  * @lightSyntaxTransform
  */
 
@@ -95,11 +95,11 @@ return {
       "storageKey": null
     }
   ],
-  "type": "LiveEvent",
+  "type": "Event",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "7e129b967c57bc3c61c230e64457ab7b";
+(node as any).hash = "3c6088f3816cb67081b622bd6b2f1a84";
 
 export default node;

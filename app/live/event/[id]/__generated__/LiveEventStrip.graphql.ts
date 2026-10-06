@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<27a6555cde2ff02c65eb5de36b21fe85>>
+ * @generated SignedSource<<7cd2943ed12e5276259a04f3c10d9e52>>
  * @lightSyntaxTransform
  */
 
@@ -62,10 +62,10 @@ const node: ReaderFragment = {
       "name": "LiveStripOdds"
     }
   ],
-  "type": "LiveEvent",
+  "type": "Event",
   "abstractKey": null
 };
 
-(node as any).hash = "7972e460454e09b5624c835c61a930b5";
+(node as any).hash = "a81427eeb62671ab49b228c9335350b3";
 
 export default node;

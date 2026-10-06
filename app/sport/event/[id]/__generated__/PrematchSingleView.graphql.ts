@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a29640505c674f0b39a74059d0492272>>
+ * @generated SignedSource<<ea0dc2e8d532d3a597ce22654b7f4470>>
  * @lightSyntaxTransform
  */
 
@@ -69,10 +69,10 @@ const node: ReaderFragment = {
       ]
     }
   ],
-  "type": "PrematchEvent",
+  "type": "Event",
   "abstractKey": null
 };
 
-(node as any).hash = "11c36696099103c43645be1a3586642d";
+(node as any).hash = "d2d83fa6595c5316a766d64282fc1e98";
 
 export default node;

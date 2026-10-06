@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0e8f5b8697c3c502abdb5a4ed277dcc6>>
+ * @generated SignedSource<<8acf63e32e09ccd17aa3706ea794f8db>>
  * @lightSyntaxTransform
  */
 
@@ -104,11 +104,11 @@ return {
       "storageKey": "markets(groups:[\"MAIN\"])"
     }
   ],
-  "type": "PrematchEvent",
+  "type": "Event",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "a130bbb6683adde2eb0041ead8c5271e";
+(node as any).hash = "cd92a05490caa3823d62b33bfcdbf280";
 
 export default node;

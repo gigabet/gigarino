@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5c2a9c6e975891a69ae060298412b738>>
+ * @generated SignedSource<<92e9c5de0fbb64ab7f9816045b289509>>
  * @lightSyntaxTransform
  */
 
@@ -83,7 +83,7 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "LiveEvent",
+            "concreteType": "Event",
             "kind": "LinkedField",
             "name": "event",
             "plural": false,
@@ -128,7 +128,7 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "LiveEvent",
+            "concreteType": "Event",
             "kind": "LinkedField",
             "name": "event",
             "plural": false,
@@ -187,12 +187,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "769f5978eaee290c6f71448fea59748b",
+    "cacheID": "972256618edcc621bbc9240bdd5d4519",
     "id": null,
     "metadata": {},
     "name": "LiveStateSubscription",
     "operationKind": "subscription",
-    "text": "subscription LiveStateSubscription(\n  $eventIds: [ID!]!\n) {\n  eventStateUpdated(eventIds: $eventIds) {\n    event {\n      id\n      status\n      tradingStatus\n      ...LiveScore\n      ...LiveTime\n    }\n  }\n}\n\nfragment LiveScore on LiveEvent {\n  homeScore\n  awayScore\n}\n\nfragment LiveTime on LiveEvent {\n  period\n  clockRunning\n  clockElapsedSeconds\n  clockAnchorAt\n}\n"
+    "text": "subscription LiveStateSubscription(\n  $eventIds: [ID!]!\n) {\n  eventStateUpdated(eventIds: $eventIds) {\n    event {\n      id\n      status\n      tradingStatus\n      ...LiveScore\n      ...LiveTime\n    }\n  }\n}\n\nfragment LiveScore on Event {\n  homeScore\n  awayScore\n}\n\nfragment LiveTime on Event {\n  period\n  clockRunning\n  clockElapsedSeconds\n  clockAnchorAt\n}\n"
   }
 };
 })();

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<37640267b5b49ce127e443abc9f60b5e>>
+ * @generated SignedSource<<7e6cdf3fadb4ac1b20d455a015ea0cbc>>
  * @lightSyntaxTransform
  */
 
@@ -56,10 +56,10 @@ const node: ReaderFragment = {
       "storageKey": null
     }
   ],
-  "type": "LiveEvent",
+  "type": "Event",
   "abstractKey": null
 };
 
-(node as any).hash = "6ce011388cef3ba6c3b3ca9d38dff9fd";
+(node as any).hash = "0b71fcebbec839036b2eb9681e806afe";
 
 export default node;

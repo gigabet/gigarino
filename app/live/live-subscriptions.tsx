@@ -68,7 +68,9 @@ function createLiveSubscriptions(environment: Environment) {
               onError,
             }),
           ]
-    previous.forEach(d => d.dispose())
+    previous.forEach(d => {
+      d.dispose()
+    })
   }
 
   const schedule = () => {
@@ -90,7 +92,9 @@ function createLiveSubscriptions(environment: Environment) {
     // keeps refs so a StrictMode remount re-registers cleanly
     dispose() {
       clearTimeout(timer)
-      active.forEach(d => d.dispose())
+      active.forEach(d => {
+        d.dispose()
+      })
       active = []
       subscribedKey = ''
     },

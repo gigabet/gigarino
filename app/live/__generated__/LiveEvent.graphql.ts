@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<85d5dc5dd3ba136031f3f2870680b44b>>
+ * @generated SignedSource<<e48ccc5be28f12054c3cfa2ec10dc536>>
  * @lightSyntaxTransform
  */
 
@@ -102,10 +102,10 @@ const node: ReaderFragment = {
       "name": "ListViewMarkets"
     }
   ],
-  "type": "LiveEvent",
+  "type": "Event",
   "abstractKey": null
 };
 
-(node as any).hash = "3ce4d526f17372f0eb138153032f1ea3";
+(node as any).hash = "9f8a04708d8f1f24a5ad88e8247416c8";
 
 export default node;

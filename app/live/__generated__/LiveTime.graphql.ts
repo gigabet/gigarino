@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3ee0c304422d175617cb7c98736eca86>>
+ * @generated SignedSource<<6b713efcdf710b0d8571ee37115e343f>>
  * @lightSyntaxTransform
  */
 
@@ -8,7 +8,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type MatchPeriod = "BREAK" | "EXTRA_TIME" | "FIRST_HALF" | "FIRST_PERIOD" | "HALF_TIME" | "PENALTIES" | "SECOND_HALF" | "SECOND_PERIOD" | "THIRD_PERIOD" | "%future added value";
+export type MatchPeriod = "BREAK" | "EXTRA_TIME" | "FIFTH_SET" | "FIRST_HALF" | "FIRST_PERIOD" | "FIRST_SET" | "FOURTH_PERIOD" | "FOURTH_SET" | "HALF_TIME" | "OVERTIME" | "PENALTIES" | "SECOND_HALF" | "SECOND_PERIOD" | "SECOND_SET" | "THIRD_PERIOD" | "THIRD_SET" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type LiveTime$data = {
   readonly clockAnchorAt: string | null | undefined;
@@ -57,10 +57,10 @@ const node: ReaderFragment = {
       "storageKey": null
     }
   ],
-  "type": "LiveEvent",
+  "type": "Event",
   "abstractKey": null
 };
 
-(node as any).hash = "2676cc59a3e07d8b0516f5baf8e2caff";
+(node as any).hash = "41a858de38f900c0aff0cdc43f0447ce";
 
 export default node;

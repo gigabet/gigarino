@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<81a6428cb03147b3e39b7a53d7e8c5d8>>
+ * @generated SignedSource<<192d0c8afc927e23aef4ca40f5b1be2b>>
  * @lightSyntaxTransform
  */
 
@@ -60,7 +60,7 @@ const node: ReaderFragment = {
     }
   ],
   "type": "Event",
-  "abstractKey": "__isEvent"
+  "abstractKey": null
 };
 
 (node as any).hash = "3bab0d46874caa713f2022feaebb9f8d";

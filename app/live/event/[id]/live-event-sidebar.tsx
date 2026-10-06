@@ -28,11 +28,15 @@ function LiveEventSidebarContent(props: { eventId: string }) {
   const data = useLazyLoadQuery<LiveEventSidebarQuery>(
     graphql`
       query LiveEventSidebarQuery {
-        liveEvents {
-          ...LiveOrder
-          ...LiveEventStrip
-          tournament {
-            ...LiveStripTournament
+        liveEvents(first: 20) {
+          edges {
+            node {
+              ...LiveOrder
+              ...LiveEventStrip
+              tournament {
+                ...LiveStripTournament
+              }
+            }
           }
         }
       }
@@ -45,7 +49,12 @@ function LiveEventSidebarContent(props: { eventId: string }) {
   const sportFilter = useAtomValue(liveSportFilterState)
 
   const { events, groups } = useMemo(
-    () => orderLiveEvents(data.liveEvents, sort, sportFilter),
+    () =>
+      orderLiveEvents(
+        data.liveEvents.edges.map(e => e.node),
+        sort,
+        sportFilter
+      ),
     [data.liveEvents, sort, sportFilter]
   )
   const initialIndex = Math.max(

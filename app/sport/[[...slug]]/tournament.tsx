@@ -118,6 +118,7 @@ function EventList(props: { tournament: TournamentEventList$key }) {
           edges {
             node {
               id
+              isLive
               ...PrematchEvent
             }
           }
@@ -129,9 +130,11 @@ function EventList(props: { tournament: TournamentEventList$key }) {
 
   return (
     <div className='flex flex-col gap-3' suppressHydrationWarning>
-      {data?.events?.edges.map(edge => (
-        <PrematchEvent key={edge.node.id} node={edge.node} />
-      ))}
+      {data?.events?.edges
+        .filter(edge => !edge.node.isLive)
+        .map(edge => (
+          <PrematchEvent key={edge.node.id} node={edge.node} />
+        ))}
     </div>
   )
 }

@@ -5,18 +5,18 @@ import { usePathname } from 'next/navigation'
 import { Suspense, useEffect, useMemo, useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { graphql, requestSubscription, useQueryLoader, useRelayEnvironment } from 'react-relay'
+import type { LiveHeaderQuery } from '@/app/live/__generated__/LiveHeaderQuery.graphql'
+import LiveEventSidebar from '@/app/live/event/[id]/live-event-sidebar'
+import LiveHeader, { LiveHeaderSkeleton } from '@/app/live/live-header'
+import { LiveSubscriptionsProvider } from '@/app/live/live-subscriptions'
 import BetslipSubscriptionNode, {
   type BetslipSubscription,
   type BetslipSubscription$data,
 } from '@/app/sport/__generated__/BetslipSubscription.graphql'
-import LiveEventSidebar from '@/app/live/event/[id]/live-event-sidebar'
-import LiveHeader, { LiveHeaderSkeleton } from '@/app/live/live-header'
-import { LiveSubscriptionsProvider } from '@/app/live/live-subscriptions'
 import Betslip, { BetslipDrawer, BetslipMobileBar } from '@/components/betslip'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { betslipInputAtom } from '@/context/betslip'
 import { cn } from '@/lib/utils'
-import type { LiveHeaderQuery } from '@/app/live/__generated__/LiveHeaderQuery.graphql'
 
 export default function LiveLayout({ children }: React.PropsWithChildren) {
   const pathname = usePathname()
@@ -48,8 +48,12 @@ export default function LiveLayout({ children }: React.PropsWithChildren) {
 
   const [queryRef, loadQuery] = useQueryLoader<LiveHeaderQuery>(graphql`
     query LiveHeaderQuery {
-      liveEvents {
-        ...LiveOrder
+      liveEvents(first: 20) {
+        edges {
+          node {
+            ...LiveOrder
+          }
+        }
       }
       ...LiveSportTabs
     }

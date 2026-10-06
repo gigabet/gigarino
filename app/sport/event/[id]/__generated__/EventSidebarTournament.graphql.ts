@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<22a0cf08d17989d30ba709578c10cc23>>
+ * @generated SignedSource<<9dcb94b01cfe134bd689100bb82f5e08>>
  * @lightSyntaxTransform
  */
 
@@ -100,7 +100,7 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": "PrematchEvent",
+              "concreteType": "Event",
               "kind": "LinkedField",
               "name": "node",
               "plural": false,

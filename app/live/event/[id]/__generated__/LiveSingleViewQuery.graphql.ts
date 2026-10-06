@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<83c1bf8b687717b6021fc53249679566>>
+ * @generated SignedSource<<25eb441d1045d731590e886ba899cbdc>>
  * @lightSyntaxTransform
  */
 
@@ -41,14 +41,14 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "key",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "key",
+  "name": "id",
   "storageKey": null
 },
 v4 = {
@@ -82,7 +82,7 @@ return {
       {
         "alias": null,
         "args": (v1/*:: as any*/),
-        "concreteType": null,
+        "concreteType": "Event",
         "kind": "LinkedField",
         "name": "event",
         "plural": false,
@@ -108,7 +108,7 @@ return {
       {
         "alias": null,
         "args": (v1/*:: as any*/),
-        "concreteType": null,
+        "concreteType": "Event",
         "kind": "LinkedField",
         "name": "event",
         "plural": false,
@@ -117,191 +117,163 @@ return {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "__typename",
+            "name": "homeCompetitor",
             "storageKey": null
           },
-          (v2/*:: as any*/),
           {
-            "kind": "InlineFragment",
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "awayCompetitor",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "startTime",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Sport",
+            "kind": "LinkedField",
+            "name": "sport",
+            "plural": false,
+            "selections": [
+              (v2/*:: as any*/),
+              (v3/*:: as any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Tournament",
+            "kind": "LinkedField",
+            "name": "tournament",
+            "plural": false,
+            "selections": [
+              (v2/*:: as any*/),
+              (v4/*:: as any*/),
+              (v3/*:: as any*/)
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Category",
+            "kind": "LinkedField",
+            "name": "category",
+            "plural": false,
+            "selections": [
+              (v4/*:: as any*/),
+              (v3/*:: as any*/)
+            ],
+            "storageKey": null
+          },
+          (v5/*:: as any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "tradingStatus",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "homeScore",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "awayScore",
+            "storageKey": null
+          },
+          {
+            "if": null,
+            "kind": "Defer",
+            "label": "LiveSingleView$defer$MarketGroups",
             "selections": [
               {
                 "alias": null,
                 "args": null,
-                "kind": "ScalarField",
-                "name": "homeCompetitor",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "awayCompetitor",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "startTime",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Sport",
+                "concreteType": "Market",
                 "kind": "LinkedField",
-                "name": "sport",
-                "plural": false,
+                "name": "markets",
+                "plural": true,
                 "selections": [
                   (v3/*:: as any*/),
-                  (v2/*:: as any*/)
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Tournament",
-                "kind": "LinkedField",
-                "name": "tournament",
-                "plural": false,
-                "selections": [
-                  (v3/*:: as any*/),
-                  (v4/*:: as any*/),
-                  (v2/*:: as any*/)
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Category",
-                "kind": "LinkedField",
-                "name": "category",
-                "plural": false,
-                "selections": [
-                  (v4/*:: as any*/),
-                  (v2/*:: as any*/)
-                ],
-                "storageKey": null
-              },
-              (v5/*:: as any*/),
-              {
-                "kind": "InlineFragment",
-                "selections": [
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "tradingStatus",
+                    "name": "groups",
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "homeScore",
+                    "name": "kind",
                     "storageKey": null
                   },
+                  (v6/*:: as any*/),
+                  (v4/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "awayScore",
+                    "name": "line",
                     "storageKey": null
-                  }
-                ],
-                "type": "Event",
-                "abstractKey": "__isEvent"
-              },
-              {
-                "if": null,
-                "kind": "Defer",
-                "label": "LiveSingleView$defer$MarketGroups",
-                "selections": [
+                  },
+                  (v5/*:: as any*/),
                   {
-                    "kind": "InlineFragment",
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Outcome",
+                    "kind": "LinkedField",
+                    "name": "outcomes",
+                    "plural": true,
                     "selections": [
+                      (v3/*:: as any*/),
+                      (v6/*:: as any*/),
+                      (v4/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "Market",
-                        "kind": "LinkedField",
-                        "name": "markets",
-                        "plural": true,
-                        "selections": [
-                          (v2/*:: as any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "groups",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "kind",
-                            "storageKey": null
-                          },
-                          (v6/*:: as any*/),
-                          (v4/*:: as any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "line",
-                            "storageKey": null
-                          },
-                          (v5/*:: as any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "Outcome",
-                            "kind": "LinkedField",
-                            "name": "outcomes",
-                            "plural": true,
-                            "selections": [
-                              (v2/*:: as any*/),
-                              (v6/*:: as any*/),
-                              (v4/*:: as any*/),
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "price",
-                                "storageKey": null
-                              },
-                              (v5/*:: as any*/)
-                            ],
-                            "storageKey": null
-                          }
-                        ],
+                        "kind": "ScalarField",
+                        "name": "price",
                         "storageKey": null
-                      }
+                      },
+                      (v5/*:: as any*/)
                     ],
-                    "type": "Event",
-                    "abstractKey": "__isEvent"
+                    "storageKey": null
                   }
-                ]
+                ],
+                "storageKey": null
               }
-            ],
-            "type": "LiveEvent",
-            "abstractKey": null
-          }
+            ]
+          },
+          (v3/*:: as any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "8415df07aa00a65b9a38479d83c862e5",
+    "cacheID": "13d0f9d6623f37327ef7c9072ff8b05a",
     "id": null,
     "metadata": {},
     "name": "LiveSingleViewQuery",
     "operationKind": "query",
-    "text": "query LiveSingleViewQuery(\n  $id: ID!\n) {\n  event(id: $id) {\n    __typename\n    ...LiveSingleView\n    id\n  }\n}\n\nfragment EventState on Event {\n  __isEvent: __typename\n  status\n  tradingStatus\n  homeScore\n  awayScore\n}\n\nfragment LiveSingleHeader on LiveEvent {\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    name\n    id\n  }\n  category {\n    name\n    id\n  }\n  status\n}\n\nfragment LiveSingleView on LiveEvent {\n  homeCompetitor\n  awayCompetitor\n  startTime\n  ...LiveSingleHeader\n  ...EventState\n  ...MarketGroups @defer(label: \"LiveSingleView$defer$MarketGroups\")\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  outcomes {\n    id\n    index\n    name\n    price\n    status\n  }\n}\n\nfragment MarketGroups on Event {\n  __isEvent: __typename\n  markets {\n    id\n    groups\n    kind\n    index\n    ...MarketCard\n  }\n}\n"
+    "text": "query LiveSingleViewQuery(\n  $id: ID!\n) {\n  event(id: $id) {\n    ...LiveSingleView\n    id\n  }\n}\n\nfragment EventState on Event {\n  status\n  tradingStatus\n  homeScore\n  awayScore\n}\n\nfragment LiveSingleHeader on Event {\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    name\n    id\n  }\n  category {\n    name\n    id\n  }\n  status\n}\n\nfragment LiveSingleView on Event {\n  homeCompetitor\n  awayCompetitor\n  startTime\n  ...LiveSingleHeader\n  ...EventState\n  ...MarketGroups @defer(label: \"LiveSingleView$defer$MarketGroups\")\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  outcomes {\n    id\n    index\n    name\n    price\n    status\n  }\n}\n\nfragment MarketGroups on Event {\n  markets {\n    id\n    groups\n    kind\n    index\n    ...MarketCard\n  }\n}\n"
   }
 };
 })();

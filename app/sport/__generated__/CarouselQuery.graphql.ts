@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8dc9b2e46a70912b842dea9e4075a5b1>>
+ * @generated SignedSource<<bf5bebff8ca38d688c935c2d1a0c8661>>
  * @lightSyntaxTransform
  */
 
@@ -196,7 +196,7 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "PrematchEvent",
+                "concreteType": "Event",
                 "kind": "LinkedField",
                 "name": "event",
                 "plural": false,

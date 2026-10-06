@@ -16,13 +16,19 @@ export default function LiveSportTabs(props: {
   active: string | null
   onChangeAction: (sportKey: string | null) => void
 }) {
+  const t = useT()
   const data = useFragment(
     graphql`
       fragment LiveSportTabs on Query {
-        liveEvents {
-          sport {
-            key
-            name
+        liveEvents(first: 20) {
+          totalCount
+          edges {
+            node {
+              sport {
+                key
+                name
+              }
+            }
           }
         }
       }
@@ -30,19 +36,20 @@ export default function LiveSportTabs(props: {
     props.query
   )
 
-  const t = useT()
+  const nodes = data.liveEvents.edges.map(e => e.node)
+  const partial = nodes.length < data.liveEvents.totalCount
 
   const bySport = useMemo(() => {
-    const counts = countBy(data.liveEvents, e => e.sport.key)
-    const names = new Map(data.liveEvents.map(e => [e.sport.key, e.sport.name]))
+    const counts = countBy(nodes, e => e.sport.key)
+    const names = new Map(nodes.map(e => [e.sport.key, e.sport.name]))
     return Object.entries(counts).map(([key, count]) => ({
       key,
       name: names.get(key) ?? key,
       count,
     }))
-  }, [data.liveEvents])
+  }, [nodes])
 
-  const total = data.liveEvents.length
+  const total = data.liveEvents.totalCount
 
   return (
     <div className='flex scrollbar-none items-center gap-2 overflow-x-auto'>
