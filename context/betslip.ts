@@ -25,28 +25,11 @@ export function useToggleOdd() {
 
   return useCallback(
     (outcomeId: string) =>
-      setInput(prev => {
-        if (prev.items.some(i => i.outcomeId === outcomeId)) {
-          let { systemSize, betType } = prev
-          if (systemSize && systemSize === prev.items.length - 1) {
-            systemSize = prev.items.length - 2
-            if (systemSize < 2) {
-              systemSize = null
-              betType = 'MULTIPLE'
-            }
-          }
-
-          if (prev.items.length <= 2) betType = 'SINGLE'
-
-          return {
-            ...prev,
-            items: prev.items.filter(i => i.outcomeId !== outcomeId),
-            systemSize,
-            betType,
-          }
-        }
-        return { ...prev, items: [...prev.items, { outcomeId }] }
-      }),
+      setInput(prev =>
+        prev.items.some(i => i.outcomeId === outcomeId)
+          ? withoutItems(prev, new Set([outcomeId]))
+          : { ...prev, items: [...prev.items, { outcomeId }] }
+      ),
     [setInput]
   )
 }
@@ -177,4 +160,23 @@ export function useSetLegStake() {
       })),
     [setInput]
   )
+}
+
+export function withoutItems(prev: BetslipInput, ids: ReadonlySet<string>): BetslipInput {
+  const items = prev.items.filter(i => !ids.has(i.outcomeId))
+  let { betType, systemSize } = prev
+
+  if (items.length <= 1) {
+    betType = 'SINGLE'
+    systemSize = undefined
+  } else if (betType === 'SYSTEM') {
+    if (items.length < 3) {
+      betType = 'MULTIPLE'
+      systemSize = undefined
+    } else if (systemSize && systemSize >= items.length) {
+      systemSize = items.length - 1
+    }
+  }
+
+  return { ...prev, items, betType, systemSize }
 }

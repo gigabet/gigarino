@@ -43,6 +43,7 @@ import {
   useActiveBoost,
   useBetslipPrices,
   useSetLegStake,
+  withoutItems,
 } from '@/context/betslip'
 import { useMediaQuery } from '@/context/hooks'
 import { useCurrency, useT } from '@/context/providers'
@@ -133,26 +134,7 @@ export default function Betslip(props: {
     }
   `)
 
-  const remove = (outcomeId: string) =>
-    setInput(prev => {
-      let { systemSize, betType } = prev
-      if (systemSize && systemSize === prev.items.length - 1) {
-        systemSize = prev.items.length - 2
-        if (systemSize < 2) {
-          systemSize = null
-          betType = 'MULTIPLE'
-        }
-      }
-
-      if (prev.items.length <= 2) betType = 'SINGLE'
-
-      return {
-        ...prev,
-        items: prev.items.filter(i => i.outcomeId !== outcomeId),
-        systemSize,
-        betType,
-      }
-    })
+  const remove = (outcomeId: string) => setInput(prev => withoutItems(prev, new Set([outcomeId])))
 
   const clearAll = () => {
     setInput(prev => ({
@@ -240,6 +222,13 @@ export default function Betslip(props: {
   const showChanges = changed.length > 0 && signature !== dismissedSig // moves again => re-shows
 
   const toMap = (items: typeof changed) => new Map(items.map(i => [i.outcomeId, i.price as string]))
+  const lower = changed.filter(i => Number(i.price) < Number(i.expectedPrice))
+
+  const acceptHigher = () => {
+    accept(toMap(higher)) // rebase the legs that went up
+    const lowerIds = new Set(lower.map(i => i.outcomeId))
+    setInput(prev => withoutItems(prev, lowerIds)) // drop the legs that went down
+  }
 
   const startNewBet = () => {
     clientRequestId.current = crypto.randomUUID()
@@ -415,28 +404,7 @@ export default function Betslip(props: {
                 variant='ghost'
                 size='icon-sm'
                 className='-mx-2 size-6 rounded-full text-xs text-red-400 hover:bg-red-400/30 hover:text-white'
-                onClick={() =>
-                  setInput(prev => {
-                    let { systemSize, betType, items } = prev
-                    items = prev.items.filter(i => !unavailable.has(i.outcomeId))
-                    if (systemSize && systemSize === items.length - 1) {
-                      systemSize = items.length - 2
-                      if (systemSize < 2) {
-                        systemSize = null
-                        betType = 'MULTIPLE'
-                      }
-                    }
-
-                    if (items.length <= 2) betType = 'SINGLE'
-
-                    return {
-                      ...prev,
-                      items,
-                      systemSize,
-                      betType,
-                    }
-                  })
-                }
+                onClick={() => setInput(prev => withoutItems(prev, unavailable))}
               >
                 <XIcon />
               </Button>
@@ -489,12 +457,12 @@ export default function Betslip(props: {
                 </Button>
               </div>
               <div className='flex gap-2'>
-                {higher.length > 0 && higher.length < changed.length && (
+                {higher.length > 0 && lower.length > 0 && (
                   <Button
                     variant='outline'
                     size='sm'
                     className='h-6 flex-1 px-2 text-[0.7rem]'
-                    onClick={() => accept(toMap(higher))}
+                    onClick={acceptHigher}
                   >
                     {t('Accept higher')}
                   </Button>
