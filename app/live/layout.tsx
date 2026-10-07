@@ -5,9 +5,10 @@ import { usePathname } from 'next/navigation'
 import { Suspense, useEffect, useMemo, useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { graphql, requestSubscription, useQueryLoader, useRelayEnvironment } from 'react-relay'
-import type { LiveHeaderQuery } from '@/app/live/__generated__/LiveHeaderQuery.graphql'
-import LiveHeaderQueryNode from '@/app/live/__generated__/LiveHeaderQuery.graphql'
-import LiveEventSidebar from '@/app/live/event/[id]/live-event-sidebar'
+import type { LiveLayoutQuery } from '@/app/live/__generated__/LiveLayoutQuery.graphql'
+import LiveEventSidebar, {
+  LiveEventSidebarSkeleton,
+} from '@/app/live/event/[id]/live-event-sidebar'
 import LiveHeader, { LiveHeaderSkeleton } from '@/app/live/live-header'
 import { LiveSubscriptionsProvider } from '@/app/live/live-subscriptions'
 import { RefetchBatcherProvider } from '@/app/live/refetch-context'
@@ -48,11 +49,18 @@ export default function LiveLayout({ children }: React.PropsWithChildren) {
     return dispose
   }, [environment, betslipInput])
 
-  const [queryRef, loadQuery] = useQueryLoader<LiveHeaderQuery>(LiveHeaderQueryNode)
+  // One query for the whole route. Header and sidebar read their own fragments from it.
+  const [queryRef, loadQuery, disposeQuery] = useQueryLoader<LiveLayoutQuery>(graphql`
+    query LiveLayoutQuery {
+      ...LiveHeader
+      ...LiveEventSidebar
+    }
+  `)
 
   useEffect(() => {
-    loadQuery({}, { fetchPolicy: 'store-or-network' })
-  }, [loadQuery])
+    loadQuery({}, { fetchPolicy: 'store-and-network' })
+    return () => disposeQuery()
+  }, [loadQuery, disposeQuery])
 
   return (
     <LiveSubscriptionsProvider>
@@ -66,7 +74,17 @@ export default function LiveLayout({ children }: React.PropsWithChildren) {
                 : 'md:grid-cols-[minmax(auto,1fr)_20rem]'
             )}
           >
-            {eventId && <LiveEventSidebar eventId={eventId} />}
+            {eventId && (
+              <ErrorBoundary FallbackComponent={SectionErrorFallback}>
+                <Suspense fallback={<LiveEventSidebarSkeleton />}>
+                  {queryRef ? (
+                    <LiveEventSidebar queryRef={queryRef} eventId={eventId} />
+                  ) : (
+                    <LiveEventSidebarSkeleton />
+                  )}
+                </Suspense>
+              </ErrorBoundary>
+            )}
 
             <div className='flex min-w-0 flex-col gap-4'>
               <ErrorBoundary FallbackComponent={SectionErrorFallback}>

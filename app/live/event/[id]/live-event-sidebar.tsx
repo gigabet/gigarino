@@ -1,34 +1,28 @@
 'use client'
 
 import { useAtomValue } from 'jotai'
-import { Suspense, useMemo } from 'react'
-import { ErrorBoundary } from 'react-error-boundary'
-import { graphql, useLazyLoadQuery } from 'react-relay'
+import { useMemo } from 'react'
+import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
 import { GroupedVirtuoso, Virtuoso } from 'react-virtuoso'
-import type { LiveEventSidebarQuery } from '@/app/live/event/[id]/__generated__/LiveEventSidebarQuery.graphql'
+import type { LiveLayoutQuery } from '@/app/live/__generated__/LiveLayoutQuery.graphql'
+import LiveLayoutQueryNode from '@/app/live/__generated__/LiveLayoutQuery.graphql'
+import type { LiveEventSidebar$key } from '@/app/live/event/[id]/__generated__/LiveEventSidebar.graphql'
 import LiveEventStrip from '@/app/live/event/[id]/live-event-strip'
 import LiveStripTournament from '@/app/live/event/[id]/live-strip-tournament'
 import { liveSortState, liveSportFilterState, orderLiveEvents } from '@/app/live/live-state'
-import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { Skeleton } from '@/components/ui/skeleton'
 
 const ASIDE = 'sticky top-26.25 hidden h-[calc(100dvh-7rem)] w-full place-self-start xl:block'
 
-export default function LiveEventSidebar(props: { eventId: string }) {
-  return (
-    <ErrorBoundary FallbackComponent={SectionErrorFallback}>
-      <Suspense fallback={<LiveEventSidebarSkeleton />}>
-        <LiveEventSidebarContent eventId={props.eventId} />
-      </Suspense>
-    </ErrorBoundary>
-  )
-}
-
-function LiveEventSidebarContent(props: { eventId: string }) {
-  const data = useLazyLoadQuery<LiveEventSidebarQuery>(
+export default function LiveEventSidebar(props: {
+  queryRef: PreloadedQuery<LiveLayoutQuery>
+  eventId: string
+}) {
+  const preloaded = usePreloadedQuery<LiveLayoutQuery>(LiveLayoutQueryNode, props.queryRef)
+  const data = useFragment<LiveEventSidebar$key>(
     graphql`
-      query LiveEventSidebarQuery {
-        liveEvents(first: 20) {
+      fragment LiveEventSidebar on Query {
+        liveEvents {
           edges {
             node {
               ...LiveOrder
@@ -41,8 +35,7 @@ function LiveEventSidebarContent(props: { eventId: string }) {
         }
       }
     `,
-    {},
-    { fetchPolicy: 'store-and-network' }
+    preloaded
   )
 
   const sort = useAtomValue(liveSortState)

@@ -97,19 +97,11 @@ function LiveSingleHeader(props: { event: LiveSingleHeader$key }) {
         </div>
       )}
       <SportIcon sport={data.sport.key} className='size-3.5 shrink-0' />
-      <Link
-        href={{
-          pathname: '/live',
-          query: { tournaments: `${data.sport.key}:${data.tournament.key}` },
-        }}
-        className='group relative flex min-w-0 items-center gap-2 text-current transition-colors hover:text-white'
-      >
+      <div className='group relative flex min-w-0 items-center gap-2'>
         <span className='max-w-40 truncate sm:max-w-none'>{data.tournament.name}</span>
         <span className='shrink-0'>·</span>
         <span className='max-w-32 truncate sm:max-w-none'>{data.category.name}</span>
-        <ExternalLinkIcon className='size-3 shrink-0' />
-        <span className='bg-primary absolute -bottom-0.5 h-px w-full opacity-0 transition-all group-hover:opacity-100' />
-      </Link>
+      </div>
     </div>
   )
 }
