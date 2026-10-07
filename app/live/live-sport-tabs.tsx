@@ -1,12 +1,10 @@
 'use client'
 
 import { cx } from 'class-variance-authority'
-import { countBy } from 'lodash'
-import { useMemo } from 'react'
-import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
-import type { LiveEventsQuery } from '@/app/live/__generated__/LiveEventsQuery.graphql'
-import LiveEventsQueryNode from '@/app/live/__generated__/LiveEventsQuery.graphql'
+import { useEffect } from 'react'
+import { fetchQuery, graphql, useRefetchableFragment, useRelayEnvironment } from 'react-relay'
 import type { LiveSportTabs$key } from '@/app/live/__generated__/LiveSportTabs.graphql'
+import LiveSportTabsRefetchNode from '@/app/live/__generated__/LiveSportTabsRefetch.graphql'
 import { SportIcon } from '@/components/sport-icon'
 import { useT } from '@/context/providers'
 import { getSportTheme } from '@/lib/sport-theme'
@@ -17,40 +15,35 @@ export default function LiveSportTabs(props: {
   onChangeAction: (sportKey: string | null) => void
 }) {
   const t = useT()
-  const data = useFragment(
+  const [data] = useRefetchableFragment(
     graphql`
-      fragment LiveSportTabs on Query {
-        liveEvents(first: 100) {
-          edges {
-            node {
-              status
-              sport {
-                key
-                name
-              }
-            }
-          }
+      fragment LiveSportTabs on Query @refetchable(queryName: "LiveSportTabsRefetch") {
+        liveEvents {
+          totalCount
+        }
+        sports {
+          key
+          name
+          liveEventCount
         }
       }
     `,
     props.query
   )
 
-  const nodes = data.liveEvents.edges
-    .map(e => e.node)
-    .filter(n => !['ENDED', 'CANCELLED', 'ABANDONED', 'POSTPONED'].includes(n.status))
+  const total = data.liveEvents.totalCount
 
-  const bySport = useMemo(() => {
-    const counts = countBy(nodes, e => e.sport.key)
-    const names = new Map(nodes.map(e => [e.sport.key, e.sport.name]))
-    return Object.entries(counts).map(([key, count]) => ({
-      key,
-      name: names.get(key) ?? key,
-      count,
-    }))
-  }, [nodes])
-
-  const total = nodes.length
+  const env = useRelayEnvironment()
+  useEffect(() => {
+    const timer = window.setInterval(
+      () =>
+        fetchQuery(env, LiveSportTabsRefetchNode, {}, { fetchPolicy: 'network-only' }).subscribe({
+          error: (err: Error) => console.error('[live-sport-tabs] poll failed', err),
+        }),
+      30_000
+    )
+    return () => clearInterval(timer)
+  }, [env])
 
   return (
     <div className='flex scrollbar-none items-center gap-2 overflow-x-auto'>
@@ -61,28 +54,30 @@ export default function LiveSportTabs(props: {
         label={t('All')}
         count={total}
       />
-      {bySport.map(sport => {
-        const theme = getSportTheme(sport.key)
-        const isActive = props.active === sport.key
-        return (
-          <Tab
-            key={sport.key}
-            active={isActive}
-            onClick={() => props.onChangeAction(sport.key)}
-            icon={<SportIcon sport={sport.key} colored className='size-4' />}
-            label={sport.name}
-            count={sport.count}
-            style={
-              isActive
-                ? ({
-                    borderColor: theme.primary,
-                    boxShadow: `inset 0 0 10px -2px ${theme.primary}`,
-                  } as React.CSSProperties)
-                : undefined
-            }
-          />
-        )
-      })}
+      {data.sports
+        .filter(s => s.liveEventCount > 0)
+        .map(sport => {
+          const theme = getSportTheme(sport.key)
+          const isActive = props.active === sport.key
+          return (
+            <Tab
+              key={sport.key}
+              active={isActive}
+              onClick={() => props.onChangeAction(sport.key)}
+              icon={<SportIcon sport={sport.key} colored className='size-4' />}
+              label={sport.name}
+              count={sport.liveEventCount}
+              style={
+                isActive
+                  ? ({
+                      borderColor: theme.primary,
+                      boxShadow: `inset 0 0 10px -2px ${theme.primary}`,
+                    } as React.CSSProperties)
+                  : undefined
+              }
+            />
+          )
+        })}
     </div>
   )
 }

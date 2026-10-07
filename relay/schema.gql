@@ -140,6 +140,11 @@ type BetslipQuoteItem implements Node {
   """
   priceChanged: Boolean!
   status: OutcomeStatus
+
+  """
+  Why the selection is locked when `availability` is SUSPENDED; null otherwise.
+  """
+  suspensionReason: SuspensionReason
 }
 
 type CashoutPayload {
@@ -525,6 +530,11 @@ type Market implements Node {
   outcomes: [Outcome!]!
   period: MarketPeriod!
   status: MarketStatus!
+
+  """
+  Why this market cannot be bet on; null while open.
+  """
+  suspensionReason: SuspensionReason
 }
 
 """
@@ -678,6 +688,11 @@ type Outcome implements Node {
   """
   price: Decimal!
   status: OutcomeStatus!
+
+  """
+  Why this selection cannot be bet on; null while open.
+  """
+  suspensionReason: SuspensionReason
 }
 
 """
@@ -947,6 +962,11 @@ type Sport implements Node {
   Stable slug: `football`, `tennis`, `basketball`, `ice-hockey`.
   """
   key: String!
+
+  """
+  Events in play now for this sport: always equals `liveEvents(sport:).totalCount`. For live sport tabs without loading the list.
+  """
+  liveEventCount: Int!
   name: String!
 }
 
@@ -970,6 +990,36 @@ type Subscription {
   Pushes price changes for the given events as the changed Outcome nodes, so a normalized client cache updates in place. Subscribe with the events visible in the viewport + those in the betslip.
   """
   oddsUpdated(eventIds: [ID!]!): OddsUpdate!
+}
+
+"""
+Why a selection cannot be bet on right now. Null whenever it is open.
+"""
+enum SuspensionReason {
+  """
+  The match has ended or is no longer traded.
+  """
+  EVENT_CLOSED
+
+  """
+  The book has paused the whole match (goal, VAR check, penalty, danger).
+  """
+  EVENT_SUSPENDED
+
+  """
+  Our live price feed is interrupted; every live market is locked until it recovers.
+  """
+  FEED_UNAVAILABLE
+
+  """
+  The book has paused this market or selection.
+  """
+  MARKET_SUSPENDED
+
+  """
+  No valid price: it would pay out no more than the stake (<= 1.00).
+  """
+  NO_PRICE
 }
 
 """

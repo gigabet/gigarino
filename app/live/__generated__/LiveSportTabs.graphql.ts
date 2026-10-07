@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<927bcdfeab9f19c03e0650573db2e51a>>
+ * @generated SignedSource<<39bcc968bf2843dfc03757e98c294a9d>>
  * @lightSyntaxTransform
  */
 
@@ -8,20 +8,16 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type EventStatus = "ABANDONED" | "CANCELLED" | "ENDED" | "LIVE" | "POSTPONED" | "SCHEDULED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type LiveSportTabs$data = {
   readonly liveEvents: {
-    readonly edges: ReadonlyArray<{
-      readonly node: {
-        readonly sport: {
-          readonly key: string;
-          readonly name: string;
-        };
-        readonly status: EventStatus;
-      };
-    }>;
+    readonly totalCount: number;
   };
+  readonly sports: ReadonlyArray<{
+    readonly key: string;
+    readonly liveEventCount: number;
+    readonly name: string;
+  }>;
   readonly " $fragmentType": "LiveSportTabs";
 };
 export type LiveSportTabs$key = {
@@ -29,21 +25,23 @@ export type LiveSportTabs$key = {
   readonly " $fragmentSpreads": FragmentRefs<"LiveSportTabs">;
 };
 
+import LiveSportTabsRefetch_graphql from './LiveSportTabsRefetch.graphql';
+
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
-  "metadata": null,
+  "metadata": {
+    "refetch": {
+      "connection": null,
+      "fragmentPathInResult": [],
+      "operation": LiveSportTabsRefetch_graphql
+    }
+  },
   "name": "LiveSportTabs",
   "selections": [
     {
       "alias": null,
-      "args": [
-        {
-          "kind": "Literal",
-          "name": "first",
-          "value": 100
-        }
-      ],
+      "args": null,
       "concreteType": "EventConnection",
       "kind": "LinkedField",
       "name": "liveEvents",
@@ -52,65 +50,50 @@ const node: ReaderFragment = {
         {
           "alias": null,
           "args": null,
-          "concreteType": "EventEdge",
-          "kind": "LinkedField",
-          "name": "edges",
-          "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "Event",
-              "kind": "LinkedField",
-              "name": "node",
-              "plural": false,
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "status",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "Sport",
-                  "kind": "LinkedField",
-                  "name": "sport",
-                  "plural": false,
-                  "selections": [
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "key",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "name",
-                      "storageKey": null
-                    }
-                  ],
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
-            }
-          ],
+          "kind": "ScalarField",
+          "name": "totalCount",
           "storageKey": null
         }
       ],
-      "storageKey": "liveEvents(first:100)"
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Sport",
+      "kind": "LinkedField",
+      "name": "sports",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "key",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "name",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "liveEventCount",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 
-(node as any).hash = "bf86a4f78d4ff0bcf999bb03afa44f74";
+(node as any).hash = "351e17778caa20d2d118cc3b0947cfd5";
 
 export default node;

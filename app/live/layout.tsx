@@ -69,13 +69,15 @@ export default function LiveLayout({ children }: React.PropsWithChildren) {
             {eventId && <LiveEventSidebar eventId={eventId} />}
 
             <div className='flex min-w-0 flex-col gap-4'>
-              <Suspense fallback={<LiveHeaderSkeleton />}>
-                {queryRef ? (
-                  <LiveHeader queryRef={queryRef} eventId={eventId} />
-                ) : (
-                  <LiveHeaderSkeleton />
-                )}
-              </Suspense>
+              <ErrorBoundary FallbackComponent={SectionErrorFallback}>
+                <Suspense fallback={<LiveHeaderSkeleton />}>
+                  {queryRef ? (
+                    <LiveHeader queryRef={queryRef} eventId={eventId} />
+                  ) : (
+                    <LiveHeaderSkeleton />
+                  )}
+                </Suspense>
+              </ErrorBoundary>
               {children}
             </div>
 

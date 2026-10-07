@@ -16,7 +16,7 @@ export default function LiveHeaderContent(props: {
   const data = usePreloadedQuery<LiveHeaderQuery>(
     graphql`
       query LiveHeaderQuery {
-        liveEvents(first: 100) {
+        liveEvents {
           edges {
             node {
               ...LiveOrder
