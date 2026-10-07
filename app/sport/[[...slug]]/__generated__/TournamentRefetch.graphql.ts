@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9ef09dc212c8a36c222a9b865bd94ad1>>
+ * @generated SignedSource<<651ee0e84739a6d4c6417c12713f0cc8>>
  * @lightSyntaxTransform
  */
 
@@ -272,13 +272,19 @@ return {
                                             "name": "index",
                                             "storageKey": null
                                           },
-                                          (v4/*:: as any*/),
                                           (v3/*:: as any*/),
                                           {
                                             "alias": null,
                                             "args": null,
                                             "kind": "ScalarField",
                                             "name": "price",
+                                            "storageKey": null
+                                          },
+                                          {
+                                            "alias": null,
+                                            "args": null,
+                                            "kind": "ScalarField",
+                                            "name": "status",
                                             "storageKey": null
                                           }
                                         ],
@@ -310,12 +316,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b32f4153c0c930e82459b2a859cfaaf2",
+    "cacheID": "878d396ce3ae241959335ff1b68b0e5d",
     "id": null,
     "metadata": {},
     "name": "TournamentRefetch",
     "operationKind": "query",
-    "text": "query TournamentRefetch(\n  $eventCount: Int\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...Tournament\n    id\n  }\n}\n\nfragment ListViewMarket on Market {\n  outcomes {\n    id\n    index\n    name\n    key\n    price\n  }\n}\n\nfragment ListViewMarkets on Event {\n  markets {\n    id\n    kind\n    ...ListViewMarket\n  }\n}\n\nfragment PrematchEvent on Event {\n  id\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  oddCount\n  ...ListViewMarkets @defer(label: \"PrematchEvent$defer$ListViewMarkets\")\n}\n\nfragment Tournament on Tournament {\n  id\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n  name\n  ...TournamentEventList @defer(label: \"Tournament$defer$TournamentEventList\")\n}\n\nfragment TournamentEventList on Tournament {\n  events(first: $eventCount) {\n    edges {\n      node {\n        id\n        isLive\n        ...PrematchEvent\n      }\n    }\n  }\n}\n"
+    "text": "query TournamentRefetch(\n  $eventCount: Int\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...Tournament\n    id\n  }\n}\n\nfragment ListViewMarket on Market {\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n  }\n}\n\nfragment ListViewMarkets on Event {\n  markets {\n    id\n    kind\n    ...ListViewMarket\n  }\n}\n\nfragment PrematchEvent on Event {\n  id\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  oddCount\n  ...ListViewMarkets @defer(label: \"PrematchEvent$defer$ListViewMarkets\")\n}\n\nfragment Tournament on Tournament {\n  id\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n  name\n  ...TournamentEventList @defer(label: \"Tournament$defer$TournamentEventList\")\n}\n\nfragment TournamentEventList on Tournament {\n  events(first: $eventCount) {\n    edges {\n      node {\n        id\n        isLive\n        ...PrematchEvent\n      }\n    }\n  }\n}\n"
   }
 };
 })();

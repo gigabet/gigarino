@@ -1,10 +1,11 @@
 'use client'
 
 import { sortBy } from 'lodash'
-import { LockIcon } from 'lucide-react'
+import { LockKeyhole } from 'lucide-react'
 import { Toggle } from 'radix-ui'
 import { graphql, useFragment } from 'react-relay'
 import type { MarketCard$key } from '@/app/sport/event/[id]/__generated__/MarketCard.graphql'
+import { OddDelta } from '@/components/odd-delta'
 import { useHasOdd, useToggleOdd } from '@/context/betslip'
 import { useUpDown } from '@/context/hooks'
 import { cn } from '@/lib/utils'
@@ -63,7 +64,7 @@ function OutcomeToggle(props: {
 
   return (
     <Toggle.Root
-      disabled={props.suspended || props.odd.status !== 'OPEN' || Number(props.odd.price) <= 1}
+      disabled={props.suspended || props.odd.status !== 'OPEN'}
       suppressHydrationWarning
       className={cn(
         'group hover:bg-primary/5 hover:border-primary/20 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-col items-center justify-center gap-0.5 rounded-lg border border-white/5 bg-black/20 py-2 transition disabled:pointer-events-none',
@@ -81,7 +82,17 @@ function OutcomeToggle(props: {
         className='group-data-[state=on]:text-primary text-foreground text-sm font-semibold'
         suppressHydrationWarning
       >
-        {Number(props.odd.price) <= 1 ? <LockIcon /> : Number(props.odd.price).toFixed(2)}
+        {props.suspended || props.odd.status !== 'OPEN' ? (
+          <LockKeyhole className='size-3' />
+        ) : (
+          <span
+            className='text-foreground group-data-[state=on]/odd:text-primary relative text-xs font-semibold'
+            suppressHydrationWarning
+          >
+            {Number(props.odd.price).toFixed(2)}
+            <OddDelta price={Number(props.odd.price)} />
+          </span>
+        )}
       </span>
     </Toggle.Root>
   )

@@ -1,6 +1,7 @@
 'use client'
 
 import { sortBy } from 'lodash'
+import { LockKeyhole } from 'lucide-react'
 import Link from 'next/link'
 import { Toggle } from 'radix-ui'
 import { graphql, useFragment } from 'react-relay'
@@ -145,13 +146,17 @@ function LiveStripOdd(props: { outcome: LiveStripOdd$key; suspended: boolean }) 
       <span className='text-secondary group-data-[state=on]/odd:text-foreground text-[0.6rem]'>
         {outcome.name}
       </span>
-      <span
-        className='text-foreground group-data-[state=on]/odd:text-primary relative text-xs font-semibold'
-        suppressHydrationWarning
-      >
-        {Number(outcome.price).toFixed(2)}
-        <OddDelta price={Number(outcome.price)} placement='side' className='text-[0.55rem]' />
-      </span>
+      {props.suspended || outcome.status !== 'OPEN' ? (
+        <LockKeyhole className='size-3' />
+      ) : (
+        <span
+          className='text-foreground group-data-[state=on]/odd:text-primary relative text-xs font-semibold'
+          suppressHydrationWarning
+        >
+          {Number(outcome.price).toFixed(2)}
+          <OddDelta price={Number(outcome.price)} placement='side' className='text-[0.55rem]' />
+        </span>
+      )}
     </Toggle.Root>
   )
 }

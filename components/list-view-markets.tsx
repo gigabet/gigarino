@@ -2,13 +2,17 @@
 
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { entries, keys, sortBy } from 'lodash'
-import { ChevronsUpIcon, PlusIcon, TrendingUpIcon } from 'lucide-react'
+import { ChevronsUpIcon, LockKeyhole, PlusIcon, TrendingUpIcon } from 'lucide-react'
 import { motion } from 'motion/react'
 import { Toggle } from 'radix-ui'
 import { FaCaretDown, FaCaretUp } from 'react-icons/fa'
 import { graphql, useFragment } from 'react-relay'
-import type { ListViewMarket$key } from '@/components/__generated__/ListViewMarket.graphql'
+import type {
+  ListViewMarket$key,
+  OutcomeStatus,
+} from '@/components/__generated__/ListViewMarket.graphql'
 import type { ListViewMarkets$key } from '@/components/__generated__/ListViewMarkets.graphql'
+import { OddDelta } from '@/components/odd-delta'
 import {
   Select,
   SelectContent,
@@ -22,7 +26,6 @@ import { useDelta, useUpDown } from '@/context/hooks'
 import { useT } from '@/context/providers'
 import { tKey } from '@/i18n/tKey'
 import { cn, swap } from '@/lib/utils'
-import { OddDelta } from '@/components/odd-delta'
 
 const marketVisibility = [
   '', // (10.5 + 1 + 10.5) + 11.5 + 11.5...
@@ -139,9 +142,9 @@ function Market(props: { className?: string; market: ListViewMarket$key }) {
         outcomes {
           id
           index
-          name
           key
           price
+          status
         }
       }
     `,
@@ -159,7 +162,9 @@ function Market(props: { className?: string; market: ListViewMarket$key }) {
   )
 }
 
-function OddToggle(props: { odd: { id: string; name: string; key: string; price: unknown } }) {
+function OddToggle(props: {
+  odd: { id: string; key: string; price: unknown; status: OutcomeStatus }
+}) {
   const hasOdd = useHasOdd()
   const toggleOdd = useToggleOdd()
   const upDown = useUpDown(Number(props.odd.price))
@@ -168,24 +173,27 @@ function OddToggle(props: { odd: { id: string; name: string; key: string; price:
     <Toggle.Root
       suppressHydrationWarning
       className={cn(
-        'group hover:bg-primary/5 hover:border-primary/20 shadow-primary/60 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-1 flex-col items-center justify-center gap-1 rounded-lg border border-white/5 bg-black/20 transition-all',
+        'group hover:bg-primary/5 hover:border-primary/20 shadow-primary/60 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-1 flex-col items-center justify-center gap-1 rounded-lg border border-white/5 bg-black/20 transition-all disabled:pointer-events-none disabled:opacity-40',
         'data-[state=on]:shadow-[0_0_12px]',
         upDown === 'up' && 'animate-odds-flash-up',
         upDown === 'down' && 'animate-odds-flash-down'
       )}
       pressed={hasOdd(props.odd.id)}
       onPressedChange={() => toggleOdd(props.odd.id)}
+      disabled={props.odd.status !== 'OPEN'}
     >
       <span className='group-data-[state=on]:text-foreground text-shadow-foreground text-secondary text-xs group-data-[state=on]:text-shadow-[0_0_8px]'>
-        {props.odd.name.length > 12 ? (
-          <span className='capitalize'>{props.odd.key}</span>
-        ) : (
-          props.odd.name
-        )}
+        <span className='capitalize'>{props.odd.key}</span>
       </span>
       <span className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground relative flex flex-col items-center justify-center gap-1 text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'>
-        <span suppressHydrationWarning>{Number(props.odd.price).toFixed(2)}</span>
-        <OddDelta price={Number(props.odd.price)} />
+        {props.odd.status === 'OPEN' ? (
+          <>
+            <span suppressHydrationWarning>{Number(props.odd.price).toFixed(2)}</span>
+            <OddDelta price={Number(props.odd.price)} />
+          </>
+        ) : (
+          <LockKeyhole className='size-3' />
+        )}
       </span>
     </Toggle.Root>
   )
