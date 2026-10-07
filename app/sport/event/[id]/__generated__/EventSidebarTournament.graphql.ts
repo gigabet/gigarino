@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9dcb94b01cfe134bd689100bb82f5e08>>
+ * @generated SignedSource<<38411145d36c132ee7414bd02b66616d>>
  * @lightSyntaxTransform
  */
 
@@ -39,12 +39,7 @@ var v0 = {
   "storageKey": null
 };
 return {
-  "argumentDefinitions": [
-    {
-      "kind": "RootArgument",
-      "name": "first"
-    }
-  ],
+  "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "EventSidebarTournament",
@@ -79,9 +74,9 @@ return {
       "alias": null,
       "args": [
         {
-          "kind": "Variable",
+          "kind": "Literal",
           "name": "first",
-          "variableName": "first"
+          "value": 20
         }
       ],
       "concreteType": "EventConnection",
@@ -118,7 +113,7 @@ return {
           "storageKey": null
         }
       ],
-      "storageKey": null
+      "storageKey": "events(first:20)"
     }
   ],
   "type": "Tournament",
@@ -126,6 +121,6 @@ return {
 };
 })();
 
-(node as any).hash = "cfb372c7c307d8e5858bb1a9bd07d6c2";
+(node as any).hash = "c2e0e1874370347cf2e5397a9e65a542";
 
 export default node;

@@ -4,36 +4,29 @@ import { cx } from 'class-variance-authority'
 import { sortBy } from 'lodash'
 import Link from 'next/link'
 import { Toggle } from 'radix-ui'
-import { Suspense } from 'react'
-import { ErrorBoundary } from 'react-error-boundary'
-import { graphql, useFragment, useLazyLoadQuery } from 'react-relay'
+import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
+import type { PrematchLayoutQuery } from '@/app/sport/__generated__/PrematchLayoutQuery.graphql'
+import PrematchLayoutQueryNode from '@/app/sport/__generated__/PrematchLayoutQuery.graphql'
+import type { EventSidebar$key } from '@/app/sport/event/[id]/__generated__/EventSidebar.graphql'
 import type { EventSidebarMarket$key } from '@/app/sport/event/[id]/__generated__/EventSidebarMarket.graphql'
 import type { EventSidebarOdd$key } from '@/app/sport/event/[id]/__generated__/EventSidebarOdd.graphql'
-import type { EventSidebarQuery } from '@/app/sport/event/[id]/__generated__/EventSidebarQuery.graphql'
 import type { EventSidebarTournament$key } from '@/app/sport/event/[id]/__generated__/EventSidebarTournament.graphql'
 import type { EventStripCard$key } from '@/app/sport/event/[id]/__generated__/EventStripCard.graphql'
-import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { SportIconBadge } from '@/components/sport-icon'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useHasOdd, useToggleOdd } from '@/context/betslip'
 import { useUpDown } from '@/context/hooks'
 import { cn, getRelativeDayLabel } from '@/lib/utils'
 
-export default function EventSidebar(props: { eventId: string }) {
-  return (
-    <ErrorBoundary FallbackComponent={SectionErrorFallback}>
-      <Suspense fallback={<EventSidebarSkeleton />}>
-        <EventSidebarContent eventId={props.eventId} />
-      </Suspense>
-    </ErrorBoundary>
-  )
-}
-
-function EventSidebarContent(props: { eventId: string }) {
-  const data = useLazyLoadQuery<EventSidebarQuery>(
+export default function EventSidebar(props: {
+  queryRef: PreloadedQuery<PrematchLayoutQuery>
+  eventId: string
+}) {
+  const preloaded = usePreloadedQuery<PrematchLayoutQuery>(PrematchLayoutQueryNode, props.queryRef)
+  const data = useFragment<EventSidebar$key>(
     graphql`
-      query EventSidebarQuery($id: ID!, $first: Int!) {
-        event(id: $id) {
+      fragment EventSidebar on Query {
+        event(id: $eventId) {
           id
           tournament {
             ...EventSidebarTournament
@@ -41,11 +34,10 @@ function EventSidebarContent(props: { eventId: string }) {
         }
       }
     `,
-    { id: props.eventId, first: 20 },
-    { fetchPolicy: 'store-and-network' }
+    preloaded.eventSidebar ?? null
   )
 
-  const tournament = data.event?.tournament
+  const tournament = data?.event?.tournament
 
   if (!tournament) {
     return (
@@ -70,7 +62,7 @@ function EventSidebarTournament(props: {
         sport {
           key
         }
-        events(first: $first) {
+        events(first: 20) {
           edges {
             node {
               id

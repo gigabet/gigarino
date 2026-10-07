@@ -23,6 +23,7 @@ export default function SportPage() {
       $tournamentKeys: [String!]!
       $eventCount: Int!
     ) {
+      ...Carousel @defer
       ...ShortcutRow
       ...PrematchList
         @arguments(
@@ -56,7 +57,7 @@ export default function SportPage() {
   if (queryRef)
     return (
       <main className='flex min-w-0 flex-col gap-4'>
-        <Carousel />
+        <Carousel queryRef={queryRef} />
         <ShortcutRow queryRef={queryRef} />
         <TournamentList queryRef={queryRef} />
       </main>

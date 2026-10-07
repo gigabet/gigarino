@@ -17,14 +17,13 @@ import { Suspense, useRef } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { GiLaurelCrown } from 'react-icons/gi'
 import { HiOutlineSparkles, HiSquare3Stack3D } from 'react-icons/hi2'
-import { graphql, useFragment, useLazyLoadQuery } from 'react-relay'
+import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
 import type { BetBoostCard$key } from '@/app/sport/__generated__/BetBoostCard.graphql'
-import type {
-  CarouselQuery,
-  CarouselQuery$data,
-} from '@/app/sport/__generated__/CarouselQuery.graphql'
+import type { Carousel$data, Carousel$key } from '@/app/sport/__generated__/Carousel.graphql'
 import type { ComboOfWeekCard$key } from '@/app/sport/__generated__/ComboOfWeekCard.graphql'
 import type { FeaturedGameCard$key } from '@/app/sport/__generated__/FeaturedGameCard.graphql'
+import type { PrematchQuery } from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
+import PrematchQueryNode from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { SportIcon } from '@/components/sport-icon'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -35,24 +34,25 @@ import { cn, formatBalance, getRelativeDayLabel } from '@/lib/utils'
 
 const CARD_SIZE = 'h-72 w-72 sm:w-80'
 
-type FeaturedBetRow = CarouselQuery$data['featuredBets'][number]
-
 const KIND_ORDER = ['COMBO_OF_WEEK', 'BET_BOOST', 'FEATURED_GAME'] as const
 
-export default function Carousel() {
+type FeaturedBetRow = Carousel$data['featuredBets'][number]
+
+export default function Carousel(props: { queryRef: PreloadedQuery<PrematchQuery> }) {
   return (
     <ErrorBoundary FallbackComponent={SectionErrorFallback}>
       <Suspense fallback={<CarouselSkeleton />}>
-        <CarouselContent />
+        <CarouselContent queryRef={props.queryRef} />
       </Suspense>
     </ErrorBoundary>
   )
 }
 
-function CarouselContent() {
-  const data = useLazyLoadQuery<CarouselQuery>(
+function CarouselContent(props: { queryRef: PreloadedQuery<PrematchQuery> }) {
+  const preloaded = usePreloadedQuery<PrematchQuery>(PrematchQueryNode, props.queryRef)
+  const data = useFragment(
     graphql`
-      query CarouselQuery {
+      fragment Carousel on Query {
         featuredBets {
           id
           kind
@@ -62,8 +62,7 @@ function CarouselContent() {
         }
       }
     `,
-    {},
-    { fetchPolicy: 'store-and-network' }
+    preloaded as Carousel$key
   )
 
   const bets = [...data.featuredBets].sort(
@@ -282,7 +281,9 @@ function BetBoostCard(props: { bet: BetBoostCard$key; id: string }) {
       <div className='relative flex items-center gap-2'>
         {data.maxStake && (
           <span className='text-secondary shrink-0 text-[0.6rem]'>
-            {t('Max {amount}', { amount: formatBalance(Number(data.maxStake)) })}
+            {t('Max {amount}', {
+              amount: formatBalance(Number(data.maxStake)),
+            })}
           </span>
         )}
         <button

@@ -2,7 +2,7 @@
 
 import { useAtomValue } from 'jotai'
 import { usePathname } from 'next/navigation'
-import { Suspense, useEffect, useMemo, useState } from 'react'
+import { Suspense, startTransition, useEffect, useMemo, useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import {
   fetchQuery,
@@ -40,33 +40,43 @@ export default function SportLayout({ children }: React.PropsWithChildren) {
     return match ? decodeURIComponent(match[1]) : null
   }, [pathname])
 
+  // One query for the whole route. The sports tree is always included;
+  // the event sidebar only when we're on an event page.
   const [queryRef, loadQuery, disposeQuery] = useQueryLoader<PrematchLayoutQuery>(graphql`
-    query PrematchLayoutQuery {
+    query PrematchLayoutQuery($hasEvent: Boolean!, $eventId: ID = "") {
       ...Sidebar
+      ...EventSidebar @include(if: $hasEvent) @alias(as: "eventSidebar")
     }
   `)
 
+  const variables = useMemo(
+    () => (eventId ? { hasEvent: true, eventId } : { hasEvent: false }),
+    [eventId]
+  )
+
+  // In a transition so switching events keeps the old sidebar on screen
+  // (instead of the skeleton) until the new data lands.
   useEffect(() => {
-    loadQuery({}, { fetchPolicy: 'store-or-network' })
-    return () => disposeQuery()
-  }, [loadQuery, disposeQuery])
+    startTransition(() => {
+      loadQuery(variables, { fetchPolicy: 'store-or-network' })
+    })
+  }, [loadQuery, variables])
+
+  useEffect(() => () => disposeQuery(), [disposeQuery])
 
   const environment = useRelayEnvironment()
   useEffect(() => {
     const id = window.setInterval(
       () =>
-        fetchQuery(
-          environment,
-          PrematchLayoutQueryNode,
-          {},
-          { fetchPolicy: 'network-only' }
-        ).subscribe({
+        fetchQuery(environment, PrematchLayoutQueryNode, variables, {
+          fetchPolicy: 'network-only',
+        }).subscribe({
           error: (err: Error) => console.error('[prematch-layout] poll failed', err),
         }),
       60_000
     )
     return () => clearInterval(id)
-  }, [environment])
+  }, [environment, variables])
 
   // subscription returns full BetslipQuote immediately on init,
   // so there's no separate preloaded query
@@ -104,7 +114,15 @@ export default function SportLayout({ children }: React.PropsWithChildren) {
     >
       <Suspense fallback={eventId ? <EventSidebarSkeleton /> : <SidebarSkeleton />}>
         {eventId ? (
-          <EventSidebar eventId={eventId} />
+          // the ref can lag a render behind the URL; until it carries the
+          // event fragment, useFragment would hit a skipped spread
+          queryRef?.variables.hasEvent ? (
+            <ErrorBoundary FallbackComponent={SectionErrorFallback}>
+              <EventSidebar queryRef={queryRef} eventId={eventId} />
+            </ErrorBoundary>
+          ) : (
+            <EventSidebarSkeleton />
+          )
         ) : queryRef ? (
           <Sidebar queryRef={queryRef} />
         ) : (
