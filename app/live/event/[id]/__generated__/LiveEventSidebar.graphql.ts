@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1b6a3bd848e66aeba382e6e42caeedd5>>
+ * @generated SignedSource<<f4a429b4f75fe0bf6aee2c857b971282>>
  * @lightSyntaxTransform
  */
 
@@ -27,8 +27,13 @@ export type LiveEventSidebar$key = {
   readonly " $fragmentSpreads": FragmentRefs<"LiveEventSidebar">;
 };
 
+import LiveEventSidebarPaginationQuery_graphql from './LiveEventSidebarPaginationQuery.graphql';
+
 const node: ReaderFragment = (function(){
 var v0 = [
+  "liveEvents"
+],
+v1 = [
   {
     "alias": null,
     "args": null,
@@ -38,17 +43,70 @@ var v0 = [
   }
 ];
 return {
-  "argumentDefinitions": [],
+  "argumentDefinitions": [
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "after"
+    },
+    {
+      "defaultValue": 50,
+      "kind": "LocalArgument",
+      "name": "first"
+    },
+    {
+      "defaultValue": "TOURNAMENT",
+      "kind": "LocalArgument",
+      "name": "orderBy"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "sport"
+    }
+  ],
   "kind": "Fragment",
-  "metadata": null,
+  "metadata": {
+    "connection": [
+      {
+        "count": "first",
+        "cursor": "after",
+        "direction": "forward",
+        "path": (v0/*:: as any*/)
+      }
+    ],
+    "refetch": {
+      "connection": {
+        "forward": {
+          "count": "first",
+          "cursor": "after"
+        },
+        "backward": null,
+        "path": (v0/*:: as any*/)
+      },
+      "fragmentPathInResult": [],
+      "operation": LiveEventSidebarPaginationQuery_graphql
+    }
+  },
   "name": "LiveEventSidebar",
   "selections": [
     {
-      "alias": null,
-      "args": null,
+      "alias": "liveEvents",
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "orderBy",
+          "variableName": "orderBy"
+        },
+        {
+          "kind": "Variable",
+          "name": "sport",
+          "variableName": "sport"
+        }
+      ],
       "concreteType": "EventConnection",
       "kind": "LinkedField",
-      "name": "liveEvents",
+      "name": "__LiveEventSidebar_liveEvents_connection",
       "plural": false,
       "selections": [
         {
@@ -99,7 +157,7 @@ return {
                       "kind": "LinkedField",
                       "name": "sport",
                       "plural": false,
-                      "selections": (v0/*:: as any*/),
+                      "selections": (v1/*:: as any*/),
                       "storageKey": null
                     },
                     {
@@ -109,7 +167,7 @@ return {
                       "kind": "LinkedField",
                       "name": "tournament",
                       "plural": false,
-                      "selections": (v0/*:: as any*/),
+                      "selections": (v1/*:: as any*/),
                       "storageKey": null
                     }
                   ],
@@ -136,8 +194,47 @@ return {
                     }
                   ],
                   "storageKey": null
+                },
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
                 }
               ],
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cursor",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "PageInfo",
+          "kind": "LinkedField",
+          "name": "pageInfo",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "endCursor",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "hasNextPage",
               "storageKey": null
             }
           ],
@@ -152,6 +249,6 @@ return {
 };
 })();
 
-(node as any).hash = "3f6975cffb3bb8ef8629d397171460ba";
+(node as any).hash = "2819c2a3972fbef51e204dd63dca1a93";
 
 export default node;

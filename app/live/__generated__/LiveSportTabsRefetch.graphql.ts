@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9baa3b04765d7b4ba43ffcf78cf0706c>>
+ * @generated SignedSource<<e443a795a3ea0a1bc6d8f1cdba9e147d>>
  * @lightSyntaxTransform
  */
 
@@ -41,7 +41,7 @@ const node: ConcreteRequest = {
     "name": "LiveSportTabsRefetch",
     "selections": [
       {
-        "alias": null,
+        "alias": "allLive",
         "args": null,
         "concreteType": "EventConnection",
         "kind": "LinkedField",
@@ -100,15 +100,15 @@ const node: ConcreteRequest = {
     ]
   },
   "params": {
-    "cacheID": "bd12e2a19592153649902e28c181a457",
+    "cacheID": "f3ee8cc17e0c8b0ccc7b609c7d24d4a9",
     "id": null,
     "metadata": {},
     "name": "LiveSportTabsRefetch",
     "operationKind": "query",
-    "text": "query LiveSportTabsRefetch {\n  ...LiveSportTabs\n}\n\nfragment LiveSportTabs on Query {\n  liveEvents {\n    totalCount\n  }\n  sports {\n    key\n    name\n    liveEventCount\n    id\n  }\n}\n"
+    "text": "query LiveSportTabsRefetch {\n  ...LiveSportTabs\n}\n\nfragment LiveSportTabs on Query {\n  allLive: liveEvents {\n    totalCount\n  }\n  sports {\n    key\n    name\n    liveEventCount\n    id\n  }\n}\n"
   }
 };
 
-(node as any).hash = "351e17778caa20d2d118cc3b0947cfd5";
+(node as any).hash = "12ca01feeeb6c10389af2d2a1aef8d3c";
 
 export default node;

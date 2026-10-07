@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<39bcc968bf2843dfc03757e98c294a9d>>
+ * @generated SignedSource<<ba9d0f9a3d684d48a2b9ee73907a693b>>
  * @lightSyntaxTransform
  */
 
@@ -10,7 +10,7 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type LiveSportTabs$data = {
-  readonly liveEvents: {
+  readonly allLive: {
     readonly totalCount: number;
   };
   readonly sports: ReadonlyArray<{
@@ -40,7 +40,7 @@ const node: ReaderFragment = {
   "name": "LiveSportTabs",
   "selections": [
     {
-      "alias": null,
+      "alias": "allLive",
       "args": null,
       "concreteType": "EventConnection",
       "kind": "LinkedField",
@@ -94,6 +94,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "351e17778caa20d2d118cc3b0947cfd5";
+(node as any).hash = "12ca01feeeb6c10389af2d2a1aef8d3c";
 
 export default node;

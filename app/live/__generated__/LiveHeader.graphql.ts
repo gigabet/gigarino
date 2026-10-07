@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e862d3cb8f336bf522a8c14a04682ddc>>
+ * @generated SignedSource<<ac4811c4eb481f6f6a1a0870c561dde7>>
  * @lightSyntaxTransform
  */
 
@@ -10,10 +10,10 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type LiveHeader$data = {
-  readonly liveEvents: {
+  readonly firstLive: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly " $fragmentSpreads": FragmentRefs<"LiveOrder">;
+        readonly id: string;
       };
     }>;
   };
@@ -25,25 +25,40 @@ export type LiveHeader$key = {
   readonly " $fragmentSpreads": FragmentRefs<"LiveHeader">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "key",
-    "storageKey": null
-  }
-];
-return {
-  "argumentDefinitions": [],
+const node: ReaderFragment = {
+  "argumentDefinitions": [
+    {
+      "kind": "RootArgument",
+      "name": "orderBy"
+    },
+    {
+      "kind": "RootArgument",
+      "name": "sport"
+    }
+  ],
   "kind": "Fragment",
   "metadata": null,
   "name": "LiveHeader",
   "selections": [
     {
-      "alias": null,
-      "args": null,
+      "alias": "firstLive",
+      "args": [
+        {
+          "kind": "Literal",
+          "name": "first",
+          "value": 1
+        },
+        {
+          "kind": "Variable",
+          "name": "orderBy",
+          "variableName": "orderBy"
+        },
+        {
+          "kind": "Variable",
+          "name": "sport",
+          "variableName": "sport"
+        }
+      ],
       "concreteType": "EventConnection",
       "kind": "LinkedField",
       "name": "liveEvents",
@@ -66,53 +81,11 @@ return {
               "plural": false,
               "selections": [
                 {
-                  "kind": "InlineDataFragmentSpread",
-                  "name": "LiveOrder",
-                  "selections": [
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "id",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "startTime",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "status",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "concreteType": "Sport",
-                      "kind": "LinkedField",
-                      "name": "sport",
-                      "plural": false,
-                      "selections": (v0/*:: as any*/),
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "concreteType": "Tournament",
-                      "kind": "LinkedField",
-                      "name": "tournament",
-                      "plural": false,
-                      "selections": (v0/*:: as any*/),
-                      "storageKey": null
-                    }
-                  ],
+                  "alias": null,
                   "args": null,
-                  "argumentDefinitions": []
+                  "kind": "ScalarField",
+                  "name": "id",
+                  "storageKey": null
                 }
               ],
               "storageKey": null
@@ -132,8 +105,7 @@ return {
   "type": "Query",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "923bf7d88bb894307700ca6512003228";
+(node as any).hash = "8520f1cdef42b6ea69dbe2664da9d3bd";
 
 export default node;

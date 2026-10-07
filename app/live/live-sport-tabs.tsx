@@ -18,7 +18,7 @@ export default function LiveSportTabs(props: {
   const [data] = useRefetchableFragment(
     graphql`
       fragment LiveSportTabs on Query @refetchable(queryName: "LiveSportTabsRefetch") {
-        liveEvents {
+        allLive: liveEvents {
           totalCount
         }
         sports {
@@ -31,7 +31,7 @@ export default function LiveSportTabs(props: {
     props.query
   )
 
-  const total = data.liveEvents.totalCount
+  const total = data.allLive.totalCount
 
   const env = useRelayEnvironment()
   useEffect(() => {

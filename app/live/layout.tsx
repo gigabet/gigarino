@@ -2,7 +2,7 @@
 
 import { useAtomValue } from 'jotai'
 import { usePathname } from 'next/navigation'
-import { Suspense, useEffect, useMemo, useState } from 'react'
+import { Suspense, startTransition, useEffect, useMemo, useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { graphql, requestSubscription, useQueryLoader, useRelayEnvironment } from 'react-relay'
 import type { LiveLayoutQuery } from '@/app/live/__generated__/LiveLayoutQuery.graphql'
@@ -10,6 +10,7 @@ import LiveEventSidebar, {
   LiveEventSidebarSkeleton,
 } from '@/app/live/event/[id]/live-event-sidebar'
 import LiveHeader, { LiveHeaderSkeleton } from '@/app/live/live-header'
+import { liveSortState, liveSportFilterState, ORDER } from '@/app/live/live-state'
 import { LiveSubscriptionsProvider } from '@/app/live/live-subscriptions'
 import { RefetchBatcherProvider } from '@/app/live/refetch-context'
 import BetslipSubscriptionNode, {
@@ -49,18 +50,22 @@ export default function LiveLayout({ children }: React.PropsWithChildren) {
     return dispose
   }, [environment, betslipInput])
 
-  // One query for the whole route. Header and sidebar read their own fragments from it.
+  const sort = useAtomValue(liveSortState)
+  const sportFilter = useAtomValue(liveSportFilterState)
+
   const [queryRef, loadQuery, disposeQuery] = useQueryLoader<LiveLayoutQuery>(graphql`
-    query LiveLayoutQuery {
+    query LiveLayoutQuery($orderBy: LiveEventOrder!, $sport: String) {
       ...LiveHeader
-      ...LiveEventSidebar
+      ...LiveEventSidebar @arguments(orderBy: $orderBy, sport: $sport)
     }
   `)
 
   useEffect(() => {
-    loadQuery({}, { fetchPolicy: 'store-and-network' })
-    return () => disposeQuery()
-  }, [loadQuery, disposeQuery])
+    startTransition(() => {
+      loadQuery({ orderBy: ORDER[sort], sport: sportFilter }, { fetchPolicy: 'store-or-network' })
+    })
+  }, [loadQuery, sort, sportFilter])
+  useEffect(() => () => disposeQuery(), [disposeQuery])
 
   return (
     <LiveSubscriptionsProvider>

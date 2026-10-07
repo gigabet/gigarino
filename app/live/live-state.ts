@@ -6,6 +6,7 @@ import type { LiveSort } from '@/app/live/live-toolbar'
 
 export const liveSortState = atom<LiveSort>('tournament')
 export const liveSportFilterState = atom<string | null>(null)
+export const ORDER = { tournament: 'TOURNAMENT', chronological: 'START_TIME' } as const
 
 const orderFragment = graphql`
   fragment LiveOrder on Event @inline {
