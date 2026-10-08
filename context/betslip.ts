@@ -5,7 +5,7 @@ import { atomWithStorage } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
 import type { BetslipSubscription$variables } from '@/app/sport/__generated__/BetslipSubscription.graphql'
 import { tKey } from '@/i18n/tKey'
-import type { BetRejectionCode } from '@/types'
+import type { BetRejectionCode, OddsChangePolicy } from '@/types'
 
 export type BetslipInput = BetslipSubscription$variables['input']
 
@@ -19,6 +19,7 @@ const defaultInput: BetslipInput = {
 /** Persisted across reloads — this is exactly what we send as subscription variables */
 export const betslipInputAtom = atomWithStorage<BetslipInput>('betslip', defaultInput)
 export const betslipOpenAtom = atom(false)
+export const oddsPolicyAtom = atom<OddsChangePolicy>('REJECT')
 
 export function useToggleOdd() {
   const setInput = useSetAtom(betslipInputAtom)

@@ -33,13 +33,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Separator } from '@/components/ui/separator'
 import * as Tabs from '@/components/ui/tabs'
 import {
   betCodeCopy,
   betslipInputAtom,
   betslipOpenAtom,
   boostAtom,
+  oddsPolicyAtom,
   useActiveBoost,
   useBetslipPrices,
   useSetDefaultStake,
@@ -169,9 +169,17 @@ function useBetslipTotals(data: Quote | null) {
   return { boost, singlesTotal, stakeNum, overBoostMax, shownOdds, shownPayout }
 }
 
-/** Odds-change detection, the dismiss state and the accept actions. */
+/**
+ * Odds-change detection, the dismiss state and the accept actions.
+ *
+ * Accepting also switches the odds policy sent with placeBet (ACCEPT_HIGHER /
+ * ACCEPT_ANY) so the server does not reject the slip for a move the player
+ * already accepted. The policy lives until the slip is empty or submitted.
+ */
 function usePriceChanges(data: Quote | null) {
+  const input = useAtomValue(betslipInputAtom)
   const setInput = useSetAtom(betslipInputAtom)
+  const [policy, setPolicy] = useAtom(oddsPolicyAtom)
   const { stamp, accept } = useBetslipPrices()
   const [dismissedSig, setDismissedSig] = useState<string | null>(null)
 
@@ -184,25 +192,46 @@ function usePriceChanges(data: Quote | null) {
     if (unseen.size) stamp(unseen)
   }, [data, stamp])
 
+  // an emptied slip starts over with the default policy
+  const isEmpty = input.items.length === 0
+  useEffect(() => {
+    if (isEmpty) setPolicy('REJECT')
+  }, [isEmpty, setPolicy])
+
   const changed = (data?.items ?? []).filter(i => i.priceChanged && i.price && i.expectedPrice)
   const higher = changed.filter(i => Number(i.price) > Number(i.expectedPrice))
   const lower = changed.filter(i => Number(i.price) < Number(i.expectedPrice))
-  const signature = changed.map(i => `${i.outcomeId}:${i.price}`).join('|')
+
+  // moves the active policy already covers will be accepted by the server: no prompt
+  const pending = policy === 'ACCEPT_ANY' ? [] : policy === 'ACCEPT_HIGHER' ? lower : changed
+  const signature = pending.map(i => `${i.outcomeId}:${i.price}`).join('|')
 
   const toMap = (items: typeof changed) => new Map(items.map(i => [i.outcomeId, i.price as string]))
+  const dropLower = () => {
+    const lowerIds = new Set(lower.map(i => i.outcomeId))
+    setInput(prev => withoutItems(prev, lowerIds))
+  }
 
   return {
-    changed,
-    hasHigher: higher.length > 0,
-    hasLower: lower.length > 0,
-    show: changed.length > 0 && signature !== dismissedSig, // moves again => re-shows
-    dismiss: () => setDismissedSig(signature),
-    reset: () => setDismissedSig(null),
-    acceptAll: () => accept(toMap(changed)),
+    pending,
+    showAcceptHigher: policy === 'REJECT' && higher.length > 0 && lower.length > 0,
+    show: pending.length > 0 && signature !== dismissedSig, // moves again => re-shows
+    // the X: reject the worse odds by dropping those legs (same idea as the invalid-bets X).
+    // With nothing lower to drop, there is nothing to reject, so just hide the prompt.
+    reject: () => (lower.length > 0 ? dropLower() : setDismissedSig(signature)),
+    // unexpected rejection: ask again from scratch
+    reset: () => {
+      setDismissedSig(null)
+      setPolicy('REJECT')
+    },
+    acceptAll: () => {
+      accept(toMap(changed))
+      setPolicy('ACCEPT_ANY')
+    },
     acceptHigher: () => {
       accept(toMap(higher)) // rebase the legs that went up
-      const lowerIds = new Set(lower.map(i => i.outcomeId))
-      setInput(prev => withoutItems(prev, lowerIds)) // drop the legs that went down
+      dropLower() // drop the legs that went down
+      setPolicy('ACCEPT_HIGHER')
     },
   }
 }
@@ -217,6 +246,7 @@ function usePlaceBet(opts: {
   const t = useT()
   const input = useAtomValue(betslipInputAtom)
   const setBoost = useSetAtom(boostAtom)
+  const [oddsPolicy, setOddsPolicy] = useAtom(oddsPolicyAtom)
   const clearAll = useClearBetslip()
 
   const [placed, setPlaced] = useState<Placed | null>(null)
@@ -268,7 +298,7 @@ function usePlaceBet(opts: {
           stake: input.stake || '0',
           systemSize: input.systemSize ?? null,
           clientRequestId: clientRequestId.current,
-          oddsPolicy: 'REJECT',
+          oddsPolicy,
           boostId: opts.boostId,
         },
       },
@@ -288,6 +318,7 @@ function usePlaceBet(opts: {
         const ticket = response.placeBet.ticket
         if (ticket) {
           setBoost(null)
+          setOddsPolicy('REJECT') // accepted odds changes only apply to the slip just submitted
           setPlaced({ id: ticket.id, stake: ticket.stake, potentialPayout: ticket.potentialPayout })
           opts.onPlaced()
         }
@@ -411,31 +442,39 @@ function BetslipBody(props: {
     !totals.overBoostMax
 
   return (
-    <div className='scrollbar-hide flex flex-1 flex-col overflow-auto'>
-      <BetTypeTabs data={data} />
-      <SystemSizeSelect data={data} />
-      <SelectionList data={data} />
+    <div className='flex min-h-0 flex-1 flex-col'>
+      {/* One scroll region: tabs, actionable banners and tips. Tips get all remaining height. */}
+      <div className='scrollbar-hide min-h-0 flex-1 overflow-y-auto'>
+        <BetTypeTabs data={data} />
+        <SystemSizeSelect data={data} />
 
-      {unavailable.size === 0 && bet.placeError === null && <Separator />}
+        {/* pinned while scrolling: these block placing, so they must stay visible */}
+        <div className='bg-dark-200 sticky top-0 z-10 mt-2 empty:hidden'>
+          <InvalidBetsBanner
+            count={unavailable.size}
+            onRemove={() => setInput(prev => withoutItems(prev, unavailable))}
+          />
+          {changes.show && <PriceChangesBanner changes={changes} />}
+        </div>
 
-      <InvalidBetsBanner
-        count={unavailable.size}
-        onRemove={() => setInput(prev => withoutItems(prev, unavailable))}
-      />
-      <PlaceErrorBanner message={bet.placeError} />
-      {!data.placeable && unavailable.size === 0 && !changes.show && (
-        <BlockersBanner blockers={data.blockers} />
-      )}
-      {changes.show && <PriceChangesBanner changes={changes} />}
+        <SelectionList data={data} />
+      </div>
 
-      <BetslipSummary data={data} totals={totals}>
-        <PlaceBetButton
-          disabled={!canPlace}
-          isPlacing={bet.isPlacing}
-          stake={totals.stakeNum}
-          onClick={bet.place}
-        />
-      </BetslipSummary>
+      {/* Pinned footer: compact, never competes with the tips for space */}
+      <div className='shrink-0 border-t border-white/5'>
+        <PlaceErrorBanner message={bet.placeError} />
+        {!data.placeable && unavailable.size === 0 && !changes.show && (
+          <BlockersBanner blockers={data.blockers} />
+        )}
+        <BetslipSummary data={data} totals={totals}>
+          <PlaceBetButton
+            disabled={!canPlace}
+            isPlacing={bet.isPlacing}
+            stake={totals.stakeNum}
+            onClick={bet.place}
+          />
+        </BetslipSummary>
+      </div>
     </div>
   )
 }
@@ -514,7 +553,7 @@ function SelectionList(props: { data: Quote }) {
   const { data } = props
 
   return (
-    <div className='scrollbar-thumb-dark-300 min-h-30 flex-1 scrollbar-thin scrollbar-track-transparent scrollbar-gutter-stable space-y-3 overflow-y-auto py-4 pr-2.5 pl-5'>
+    <div className='space-y-1.5 px-5 pt-2 pb-3'>
       {data.items.map(item => (
         <Tip
           key={item.outcomeId}
@@ -532,7 +571,7 @@ function SelectionList(props: { data: Quote }) {
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Banners                                                                   */
+/*  Banners (slim, one line where possible)                                   */
 /* -------------------------------------------------------------------------- */
 
 function InvalidBetsBanner(props: { count: number; onRemove: () => void }) {
@@ -540,15 +579,15 @@ function InvalidBetsBanner(props: { count: number; onRemove: () => void }) {
   if (props.count === 0) return null
 
   return (
-    <div className='z-1 flex items-center gap-2 bg-red-500/10 p-3 px-6 text-red-400'>
-      <AlertTriangleIcon className='size-4 shrink-0' />
+    <div className='flex items-center gap-2 bg-red-500/10 px-5 py-1.5 text-red-400'>
+      <AlertTriangleIcon className='size-3.5 shrink-0' />
       <p className='mr-auto text-xs'>
         {props.count === 1 ? t('1 invalid bet.') : t('{n} invalid bets.', { n: props.count })}
       </p>
       <Button
         variant='ghost'
         size='icon-sm'
-        className='-mx-2 size-6 rounded-full text-xs text-red-400 hover:bg-red-400/30 hover:text-white'
+        className='-mr-1 size-6 rounded-full text-xs text-red-400 hover:bg-red-400/30 hover:text-white'
         onClick={props.onRemove}
       >
         <XIcon />
@@ -561,8 +600,8 @@ function PlaceErrorBanner(props: { message: string | null }) {
   if (!props.message) return null
 
   return (
-    <div className='z-1 flex items-start gap-2 bg-red-500/10 p-3 px-6 text-red-400'>
-      <AlertTriangleIcon className='mt-0.5 size-4 shrink-0' />
+    <div className='flex items-start gap-2 bg-red-500/10 px-5 py-1.5 text-red-400'>
+      <AlertTriangleIcon className='mt-0.5 size-3.5 shrink-0' />
       <p className='text-xs'>{props.message}</p>
     </div>
   )
@@ -573,8 +612,8 @@ function BlockersBanner(props: { blockers: Quote['blockers'] }) {
   if (props.blockers.length === 0) return null
 
   return (
-    <div className='z-1 flex items-start gap-2 bg-red-500/10 p-3 px-6 text-red-400'>
-      <AlertTriangleIcon className='mt-0.5 size-4 shrink-0' />
+    <div className='flex items-start gap-2 bg-red-500/10 px-5 py-1.5 text-red-400'>
+      <AlertTriangleIcon className='mt-0.5 size-3.5 shrink-0' />
       <div className='mr-auto space-y-0.5 text-xs'>
         {[...new Set(props.blockers)].map(b => (
           <p key={b}>{betCodeCopy(b, t) ?? t('Bet unavailable.')}</p>
@@ -592,45 +631,41 @@ function BlockersBanner(props: { blockers: Quote['blockers'] }) {
 function PriceChangesBanner(props: { changes: ReturnType<typeof usePriceChanges> }) {
   const t = useT()
   const { changes } = props
-  const count = changes.changed.length
+  const count = changes.pending.length
+  const btn = 'h-6 shrink-0 rounded-full px-2.5 text-[0.65rem] whitespace-nowrap'
 
   return (
-    <div className='z-1 flex flex-col gap-2 bg-amber-500/10 p-3 px-6 text-amber-400'>
-      <div className='flex items-center gap-2'>
-        <TrendingUpIcon className='size-4 shrink-0' />
-        <p className='mr-auto text-xs'>
-          {count === 1 ? t('1 odd change.') : t('{n} odds changes.', { n: count })}
-        </p>
-        <Button
-          variant='ghost'
-          size='icon-sm'
-          aria-label={t('Dismiss')}
-          className='-mx-2 size-6 rounded-full text-xs text-amber-400 hover:bg-amber-400/30 hover:text-white'
-          onClick={changes.dismiss}
-        >
-          <XIcon />
-        </Button>
-      </div>
-      <div className='flex gap-2'>
-        {changes.hasHigher && changes.hasLower && (
-          <Button
-            variant='outline'
-            size='sm'
-            className='h-6 flex-1 px-2 text-[0.7rem]'
-            onClick={changes.acceptHigher}
-          >
-            {t('Accept higher')}
-          </Button>
-        )}
+    <div className='flex items-center gap-1.5 bg-amber-500/10 px-5 py-1.5 text-amber-400'>
+      <TrendingUpIcon className='size-3.5 shrink-0' />
+      <p className='min-w-0 flex-1 truncate text-xs'>
+        {count === 1 ? t('1 odd change.') : t('{n} odds changes.', { n: count })}
+      </p>
+      {changes.showAcceptHigher && (
         <Button
           variant='outline'
           size='sm'
-          className='h-6 flex-1 px-2 text-[0.7rem]'
-          onClick={changes.acceptAll}
+          className={cn(btn, 'border-amber-400/50')}
+          onClick={changes.acceptHigher}
         >
-          {t('Accept all')}
+          {t('Accept higher')}
         </Button>
-      </div>
+      )}
+      <Button
+        size='sm'
+        className={cn(btn, 'border-transparent bg-amber-400 text-black hover:bg-amber-300')}
+        onClick={changes.acceptAll}
+      >
+        {t('Accept all')}
+      </Button>
+      <Button
+        variant='ghost'
+        size='icon-sm'
+        aria-label={t('Remove lower odds')}
+        className='-mr-1 size-6 shrink-0 rounded-full text-xs text-amber-400 hover:bg-amber-400/30 hover:text-white'
+        onClick={changes.reject}
+      >
+        <XIcon />
+      </Button>
     </div>
   )
 }
@@ -651,13 +686,14 @@ function BetslipSummary(props: {
   const fmt = (n: number) => formatBalance(n, currency)
   const { data, totals } = props
   const { boost } = totals
+  const isSingle = data.betType === 'SINGLE'
 
   return (
-    <div className='space-y-4 px-5 py-4'>
+    <div className='space-y-2.5 px-5 py-3'>
       {boost && (
-        <div className='border-primary/40 bg-primary/10 flex items-center justify-between rounded-xl border px-4 py-2 text-xs'>
+        <div className='border-primary/40 bg-primary/10 flex items-center justify-between rounded-lg border px-3 py-1 text-xs'>
           <span className='text-primary flex items-center gap-1.5 font-bold uppercase'>
-            <ChevronsUpIcon className='size-4' />
+            <ChevronsUpIcon className='size-3.5' />
             {t('Bet Boost')}
           </span>
           <span className='font-mono'>
@@ -669,31 +705,16 @@ function BetslipSummary(props: {
         </div>
       )}
 
-      {data.betType === 'SINGLE' ? (
-        <>
-          <div className='flex items-center gap-3'>
-            <span className='text-secondary shrink-0 text-sm'>{t('Stake per bet')}</span>
-            <StakeInput
-              value={input.stake}
-              placeholder={t('Stake per bet')}
-              onCommit={setDefaultStake}
-            />
-          </div>
-          <SummaryRow label={t('Total stake')} value={fmt(totals.singlesTotal)} />
-        </>
-      ) : (
-        <>
-          <SummaryRow label={t('Combined odds')} value={totals.shownOdds.toFixed(2)} mono />
-          <div className='flex items-center gap-3'>
-            <span className='text-secondary shrink-0 text-sm'>{t('Stake')}</span>
-            <StakeInput
-              value={input.stake}
-              placeholder={t('Stake')}
-              onCommit={stake => setInput(prev => ({ ...prev, stake }))}
-            />
-          </div>
-        </>
-      )}
+      <div className='flex items-center gap-3'>
+        <span className='text-secondary shrink-0 text-sm'>
+          {isSingle ? t('Stake per bet') : t('Stake')}
+        </span>
+        <StakeInput
+          value={input.stake}
+          placeholder={isSingle ? t('Stake per bet') : t('Stake')}
+          onCommit={isSingle ? setDefaultStake : stake => setInput(prev => ({ ...prev, stake }))}
+        />
+      </div>
 
       {totals.overBoostMax && boost?.maxStake && (
         <p className='text-xs text-amber-400'>
@@ -703,9 +724,22 @@ function BetslipSummary(props: {
         </p>
       )}
 
-      <div className='bg-dark flex items-center justify-between rounded-xl border border-white/5 px-4 py-3'>
-        <span className='text-secondary text-sm'>{t('Potential payout')}</span>
-        <span className='text-primary text-lg font-bold'>{fmt(totals.shownPayout)}</span>
+      {/* one tile: total stake (or combined odds) on the left, payout on the right */}
+      <div className='bg-dark grid grid-cols-2 items-center gap-3 rounded-xl border border-white/5 px-4 py-2'>
+        <div className='flex flex-col'>
+          <span className='text-secondary text-[0.65rem] uppercase'>
+            {isSingle ? t('Total stake') : t('Combined odds')}
+          </span>
+          <span className={cn('text-sm font-semibold text-white', !isSingle && 'font-mono')}>
+            {isSingle ? fmt(totals.singlesTotal) : totals.shownOdds.toFixed(2)}
+          </span>
+        </div>
+        <div className='flex flex-col items-end'>
+          <span className='text-secondary text-[0.65rem] uppercase'>{t('Potential payout')}</span>
+          <span className='text-primary text-lg leading-tight font-bold'>
+            {fmt(totals.shownPayout)}
+          </span>
+        </div>
       </div>
 
       {props.children}
@@ -727,7 +761,7 @@ function PlaceBetButton(props: {
       type='button'
       disabled={props.disabled}
       onClick={props.onClick}
-      className='group/button bg-primary hover:shadow-glow-lg text-primary-foreground relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-full px-10 py-4 text-base font-bold tracking-wide uppercase transition-all duration-300 select-none disabled:pointer-events-none disabled:bg-neutral-400 disabled:text-neutral-700'
+      className='group/button bg-primary hover:shadow-glow-lg text-primary-foreground relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-full px-10 py-3 text-base font-bold tracking-wide uppercase transition-all duration-300 select-none disabled:pointer-events-none disabled:bg-neutral-400 disabled:text-neutral-700'
     >
       <div className='from-primary to-primary absolute inset-0 bg-linear-to-r via-white/30 opacity-0 transition-opacity duration-500 group-hover/button:opacity-100' />
       <div className='absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/40 to-transparent transition-transform duration-1000 group-hover/button:translate-x-full' />
@@ -742,17 +776,6 @@ function PlaceBetButton(props: {
         </span>
       )}
     </button>
-  )
-}
-
-function SummaryRow(props: { label: string; value: string; mono?: boolean }) {
-  return (
-    <div className='flex items-center justify-between text-sm'>
-      <span className='text-secondary'>{props.label}</span>
-      <span className={cn('font-semibold text-white', props.mono && 'font-mono')}>
-        {props.value}
-      </span>
-    </div>
   )
 }
 
@@ -799,72 +822,70 @@ function Tip(props: {
   const changed = data.priceChanged && !!data.expectedPrice && !!data.price
   const up = changed && Number(data.price) > Number(data.expectedPrice)
   const blocked = data.availability !== 'AVAILABLE'
+  const subline = [data.marketName, data.eventName].filter(Boolean).join(' · ') || '—'
 
   return (
     <div
       className={cn(
-        'group relative rounded-xl border bg-black/20 p-3 transition-colors',
+        'rounded-xl border bg-black/20 px-3 py-2 transition-colors',
         blocked ? 'border-neutral-500/30 bg-neutral-500/5 opacity-80' : 'border-white/5'
       )}
     >
-      <button
-        type='button'
-        onClick={props.onRemove}
-        aria-label={t('Remove selection')}
-        className='text-secondary hover:bg-dark-300 absolute top-2 right-2 flex size-6 items-center justify-center rounded-full opacity-0 transition-opacity group-hover:opacity-100 hover:text-white'
-      >
-        <XIcon className='size-3.5' />
-      </button>
-
-      <div className='flex items-start justify-between gap-2'>
-        <div className='min-w-0 pr-1'>
+      <div className='flex items-start gap-2'>
+        <div className='min-w-0 flex-1'>
           <p
             className={cn(
-              'truncate text-sm font-bold',
+              'truncate text-sm leading-tight font-bold',
               blocked ? 'text-secondary line-through' : 'text-primary'
             )}
           >
             {getLabel(data.eventName, data.key, t) ?? '—'}
           </p>
-          <p className='truncate text-xs font-medium text-white/80'>{data.marketName ?? '—'}</p>
-          <p className='text-secondary truncate text-[0.7rem]'>{data.eventName ?? '—'}</p>
+          <p className='text-secondary truncate text-[0.7rem] leading-tight'>{subline}</p>
         </div>
 
-        <div className='flex shrink-0 flex-col items-end self-center pt-0.5'>
-          <span className='flex items-center gap-1 font-mono text-base font-semibold text-white'>
-            {changed ? (
-              <span className='flex items-center gap-1'>
-                <span className='text-secondary text-xs line-through'>
-                  {Number(data.expectedPrice).toFixed(2)}
-                </span>
-                <TrendingUpIcon
-                  className={cn('size-3', up ? 'text-primary' : 'rotate-90 text-red-400')}
-                />
-                <span className={up ? 'text-primary' : 'text-red-400'}>
-                  {Number(data.price).toFixed(2)}
-                </span>
+        <span className='flex shrink-0 items-center gap-1 font-mono text-sm font-semibold text-white'>
+          {changed ? (
+            <>
+              <span className='text-secondary text-[0.65rem] line-through'>
+                {Number(data.expectedPrice).toFixed(2)}
               </span>
-            ) : data.price ? (
-              Number(data.price).toFixed(2)
-            ) : (
-              <LockKeyhole className='text-secondary size-4' />
-            )}
-          </span>
-        </div>
+              <TrendingUpIcon
+                className={cn('size-3', up ? 'text-primary' : 'rotate-90 text-red-400')}
+              />
+              <span className={up ? 'text-primary' : 'text-red-400'}>
+                {Number(data.price).toFixed(2)}
+              </span>
+            </>
+          ) : data.price ? (
+            Number(data.price).toFixed(2)
+          ) : (
+            <LockKeyhole className='text-secondary size-4' />
+          )}
+        </span>
+
+        {/* always visible: there is no hover on touch devices */}
+        <button
+          type='button'
+          onClick={props.onRemove}
+          aria-label={t('Remove selection')}
+          className='text-secondary hover:bg-dark-300 -mr-1 flex size-5 shrink-0 items-center justify-center rounded-full transition-colors hover:text-white'
+        >
+          <XIcon className='size-3.5' />
+        </button>
       </div>
 
       {blocked && (
-        <p className='mt-2 flex items-center gap-1.5 text-xs text-red-400'>
+        <p className='mt-1 flex items-center gap-1.5 text-xs text-red-400'>
           <AlertTriangleIcon className='size-3.5' />
           {betCodeCopy(data.availability, t)}
         </p>
       )}
 
       {!blocked && props.showStake && (
-        <div className='mt-2 flex items-center gap-2 border-t border-white/5 pt-2'>
-          <span className='text-secondary text-xs'>{t('Stake')}</span>
-          <StakeInput value={props.stakeValue} onCommit={props.onStakeChange} />
-          <span className='text-primary w-20 shrink-0 text-right text-xs font-semibold'>
+        <div className='mt-1.5 flex items-center gap-2'>
+          <StakeInput compact value={props.stakeValue} onCommit={props.onStakeChange} />
+          <span className='text-primary ml-auto text-xs font-semibold'>
             → {formatBalance((Number(props.stakeValue) || 0) * (Number(data.price) || 0), currency)}
           </span>
         </div>
@@ -873,7 +894,12 @@ function Tip(props: {
   )
 }
 
-function StakeInput(props: { value: string; onCommit: (v: string) => void; placeholder?: string }) {
+function StakeInput(props: {
+  value: string
+  onCommit: (v: string) => void
+  placeholder?: string
+  compact?: boolean
+}) {
   const currency = useCurrency()
   const [text, setText] = useState(props.value)
   const timer = useRef<number>(undefined)
@@ -882,7 +908,9 @@ function StakeInput(props: { value: string; onCommit: (v: string) => void; place
   useEffect(() => () => clearTimeout(timer.current), [])
 
   return (
-    <InputGroup className='bg-dark flex-1 rounded-full'>
+    <InputGroup
+      className={cn('bg-dark flex-1 rounded-full', props.compact && 'h-7 w-28 flex-none')}
+    >
       <InputGroupInput
         type='number'
         inputMode='decimal'
@@ -901,7 +929,10 @@ function StakeInput(props: { value: string; onCommit: (v: string) => void; place
           if (text === '') setText(props.value)
           else if (text !== props.value) props.onCommit(text)
         }}
-        className='appearance-none text-right font-mono text-sm [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none'
+        className={cn(
+          'appearance-none text-right font-mono text-sm [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none',
+          props.compact && 'text-xs'
+        )}
       />
       <InputGroupAddon align='inline-end' className='text-xs'>
         {currency}
