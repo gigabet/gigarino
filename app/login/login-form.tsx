@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useT } from '@/context/providers'
 
-export default function LoginForm() {
+export default function LoginForm(props: { from?: string }) {
   const [formData, action, isPending] = useActionState(login, {
     identifier: '',
     password: '',
@@ -180,7 +180,7 @@ export default function LoginForm() {
 
           <input type='hidden' name='userAgent' value={userAgent} />
           <input type='hidden' name='device' value={device} />
-          <input type='hidden' name='from' value={searchParams.get('from') ?? '/'} />
+          <input type='hidden' name='from' value={props.from ?? searchParams.get('from') ?? '/'} />
 
           {/* Submit Button */}
           <motion.div

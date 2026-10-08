@@ -763,6 +763,10 @@
     "de": "Angemeldet bleiben",
     "tr": "Beni hatırla"
   },
+  "Remove lower odds": {
+    "de": "",
+    "tr": ""
+  },
   "Remove selection": {
     "de": "Auswahl entfernen",
     "tr": "Seçimi kaldır"
@@ -882,6 +886,10 @@
   "Stake": {
     "de": "Einsatz",
     "tr": "Bahis Miktarı"
+  },
+  "Stake per bet": {
+    "de": "",
+    "tr": ""
   },
   "System": {
     "de": "System",

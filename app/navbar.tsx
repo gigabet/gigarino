@@ -21,6 +21,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import BottomBar from '@/app/bottom-bar'
 import Search from '@/app/search'
 import { LocaleSwitcher } from '@/components/locale-switcher'
+import LoginDialog from '@/components/login-dialog'
 import Logo from '@/components/logo'
 import * as DropdownMenu from '@/components/ui/dropdown-menu'
 import { useBalanceUpdates } from '@/context/hooks'
@@ -192,6 +193,7 @@ export default function Navbar(props: { token: string | undefined }) {
       </header>
       <MobileMenu />
       <BottomBar links={navLinks} />
+      <LoginDialog />
     </>
   )
 }

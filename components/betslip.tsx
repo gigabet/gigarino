@@ -23,6 +23,7 @@ import type { Betslip$data, Betslip$key } from '@/components/__generated__/Betsl
 import type { BetslipMobileBar$key } from '@/components/__generated__/BetslipMobileBar.graphql'
 import type { BetslipPlaceBetMutation } from '@/components/__generated__/BetslipPlaceBetMutation.graphql'
 import type { Tip$key } from '@/components/__generated__/Tip.graphql'
+import { loginDialogOpenAtom } from '@/components/login-dialog'
 import MyTickets from '@/components/my-tickets'
 import { Button } from '@/components/ui/button'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
@@ -47,7 +48,7 @@ import {
   withoutItems,
 } from '@/context/betslip'
 import { useMediaQuery } from '@/context/hooks'
-import { useCurrency, useT } from '@/context/providers'
+import { useCurrency, useT, useUser } from '@/context/providers'
 import { cn, formatBalance, nCk } from '@/lib/utils'
 import type { TicketType } from '@/types'
 
@@ -142,7 +143,12 @@ function useClearBetslip() {
   const setBoost = useSetAtom(boostAtom)
 
   return () => {
-    setInput(prev => ({ ...prev, items: [], systemSize: null, betType: 'SINGLE' }))
+    setInput(prev => ({
+      ...prev,
+      items: [],
+      systemSize: null,
+      betType: 'SINGLE',
+    }))
     setBoost(null)
   }
 }
@@ -275,9 +281,20 @@ function usePlaceBet(opts: {
     }
   `)
 
+  const { user } = useUser()
+  const setLoginOpen = useSetAtom(loginDialogOpenAtom)
+  const setBetslipOpen = useSetAtom(betslipOpenAtom)
   const place = () => {
     const { data } = opts
     if (!data) return
+
+    // guests can't place bets: ask them to log in instead of hitting the API
+    if (!user) {
+      setBetslipOpen(false) // close the mobile drawer so it doesn't fight the dialog for focus
+      setLoginOpen(true)
+      return
+    }
+
     const byId = new Map(input.items.map(i => [i.outcomeId, i]))
     const items = data.items
       .filter(i => i.availability === 'AVAILABLE')
@@ -319,7 +336,11 @@ function usePlaceBet(opts: {
         if (ticket) {
           setBoost(null)
           setOddsPolicy('REJECT') // accepted odds changes only apply to the slip just submitted
-          setPlaced({ id: ticket.id, stake: ticket.stake, potentialPayout: ticket.potentialPayout })
+          setPlaced({
+            id: ticket.id,
+            stake: ticket.stake,
+            potentialPayout: ticket.potentialPayout,
+          })
           opts.onPlaced()
         }
       },
@@ -377,9 +398,18 @@ function BetslipHeader(props: {
             animate={{
               scale: 1,
               opacity: 1,
-              transition: { type: 'spring', stiffness: 500, damping: 15, mass: 0.5 },
+              transition: {
+                type: 'spring',
+                stiffness: 500,
+                damping: 15,
+                mass: 0.5,
+              },
             }}
-            exit={{ scale: 0, opacity: 0, transition: { duration: 0.1, ease: 'easeIn' } }}
+            exit={{
+              scale: 0,
+              opacity: 0,
+              transition: { duration: 0.1, ease: 'easeIn' },
+            }}
             whileTap={{ scale: 0.95 }}
           >
             <PiTrash />
