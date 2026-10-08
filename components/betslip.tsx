@@ -19,7 +19,7 @@ import { useEffect, useRef, useState } from 'react'
 import { PiTicket, PiTrash } from 'react-icons/pi'
 import { graphql, useFragment, useMutation } from 'react-relay'
 import { Drawer } from 'vaul'
-import type { Betslip$key } from '@/components/__generated__/Betslip.graphql'
+import type { Betslip$data, Betslip$key } from '@/components/__generated__/Betslip.graphql'
 import type { BetslipMobileBar$key } from '@/components/__generated__/BetslipMobileBar.graphql'
 import type { BetslipPlaceBetMutation } from '@/components/__generated__/BetslipPlaceBetMutation.graphql'
 import type { Tip$key } from '@/components/__generated__/Tip.graphql'
@@ -42,67 +42,123 @@ import {
   boostAtom,
   useActiveBoost,
   useBetslipPrices,
+  useSetDefaultStake,
   useSetLegStake,
   withoutItems,
 } from '@/context/betslip'
 import { useMediaQuery } from '@/context/hooks'
 import { useCurrency, useT } from '@/context/providers'
-import { unseenResettlementsAtom } from '@/context/tickets'
 import { cn, formatBalance, nCk } from '@/lib/utils'
 import type { TicketType } from '@/types'
 
+type Quote = Betslip$data
 type MainTab = 'betslip' | 'tickets'
+type Placed = { id: string; stake: string; potentialPayout: string | null }
+
+/* -------------------------------------------------------------------------- */
+/*  Root                                                                      */
+/* -------------------------------------------------------------------------- */
 
 export default function Betslip(props: {
   query: Betslip$key | null
   variant?: 'panel' | 'drawer'
 }) {
-  const data = useFragment(
-    graphql`
-      fragment Betslip on BetslipQuote {
-        stake
-        effectiveOdds
-        potentialPayout
-        placeable
-        betType
-        blockers
-        items {
-          outcomeId
-          availability
-          price
-          expectedPrice
-          priceChanged
-          ...Tip
+  const data =
+    useFragment(
+      graphql`
+        fragment Betslip on BetslipQuote {
+          stake
+          effectiveOdds
+          potentialPayout
+          placeable
+          betType
+          blockers
+          items {
+            outcomeId
+            availability
+            price
+            expectedPrice
+            priceChanged
+            ...Tip
+          }
         }
-      }
-    `,
-    props.query
-  )
+      `,
+      props.query
+    ) ?? null
 
-  const [input, setInput] = useAtom(betslipInputAtom)
-  const t = useT()
-
+  const input = useAtomValue(betslipInputAtom)
   const [mainTab, setMainTab] = useState<MainTab>('betslip')
-  const [placed, setPlaced] = useState<{
-    id: string
-    stake: string
-    potentialPayout: string | null
-  } | null>(null)
-  const [placeError, setPlaceError] = useState<string | null>(null)
   const [ticketsKey, setTicketsKey] = useState(0)
 
-  const currency = useCurrency()
-  const fmt = (n: number) => formatBalance(n, currency)
-  const boost = useActiveBoost()
+  const clearAll = useClearBetslip()
+  const totals = useBetslipTotals(data)
+  const changes = usePriceChanges(data)
+  const bet = usePlaceBet({
+    data,
+    boostId: totals.boost?.id,
+    onPriceChanged: changes.reset,
+    onPlaced: () => setTicketsKey(k => k + 1),
+  })
+
+  return (
+    <div
+      className={cn(
+        'bg-dark-200 flex w-full shrink flex-col overflow-hidden',
+        props.variant === 'drawer'
+          ? 'h-full min-h-0 flex-1'
+          : 'sticky top-26.25 max-h-[calc(100dvh-8rem)] rounded-2xl border border-white/5'
+      )}
+    >
+      <BetslipHeader
+        tab={mainTab}
+        onTabChange={setMainTab}
+        showClear={mainTab === 'betslip' && !!data?.items.length && !bet.placed}
+        onClear={clearAll}
+      />
+
+      {mainTab === 'tickets' ? (
+        <MyTickets key={ticketsKey} />
+      ) : bet.placed ? (
+        <PlacedState
+          ticket={bet.placed}
+          onNewBet={bet.startNewBet}
+          onViewTickets={() => setMainTab('tickets')}
+        />
+      ) : !data || input.items.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <BetslipBody data={data} totals={totals} changes={changes} bet={bet} />
+      )}
+    </div>
+  )
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Hooks (state + logic, no markup)                                          */
+/* -------------------------------------------------------------------------- */
+
+function useClearBetslip() {
+  const setInput = useSetAtom(betslipInputAtom)
   const setBoost = useSetAtom(boostAtom)
-  const setLegStake = useSetLegStake()
-  const unseen = useAtomValue(unseenResettlementsAtom)
+
+  return () => {
+    setInput(prev => ({ ...prev, items: [], systemSize: null, betType: 'SINGLE' }))
+    setBoost(null)
+  }
+}
+
+/** Stake / odds / payout figures shown in the summary and used for the place button. */
+function useBetslipTotals(data: Quote | null) {
+  const input = useAtomValue(betslipInputAtom)
+  const boost = useActiveBoost()
 
   const legStake = (id: string) =>
     Number(input.items.find(i => i.outcomeId === id)?.stake ?? input.stake) || 0
+
   const singlesTotal = (data?.items ?? [])
     .filter(i => i.availability === 'AVAILABLE')
     .reduce((a, i) => a + legStake(i.outcomeId), 0)
+
   const stakeNum = data?.betType === 'SINGLE' ? singlesTotal : Number(input.stake) || 0
   const overBoostMax = !!boost?.maxStake && stakeNum > Number(boost.maxStake)
   const shownOdds = boost ? Number(boost.boostedPrice) : Number(data?.effectiveOdds)
@@ -110,9 +166,64 @@ export default function Betslip(props: {
     ? stakeNum * Number(boost.boostedPrice)
     : Number(data?.potentialPayout) || 0
 
+  return { boost, singlesTotal, stakeNum, overBoostMax, shownOdds, shownPayout }
+}
+
+/** Odds-change detection, the dismiss state and the accept actions. */
+function usePriceChanges(data: Quote | null) {
+  const setInput = useSetAtom(betslipInputAtom)
+  const { stamp, accept } = useBetslipPrices()
+  const [dismissedSig, setDismissedSig] = useState<string | null>(null)
+
+  // remember the first price we saw for each leg so we can detect moves later
+  useEffect(() => {
+    if (!data) return
+    const unseen = new Map(
+      data.items.filter(i => i.price && !i.expectedPrice).map(i => [i.outcomeId, i.price as string])
+    )
+    if (unseen.size) stamp(unseen)
+  }, [data, stamp])
+
+  const changed = (data?.items ?? []).filter(i => i.priceChanged && i.price && i.expectedPrice)
+  const higher = changed.filter(i => Number(i.price) > Number(i.expectedPrice))
+  const lower = changed.filter(i => Number(i.price) < Number(i.expectedPrice))
+  const signature = changed.map(i => `${i.outcomeId}:${i.price}`).join('|')
+
+  const toMap = (items: typeof changed) => new Map(items.map(i => [i.outcomeId, i.price as string]))
+
+  return {
+    changed,
+    hasHigher: higher.length > 0,
+    hasLower: lower.length > 0,
+    show: changed.length > 0 && signature !== dismissedSig, // moves again => re-shows
+    dismiss: () => setDismissedSig(signature),
+    reset: () => setDismissedSig(null),
+    acceptAll: () => accept(toMap(changed)),
+    acceptHigher: () => {
+      accept(toMap(higher)) // rebase the legs that went up
+      const lowerIds = new Set(lower.map(i => i.outcomeId))
+      setInput(prev => withoutItems(prev, lowerIds)) // drop the legs that went down
+    },
+  }
+}
+
+/** Place-bet mutation + the "placed" / error state that surrounds it. */
+function usePlaceBet(opts: {
+  data: Quote | null
+  boostId: string | undefined
+  onPriceChanged: () => void
+  onPlaced: () => void
+}) {
+  const t = useT()
+  const input = useAtomValue(betslipInputAtom)
+  const setBoost = useSetAtom(boostAtom)
+  const clearAll = useClearBetslip()
+
+  const [placed, setPlaced] = useState<Placed | null>(null)
+  const [placeError, setPlaceError] = useState<string | null>(null)
   const clientRequestId = useRef<string>(crypto.randomUUID())
 
-  const [commitPlaceBet, isPlacing] = useMutation<BetslipPlaceBetMutation>(graphql`
+  const [commit, isPlacing] = useMutation<BetslipPlaceBetMutation>(graphql`
     mutation BetslipPlaceBetMutation($input: PlaceBetInput!) {
       placeBet(input: $input) {
         ticket {
@@ -134,23 +245,8 @@ export default function Betslip(props: {
     }
   `)
 
-  const remove = (outcomeId: string) => setInput(prev => withoutItems(prev, new Set([outcomeId])))
-
-  const clearAll = () => {
-    setInput(prev => ({
-      ...prev,
-      items: [],
-      systemSize: null,
-      betType: 'SINGLE',
-    }))
-    setBoost(null)
-  }
-
-  const unavailable = new Set(
-    (data?.items ?? []).filter(i => i.availability !== 'AVAILABLE').map(i => i.outcomeId)
-  )
-
-  const handlePlace = () => {
+  const place = () => {
+    const { data } = opts
     if (!data) return
     const byId = new Map(input.items.map(i => [i.outcomeId, i]))
     const items = data.items
@@ -164,7 +260,7 @@ export default function Betslip(props: {
             : undefined,
       }))
 
-    commitPlaceBet({
+    commit({
       variables: {
         input: {
           betType: data.betType,
@@ -173,14 +269,14 @@ export default function Betslip(props: {
           systemSize: input.systemSize ?? null,
           clientRequestId: clientRequestId.current,
           oddsPolicy: 'REJECT',
-          boostId: boost?.id,
+          boostId: opts.boostId,
         },
       },
       onCompleted: response => {
         const rej = response.placeBet.rejection
         if (rej) {
           if (rej.code === 'PRICE_CHANGED') {
-            setDismissedSig(null)
+            opts.onPriceChanged()
             setPlaceError(null)
           } else {
             if (rej.code === 'BOOST_UNAVAILABLE') setBoost(null)
@@ -189,45 +285,17 @@ export default function Betslip(props: {
           return
         }
 
-        if (response.placeBet.ticket) {
+        const ticket = response.placeBet.ticket
+        if (ticket) {
           setBoost(null)
-          setPlaced({
-            id: response.placeBet.ticket.id,
-            stake: response.placeBet.ticket.stake,
-            potentialPayout: response.placeBet.ticket.potentialPayout,
-          })
-          setTicketsKey(k => k + 1)
+          setPlaced({ id: ticket.id, stake: ticket.stake, potentialPayout: ticket.potentialPayout })
+          opts.onPlaced()
         }
       },
       onError: error => {
         setPlaceError(error.message || t('Failed to place bet. Please try again.'))
       },
     })
-  }
-
-  const { stamp, accept } = useBetslipPrices()
-  const [dismissedSig, setDismissedSig] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (!data) return
-    const unseen = new Map(
-      data.items.filter(i => i.price && !i.expectedPrice).map(i => [i.outcomeId, i.price as string])
-    )
-    if (unseen.size) stamp(unseen)
-  }, [data, stamp])
-
-  const changed = (data?.items ?? []).filter(i => i.priceChanged && i.price && i.expectedPrice)
-  const higher = changed.filter(i => Number(i.price) > Number(i.expectedPrice))
-  const signature = changed.map(i => `${i.outcomeId}:${i.price}`).join('|')
-  const showChanges = changed.length > 0 && signature !== dismissedSig // moves again => re-shows
-
-  const toMap = (items: typeof changed) => new Map(items.map(i => [i.outcomeId, i.price as string]))
-  const lower = changed.filter(i => Number(i.price) < Number(i.expectedPrice))
-
-  const acceptHigher = () => {
-    accept(toMap(higher)) // rebase the legs that went up
-    const lowerIds = new Set(lower.map(i => i.outcomeId))
-    setInput(prev => withoutItems(prev, lowerIds)) // drop the legs that went down
   }
 
   const startNewBet = () => {
@@ -237,319 +305,56 @@ export default function Betslip(props: {
     clearAll()
   }
 
-  const systemOptions = data ? Array.from({ length: data.items.length - 2 }, (_, i) => i + 2) : []
+  return { place, isPlacing, placed, placeError, startNewBet }
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Header                                                                    */
+/* -------------------------------------------------------------------------- */
+
+function BetslipHeader(props: {
+  tab: MainTab
+  onTabChange: (tab: MainTab) => void
+  showClear: boolean
+  onClear: () => void
+}) {
+  const t = useT()
 
   return (
-    <div
-      className={cn(
-        'bg-dark-200 flex w-full shrink flex-col overflow-hidden',
-        props.variant === 'drawer'
-          ? 'h-full min-h-0 flex-1'
-          : 'sticky top-26.25 max-h-[calc(100dvh-8rem)] rounded-2xl border border-white/5'
-      )}
-    >
-      <div className='flex items-center justify-between border-b border-white/5 px-5 py-4'>
-        <div className='flex items-center gap-1'>
-          <MainTabButton
-            active={mainTab === 'betslip'}
-            onClick={() => setMainTab('betslip')}
-            icon={<TicketIcon className='size-4' />}
-            label={t('Betslip')}
-            // count={data?.items.length}
-          />
-          <MainTabButton
-            active={mainTab === 'tickets'}
-            onClick={() => setMainTab('tickets')}
-            icon={<HistoryIcon className='size-4' />}
-            label={t('My Tickets')}
-          />
-        </div>
-        <AnimatePresence>
-          {mainTab === 'betslip' && !!data?.items.length && !placed && (
-            <motion.button
-              type='button'
-              onClick={clearAll}
-              className='text-secondary hover:text-foreground mr-2 transition-colors'
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{
-                scale: 1,
-                opacity: 1,
-                transition: {
-                  type: 'spring',
-                  stiffness: 500,
-                  damping: 15,
-                  mass: 0.5,
-                },
-              }}
-              exit={{
-                scale: 0,
-                opacity: 0,
-                transition: {
-                  duration: 0.1,
-                  ease: 'easeIn',
-                },
-              }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <PiTrash />
-            </motion.button>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {mainTab === 'tickets' ? (
-        // TODO: unseen badge
-        <MyTickets key={ticketsKey} /> //count={unseen} />
-      ) : placed ? (
-        <PlacedState
-          ticket={placed}
-          onNewBet={startNewBet}
-          onViewTickets={() => setMainTab('tickets')}
+    <div className='flex items-center justify-between border-b border-white/5 px-5 py-4'>
+      <div className='flex items-center gap-1'>
+        <MainTabButton
+          active={props.tab === 'betslip'}
+          onClick={() => props.onTabChange('betslip')}
+          icon={<TicketIcon className='size-4' />}
+          label={t('Betslip')}
         />
-      ) : !data || input.items.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <div className='scrollbar-hide flex flex-1 flex-col overflow-auto'>
-          <Tabs.Root
-            value={data.betType}
-            onValueChange={v =>
-              setInput(i => ({
-                ...i,
-                betType: v as TicketType,
-                systemSize: v === 'SYSTEM' && !i.systemSize ? 2 : i.systemSize,
-              }))
-            }
-            className='px-5 pt-4'
+        <MainTabButton
+          active={props.tab === 'tickets'}
+          onClick={() => props.onTabChange('tickets')}
+          icon={<HistoryIcon className='size-4' />}
+          label={t('My Tickets')}
+        />
+      </div>
+      <AnimatePresence>
+        {props.showClear && (
+          <motion.button
+            type='button'
+            onClick={props.onClear}
+            className='text-secondary hover:text-foreground mr-2 transition-colors'
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{
+              scale: 1,
+              opacity: 1,
+              transition: { type: 'spring', stiffness: 500, damping: 15, mass: 0.5 },
+            }}
+            exit={{ scale: 0, opacity: 0, transition: { duration: 0.1, ease: 'easeIn' } }}
+            whileTap={{ scale: 0.95 }}
           >
-            <Tabs.List className='grid w-full grid-cols-3 gap-1 border border-white/5 p-1'>
-              <Tabs.Trigger
-                value='SINGLE'
-                className='data-[state=active]:bg-primary hover:bg-dark-300 transition-colors data-[state=active]:text-black'
-              >
-                {t('Singles')}
-              </Tabs.Trigger>
-              <Tabs.Trigger
-                value='MULTIPLE'
-                disabled={data.items.length < 2}
-                className='data-[state=active]:bg-primary hover:bg-dark-300 transition-colors data-[state=active]:text-black'
-              >
-                {t('Combi')}
-              </Tabs.Trigger>
-              <Tabs.Trigger
-                value='SYSTEM'
-                disabled={data.items.length < 3}
-                className='data-[state=active]:bg-primary hover:bg-dark-300 transition-colors data-[state=active]:text-black'
-              >
-                {t('System')}
-              </Tabs.Trigger>
-            </Tabs.List>
-          </Tabs.Root>
-
-          {data.betType === 'SYSTEM' && !!input?.systemSize && input.systemSize >= 2 && (
-            <div className='px-5 pt-2'>
-              <Select
-                value={String(input.systemSize)}
-                onValueChange={v => setInput({ ...input, systemSize: Number(v) })}
-              >
-                <SelectTrigger size='sm' className='w-full'>
-                  <SelectValue>
-                    {t('{k} out of {n} ({b} bets)', {
-                      k: input.systemSize,
-                      n: data.items.length,
-                      b: nCk(data.items.length, input.systemSize),
-                    })}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  {systemOptions.map(k => (
-                    <SelectItem key={k} value={String(k)}>
-                      {t('{k} out of {n} ({b} bets)', {
-                        k,
-                        n: data.items.length,
-                        b: nCk(data.items.length, k),
-                      })}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
-
-          <div className='scrollbar-thumb-dark-300 min-h-30 flex-1 scrollbar-thin scrollbar-track-transparent scrollbar-gutter-stable space-y-3 overflow-y-auto py-4 pr-2.5 pl-5'>
-            {data.items.map(item => (
-              <Tip
-                key={item.outcomeId}
-                item={item}
-                showStake={data.betType === 'SINGLE'}
-                stakeValue={String(
-                  input.items.find(i => i.outcomeId === item.outcomeId)?.stake ?? input.stake
-                )}
-                onStakeChange={v => setLegStake(item.outcomeId, v)}
-                onRemove={() => remove(item.outcomeId)}
-              />
-            ))}
-          </div>
-
-          {unavailable.size === 0 && placeError === null && <Separator />}
-
-          {unavailable.size > 0 && (
-            <div className='z-1 flex items-center gap-2 bg-red-500/10 p-3 px-6 text-red-400'>
-              <AlertTriangleIcon className='size-4 shrink-0' />
-              <p className='mr-auto text-xs'>
-                {unavailable.size === 1
-                  ? t('1 invalid bet.')
-                  : t('{n} invalid bets.', { n: unavailable.size })}
-              </p>
-              <Button
-                variant='ghost'
-                size='icon-sm'
-                className='-mx-2 size-6 rounded-full text-xs text-red-400 hover:bg-red-400/30 hover:text-white'
-                onClick={() => setInput(prev => withoutItems(prev, unavailable))}
-              >
-                <XIcon />
-              </Button>
-            </div>
-          )}
-
-          {placeError && (
-            <div className='z-1 flex items-start gap-2 bg-red-500/10 p-3 px-6 text-red-400'>
-              <AlertTriangleIcon className='mt-0.5 size-4 shrink-0' />
-              <p className='text-xs'>{placeError}</p>
-            </div>
-          )}
-
-          {!data.placeable &&
-            unavailable.size === 0 &&
-            !showChanges &&
-            data.blockers.length > 0 && (
-              <div className='z-1 flex items-start gap-2 bg-red-500/10 p-3 px-6 text-red-400'>
-                <AlertTriangleIcon className='mt-0.5 size-4 shrink-0' />
-                <div className='mr-auto space-y-0.5 text-xs'>
-                  {[...new Set(data.blockers)].map(b => (
-                    <p key={b}>{betCodeCopy(b, t) ?? t('Bet unavailable.')}</p>
-                  ))}
-                </div>
-                {data.blockers.includes('INSUFFICIENT_FUNDS') && (
-                  <Link href='/user/wallet' className='shrink-0 text-xs underline'>
-                    {t('Deposit')}
-                  </Link>
-                )}
-              </div>
-            )}
-
-          {showChanges && (
-            <div className='z-1 flex flex-col gap-2 bg-amber-500/10 p-3 px-6 text-amber-400'>
-              <div className='flex items-center gap-2'>
-                <TrendingUpIcon className='size-4 shrink-0' />
-                <p className='mr-auto text-xs'>
-                  {changed.length === 1
-                    ? t('1 odd change.')
-                    : t('{n} odds changes.', { n: changed.length })}
-                </p>
-                <Button
-                  variant='ghost'
-                  size='icon-sm'
-                  aria-label={t('Dismiss')}
-                  className='-mx-2 size-6 rounded-full text-xs text-amber-400 hover:bg-amber-400/30 hover:text-white'
-                  onClick={() => setDismissedSig(signature)}
-                >
-                  <XIcon />
-                </Button>
-              </div>
-              <div className='flex gap-2'>
-                {higher.length > 0 && lower.length > 0 && (
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    className='h-6 flex-1 px-2 text-[0.7rem]'
-                    onClick={acceptHigher}
-                  >
-                    {t('Accept higher')}
-                  </Button>
-                )}
-                <Button
-                  variant='outline'
-                  size='sm'
-                  className='h-6 flex-1 px-2 text-[0.7rem]'
-                  onClick={() => accept(toMap(changed))}
-                >
-                  {t('Accept all')}
-                </Button>
-              </div>
-            </div>
-          )}
-
-          <div className='space-y-4 px-5 py-4'>
-            {boost && (
-              <div className='border-primary/40 bg-primary/10 flex items-center justify-between rounded-xl border px-4 py-2 text-xs'>
-                <span className='text-primary flex items-center gap-1.5 font-bold uppercase'>
-                  <ChevronsUpIcon className='size-4' />
-                  {t('Bet Boost')}
-                </span>
-                <span className='font-mono'>
-                  <span className='text-secondary mr-1 line-through'>
-                    {Number(boost.combinedPrice).toFixed(2)}
-                  </span>
-                  {Number(boost.boostedPrice).toFixed(2)}
-                </span>
-              </div>
-            )}
-
-            {data.betType !== 'SINGLE' && (
-              <>
-                <SummaryRow label={t('Combined odds')} value={shownOdds.toFixed(2)} mono />
-                <div className='flex items-center gap-3'>
-                  <span className='text-secondary shrink-0 text-sm'>{t('Stake')}</span>
-                  <StakeInput
-                    value={input.stake}
-                    placeholder={t('Stake')}
-                    onCommit={stake => setInput(prev => ({ ...prev, stake }))}
-                  />
-                </div>
-              </>
-            )}
-
-            {data.betType === 'SINGLE' && (
-              <SummaryRow label={t('Total stake')} value={fmt(singlesTotal)} />
-            )}
-
-            {overBoostMax && boost?.maxStake && (
-              <p className='text-xs text-amber-400'>
-                {t('Boost applies up to {max}. Lower your stake to use it.', {
-                  max: fmt(Number(boost.maxStake)),
-                })}
-              </p>
-            )}
-
-            <div className='bg-dark flex items-center justify-between rounded-xl border border-white/5 px-4 py-3'>
-              <span className='text-secondary text-sm'>{t('Potential payout')}</span>
-              <span className='text-primary text-lg font-bold'>{fmt(shownPayout)}</span>
-            </div>
-
-            <button
-              type='button'
-              disabled={
-                isPlacing || !data.placeable || unavailable.size > 0 || showChanges || overBoostMax
-              }
-              onClick={handlePlace}
-              className='group/button bg-primary hover:shadow-glow-lg text-primary-foreground relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-full px-10 py-4 text-base font-bold tracking-wide uppercase transition-all duration-300 select-none disabled:pointer-events-none disabled:bg-neutral-400 disabled:text-neutral-700'
-            >
-              <div className='from-primary to-primary absolute inset-0 bg-linear-to-r via-white/30 opacity-0 transition-opacity duration-500 group-hover/button:opacity-100' />
-              <div className='absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/40 to-transparent transition-transform duration-1000 group-hover/button:translate-x-full' />
-              {isPlacing ? (
-                <span className='relative flex items-center gap-2'>
-                  <Loader2Icon className='size-5 animate-spin' />
-                  {t('Placing bet...')}
-                </span>
-              ) : (
-                <span className='relative'>
-                  {t('Place bet')} · {fmt(stakeNum)}
-                </span>
-              )}
-            </button>
-          </div>
-        </div>
-      )}
+            <PiTrash />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
@@ -580,6 +385,380 @@ function MainTabButton(props: {
     </button>
   )
 }
+
+/* -------------------------------------------------------------------------- */
+/*  Body (active betslip with selections)                                     */
+/* -------------------------------------------------------------------------- */
+
+function BetslipBody(props: {
+  data: Quote
+  totals: ReturnType<typeof useBetslipTotals>
+  changes: ReturnType<typeof usePriceChanges>
+  bet: ReturnType<typeof usePlaceBet>
+}) {
+  const { data, totals, changes, bet } = props
+  const setInput = useSetAtom(betslipInputAtom)
+
+  const unavailable = new Set(
+    data.items.filter(i => i.availability !== 'AVAILABLE').map(i => i.outcomeId)
+  )
+
+  const canPlace =
+    !bet.isPlacing &&
+    data.placeable &&
+    unavailable.size === 0 &&
+    !changes.show &&
+    !totals.overBoostMax
+
+  return (
+    <div className='scrollbar-hide flex flex-1 flex-col overflow-auto'>
+      <BetTypeTabs data={data} />
+      <SystemSizeSelect data={data} />
+      <SelectionList data={data} />
+
+      {unavailable.size === 0 && bet.placeError === null && <Separator />}
+
+      <InvalidBetsBanner
+        count={unavailable.size}
+        onRemove={() => setInput(prev => withoutItems(prev, unavailable))}
+      />
+      <PlaceErrorBanner message={bet.placeError} />
+      {!data.placeable && unavailable.size === 0 && !changes.show && (
+        <BlockersBanner blockers={data.blockers} />
+      )}
+      {changes.show && <PriceChangesBanner changes={changes} />}
+
+      <BetslipSummary data={data} totals={totals}>
+        <PlaceBetButton
+          disabled={!canPlace}
+          isPlacing={bet.isPlacing}
+          stake={totals.stakeNum}
+          onClick={bet.place}
+        />
+      </BetslipSummary>
+    </div>
+  )
+}
+
+function BetTypeTabs(props: { data: Quote }) {
+  const setInput = useSetAtom(betslipInputAtom)
+  const t = useT()
+  const { data } = props
+
+  const triggerClass =
+    'data-[state=active]:bg-primary hover:bg-dark-300 transition-colors data-[state=active]:text-black'
+
+  return (
+    <Tabs.Root
+      value={data.betType}
+      onValueChange={v =>
+        setInput(i => ({
+          ...i,
+          betType: v as TicketType,
+          systemSize: v === 'SYSTEM' && !i.systemSize ? 2 : i.systemSize,
+        }))
+      }
+      className='px-5 pt-4'
+    >
+      <Tabs.List className='grid w-full grid-cols-3 gap-1 border border-white/5 p-1'>
+        <Tabs.Trigger value='SINGLE' className={triggerClass}>
+          {t('Singles')}
+        </Tabs.Trigger>
+        <Tabs.Trigger value='MULTIPLE' disabled={data.items.length < 2} className={triggerClass}>
+          {t('Combi')}
+        </Tabs.Trigger>
+        <Tabs.Trigger value='SYSTEM' disabled={data.items.length < 3} className={triggerClass}>
+          {t('System')}
+        </Tabs.Trigger>
+      </Tabs.List>
+    </Tabs.Root>
+  )
+}
+
+function SystemSizeSelect(props: { data: Quote }) {
+  const [input, setInput] = useAtom(betslipInputAtom)
+  const t = useT()
+  const { data } = props
+
+  if (data.betType !== 'SYSTEM' || !input.systemSize || input.systemSize < 2) return null
+
+  const n = data.items.length
+  const label = (k: number) => t('{k} out of {n} ({b} bets)', { k, n, b: nCk(n, k) })
+  const options = Array.from({ length: n - 2 }, (_, i) => i + 2)
+
+  return (
+    <div className='px-5 pt-2'>
+      <Select
+        value={String(input.systemSize)}
+        onValueChange={v => setInput({ ...input, systemSize: Number(v) })}
+      >
+        <SelectTrigger size='sm' className='w-full'>
+          <SelectValue>{label(input.systemSize)}</SelectValue>
+        </SelectTrigger>
+        <SelectContent>
+          {options.map(k => (
+            <SelectItem key={k} value={String(k)}>
+              {label(k)}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  )
+}
+
+function SelectionList(props: { data: Quote }) {
+  const input = useAtomValue(betslipInputAtom)
+  const setInput = useSetAtom(betslipInputAtom)
+  const setLegStake = useSetLegStake()
+  const { data } = props
+
+  return (
+    <div className='scrollbar-thumb-dark-300 min-h-30 flex-1 scrollbar-thin scrollbar-track-transparent scrollbar-gutter-stable space-y-3 overflow-y-auto py-4 pr-2.5 pl-5'>
+      {data.items.map(item => (
+        <Tip
+          key={item.outcomeId}
+          item={item}
+          showStake={data.betType === 'SINGLE'}
+          stakeValue={String(
+            input.items.find(i => i.outcomeId === item.outcomeId)?.stake ?? input.stake
+          )}
+          onStakeChange={v => setLegStake(item.outcomeId, v)}
+          onRemove={() => setInput(prev => withoutItems(prev, new Set([item.outcomeId])))}
+        />
+      ))}
+    </div>
+  )
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Banners                                                                   */
+/* -------------------------------------------------------------------------- */
+
+function InvalidBetsBanner(props: { count: number; onRemove: () => void }) {
+  const t = useT()
+  if (props.count === 0) return null
+
+  return (
+    <div className='z-1 flex items-center gap-2 bg-red-500/10 p-3 px-6 text-red-400'>
+      <AlertTriangleIcon className='size-4 shrink-0' />
+      <p className='mr-auto text-xs'>
+        {props.count === 1 ? t('1 invalid bet.') : t('{n} invalid bets.', { n: props.count })}
+      </p>
+      <Button
+        variant='ghost'
+        size='icon-sm'
+        className='-mx-2 size-6 rounded-full text-xs text-red-400 hover:bg-red-400/30 hover:text-white'
+        onClick={props.onRemove}
+      >
+        <XIcon />
+      </Button>
+    </div>
+  )
+}
+
+function PlaceErrorBanner(props: { message: string | null }) {
+  if (!props.message) return null
+
+  return (
+    <div className='z-1 flex items-start gap-2 bg-red-500/10 p-3 px-6 text-red-400'>
+      <AlertTriangleIcon className='mt-0.5 size-4 shrink-0' />
+      <p className='text-xs'>{props.message}</p>
+    </div>
+  )
+}
+
+function BlockersBanner(props: { blockers: Quote['blockers'] }) {
+  const t = useT()
+  if (props.blockers.length === 0) return null
+
+  return (
+    <div className='z-1 flex items-start gap-2 bg-red-500/10 p-3 px-6 text-red-400'>
+      <AlertTriangleIcon className='mt-0.5 size-4 shrink-0' />
+      <div className='mr-auto space-y-0.5 text-xs'>
+        {[...new Set(props.blockers)].map(b => (
+          <p key={b}>{betCodeCopy(b, t) ?? t('Bet unavailable.')}</p>
+        ))}
+      </div>
+      {props.blockers.includes('INSUFFICIENT_FUNDS') && (
+        <Link href='/user/wallet' className='shrink-0 text-xs underline'>
+          {t('Deposit')}
+        </Link>
+      )}
+    </div>
+  )
+}
+
+function PriceChangesBanner(props: { changes: ReturnType<typeof usePriceChanges> }) {
+  const t = useT()
+  const { changes } = props
+  const count = changes.changed.length
+
+  return (
+    <div className='z-1 flex flex-col gap-2 bg-amber-500/10 p-3 px-6 text-amber-400'>
+      <div className='flex items-center gap-2'>
+        <TrendingUpIcon className='size-4 shrink-0' />
+        <p className='mr-auto text-xs'>
+          {count === 1 ? t('1 odd change.') : t('{n} odds changes.', { n: count })}
+        </p>
+        <Button
+          variant='ghost'
+          size='icon-sm'
+          aria-label={t('Dismiss')}
+          className='-mx-2 size-6 rounded-full text-xs text-amber-400 hover:bg-amber-400/30 hover:text-white'
+          onClick={changes.dismiss}
+        >
+          <XIcon />
+        </Button>
+      </div>
+      <div className='flex gap-2'>
+        {changes.hasHigher && changes.hasLower && (
+          <Button
+            variant='outline'
+            size='sm'
+            className='h-6 flex-1 px-2 text-[0.7rem]'
+            onClick={changes.acceptHigher}
+          >
+            {t('Accept higher')}
+          </Button>
+        )}
+        <Button
+          variant='outline'
+          size='sm'
+          className='h-6 flex-1 px-2 text-[0.7rem]'
+          onClick={changes.acceptAll}
+        >
+          {t('Accept all')}
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Summary + place button                                                    */
+/* -------------------------------------------------------------------------- */
+
+function BetslipSummary(props: {
+  data: Quote
+  totals: ReturnType<typeof useBetslipTotals>
+  children: React.ReactNode // the place button
+}) {
+  const [input, setInput] = useAtom(betslipInputAtom)
+  const setDefaultStake = useSetDefaultStake()
+  const currency = useCurrency()
+  const t = useT()
+  const fmt = (n: number) => formatBalance(n, currency)
+  const { data, totals } = props
+  const { boost } = totals
+
+  return (
+    <div className='space-y-4 px-5 py-4'>
+      {boost && (
+        <div className='border-primary/40 bg-primary/10 flex items-center justify-between rounded-xl border px-4 py-2 text-xs'>
+          <span className='text-primary flex items-center gap-1.5 font-bold uppercase'>
+            <ChevronsUpIcon className='size-4' />
+            {t('Bet Boost')}
+          </span>
+          <span className='font-mono'>
+            <span className='text-secondary mr-1 line-through'>
+              {Number(boost.combinedPrice).toFixed(2)}
+            </span>
+            {Number(boost.boostedPrice).toFixed(2)}
+          </span>
+        </div>
+      )}
+
+      {data.betType === 'SINGLE' ? (
+        <>
+          <div className='flex items-center gap-3'>
+            <span className='text-secondary shrink-0 text-sm'>{t('Stake per bet')}</span>
+            <StakeInput
+              value={input.stake}
+              placeholder={t('Stake per bet')}
+              onCommit={setDefaultStake}
+            />
+          </div>
+          <SummaryRow label={t('Total stake')} value={fmt(totals.singlesTotal)} />
+        </>
+      ) : (
+        <>
+          <SummaryRow label={t('Combined odds')} value={totals.shownOdds.toFixed(2)} mono />
+          <div className='flex items-center gap-3'>
+            <span className='text-secondary shrink-0 text-sm'>{t('Stake')}</span>
+            <StakeInput
+              value={input.stake}
+              placeholder={t('Stake')}
+              onCommit={stake => setInput(prev => ({ ...prev, stake }))}
+            />
+          </div>
+        </>
+      )}
+
+      {totals.overBoostMax && boost?.maxStake && (
+        <p className='text-xs text-amber-400'>
+          {t('Boost applies up to {max}. Lower your stake to use it.', {
+            max: fmt(Number(boost.maxStake)),
+          })}
+        </p>
+      )}
+
+      <div className='bg-dark flex items-center justify-between rounded-xl border border-white/5 px-4 py-3'>
+        <span className='text-secondary text-sm'>{t('Potential payout')}</span>
+        <span className='text-primary text-lg font-bold'>{fmt(totals.shownPayout)}</span>
+      </div>
+
+      {props.children}
+    </div>
+  )
+}
+
+function PlaceBetButton(props: {
+  disabled: boolean
+  isPlacing: boolean
+  stake: number
+  onClick: () => void
+}) {
+  const currency = useCurrency()
+  const t = useT()
+
+  return (
+    <button
+      type='button'
+      disabled={props.disabled}
+      onClick={props.onClick}
+      className='group/button bg-primary hover:shadow-glow-lg text-primary-foreground relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-full px-10 py-4 text-base font-bold tracking-wide uppercase transition-all duration-300 select-none disabled:pointer-events-none disabled:bg-neutral-400 disabled:text-neutral-700'
+    >
+      <div className='from-primary to-primary absolute inset-0 bg-linear-to-r via-white/30 opacity-0 transition-opacity duration-500 group-hover/button:opacity-100' />
+      <div className='absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/40 to-transparent transition-transform duration-1000 group-hover/button:translate-x-full' />
+      {props.isPlacing ? (
+        <span className='relative flex items-center gap-2'>
+          <Loader2Icon className='size-5 animate-spin' />
+          {t('Placing bet...')}
+        </span>
+      ) : (
+        <span className='relative'>
+          {t('Place bet')} · {formatBalance(props.stake, currency)}
+        </span>
+      )}
+    </button>
+  )
+}
+
+function SummaryRow(props: { label: string; value: string; mono?: boolean }) {
+  return (
+    <div className='flex items-center justify-between text-sm'>
+      <span className='text-secondary'>{props.label}</span>
+      <span className={cn('font-semibold text-white', props.mono && 'font-mono')}>
+        {props.value}
+      </span>
+    </div>
+  )
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Selection row                                                             */
+/* -------------------------------------------------------------------------- */
 
 function getLabel(
   eventName: string | null | undefined,
@@ -616,11 +795,10 @@ function Tip(props: {
     props.item
   )
   const t = useT()
+  const currency = useCurrency()
   const changed = data.priceChanged && !!data.expectedPrice && !!data.price
   const up = changed && Number(data.price) > Number(data.expectedPrice)
   const blocked = data.availability !== 'AVAILABLE'
-
-  const currency = useCurrency()
 
   return (
     <div
@@ -695,17 +873,6 @@ function Tip(props: {
   )
 }
 
-function SummaryRow(props: { label: string; value: string; mono?: boolean }) {
-  return (
-    <div className='flex items-center justify-between text-sm'>
-      <span className='text-secondary'>{props.label}</span>
-      <span className={cn('font-semibold text-white', props.mono && 'font-mono')}>
-        {props.value}
-      </span>
-    </div>
-  )
-}
-
 function StakeInput(props: { value: string; onCommit: (v: string) => void; placeholder?: string }) {
   const currency = useCurrency()
   const [text, setText] = useState(props.value)
@@ -743,6 +910,10 @@ function StakeInput(props: { value: string; onCommit: (v: string) => void; place
   )
 }
 
+/* -------------------------------------------------------------------------- */
+/*  Empty / placed states                                                     */
+/* -------------------------------------------------------------------------- */
+
 function EmptyState() {
   const t = useT()
   return (
@@ -758,11 +929,7 @@ function EmptyState() {
   )
 }
 
-function PlacedState(props: {
-  ticket: { id: string; stake: string; potentialPayout: string | null }
-  onNewBet: () => void
-  onViewTickets: () => void
-}) {
+function PlacedState(props: { ticket: Placed; onNewBet: () => void; onViewTickets: () => void }) {
   const t = useT()
   return (
     <div className='flex max-h-[calc(100dvh-7rem)] w-full flex-col items-center justify-center gap-4 overflow-hidden px-6 py-16 text-center'>
@@ -790,6 +957,10 @@ function PlacedState(props: {
     </div>
   )
 }
+
+/* -------------------------------------------------------------------------- */
+/*  Mobile bar + drawer                                                       */
+/* -------------------------------------------------------------------------- */
 
 export function BetslipMobileBar(props: { query: BetslipMobileBar$key | null }) {
   const data = useFragment(

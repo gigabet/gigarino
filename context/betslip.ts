@@ -39,6 +39,21 @@ export function useHasOdd() {
   return useCallback((oddId: string) => input.items.some(i => i.outcomeId === oddId), [input.items])
 }
 
+// sets the default stake and clears any per-leg overrides, so every tip follows it
+// if we'd rather keep overrides, change the hook to only set stake and leave items alone; edited tips would then stay put while the rest follow the master
+export function useSetDefaultStake() {
+  const setInput = useSetAtom(betslipInputAtom)
+  return useCallback(
+    (stake: string) =>
+      setInput(prev => ({
+        ...prev,
+        stake,
+        items: prev.items.map(({ stake: _override, ...rest }) => rest),
+      })),
+    [setInput]
+  )
+}
+
 export function useCombo() {
   const setInput = useSetAtom(betslipInputAtom)
 
