@@ -214,13 +214,16 @@ function usePriceChanges(data: Quote | null) {
 
   const toMap = (items: typeof changed) => new Map(items.map(i => [i.outcomeId, i.price as string]))
   const dropLower = () => {
+    if (lower.length === 0) return // nothing to drop; avoids a needless input change/resubscribe
     const lowerIds = new Set(lower.map(i => i.outcomeId))
     setInput(prev => withoutItems(prev, lowerIds))
   }
 
   return {
     pending,
-    showAcceptHigher: policy === 'REJECT' && higher.length > 0 && lower.length > 0,
+    // always offer the narrower option while the policy is still REJECT,
+    // whatever mix of higher/lower moves we got
+    showAcceptHigher: policy === 'REJECT' && pending.length > 0,
     show: pending.length > 0 && signature !== dismissedSig, // moves again => re-shows
     // the X: reject the worse odds by dropping those legs (same idea as the invalid-bets X).
     // With nothing lower to drop, there is nothing to reject, so just hide the prompt.
@@ -235,8 +238,8 @@ function usePriceChanges(data: Quote | null) {
       setPolicy('ACCEPT_ANY')
     },
     acceptHigher: () => {
-      accept(toMap(higher)) // rebase the legs that went up
-      dropLower() // drop the legs that went down
+      accept(toMap(higher)) // rebase the legs that went up (no-op if none)
+      dropLower() // drop the legs that went down (no-op if none)
       setPolicy('ACCEPT_HIGHER')
     },
   }
@@ -642,8 +645,8 @@ function BlockersBanner(props: { blockers: Quote['blockers'] }) {
   if (props.blockers.length === 0) return null
 
   return (
-    <div className='flex items-start gap-2 bg-red-500/10 px-5 py-1.5 text-red-400'>
-      <AlertTriangleIcon className='mt-0.5 size-3.5 shrink-0' />
+    <div className='flex items-center gap-2 bg-red-500/10 px-5 py-1.5 text-red-400'>
+      <AlertTriangleIcon className='size-3.5 shrink-0' />
       <div className='mr-auto space-y-0.5 text-xs'>
         {[...new Set(props.blockers)].map(b => (
           <p key={b}>{betCodeCopy(b, t) ?? t('Bet unavailable.')}</p>
