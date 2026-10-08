@@ -142,43 +142,44 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
         onClick={() => setExpanded(e => !e)}
         className='flex w-full items-center justify-between gap-3 text-left'
       >
-        <div className='min-w-0'>
-          <div className='flex items-center gap-2'>
-            <span
-              className={cn(
-                'rounded-full px-2 py-0.5 text-[0.65rem] font-bold uppercase',
-                meta.className
-              )}
-            >
-              {t(meta.label)}
-            </span>
-            {data.resettled && !data.resettlementSeen && (
-              <span className='rounded-full bg-amber-500/10 px-2 py-0.5 text-[0.65rem] font-bold text-amber-400 uppercase'>
-                {t('Corrected')}
+        <div className='flex grow justify-between gap-3'>
+          <div className='min-w-0'>
+            <div className='flex items-center gap-2'>
+              <span
+                className={cn(
+                  'rounded-full px-2 py-0.5 text-[0.65rem] font-bold uppercase',
+                  meta.className
+                )}
+              >
+                {t(meta.label)}
               </span>
-            )}
-            <span className='text-secondary text-xs'>
-              {data.betType === 'SINGLE'
-                ? t('Single')
-                : data.betType === 'SYSTEM'
-                  ? t('System')
-                  : t('{n}-fold Combi', { n: data.items.length })}
+              {data.resettled && !data.resettlementSeen && (
+                <span className='rounded-full bg-amber-500/10 px-2 py-0.5 text-[0.65rem] font-bold text-amber-400 uppercase'>
+                  {t('Corrected')}
+                </span>
+              )}
+              <span className='text-secondary text-xs'>
+                {data.betType === 'SINGLE'
+                  ? t('Single')
+                  : data.betType === 'SYSTEM'
+                    ? t('System')
+                    : t('{n}-fold Combi', { n: data.items.length })}
+              </span>
+            </div>
+            <p className='text-secondary mt-1 truncate text-xs'>
+              {data.items.length === 1
+                ? t('1 selection')
+                : t('{n} selections', { n: data.items.length })}
+            </p>
+          </div>
+          <div className='flex shrink-0 flex-col items-end'>
+            <span className='font-mono text-sm font-semibold text-white'>
+              {formatBalance(Number(data.stake), data.currency)}
+            </span>
+            <span className='text-secondary text-[0.65rem]'>
+              {format(new Date(data.createdAt), 'dd MMM, HH:mm')}
             </span>
           </div>
-          <p className='text-secondary mt-1 truncate text-xs'>
-            {data.items.length === 1
-              ? t('1 selection')
-              : t('{n} selections', { n: data.items.length })}
-          </p>
-        </div>
-
-        <div className='flex shrink-0 flex-col items-end'>
-          <span className='font-mono text-sm font-semibold text-white'>
-            {formatBalance(Number(data.stake), data.currency)}
-          </span>
-          <span className='text-secondary text-[0.65rem]'>
-            {format(new Date(data.createdAt), 'dd MMM, HH:mm')}
-          </span>
         </div>
 
         <ChevronDownIcon
