@@ -4,8 +4,14 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { cx } from 'class-variance-authority'
 import { atom, useAtomValue } from 'jotai'
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { graphql, requestSubscription, useRelayEnvironment } from 'react-relay'
 import { BarLoader } from 'react-spinners'
 import { Toaster } from '@/components/ui/sonner'
+import type {
+  BetslipSubscription,
+  BetslipSubscription$data,
+} from '@/context/__generated__/BetslipSubscription.graphql'
+import { betslipInputAtom } from '@/context/betslip'
 import { RelayProvider } from '@/relay/relay-provider'
 import type { User, Wallet } from '@/types'
 
@@ -39,10 +45,12 @@ export default function Providers({
   return (
     <RelayProvider>
       <QueryClientProvider client={queryClient}>
-        <LoadingOverlay />
-        <UserProvider {...props}>{children}</UserProvider>
-        <Toaster position='top-center' />
-        <ReactQueryDevtools initialIsOpen={false} />
+        <BetslipQuoteProvider>
+          <LoadingOverlay />
+          <UserProvider {...props}>{children}</UserProvider>
+          <Toaster position='top-center' />
+          <ReactQueryDevtools initialIsOpen={false} />
+        </BetslipQuoteProvider>
       </QueryClientProvider>
     </RelayProvider>
   )
@@ -145,3 +153,40 @@ export function useCurrency() {
   const { wallet } = useUser()
   return wallet?.currency ?? process.env.NEXT_PUBLIC_APP_CURRENCY ?? 'EUR'
 }
+
+type Quote = BetslipSubscription$data['betslipUpdated'] | null
+const BetslipQuoteContext = createContext<Quote>(null)
+const betslipSubscription = graphql`
+  subscription BetslipSubscription($input: BetslipQuoteInput!) {
+    betslipUpdated(input: $input) {
+      ...Betslip
+      ...BetslipMobileBar
+    }
+  }
+`
+
+export function BetslipQuoteProvider({ children }: { children: React.ReactNode }) {
+  const environment = useRelayEnvironment()
+  const betslipInput = useAtomValue(betslipInputAtom)
+  const [quote, setQuote] = useState<Quote>(null)
+
+  useEffect(() => {
+    if (betslipInput.items.length === 0) {
+      setQuote(null)
+      return
+    }
+
+    const { dispose } = requestSubscription<BetslipSubscription>(environment, {
+      subscription: betslipSubscription,
+      variables: { input: betslipInput },
+      onNext: response => setQuote(response?.betslipUpdated ?? null),
+      onError: (err: Error) => console.error('[betslip] subscription failed', err),
+    })
+
+    return dispose
+  }, [environment, betslipInput])
+
+  return <BetslipQuoteContext.Provider value={quote}>{children}</BetslipQuoteContext.Provider>
+}
+
+export const useBetslipQuote = () => useContext(BetslipQuoteContext)

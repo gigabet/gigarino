@@ -113,7 +113,7 @@ export default function Betslip(props: {
       <BetslipHeader
         tab={mainTab}
         onTabChange={setMainTab}
-        showClear={mainTab === 'betslip' && !!data?.items.length && !bet.placed}
+        showClear={mainTab === 'betslip' && input.items.length > 0 && !bet.placed}
         onClear={clearAll}
       />
 
@@ -391,7 +391,7 @@ function BetslipHeader(props: {
           label={t('My Tickets')}
         />
       </div>
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
         {props.showClear && (
           <motion.button
             type='button'

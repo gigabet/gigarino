@@ -2,9 +2,9 @@
 
 import { useAtomValue } from 'jotai'
 import { usePathname } from 'next/navigation'
-import { Suspense, startTransition, useEffect, useMemo, useState } from 'react'
+import { Suspense, startTransition, useEffect, useMemo } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
-import { graphql, requestSubscription, useQueryLoader, useRelayEnvironment } from 'react-relay'
+import { graphql, useQueryLoader } from 'react-relay'
 import type { LiveLayoutQuery } from '@/app/live/__generated__/LiveLayoutQuery.graphql'
 import LiveEventSidebar, {
   LiveEventSidebarSkeleton,
@@ -13,13 +13,9 @@ import LiveHeader, { LiveHeaderSkeleton } from '@/app/live/live-header'
 import { liveSortState, liveSportFilterState, ORDER } from '@/app/live/live-state'
 import { LiveSubscriptionsProvider } from '@/app/live/live-subscriptions'
 import { RefetchBatcherProvider } from '@/app/live/refetch-context'
-import BetslipSubscriptionNode, {
-  type BetslipSubscription,
-  type BetslipSubscription$data,
-} from '@/app/sport/__generated__/BetslipSubscription.graphql'
 import Betslip, { BetslipDrawer, BetslipMobileBar } from '@/components/betslip'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
-import { betslipInputAtom } from '@/context/betslip'
+import { useBetslipQuote } from '@/context/providers'
 import { cn } from '@/lib/utils'
 
 export default function LiveLayout({ children }: React.PropsWithChildren) {
@@ -28,27 +24,6 @@ export default function LiveLayout({ children }: React.PropsWithChildren) {
     const match = pathname.match(/^\/live\/event\/([^/]+)/)
     return match ? decodeURIComponent(match[1]) : null
   }, [pathname])
-
-  const environment = useRelayEnvironment()
-
-  const betslipInput = useAtomValue(betslipInputAtom)
-  const [betslip, setBetslip] = useState<BetslipSubscription$data['betslipUpdated'] | null>(null)
-
-  useEffect(() => {
-    if (betslipInput.items.length === 0) {
-      setBetslip(null)
-      return
-    }
-
-    const { dispose } = requestSubscription<BetslipSubscription>(environment, {
-      subscription: BetslipSubscriptionNode,
-      variables: { input: betslipInput },
-      onNext: response => setBetslip(response?.betslipUpdated ?? null),
-      onError: (err: Error) => console.error('[betslip] subscription failed', err),
-    })
-
-    return dispose
-  }, [environment, betslipInput])
 
   const sort = useAtomValue(liveSortState)
   const sportFilter = useAtomValue(liveSportFilterState)
@@ -67,6 +42,8 @@ export default function LiveLayout({ children }: React.PropsWithChildren) {
   }, [loadQuery, sort, sportFilter])
   useEffect(() => () => disposeQuery(), [disposeQuery])
 
+  const betslip = useBetslipQuote()
+
   return (
     <LiveSubscriptionsProvider>
       <RefetchBatcherProvider>
@@ -76,7 +53,7 @@ export default function LiveLayout({ children }: React.PropsWithChildren) {
               'grid grid-cols-1 gap-8',
               eventId
                 ? 'xl:grid-cols-[16rem_minmax(auto,1fr)_20rem]'
-                : 'md:grid-cols-[minmax(auto,1fr)_20rem]'
+                : 'xl:grid-cols-[minmax(auto,1fr)_20rem]'
             )}
           >
             {eventId && (
