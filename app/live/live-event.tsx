@@ -48,7 +48,7 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
   const suspended = event.tradingStatus === 'SUSPENDED'
 
   return (
-    <div className='sport-texture group relative flex flex-col gap-2 overflow-hidden border-b py-3 last:border-b-0 sm:gap-3 sm:rounded-2xl sm:border-b-0 sm:border-white/5 sm:bg-black/20 sm:px-4 lg:h-27 lg:flex-row lg:flex-nowrap lg:items-center lg:gap-4 lg:px-5'>
+    <div className='sport-texture group relative flex h-32 flex-col gap-2 overflow-hidden border-b py-3 last:border-b-0 sm:gap-3 sm:rounded-2xl sm:border-b-0 sm:border-white/5 sm:bg-black/20 sm:px-4 lg:h-27 lg:flex-row lg:flex-nowrap lg:items-center lg:gap-4 lg:px-5'>
       <div
         className={cn('relative flex items-center gap-4 lg:contents', suspended && 'opacity-60')}
       >
@@ -98,6 +98,7 @@ export function LiveTime(props: { event: LiveTime$key; aside?: boolean }) {
         clockRunning
         clockElapsedSeconds
         clockAnchorAt
+        tradingStatus
       }
     `,
     props.event
@@ -116,7 +117,7 @@ export function LiveTime(props: { event: LiveTime$key; aside?: boolean }) {
     <div
       className={cn(
         'flex items-center justify-between gap-1',
-        props.aside ? 'flex-row' : 'flex-col'
+        props.aside ? 'flex-row' : 'flex-row gap-2 lg:flex-col lg:gap-1'
       )}
     >
       <div className='text-foreground flex gap-1.5'>
@@ -127,11 +128,13 @@ export function LiveTime(props: { event: LiveTime$key; aside?: boolean }) {
         {/* @ts-expect-error: %future added value */}
         {t(getPeriod(data.period).long)}
       </div>
+      {!props.aside && seconds !== null && <span className='lg:hidden'>·</span>}
       {seconds !== null && (
         <time className='text-foreground font-mono'>
           {String(mins).padStart(2, '0')}:{String(secs).padStart(2, '0')}
         </time>
       )}
+      <span>{data.tradingStatus}</span>
     </div>
   )
 }
@@ -189,5 +192,5 @@ export function LiveScore(props: { event: LiveScore$key }) {
 }
 
 export function LiveEventSkeleton() {
-  return <div className='bg-muted h-24 w-full animate-pulse rounded-xl lg:h-27' />
+  return <div className='bg-muted h-32 w-full animate-pulse rounded-xl lg:h-27' />
 }

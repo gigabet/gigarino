@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<92e9c5de0fbb64ab7f9816045b289509>>
+ * @generated SignedSource<<ca8276c5d825a3b9fb022fadcf4fb7ad>>
  * @lightSyntaxTransform
  */
 
@@ -187,12 +187,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "972256618edcc621bbc9240bdd5d4519",
+    "cacheID": "5c5e66eef9ae438c29be7b4b795ed70b",
     "id": null,
     "metadata": {},
     "name": "LiveStateSubscription",
     "operationKind": "subscription",
-    "text": "subscription LiveStateSubscription(\n  $eventIds: [ID!]!\n) {\n  eventStateUpdated(eventIds: $eventIds) {\n    event {\n      id\n      status\n      tradingStatus\n      ...LiveScore\n      ...LiveTime\n    }\n  }\n}\n\nfragment LiveScore on Event {\n  homeScore\n  awayScore\n}\n\nfragment LiveTime on Event {\n  period\n  clockRunning\n  clockElapsedSeconds\n  clockAnchorAt\n}\n"
+    "text": "subscription LiveStateSubscription(\n  $eventIds: [ID!]!\n) {\n  eventStateUpdated(eventIds: $eventIds) {\n    event {\n      id\n      status\n      tradingStatus\n      ...LiveScore\n      ...LiveTime\n    }\n  }\n}\n\nfragment LiveScore on Event {\n  homeScore\n  awayScore\n}\n\nfragment LiveTime on Event {\n  period\n  clockRunning\n  clockElapsedSeconds\n  clockAnchorAt\n  tradingStatus\n}\n"
   }
 };
 })();

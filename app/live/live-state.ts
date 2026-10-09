@@ -24,7 +24,7 @@ const orderFragment = graphql`
 
 const FINISHED = new Set(['ENDED', 'CANCELLED', 'ABANDONED', 'POSTPONED'])
 
-export type OrderedLiveEvent<T> = { id: string; event: T }
+export type OrderedLiveEvent<T> = { id: string; group: string; event: T }
 
 export function orderLiveEvents<T extends LiveOrder$key>(
   events: ReadonlyArray<T>,
@@ -46,7 +46,11 @@ export function orderLiveEvents<T extends LiveOrder$key>(
     .filter(r => !FINISHED.has(r.status))
     .filter(r => !sportFilter || r.sport === sportFilter)
 
-  const toOut = (r: (typeof rows)[number]): OrderedLiveEvent<T> => ({ id: r.id, event: r.event })
+  const toOut = (r: (typeof rows)[number]): OrderedLiveEvent<T> => ({
+    id: r.id,
+    group: r.group,
+    event: r.event,
+  })
 
   if (sort === 'chronological')
     return { events: sortBy(rows, r => r.start).map(toOut), groups: null }

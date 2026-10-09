@@ -7,7 +7,7 @@ import type { LiveOddsSubscription } from '@/app/live/__generated__/LiveOddsSubs
 import type { LiveStateSubscription } from '@/app/live/__generated__/LiveStateSubscription.graphql'
 
 // Scrolling churns the registered set; wait for it to settle before swapping streams
-const RESUBSCRIBE_DEBOUNCE_MS = 300
+const RESUBSCRIBE_DEBOUNCE_MS = 800
 
 // Outcome nodes merge into the store by id, so list rows, strips and the single view all update
 const oddsSubscription = graphql`
