@@ -1,8 +1,7 @@
 'use client'
 
-import { ChartNoAxesColumnIcon } from 'lucide-react'
+import { BanIcon, ChartNoAxesColumnIcon, TriangleAlert } from 'lucide-react'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
 import { graphql, useFragment } from 'react-relay'
 import type { LiveEvent$key } from '@/app/live/__generated__/LiveEvent.graphql'
 import type { LiveScore$key } from '@/app/live/__generated__/LiveScore.graphql'
@@ -44,8 +43,7 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
   useLiveRowRegistration(event.id)
   useRefetchRegistration(event.id)
 
-  const t = useT()
-  const suspended = event.tradingStatus === 'SUSPENDED'
+  const suspended = event.tradingStatus !== 'OPEN'
 
   return (
     <div className='sport-texture group relative flex h-32 flex-col gap-2 overflow-hidden border-b py-3 last:border-b-0 sm:gap-3 sm:rounded-2xl sm:border-b-0 sm:border-white/5 sm:bg-black/20 sm:px-4 lg:h-27 lg:flex-row lg:flex-nowrap lg:items-center lg:gap-4 lg:px-5'>
@@ -134,7 +132,16 @@ export function LiveTime(props: { event: LiveTime$key; aside?: boolean }) {
           {String(mins).padStart(2, '0')}:{String(secs).padStart(2, '0')}
         </time>
       )}
-      <span>{data.tradingStatus}</span>
+      {data.tradingStatus === 'SUSPENDED' && (
+        <div className='flex items-center gap-1 truncate text-[0.6rem] text-amber-400'>
+          <TriangleAlert className='size-3' /> <span>{t('Suspended')}</span>
+        </div>
+      )}
+      {data.tradingStatus === 'CLOSED' && (
+        <div className='text-destructive flex items-center gap-1 truncate text-[0.6rem]'>
+          <BanIcon className='size-3' /> <span>{t('Closed')}</span>
+        </div>
+      )}
     </div>
   )
 }

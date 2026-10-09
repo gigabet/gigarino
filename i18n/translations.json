@@ -295,6 +295,10 @@
     "de": "Suche löschen",
     "tr": "Aramayı temizle"
   },
+  "Closed": {
+    "de": "Zu",
+    "tr": "Kapalı"
+  },
   "Collapse sidebar": {
     "de": "Seitenleiste einklappen",
     "tr": "Kenar çubuğunu daralt"
@@ -354,10 +358,6 @@
   "Deposit": {
     "de": "Einzahlung",
     "tr": "Para yatırma"
-  },
-  "Dismiss": {
-    "de": "Schließen",
-    "tr": "Kapat"
   },
   "Don't have an account?": {
     "de": "Noch kein Konto?",
@@ -603,10 +603,6 @@
     "de": "Neuheiten",
     "tr": "Yeni Çıkanlar"
   },
-  "No events are live right now.": {
-    "de": "",
-    "tr": ""
-  },
   "No games": {
     "de": "Keine Spiele",
     "tr": "Oyun yok"
@@ -768,12 +764,12 @@
     "tr": "Beni hatırla"
   },
   "Remove lower odds": {
-    "de": "",
-    "tr": ""
+    "de": "Niedrigere Quoten entfernen",
+    "tr": "Düşük oranları çıkar"
   },
   "Remove selection": {
     "de": "Auswahl entfernen",
-    "tr": "Seçimi kaldır"
+    "tr": "Seçimi çıkar"
   },
   "Responsible Gaming": {
     "de": "Verantwortungsvolles Spielen",
@@ -892,8 +888,12 @@
     "tr": "Bahis Miktarı"
   },
   "Stake per bet": {
-    "de": "",
-    "tr": ""
+    "de": "Einsatz pro Wette",
+    "tr": "Bahis başına miktar"
+  },
+  "Suspended": {
+    "de": "Gesperrt",
+    "tr": "Askıda"
   },
   "System": {
     "de": "System",
