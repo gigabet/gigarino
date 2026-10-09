@@ -12,7 +12,7 @@ import {
   TrendingUpIcon,
   XIcon,
 } from 'lucide-react'
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence, MotionConfig, motion } from 'motion/react'
 import Link from 'next/link'
 import { VisuallyHidden } from 'radix-ui'
 import { useEffect, useRef, useState } from 'react'
@@ -483,11 +483,21 @@ function BetslipBody(props: {
 
         {/* pinned while scrolling: these block placing, so they must stay visible */}
         <div className='bg-dark-200 sticky top-0 z-10 mt-2 empty:hidden'>
-          <InvalidBetsBanner
-            count={unavailable.size}
-            onRemove={() => setInput(prev => withoutItems(prev, unavailable))}
-          />
-          {changes.show && <PriceChangesBanner changes={changes} />}
+          <AnimatePresence initial={false}>
+            {unavailable.size > 0 && (
+              <Collapse key='invalid'>
+                <InvalidBetsBanner
+                  count={unavailable.size}
+                  onRemove={() => setInput(prev => withoutItems(prev, unavailable))}
+                />
+              </Collapse>
+            )}
+            {changes.show && (
+              <Collapse key='changes'>
+                <PriceChangesBanner changes={changes} />
+              </Collapse>
+            )}
+          </AnimatePresence>
         </div>
 
         <SelectionList data={data} />
@@ -586,20 +596,25 @@ function SelectionList(props: { data: Quote }) {
   const { data } = props
 
   return (
-    <div className='space-y-1.5 px-5 pt-2 pb-3'>
-      {data.items.map(item => (
-        <Tip
-          key={item.outcomeId}
-          item={item}
-          showStake={data.betType === 'SINGLE'}
-          stakeValue={String(
-            input.items.find(i => i.outcomeId === item.outcomeId)?.stake ?? input.stake
-          )}
-          onStakeChange={v => setLegStake(item.outcomeId, v)}
-          onRemove={() => setInput(prev => withoutItems(prev, new Set([item.outcomeId])))}
-        />
-      ))}
-    </div>
+    <MotionConfig reducedMotion='user'>
+      <div className='px-5 pt-2 pb-2.5'>
+        <AnimatePresence>
+          {data.items.map((item, i) => (
+            <SlipPresence key={item.outcomeId} index={i}>
+              <Tip
+                item={item}
+                showStake={data.betType === 'SINGLE'}
+                stakeValue={String(
+                  input.items.find(x => x.outcomeId === item.outcomeId)?.stake ?? input.stake
+                )}
+                onStakeChange={v => setLegStake(item.outcomeId, v)}
+                onRemove={() => setInput(prev => withoutItems(prev, new Set([item.outcomeId])))}
+              />
+            </SlipPresence>
+          ))}
+        </AnimatePresence>
+      </div>
+    </MotionConfig>
   )
 }
 
@@ -924,6 +939,62 @@ function Tip(props: {
         </div>
       )}
     </div>
+  )
+}
+
+// const SLIP_SPRING = { type: 'spring', stiffness: 420, damping: 34 } as const
+
+/** A paper slip: slides in from the edge, swiped away on removal, then the gap closes. */
+function SlipPresence(props: { index?: number; children: React.ReactNode }) {
+  // cap the stagger so long slips don't take forever to settle
+  // const delay = Math.min(props.index ?? 0, 5) * 0.04
+
+  return (
+    <motion.div
+      className='overflow-hidden'
+      // initial={{ opacity: 0, x: 32, height: 0, paddingBottom: 0 }}
+      // animate={{
+      //   opacity: 1,
+      //   x: 0,
+      //   height: 'auto',
+      //   paddingBottom: 6, // replaces space-y-1.5
+      //   transition: {
+      //     x: { ...SLIP_SPRING, delay },
+      //     opacity: { duration: 0.2, delay },
+      //     height: { duration: 0.25, ease: 'easeOut', delay },
+      //     paddingBottom: { duration: 0.25, ease: 'easeOut', delay },
+      //   },
+      // }}
+      exit={{
+        opacity: 0,
+        x: 48, // swipe away
+        height: 0, // then close the gap
+        paddingBottom: 0,
+        transition: {
+          x: { duration: 0.18, ease: 'easeIn' },
+          opacity: { duration: 0.18 },
+          height: { duration: 0.2, ease: 'easeInOut', delay: 0.1 },
+          paddingBottom: { duration: 0.2, ease: 'easeInOut', delay: 0.1 },
+        },
+      }}
+    >
+      {props.children}
+    </motion.div>
+  )
+}
+
+/** A drawer: unfolds / folds vertically. Used for the banners. */
+function Collapse(props: { children: React.ReactNode }) {
+  return (
+    <motion.div
+      className='overflow-hidden'
+      initial={{ height: 0, opacity: 0 }}
+      animate={{ height: 'auto', opacity: 1 }}
+      exit={{ height: 0, opacity: 0 }}
+      transition={{ duration: 0.22, ease: 'easeOut' }}
+    >
+      {props.children}
+    </motion.div>
   )
 }
 
