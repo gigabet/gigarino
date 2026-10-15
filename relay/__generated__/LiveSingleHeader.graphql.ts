@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c406059a5f726f7a4c68ca0ca17cbb0c>>
+ * @generated SignedSource<<09b96b207615f3d8e6e7fb143cdf056a>>
  * @lightSyntaxTransform
  */
 
@@ -22,6 +22,7 @@ export type LiveSingleHeader$data = {
     readonly key: string;
     readonly name: string;
   };
+  readonly " $fragmentSpreads": FragmentRefs<"FavouriteButton">;
   readonly " $fragmentType": "LiveSingleHeader";
 };
 export type LiveSingleHeader$key = {
@@ -93,6 +94,11 @@ return {
       "kind": "ScalarField",
       "name": "status",
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "FavouriteButton"
     }
   ],
   "type": "Event",
@@ -100,6 +106,6 @@ return {
 };
 })();
 
-(node as any).hash = "3c6088f3816cb67081b622bd6b2f1a84";
+(node as any).hash = "9072f7adacedfd96bf544acb3e7a00b0";
 
 export default node;

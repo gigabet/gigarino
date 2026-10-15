@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e48ccc5be28f12054c3cfa2ec10dc536>>
+ * @generated SignedSource<<3acdfc522e9931ea5481bb853dc89baa>>
  * @lightSyntaxTransform
  */
 
@@ -18,7 +18,7 @@ export type LiveEvent$data = {
   readonly id: string;
   readonly oddCount: number;
   readonly tradingStatus: TradingStatus;
-  readonly " $fragmentSpreads": FragmentRefs<"ListViewMarkets" | "LiveScore" | "LiveTeams" | "LiveTime">;
+  readonly " $fragmentSpreads": FragmentRefs<"FavouriteButton" | "ListViewMarkets" | "LiveScore" | "LiveTeams" | "LiveTime">;
   readonly " $fragmentType": "LiveEvent";
 };
 export type LiveEvent$key = {
@@ -100,12 +100,17 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "ListViewMarkets"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "FavouriteButton"
     }
   ],
   "type": "Event",
   "abstractKey": null
 };
 
-(node as any).hash = "9f8a04708d8f1f24a5ad88e8247416c8";
+(node as any).hash = "c5cf9fec05e4d250e12c573faf3b87a4";
 
 export default node;

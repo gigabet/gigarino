@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<09785fc9cae7066f2328149427dbd807>>
+ * @generated SignedSource<<c6949346302234246b59a1a1349889c0>>
  * @lightSyntaxTransform
  */
 
@@ -14,9 +14,13 @@ export type PrematchQuery$variables = {
   filterActive: boolean;
   hasAny: boolean;
   hasSearch: boolean;
+  hasUser: boolean;
   tournamentKeys: ReadonlyArray<string>;
 };
 export type PrematchQuery$data = {
+  readonly favouriteEvents?: {
+    readonly " $fragmentSpreads": FragmentRefs<"FavouriteEvents">;
+  } | null | undefined;
   readonly " $fragmentSpreads": FragmentRefs<"Carousel" | "PrematchList" | "ShortcutRow">;
 };
 export type PrematchQuery = {
@@ -48,65 +52,70 @@ v3 = {
 v4 = {
   "defaultValue": null,
   "kind": "LocalArgument",
-  "name": "tournamentKeys"
+  "name": "hasUser"
 },
 v5 = {
+  "defaultValue": null,
+  "kind": "LocalArgument",
+  "name": "tournamentKeys"
+},
+v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v6 = {
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "kind",
   "storageKey": null
 },
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "price",
   "storageKey": null
 },
-v8 = {
+v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "homeCompetitor",
   "storageKey": null
 },
-v9 = {
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "awayCompetitor",
   "storageKey": null
 },
-v10 = {
+v11 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "startTime",
   "storageKey": null
 },
-v11 = {
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "status",
   "storageKey": null
 },
-v12 = {
+v13 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "key",
   "storageKey": null
 },
-v13 = {
+v14 = {
   "alias": null,
   "args": null,
   "concreteType": "Sport",
@@ -114,26 +123,109 @@ v13 = {
   "name": "sport",
   "plural": false,
   "selections": [
-    (v12/*:: as any*/),
-    (v5/*:: as any*/)
+    (v13/*:: as any*/),
+    (v6/*:: as any*/)
   ],
-  "storageKey": null
-},
-v14 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
   "storageKey": null
 },
 v15 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "index",
+  "name": "name",
   "storageKey": null
 },
 v16 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "index",
+  "storageKey": null
+},
+v17 = [
+  {
+    "kind": "Literal",
+    "name": "favourites",
+    "value": true
+  },
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 50
+  }
+],
+v18 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isLive",
+  "storageKey": null
+},
+v19 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "homeImageUrl",
+  "storageKey": null
+},
+v20 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "awayImageUrl",
+  "storageKey": null
+},
+v21 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "oddCount",
+  "storageKey": null
+},
+v22 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isFavourite",
+  "storageKey": null
+},
+v23 = {
+  "if": null,
+  "kind": "Defer",
+  "label": "PrematchEvent$defer$ListViewMarkets",
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Market",
+      "kind": "LinkedField",
+      "name": "markets",
+      "plural": true,
+      "selections": [
+        (v6/*:: as any*/),
+        (v7/*:: as any*/),
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "Outcome",
+          "kind": "LinkedField",
+          "name": "outcomes",
+          "plural": true,
+          "selections": [
+            (v6/*:: as any*/),
+            (v16/*:: as any*/),
+            (v13/*:: as any*/),
+            (v8/*:: as any*/),
+            (v12/*:: as any*/)
+          ],
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    }
+  ]
+},
+v24 = {
   "alias": null,
   "args": null,
   "concreteType": "EventEdge",
@@ -149,83 +241,25 @@ v16 = {
       "name": "node",
       "plural": false,
       "selections": [
-        (v5/*:: as any*/),
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "isLive",
-          "storageKey": null
-        },
-        (v8/*:: as any*/),
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "homeImageUrl",
-          "storageKey": null
-        },
+        (v6/*:: as any*/),
+        (v18/*:: as any*/),
         (v9/*:: as any*/),
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "awayImageUrl",
-          "storageKey": null
-        },
+        (v19/*:: as any*/),
         (v10/*:: as any*/),
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "oddCount",
-          "storageKey": null
-        },
-        {
-          "if": null,
-          "kind": "Defer",
-          "label": "PrematchEvent$defer$ListViewMarkets",
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "Market",
-              "kind": "LinkedField",
-              "name": "markets",
-              "plural": true,
-              "selections": [
-                (v5/*:: as any*/),
-                (v6/*:: as any*/),
-                {
-                  "alias": null,
-                  "args": null,
-                  "concreteType": "Outcome",
-                  "kind": "LinkedField",
-                  "name": "outcomes",
-                  "plural": true,
-                  "selections": [
-                    (v5/*:: as any*/),
-                    (v15/*:: as any*/),
-                    (v12/*:: as any*/),
-                    (v7/*:: as any*/),
-                    (v11/*:: as any*/)
-                  ],
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
-            }
-          ]
-        }
+        (v20/*:: as any*/),
+        (v11/*:: as any*/),
+        (v21/*:: as any*/),
+        (v22/*:: as any*/),
+        (v23/*:: as any*/)
       ],
       "storageKey": null
     }
   ],
   "storageKey": null
 },
-v17 = [
-  (v5/*:: as any*/),
-  (v13/*:: as any*/),
+v25 = [
+  (v6/*:: as any*/),
+  (v14/*:: as any*/),
   {
     "alias": null,
     "args": null,
@@ -234,7 +268,7 @@ v17 = [
     "name": "category",
     "plural": false,
     "selections": [
-      (v14/*:: as any*/),
+      (v15/*:: as any*/),
       {
         "alias": null,
         "args": null,
@@ -242,11 +276,11 @@ v17 = [
         "name": "countryCode",
         "storageKey": null
       },
-      (v5/*:: as any*/)
+      (v6/*:: as any*/)
     ],
     "storageKey": null
   },
-  (v14/*:: as any*/),
+  (v15/*:: as any*/),
   {
     "if": null,
     "kind": "Defer",
@@ -266,7 +300,7 @@ v17 = [
         "name": "events",
         "plural": false,
         "selections": [
-          (v16/*:: as any*/)
+          (v24/*:: as any*/)
         ],
         "storageKey": null
       }
@@ -280,7 +314,8 @@ return {
       (v1/*:: as any*/),
       (v2/*:: as any*/),
       (v3/*:: as any*/),
-      (v4/*:: as any*/)
+      (v4/*:: as any*/),
+      (v5/*:: as any*/)
     ],
     "kind": "Fragment",
     "metadata": null,
@@ -300,6 +335,29 @@ return {
         "args": null,
         "kind": "FragmentSpread",
         "name": "ShortcutRow"
+      },
+      {
+        "condition": "hasUser",
+        "kind": "Condition",
+        "passingValue": true,
+        "selections": [
+          {
+            "fragment": {
+              "kind": "InlineFragment",
+              "selections": [
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "FavouriteEvents"
+                }
+              ],
+              "type": "Query",
+              "abstractKey": null
+            },
+            "kind": "AliasedInlineFragmentSpread",
+            "name": "favouriteEvents"
+          }
+        ]
       },
       {
         "args": [
@@ -338,6 +396,7 @@ return {
       (v3/*:: as any*/),
       (v2/*:: as any*/),
       (v4/*:: as any*/),
+      (v5/*:: as any*/),
       (v0/*:: as any*/)
     ],
     "kind": "Operation",
@@ -356,8 +415,8 @@ return {
             "name": "featuredBets",
             "plural": true,
             "selections": [
-              (v5/*:: as any*/),
               (v6/*:: as any*/),
+              (v7/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -429,7 +488,7 @@ return {
                     "name": "available",
                     "storageKey": null
                   },
-                  (v7/*:: as any*/),
+                  (v8/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -438,12 +497,12 @@ return {
                     "name": "event",
                     "plural": false,
                     "selections": [
-                      (v5/*:: as any*/),
-                      (v8/*:: as any*/),
+                      (v6/*:: as any*/),
                       (v9/*:: as any*/),
                       (v10/*:: as any*/),
                       (v11/*:: as any*/),
-                      (v13/*:: as any*/),
+                      (v12/*:: as any*/),
+                      (v14/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -452,8 +511,8 @@ return {
                         "name": "tournament",
                         "plural": false,
                         "selections": [
-                          (v14/*:: as any*/),
-                          (v5/*:: as any*/)
+                          (v15/*:: as any*/),
+                          (v6/*:: as any*/)
                         ],
                         "storageKey": null
                       },
@@ -473,8 +532,8 @@ return {
                         "name": "markets",
                         "plural": true,
                         "selections": [
-                          (v5/*:: as any*/),
                           (v6/*:: as any*/),
+                          (v7/*:: as any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -483,12 +542,12 @@ return {
                             "name": "outcomes",
                             "plural": true,
                             "selections": [
-                              (v5/*:: as any*/),
+                              (v6/*:: as any*/),
+                              (v16/*:: as any*/),
                               (v15/*:: as any*/),
-                              (v14/*:: as any*/),
-                              (v12/*:: as any*/),
-                              (v7/*:: as any*/),
-                              (v11/*:: as any*/)
+                              (v13/*:: as any*/),
+                              (v8/*:: as any*/),
+                              (v12/*:: as any*/)
                             ],
                             "storageKey": null
                           }
@@ -532,12 +591,112 @@ return {
             "name": "topTournaments",
             "plural": true,
             "selections": [
-              (v13/*:: as any*/),
-              (v12/*:: as any*/),
               (v14/*:: as any*/),
-              (v5/*:: as any*/)
+              (v13/*:: as any*/),
+              (v15/*:: as any*/),
+              (v6/*:: as any*/)
             ],
             "storageKey": "topTournaments(first:6)"
+          }
+        ]
+      },
+      {
+        "condition": "hasUser",
+        "kind": "Condition",
+        "passingValue": true,
+        "selections": [
+          {
+            "alias": null,
+            "args": (v17/*:: as any*/),
+            "concreteType": "EventConnection",
+            "kind": "LinkedField",
+            "name": "events",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "EventEdge",
+                "kind": "LinkedField",
+                "name": "edges",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Event",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      (v6/*:: as any*/),
+                      (v18/*:: as any*/),
+                      (v9/*:: as any*/),
+                      (v19/*:: as any*/),
+                      (v10/*:: as any*/),
+                      (v20/*:: as any*/),
+                      (v11/*:: as any*/),
+                      (v21/*:: as any*/),
+                      (v22/*:: as any*/),
+                      (v23/*:: as any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "__typename",
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "cursor",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PageInfo",
+                "kind": "LinkedField",
+                "name": "pageInfo",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "endCursor",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "hasNextPage",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": "events(favourites:true,first:50)"
+          },
+          {
+            "alias": null,
+            "args": (v17/*:: as any*/),
+            "filters": [
+              "favourites"
+            ],
+            "handle": "connection",
+            "key": "FavouriteEvents_events",
+            "kind": "LinkedHandle",
+            "name": "events"
           }
         ]
       },
@@ -564,7 +723,7 @@ return {
                 "kind": "LinkedField",
                 "name": "topTournaments",
                 "plural": true,
-                "selections": (v17/*:: as any*/),
+                "selections": (v25/*:: as any*/),
                 "storageKey": "topTournaments(first:4)"
               }
             ]
@@ -599,7 +758,7 @@ return {
                     "kind": "LinkedField",
                     "name": "tournaments",
                     "plural": true,
-                    "selections": (v17/*:: as any*/),
+                    "selections": (v25/*:: as any*/),
                     "storageKey": null
                   }
                 ]
@@ -634,7 +793,7 @@ return {
                 "name": "totalCount",
                 "storageKey": null
               },
-              (v16/*:: as any*/)
+              (v24/*:: as any*/)
             ],
             "storageKey": "events(first:20)"
           }
@@ -643,16 +802,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "de31b2e1a32ecd468959f37bbfec544e",
+    "cacheID": "21ce1e00a09430e9953eb16a3ef416ff",
     "id": null,
     "metadata": {},
     "name": "PrematchQuery",
     "operationKind": "query",
-    "text": "query PrematchQuery(\n  $filterActive: Boolean!\n  $hasSearch: Boolean!\n  $hasAny: Boolean!\n  $tournamentKeys: [String!]!\n  $eventCount: Int!\n) {\n  ...Carousel @defer(label: \"PrematchQuery$defer$Carousel\")\n  ...ShortcutRow\n  ...PrematchList_q9UQW\n}\n\nfragment BetBoostCard on FeaturedBet {\n  boostedPrice\n  combinedPrice\n  maxStake\n  validTo\n  selections {\n    outcomeId\n    outcomeName\n    marketName\n    eventName\n    available\n  }\n}\n\nfragment Carousel on Query {\n  featuredBets {\n    id\n    kind\n    ...BetBoostCard\n    ...ComboOfWeekCard\n    ...FeaturedGameCard\n  }\n}\n\nfragment ComboOfWeekCard on FeaturedBet {\n  title\n  combinedPrice\n  validTo\n  selections {\n    outcomeId\n    outcomeName\n    marketName\n    eventName\n    price\n    available\n  }\n}\n\nfragment FeaturedGameCard on FeaturedBet {\n  validTo\n  selections {\n    event {\n      id\n      homeCompetitor\n      awayCompetitor\n      startTime\n      status\n      sport {\n        key\n        id\n      }\n      tournament {\n        name\n        id\n      }\n      markets(groups: [MAIN]) {\n        id\n        kind\n        outcomes {\n          id\n          index\n          name\n          key\n          price\n          status\n        }\n      }\n    }\n  }\n}\n\nfragment ListViewMarket on Market {\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n  }\n}\n\nfragment ListViewMarkets on Event {\n  markets {\n    id\n    kind\n    ...ListViewMarket\n  }\n}\n\nfragment PrematchEvent on Event {\n  id\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  oddCount\n  ...ListViewMarkets @defer(label: \"PrematchEvent$defer$ListViewMarkets\")\n}\n\nfragment PrematchList_q9UQW on Query {\n  topTournaments(first: 4) @skip(if: $hasAny) @stream(label: \"PrematchList$stream$topTournaments_3z2gQm\", initialCount: 1) {\n    id\n    ...Tournament\n  }\n  tournaments(keys: $tournamentKeys) @include(if: $filterActive) @skip(if: $hasSearch) @stream(label: \"PrematchList$stream$tournaments_1FDLHx\", initialCount: 1) {\n    id\n    ...Tournament\n  }\n  searchResults: events(first: 20) @include(if: $hasSearch) {\n    totalCount\n    edges {\n      node {\n        id\n        isLive\n        ...PrematchEvent\n      }\n    }\n  }\n}\n\nfragment ShortcutRow on Query {\n  scr_topTournaments: topTournaments(first: 6) @stream(label: \"ShortcutRow$stream$scr_topTournaments_4ktKph\", initialCount: 1) {\n    sport {\n      key\n      id\n    }\n    key\n    name\n    id\n  }\n}\n\nfragment Tournament on Tournament {\n  id\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n  name\n  ...TournamentEventList @defer(label: \"Tournament$defer$TournamentEventList\")\n}\n\nfragment TournamentEventList on Tournament {\n  events(first: $eventCount) {\n    edges {\n      node {\n        id\n        isLive\n        ...PrematchEvent\n      }\n    }\n  }\n}\n"
+    "text": "query PrematchQuery(\n  $filterActive: Boolean!\n  $hasSearch: Boolean!\n  $hasAny: Boolean!\n  $hasUser: Boolean!\n  $tournamentKeys: [String!]!\n  $eventCount: Int!\n) {\n  ...Carousel @defer(label: \"PrematchQuery$defer$Carousel\")\n  ...ShortcutRow\n  ...FavouriteEvents @include(if: $hasUser)\n  ...PrematchList_q9UQW\n}\n\nfragment BetBoostCard on FeaturedBet {\n  boostedPrice\n  combinedPrice\n  maxStake\n  validTo\n  selections {\n    outcomeId\n    outcomeName\n    marketName\n    eventName\n    available\n  }\n}\n\nfragment Carousel on Query {\n  featuredBets {\n    id\n    kind\n    ...BetBoostCard\n    ...ComboOfWeekCard\n    ...FeaturedGameCard\n  }\n}\n\nfragment ComboOfWeekCard on FeaturedBet {\n  title\n  combinedPrice\n  validTo\n  selections {\n    outcomeId\n    outcomeName\n    marketName\n    eventName\n    price\n    available\n  }\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment FavouriteEvents on Query {\n  events(first: 50, favourites: true) {\n    edges {\n      node {\n        id\n        isLive\n        ...PrematchEvent\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment FeaturedGameCard on FeaturedBet {\n  validTo\n  selections {\n    event {\n      id\n      homeCompetitor\n      awayCompetitor\n      startTime\n      status\n      sport {\n        key\n        id\n      }\n      tournament {\n        name\n        id\n      }\n      markets(groups: [MAIN]) {\n        id\n        kind\n        outcomes {\n          id\n          index\n          name\n          key\n          price\n          status\n        }\n      }\n    }\n  }\n}\n\nfragment ListViewMarket on Market {\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n  }\n}\n\nfragment ListViewMarkets on Event {\n  markets {\n    id\n    kind\n    ...ListViewMarket\n  }\n}\n\nfragment PrematchEvent on Event {\n  id\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  oddCount\n  ...FavouriteButton\n  ...ListViewMarkets @defer(label: \"PrematchEvent$defer$ListViewMarkets\")\n}\n\nfragment PrematchList_q9UQW on Query {\n  topTournaments(first: 4) @skip(if: $hasAny) @stream(label: \"PrematchList$stream$topTournaments_3z2gQm\", initialCount: 1) {\n    id\n    ...Tournament\n  }\n  tournaments(keys: $tournamentKeys) @include(if: $filterActive) @skip(if: $hasSearch) @stream(label: \"PrematchList$stream$tournaments_1FDLHx\", initialCount: 1) {\n    id\n    ...Tournament\n  }\n  searchResults: events(first: 20) @include(if: $hasSearch) {\n    totalCount\n    edges {\n      node {\n        id\n        isLive\n        ...PrematchEvent\n      }\n    }\n  }\n}\n\nfragment ShortcutRow on Query {\n  scr_topTournaments: topTournaments(first: 6) @stream(label: \"ShortcutRow$stream$scr_topTournaments_4ktKph\", initialCount: 1) {\n    sport {\n      key\n      id\n    }\n    key\n    name\n    id\n  }\n}\n\nfragment Tournament on Tournament {\n  id\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n  name\n  ...TournamentEventList @defer(label: \"Tournament$defer$TournamentEventList\")\n}\n\nfragment TournamentEventList on Tournament {\n  events(first: $eventCount) {\n    edges {\n      node {\n        id\n        isLive\n        ...PrematchEvent\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "950f764030bd9e6a42404c9a1df282bd";
+(node as any).hash = "a759253001ea43d7db3f30ed30fe8fc3";
 
 export default node;

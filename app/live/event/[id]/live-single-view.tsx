@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Suspense, useEffect } from 'react'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
 import StatisticsWidget from '@/app/live/event/[id]/statistics-widget'
+import { FavouriteButton } from '@/components/favourite-button'
 import MarketGroups, { MarketGroupsSkeleton } from '@/components/market-groups'
 import { SportIcon } from '@/components/sport-icon'
 import { useT } from '@/context/providers'
@@ -78,6 +79,7 @@ function LiveSingleHeader(props: { event: LiveSingleHeader$key }) {
           name
         }
         status
+        ...FavouriteButton
       }
     `,
     props.event
@@ -102,6 +104,7 @@ function LiveSingleHeader(props: { event: LiveSingleHeader$key }) {
         <span className='shrink-0'>·</span>
         <span className='max-w-32 truncate sm:max-w-none'>{data.category.name}</span>
       </div>
+      <FavouriteButton event={data} className='ml-auto' />
     </div>
   )
 }

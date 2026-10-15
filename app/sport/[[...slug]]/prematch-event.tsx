@@ -4,6 +4,7 @@ import { ChartNoAxesColumnIcon } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { fetchQuery, graphql, useFragment, useRelayEnvironment } from 'react-relay'
+import { FavouriteButton } from '@/components/favourite-button'
 import { ListViewMarkets, ListViewMarketsSkeleton } from '@/components/list-view-markets'
 import { TeamBadge } from '@/components/team-badge'
 import { Button, buttonVariants } from '@/components/ui/button'
@@ -24,6 +25,7 @@ export default function PrematchEvent(props: { node: PrematchEvent$key }) {
         awayImageUrl
         startTime
         oddCount
+        ...FavouriteButton
         ...ListViewMarkets @defer
       }
     `,
@@ -92,9 +94,10 @@ export default function PrematchEvent(props: { node: PrematchEvent$key }) {
               +{data.oddCount}
             </Link>
           )}
-          <Button variant='ghost' size='icon-sm' className='rounded-full'>
+          <FavouriteButton event={data} className='mb-0.5' />
+          {/* <Button variant='ghost' size='icon-sm' className='rounded-full'>
             <ChartNoAxesColumnIcon />
-          </Button>
+          </Button> */}
         </div>
       </div>
 

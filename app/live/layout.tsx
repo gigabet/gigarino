@@ -8,13 +8,14 @@ import { graphql, useQueryLoader } from 'react-relay'
 import LiveEventSidebar, {
   LiveEventSidebarSkeleton,
 } from '@/app/live/event/[id]/live-event-sidebar'
+import FavouriteLiveSection from '@/app/live/favourite-live-events'
 import LiveHeader, { LiveHeaderSkeleton } from '@/app/live/live-header'
 import { liveSortState, liveSportFilterState, ORDER } from '@/app/live/live-state'
 import { LiveSubscriptionsProvider } from '@/app/live/live-subscriptions'
 import { RefetchBatcherProvider } from '@/app/live/refetch-context'
 import Betslip, { BetslipDrawer, BetslipMobileBar } from '@/components/betslip'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
-import { useBetslipQuote } from '@/context/providers'
+import { useBetslipQuote, useUser } from '@/context/providers'
 import { cn } from '@/lib/utils'
 import type { LiveLayoutQuery } from '@/relay/__generated__/LiveLayoutQuery.graphql'
 
@@ -29,18 +30,24 @@ export default function LiveLayout({ children }: React.PropsWithChildren) {
   const sportFilter = useAtomValue(liveSportFilterState)
 
   const [queryRef, loadQuery, disposeQuery] = useQueryLoader<LiveLayoutQuery>(graphql`
-    query LiveLayoutQuery($orderBy: LiveEventOrder!, $sport: String) {
+    query LiveLayoutQuery($orderBy: LiveEventOrder!, $sport: String, $hasUser: Boolean!) {
       ...LiveHeader
       ...LiveEventSidebar @arguments(orderBy: $orderBy, sport: $sport)
+      ...FavouriteLiveEvents @include(if: $hasUser) @alias(as: "favouriteLive")
     }
   `)
 
+  const { user } = useUser()
+  const hasUser = !!user
+
   useEffect(() => {
     startTransition(() => {
-      loadQuery({ orderBy: ORDER[sort], sport: sportFilter }, { fetchPolicy: 'store-or-network' })
+      loadQuery(
+        { orderBy: ORDER[sort], sport: sportFilter, hasUser },
+        { fetchPolicy: 'store-or-network' }
+      )
     })
-  }, [loadQuery, sort, sportFilter])
-  useEffect(() => () => disposeQuery(), [disposeQuery])
+  }, [loadQuery, sort, sportFilter, hasUser])
 
   const betslip = useBetslipQuote()
 
@@ -78,6 +85,7 @@ export default function LiveLayout({ children }: React.PropsWithChildren) {
                   )}
                 </Suspense>
               </ErrorBoundary>
+              {!eventId && <FavouriteLiveSection queryRef={queryRef} />}
               {children}
             </div>
 

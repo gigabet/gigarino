@@ -11,7 +11,8 @@ export function createRefetchBatcher(environment: Environment) {
   // A row registers on mount and unregisters on unmount — including when
   // Virtuoso virtualizes it away and later remounts it, which naturally
   // re-adds it here without any extra bookkeeping.
-  const visible = new Set<string>()
+  const visible = new Map<string, number>()
+
   let timer: ReturnType<typeof setInterval> | null = null
 
   function sweep() {
@@ -26,7 +27,7 @@ export function createRefetchBatcher(environment: Environment) {
           }
         }
       `,
-      { ids: Array.from(visible) },
+      { ids: Array.from(visible.keys()) },
       { fetchPolicy: 'network-only' }
     ).subscribe({
       error: (err: Error) => console.error('[live-batcher] sweep failed', err),
@@ -35,11 +36,13 @@ export function createRefetchBatcher(environment: Environment) {
 
   return {
     register(id: string) {
-      visible.add(id)
+      visible.set(id, (visible.get(id) ?? 0) + 1)
       timer ??= setInterval(sweep, SWEEP_INTERVAL_MS)
     },
     unregister(id: string) {
-      visible.delete(id)
+      const n = (visible.get(id) ?? 0) - 1
+      if (n > 0) visible.set(id, n)
+      else visible.delete(id)
     },
     // call on unmount of the whole list
     dispose() {

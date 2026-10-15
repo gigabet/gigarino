@@ -167,6 +167,10 @@
     "de": "Hinzufügen",
     "tr": "Ekle"
   },
+  "Add to favourites": {
+    "de": "",
+    "tr": ""
+  },
   "Added": {
     "de": "Hinzugefügt",
     "tr": "Eklendi"
@@ -434,6 +438,10 @@
   "Fast Payouts": {
     "de": "Schnelle Auszahlungen",
     "tr": "Hızlı Ödemeler"
+  },
+  "Favourites": {
+    "de": "",
+    "tr": ""
   },
   "Featured Bets": {
     "de": "Top-Wetten",
@@ -762,6 +770,10 @@
   "Remember me": {
     "de": "Angemeldet bleiben",
     "tr": "Beni hatırla"
+  },
+  "Remove from favourites": {
+    "de": "",
+    "tr": ""
   },
   "Remove lower odds": {
     "de": "Niedrigere Quoten entfernen",

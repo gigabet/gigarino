@@ -6,6 +6,7 @@ import { graphql, useFragment } from 'react-relay'
 import { getPeriod, useNow } from '@/app/live/helpers'
 import { useLiveRowRegistration } from '@/app/live/live-subscriptions'
 import { useRefetchRegistration } from '@/app/live/refetch-context'
+import { FavouriteButton } from '@/components/favourite-button'
 import { ListViewMarkets } from '@/components/list-view-markets'
 import { TeamBadge } from '@/components/team-badge'
 import { Button, buttonVariants } from '@/components/ui/button'
@@ -33,6 +34,7 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
         ...LiveTeams
         ...LiveScore
         ...ListViewMarkets
+        ...FavouriteButton
       }
     `,
     props.eventRef
@@ -77,9 +79,7 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
           >
             +{event.oddCount}
           </Link>
-          <Button variant='ghost' size='icon-sm' className='rounded-full'>
-            <ChartNoAxesColumnIcon />
-          </Button>
+          <FavouriteButton event={event} />
         </div>
       </div>
 

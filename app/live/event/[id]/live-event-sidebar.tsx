@@ -7,6 +7,7 @@ import { graphql, type PreloadedQuery, usePaginationFragment, usePreloadedQuery 
 import { GroupedVirtuoso, Virtuoso } from 'react-virtuoso'
 import LiveEventStrip from '@/app/live/event/[id]/live-event-strip'
 import LiveStripTournament from '@/app/live/event/[id]/live-strip-tournament'
+import { FavouriteLiveStrips } from '@/app/live/favourite-live-events'
 import { liveSortState, liveSportFilterState, orderLiveEvents } from '@/app/live/live-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { LiveEventSidebar$key } from '@/relay/__generated__/LiveEventSidebar.graphql'
@@ -97,6 +98,11 @@ export default function LiveEventSidebar(props: {
     </div>
   )
 
+  const headerContext = useMemo(
+    () => ({ queryRef: props.queryRef, activeId: props.eventId }),
+    [props.queryRef, props.eventId]
+  )
+
   return (
     <aside className={ASIDE}>
       {groups ? (
@@ -112,6 +118,8 @@ export default function LiveEventSidebar(props: {
             <LiveStripTournament tournament={groups[i][0].event.tournament} pad={i > 0} />
           )}
           itemContent={item}
+          components={{ Header: FavouritesHeader }}
+          context={headerContext}
         />
       ) : (
         <Virtuoso
@@ -124,10 +132,21 @@ export default function LiveEventSidebar(props: {
           initialTopMostItemIndex={initialIndex}
           computeItemKey={i => events[i].id}
           itemContent={item}
+          components={{ Header: FavouritesHeader }}
+          context={headerContext}
         />
       )}
     </aside>
   )
+}
+
+type HeaderContext = {
+  queryRef: PreloadedQuery<LiveLayoutQuery>
+  activeId: string
+}
+
+function FavouritesHeader({ context }: { context: HeaderContext }) {
+  return <FavouriteLiveStrips queryRef={context.queryRef} activeId={context.activeId} />
 }
 
 export function LiveEventSidebarSkeleton() {

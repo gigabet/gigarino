@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2596b5e1dcc7eaf56ff357ab26fe34c2>>
+ * @generated SignedSource<<5b3bc6d4a5c45fbde765fb198d89b962>>
  * @lightSyntaxTransform
  */
 
@@ -11,7 +11,7 @@ import { ReaderFragment } from 'relay-runtime';
 export type TradingStatus = "CLOSED" | "OPEN" | "SUSPENDED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type LiveStripOdds$data = {
-  readonly markets: ReadonlyArray<{
+  readonly mainMarkets: ReadonlyArray<{
     readonly id: string;
     readonly kind: string;
     readonly " $fragmentSpreads": FragmentRefs<"LiveStripMarket">;
@@ -38,7 +38,7 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
-      "alias": null,
+      "alias": "mainMarkets",
       "args": [
         {
           "kind": "Literal",
@@ -80,6 +80,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "7bb7f3cc89de4284a2fda314c135ead1";
+(node as any).hash = "f12b4333696985a7695a55f1e85ec416";
 
 export default node;

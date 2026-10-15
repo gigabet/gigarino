@@ -75,7 +75,7 @@ function LiveStripOdds(props: { event: LiveStripOdds$key }) {
     graphql`
       fragment LiveStripOdds on Event {
         tradingStatus
-        markets(groups: [MAIN]) {
+        mainMarkets: markets(groups: [MAIN]) {
           id
           kind
           ...LiveStripMarket
@@ -85,7 +85,8 @@ function LiveStripOdds(props: { event: LiveStripOdds$key }) {
     props.event
   )
 
-  const market = data.markets.find(m => m.kind === 'match_winner') ?? data.markets[0] ?? null
+  const market =
+    data.mainMarkets.find(m => m.kind === 'match_winner') ?? data.mainMarkets[0] ?? null
   if (!market) return null
 
   return <LiveStripMarket market={market} suspended={data.tradingStatus === 'SUSPENDED'} />
