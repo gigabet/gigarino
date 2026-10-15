@@ -1,9 +1,9 @@
 'use client'
 
 import { SearchXIcon } from 'lucide-react'
-import type { PrematchEvent$key } from '@/app/sport/[[...slug]]/__generated__/PrematchEvent.graphql'
 import PrematchEvent, { PrematchEventSkeleton } from '@/app/sport/[[...slug]]/prematch-event'
 import { useT } from '@/context/providers'
+import type { PrematchEvent$key } from '@/relay/__generated__/PrematchEvent.graphql'
 
 export default function SearchResults(props: {
   query: string

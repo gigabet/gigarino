@@ -3,14 +3,14 @@
 import { forwardRef, useCallback, useMemo } from 'react'
 import { graphql, type PreloadedQuery, usePaginationFragment, usePreloadedQuery } from 'react-relay'
 import { GroupedVirtuoso, type TopItemListProps, Virtuoso } from 'react-virtuoso'
-import type { LiveEventList$key } from '@/app/live/__generated__/LiveEventList.graphql'
-import type { LiveEventListPaginationQuery } from '@/app/live/__generated__/LiveEventListPaginationQuery.graphql'
-import type { LiveEventsQuery } from '@/app/live/__generated__/LiveEventsQuery.graphql'
-import LiveEventsQueryNode from '@/app/live/__generated__/LiveEventsQuery.graphql'
 import LiveEvent, { LiveEventSkeleton } from '@/app/live/live-event'
 import { orderLiveEvents } from '@/app/live/live-state'
 import type { LiveSort } from '@/app/live/live-toolbar'
 import LiveTournament, { LiveMarketsHeader } from '@/app/live/live-tournament'
+import type { LiveEventList$key } from '@/relay/__generated__/LiveEventList.graphql'
+import type { LiveEventListPaginationQuery } from '@/relay/__generated__/LiveEventListPaginationQuery.graphql'
+import type { LiveEventsQuery } from '@/relay/__generated__/LiveEventsQuery.graphql'
+import LiveEventsQueryNode from '@/relay/__generated__/LiveEventsQuery.graphql'
 
 const PAGE_SIZE = 20
 

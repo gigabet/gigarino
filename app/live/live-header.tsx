@@ -3,13 +3,13 @@
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/navigation'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
-import type { LiveHeader$key } from '@/app/live/__generated__/LiveHeader.graphql'
-import type { LiveLayoutQuery } from '@/app/live/__generated__/LiveLayoutQuery.graphql'
-import LiveLayoutQueryNode from '@/app/live/__generated__/LiveLayoutQuery.graphql'
 import LiveSportTabs from '@/app/live/live-sport-tabs'
 import { liveSortState, liveSportFilterState } from '@/app/live/live-state'
 import LiveToolbar, { type LiveView } from '@/app/live/live-toolbar'
 import { Skeleton } from '@/components/ui/skeleton'
+import type { LiveHeader$key } from '@/relay/__generated__/LiveHeader.graphql'
+import type { LiveLayoutQuery } from '@/relay/__generated__/LiveLayoutQuery.graphql'
+import LiveLayoutQueryNode from '@/relay/__generated__/LiveLayoutQuery.graphql'
 
 export default function LiveHeaderContent(props: {
   queryRef: PreloadedQuery<LiveLayoutQuery>

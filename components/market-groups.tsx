@@ -2,14 +2,14 @@
 
 import { entries, groupBy, sortBy } from 'lodash'
 import { graphql, useFragment } from 'react-relay'
+import MarketCard from '@/components/market-card'
+import { Skeleton } from '@/components/ui/skeleton'
+import * as Tabs from '@/components/ui/tabs'
 import type {
   MarketGroup,
   MarketGroups$data,
   MarketGroups$key,
-} from '@/app/sport/event/[id]/__generated__/MarketGroups.graphql'
-import MarketCard from '@/components/market-card'
-import { Skeleton } from '@/components/ui/skeleton'
-import * as Tabs from '@/components/ui/tabs'
+} from '@/relay/__generated__/MarketGroups.graphql'
 
 const GROUP_ORDER: MarketGroup[] = [
   'MAIN',

@@ -3,11 +3,11 @@
 import { cx } from 'class-variance-authority'
 import { useEffect } from 'react'
 import { fetchQuery, graphql, useRefetchableFragment, useRelayEnvironment } from 'react-relay'
-import type { LiveSportTabs$key } from '@/app/live/__generated__/LiveSportTabs.graphql'
-import LiveSportTabsRefetchNode from '@/app/live/__generated__/LiveSportTabsRefetch.graphql'
 import { SportIcon } from '@/components/sport-icon'
 import { useT } from '@/context/providers'
 import { getSportTheme } from '@/lib/sport-theme'
+import type { LiveSportTabs$key } from '@/relay/__generated__/LiveSportTabs.graphql'
+import LiveSportTabsRefetchNode from '@/relay/__generated__/LiveSportTabsRefetch.graphql'
 
 export default function LiveSportTabs(props: {
   query: LiveSportTabs$key

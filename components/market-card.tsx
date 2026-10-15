@@ -4,11 +4,11 @@ import { sortBy } from 'lodash'
 import { LockKeyhole } from 'lucide-react'
 import { Toggle } from 'radix-ui'
 import { graphql, useFragment } from 'react-relay'
-import type { MarketCard$key } from '@/app/sport/event/[id]/__generated__/MarketCard.graphql'
 import { OddDelta } from '@/components/odd-delta'
 import { useHasOdd, useToggleOdd } from '@/context/betslip'
 import { useUpDown } from '@/context/hooks'
 import { cn } from '@/lib/utils'
+import type { MarketCard$key } from '@/relay/__generated__/MarketCard.graphql'
 
 function getOutcomesLayout(count: number): { container: string; item: string } {
   if (count === 2) return { container: 'grid grid-cols-2 gap-1.5', item: '' }

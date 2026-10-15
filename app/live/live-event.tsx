@@ -3,10 +3,6 @@
 import { BanIcon, ChartNoAxesColumnIcon, TriangleAlert } from 'lucide-react'
 import Link from 'next/link'
 import { graphql, useFragment } from 'react-relay'
-import type { LiveEvent$key } from '@/app/live/__generated__/LiveEvent.graphql'
-import type { LiveScore$key } from '@/app/live/__generated__/LiveScore.graphql'
-import type { LiveTeams$key } from '@/app/live/__generated__/LiveTeams.graphql'
-import type { LiveTime$key } from '@/app/live/__generated__/LiveTime.graphql'
 import { getPeriod, useNow } from '@/app/live/helpers'
 import { useLiveRowRegistration } from '@/app/live/live-subscriptions'
 import { useRefetchRegistration } from '@/app/live/refetch-context'
@@ -16,6 +12,10 @@ import { Button, buttonVariants } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useT } from '@/context/providers'
 import { cn } from '@/lib/utils'
+import type { LiveEvent$key } from '@/relay/__generated__/LiveEvent.graphql'
+import type { LiveScore$key } from '@/relay/__generated__/LiveScore.graphql'
+import type { LiveTeams$key } from '@/relay/__generated__/LiveTeams.graphql'
+import type { LiveTime$key } from '@/relay/__generated__/LiveTime.graphql'
 
 export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
   const event = useFragment(

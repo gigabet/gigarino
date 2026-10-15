@@ -1,10 +1,10 @@
 'use client'
 
-import type { LiveStripTournament$key } from '@/app/live/event/[id]/__generated__/LiveStripTournament.graphql'
+import { graphql, useFragment } from 'react-relay'
 import { SportIconBadge } from '@/components/sport-icon'
 import { getSportTheme } from '@/lib/sport-theme'
 import { cn } from '@/lib/utils'
-import { graphql, useFragment } from 'react-relay'
+import type { LiveStripTournament$key } from '@/relay/__generated__/LiveStripTournament.graphql'
 
 export default function LiveStripTournament(props: {
   tournament: LiveStripTournament$key

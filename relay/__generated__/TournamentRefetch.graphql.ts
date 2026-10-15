@@ -1,0 +1,331 @@
+/**
+ * @generated SignedSource<<651ee0e84739a6d4c6417c12713f0cc8>>
+ * @lightSyntaxTransform
+ */
+
+/* tslint:disable */
+/* eslint-disable */
+// @ts-nocheck
+
+import { ConcreteRequest } from 'relay-runtime';
+import { FragmentRefs } from "relay-runtime";
+export type TournamentRefetch$variables = {
+  eventCount?: number | null | undefined;
+  id: string;
+};
+export type TournamentRefetch$data = {
+  readonly node: {
+    readonly " $fragmentSpreads": FragmentRefs<"Tournament">;
+  } | null | undefined;
+};
+export type TournamentRefetch = {
+  response: TournamentRefetch$data;
+  variables: TournamentRefetch$variables;
+};
+
+const node: ConcreteRequest = (function(){
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "eventCount"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "id"
+  }
+],
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "id",
+    "variableName": "id"
+  }
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "key",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+};
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*:: as any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "TournamentRefetch",
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*:: as any*/),
+        "concreteType": null,
+        "kind": "LinkedField",
+        "name": "node",
+        "plural": false,
+        "selections": [
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "Tournament"
+          }
+        ],
+        "storageKey": null
+      }
+    ],
+    "type": "Query",
+    "abstractKey": null
+  },
+  "kind": "Request",
+  "operation": {
+    "argumentDefinitions": (v0/*:: as any*/),
+    "kind": "Operation",
+    "name": "TournamentRefetch",
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*:: as any*/),
+        "concreteType": null,
+        "kind": "LinkedField",
+        "name": "node",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "__typename",
+            "storageKey": null
+          },
+          (v2/*:: as any*/),
+          {
+            "kind": "InlineFragment",
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Sport",
+                "kind": "LinkedField",
+                "name": "sport",
+                "plural": false,
+                "selections": [
+                  (v3/*:: as any*/),
+                  (v2/*:: as any*/)
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Category",
+                "kind": "LinkedField",
+                "name": "category",
+                "plural": false,
+                "selections": [
+                  (v4/*:: as any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "countryCode",
+                    "storageKey": null
+                  },
+                  (v2/*:: as any*/)
+                ],
+                "storageKey": null
+              },
+              (v4/*:: as any*/),
+              {
+                "if": null,
+                "kind": "Defer",
+                "label": "Tournament$defer$TournamentEventList",
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": [
+                      {
+                        "kind": "Variable",
+                        "name": "first",
+                        "variableName": "eventCount"
+                      }
+                    ],
+                    "concreteType": "EventConnection",
+                    "kind": "LinkedField",
+                    "name": "events",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "EventEdge",
+                        "kind": "LinkedField",
+                        "name": "edges",
+                        "plural": true,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Event",
+                            "kind": "LinkedField",
+                            "name": "node",
+                            "plural": false,
+                            "selections": [
+                              (v2/*:: as any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "isLive",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "homeCompetitor",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "homeImageUrl",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "awayCompetitor",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "awayImageUrl",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "startTime",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "oddCount",
+                                "storageKey": null
+                              },
+                              {
+                                "if": null,
+                                "kind": "Defer",
+                                "label": "PrematchEvent$defer$ListViewMarkets",
+                                "selections": [
+                                  {
+                                    "alias": null,
+                                    "args": null,
+                                    "concreteType": "Market",
+                                    "kind": "LinkedField",
+                                    "name": "markets",
+                                    "plural": true,
+                                    "selections": [
+                                      (v2/*:: as any*/),
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "kind": "ScalarField",
+                                        "name": "kind",
+                                        "storageKey": null
+                                      },
+                                      {
+                                        "alias": null,
+                                        "args": null,
+                                        "concreteType": "Outcome",
+                                        "kind": "LinkedField",
+                                        "name": "outcomes",
+                                        "plural": true,
+                                        "selections": [
+                                          (v2/*:: as any*/),
+                                          {
+                                            "alias": null,
+                                            "args": null,
+                                            "kind": "ScalarField",
+                                            "name": "index",
+                                            "storageKey": null
+                                          },
+                                          (v3/*:: as any*/),
+                                          {
+                                            "alias": null,
+                                            "args": null,
+                                            "kind": "ScalarField",
+                                            "name": "price",
+                                            "storageKey": null
+                                          },
+                                          {
+                                            "alias": null,
+                                            "args": null,
+                                            "kind": "ScalarField",
+                                            "name": "status",
+                                            "storageKey": null
+                                          }
+                                        ],
+                                        "storageKey": null
+                                      }
+                                    ],
+                                    "storageKey": null
+                                  }
+                                ]
+                              }
+                            ],
+                            "storageKey": null
+                          }
+                        ],
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  }
+                ]
+              }
+            ],
+            "type": "Tournament",
+            "abstractKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
+  },
+  "params": {
+    "cacheID": "878d396ce3ae241959335ff1b68b0e5d",
+    "id": null,
+    "metadata": {},
+    "name": "TournamentRefetch",
+    "operationKind": "query",
+    "text": "query TournamentRefetch(\n  $eventCount: Int\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...Tournament\n    id\n  }\n}\n\nfragment ListViewMarket on Market {\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n  }\n}\n\nfragment ListViewMarkets on Event {\n  markets {\n    id\n    kind\n    ...ListViewMarket\n  }\n}\n\nfragment PrematchEvent on Event {\n  id\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  oddCount\n  ...ListViewMarkets @defer(label: \"PrematchEvent$defer$ListViewMarkets\")\n}\n\nfragment Tournament on Tournament {\n  id\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n  name\n  ...TournamentEventList @defer(label: \"Tournament$defer$TournamentEventList\")\n}\n\nfragment TournamentEventList on Tournament {\n  events(first: $eventCount) {\n    edges {\n      node {\n        id\n        isLive\n        ...PrematchEvent\n      }\n    }\n  }\n}\n"
+  }
+};
+})();
+
+(node as any).hash = "c659e540fc25958501750928030cb317";
+
+export default node;

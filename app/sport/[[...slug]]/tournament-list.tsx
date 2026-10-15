@@ -11,15 +11,15 @@ import {
   useRefetchableFragment,
   useRelayEnvironment,
 } from 'react-relay'
-import type { PrematchList$key } from '@/app/sport/[[...slug]]/__generated__/PrematchList.graphql'
-import PrematchListRefetchNode from '@/app/sport/[[...slug]]/__generated__/PrematchListRefetch.graphql'
-import type { PrematchQuery } from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
-import PrematchQueryNode from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
 import SearchResults from '@/app/sport/[[...slug]]/search-results'
 import Tournament, { TournamentSkeleton } from '@/app/sport/[[...slug]]/tournament'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { useSidebarSearch } from '@/context/hooks'
 import { cn } from '@/lib/utils'
+import type { PrematchList$key } from '@/relay/__generated__/PrematchList.graphql'
+import PrematchListRefetchNode from '@/relay/__generated__/PrematchListRefetch.graphql'
+import type { PrematchQuery } from '@/relay/__generated__/PrematchQuery.graphql'
+import PrematchQueryNode from '@/relay/__generated__/PrematchQuery.graphql'
 
 export function useTournamentKeysFromUrl() {
   const searchParams = useSearchParams()

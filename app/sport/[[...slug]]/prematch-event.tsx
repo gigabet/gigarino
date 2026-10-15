@@ -4,14 +4,14 @@ import { ChartNoAxesColumnIcon } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { fetchQuery, graphql, useFragment, useRelayEnvironment } from 'react-relay'
-import type { PrematchEvent$key } from '@/app/sport/[[...slug]]/__generated__/PrematchEvent.graphql'
-import PrematchSingleViewQueryNode from '@/app/sport/event/[id]/__generated__/PrematchSingleViewQuery.graphql'
 import { ListViewMarkets, ListViewMarketsSkeleton } from '@/components/list-view-markets'
 import { TeamBadge } from '@/components/team-badge'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { getRelativeDayLabel } from '@/lib/utils'
+import type { PrematchEvent$key } from '@/relay/__generated__/PrematchEvent.graphql'
+import PrematchSingleViewQueryNode from '@/relay/__generated__/PrematchSingleViewQuery.graphql'
 
 export default function PrematchEvent(props: { node: PrematchEvent$key }) {
   const data = useFragment(

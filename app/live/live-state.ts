@@ -1,12 +1,15 @@
 import { atom } from 'jotai'
 import { groupBy, sortBy } from 'lodash'
 import { graphql, readInlineData } from 'relay-runtime'
-import type { LiveOrder$key } from '@/app/live/__generated__/LiveOrder.graphql'
 import type { LiveSort } from '@/app/live/live-toolbar'
+import type { LiveOrder$key } from '@/relay/__generated__/LiveOrder.graphql'
 
 export const liveSortState = atom<LiveSort>('tournament')
 export const liveSportFilterState = atom<string | null>(null)
-export const ORDER = { tournament: 'TOURNAMENT', chronological: 'START_TIME' } as const
+export const ORDER = {
+  tournament: 'TOURNAMENT',
+  chronological: 'START_TIME',
+} as const
 
 const orderFragment = graphql`
   fragment LiveOrder on Event @inline {

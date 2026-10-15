@@ -7,14 +7,14 @@ import { ErrorBoundary, type FallbackProps } from 'react-error-boundary'
 import { PiTicket } from 'react-icons/pi'
 import { useInView } from 'react-intersection-observer'
 import { graphql, useLazyLoadQuery, usePaginationFragment } from 'react-relay'
-import type { MyTicketsList$key } from '@/components/__generated__/MyTicketsList.graphql'
-import type { MyTicketsListPaginationQuery } from '@/components/__generated__/MyTicketsListPaginationQuery.graphql'
-import type { MyTicketsQuery } from '@/components/__generated__/MyTicketsQuery.graphql'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
 import TicketCard, { TicketCardSkeleton } from '@/components/ticket-card'
 import { buttonVariants } from '@/components/ui/button'
 import { useT, useUser } from '@/context/providers'
 import { isAuthError } from '@/lib/utils'
+import type { MyTicketsList$key } from '@/relay/__generated__/MyTicketsList.graphql'
+import type { MyTicketsListPaginationQuery } from '@/relay/__generated__/MyTicketsListPaginationQuery.graphql'
+import type { MyTicketsQuery } from '@/relay/__generated__/MyTicketsQuery.graphql'
 
 const OPEN_STATUSES = new Set([
   'PENDING_ACCEPTANCE',

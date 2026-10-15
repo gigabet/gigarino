@@ -4,14 +4,14 @@ import { usePathname } from 'next/navigation'
 import { Suspense, startTransition, useEffect, useMemo } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { fetchQuery, graphql, useQueryLoader, useRelayEnvironment } from 'react-relay'
-import type { PrematchLayoutQuery } from '@/app/sport/__generated__/PrematchLayoutQuery.graphql'
-import PrematchLayoutQueryNode from '@/app/sport/__generated__/PrematchLayoutQuery.graphql'
 import EventSidebar, { EventSidebarSkeleton } from '@/app/sport/event/[id]/event-sidebar'
 import Sidebar, { SidebarSkeleton } from '@/app/sport/sidebar'
 import Betslip, { BetslipDrawer, BetslipMobileBar } from '@/components/betslip'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { useBetslipQuote } from '@/context/providers'
 import { cn } from '@/lib/utils'
+import type { PrematchLayoutQuery } from '@/relay/__generated__/PrematchLayoutQuery.graphql'
+import PrematchLayoutQueryNode from '@/relay/__generated__/PrematchLayoutQuery.graphql'
 
 export default function SportLayout({ children }: React.PropsWithChildren) {
   const pathname = usePathname()

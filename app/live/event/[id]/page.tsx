@@ -4,10 +4,10 @@ import { useParams } from 'next/navigation'
 import { useEffect } from 'react'
 import { useQueryLoader } from 'react-relay'
 import { graphql } from 'relay-runtime'
-import SingleViewSkeleton from '@/app/live/event/[id]/loading'
 import LiveSingleView from '@/app/live/event/[id]/live-single-view'
-import type { LiveSingleViewQuery } from '@/app/live/event/[id]/__generated__/LiveSingleViewQuery.graphql'
+import SingleViewSkeleton from '@/app/live/event/[id]/loading'
 import { useLiveRowRegistration } from '@/app/live/live-subscriptions'
+import type { LiveSingleViewQuery } from '@/relay/__generated__/LiveSingleViewQuery.graphql'
 
 export default function LiveEventPage() {
   const { id } = useParams<{ id: string }>()

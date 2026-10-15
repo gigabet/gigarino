@@ -4,10 +4,10 @@ import { useSetAtom } from 'jotai'
 import { useCallback, useEffect } from 'react'
 import { fetchQuery, graphql, requestSubscription, useRelayEnvironment } from 'react-relay'
 import { toast } from 'sonner'
-import type { TicketUpdatesCountQuery } from '@/context/__generated__/TicketUpdatesCountQuery.graphql'
-import type { TicketUpdatesSubscription } from '@/context/__generated__/TicketUpdatesSubscription.graphql'
 import { useT, useUser } from '@/context/providers'
 import { unseenResettlementsAtom } from '@/context/tickets'
+import type { TicketUpdatesCountQuery } from '@/relay/__generated__/TicketUpdatesCountQuery.graphql'
+import type { TicketUpdatesSubscription } from '@/relay/__generated__/TicketUpdatesSubscription.graphql'
 
 const countQuery = graphql`
   query TicketUpdatesCountQuery {

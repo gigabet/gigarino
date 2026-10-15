@@ -4,9 +4,9 @@ import { useParams } from 'next/navigation'
 import { useEffect } from 'react'
 import { useQueryLoader } from 'react-relay'
 import { graphql } from 'relay-runtime'
-import type { PrematchSingleViewQuery } from '@/app/sport/event/[id]/__generated__/PrematchSingleViewQuery.graphql'
 import PrematchSingleViewSkeleton from '@/app/sport/event/[id]/loading'
 import PrematchSingleView from '@/app/sport/event/[id]/prematch-single-view'
+import type { PrematchSingleViewQuery } from '@/relay/__generated__/PrematchSingleViewQuery.graphql'
 
 export default function EventPage() {
   const { id } = useParams<{ id: string }>()

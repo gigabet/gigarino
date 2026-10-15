@@ -2,11 +2,11 @@
 
 import ReactCountryFlag from 'react-country-flag'
 import { graphql, useFragment } from 'react-relay'
-import type { LiveTournament$key } from '@/app/live/__generated__/LiveTournament.graphql'
 import { ListViewMarketDropdowns } from '@/components/list-view-markets'
 import { SportIconBadge } from '@/components/sport-icon'
 import { getSportTheme } from '@/lib/sport-theme'
 import { cn } from '@/lib/utils'
+import type { LiveTournament$key } from '@/relay/__generated__/LiveTournament.graphql'
 
 export function HeaderRow(props: { left?: React.ReactNode }) {
   return (

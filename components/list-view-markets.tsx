@@ -7,11 +7,6 @@ import { motion } from 'motion/react'
 import { Toggle } from 'radix-ui'
 import { FaCaretDown, FaCaretUp } from 'react-icons/fa'
 import { graphql, useFragment } from 'react-relay'
-import type {
-  ListViewMarket$key,
-  OutcomeStatus,
-} from '@/components/__generated__/ListViewMarket.graphql'
-import type { ListViewMarkets$key } from '@/components/__generated__/ListViewMarkets.graphql'
 import { OddDelta } from '@/components/odd-delta'
 import {
   Select,
@@ -26,6 +21,11 @@ import { useDelta, useUpDown } from '@/context/hooks'
 import { useT } from '@/context/providers'
 import { tKey } from '@/i18n/tKey'
 import { cn, swap } from '@/lib/utils'
+import type {
+  ListViewMarket$key,
+  OutcomeStatus,
+} from '@/relay/__generated__/ListViewMarket.graphql'
+import type { ListViewMarkets$key } from '@/relay/__generated__/ListViewMarkets.graphql'
 
 const marketVisibility = [
   '', // (10.5 + 1 + 10.5) + 11.5 + 11.5...

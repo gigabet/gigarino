@@ -3,8 +3,8 @@
 import { createContext, useContext, useEffect, useMemo } from 'react'
 import { useRelayEnvironment } from 'react-relay'
 import { type Disposable, type Environment, graphql, requestSubscription } from 'relay-runtime'
-import type { LiveOddsSubscription } from '@/app/live/__generated__/LiveOddsSubscription.graphql'
-import type { LiveStateSubscription } from '@/app/live/__generated__/LiveStateSubscription.graphql'
+import type { LiveOddsSubscription } from '@/relay/__generated__/LiveOddsSubscription.graphql'
+import type { LiveStateSubscription } from '@/relay/__generated__/LiveStateSubscription.graphql'
 
 // Scrolling churns the registered set; wait for it to settle before swapping streams
 const RESUBSCRIBE_DEBOUNCE_MS = 800

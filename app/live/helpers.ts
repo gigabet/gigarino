@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react'
-import type { MatchPeriod } from '@/app/live/__generated__/LiveTime.graphql'
 import { tKeysObj } from '@/i18n/tKey'
+import type { MatchPeriod } from '@/relay/__generated__/LiveTime.graphql'
 
 const listeners = new Set<() => void>()
 let timer: ReturnType<typeof setInterval> | undefined

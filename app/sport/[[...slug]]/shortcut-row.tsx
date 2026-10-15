@@ -4,14 +4,14 @@ import { usePathname } from 'next/navigation'
 import ScrollContainer from 'react-indiana-drag-scroll'
 import { type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
 import { graphql } from 'relay-runtime'
-import type { PrematchQuery } from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
-import PrematchQueryNode from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
-import type { ShortcutRow$key } from '@/app/sport/[[...slug]]/__generated__/ShortcutRow.graphql'
 import { useTournamentKeysFromUrl } from '@/app/sport/[[...slug]]/tournament-list'
 import { SportIcon } from '@/components/sport-icon'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useSelectedTournaments } from '@/context/hooks'
 import { getSportTheme } from '@/lib/sport-theme'
+import type { PrematchQuery } from '@/relay/__generated__/PrematchQuery.graphql'
+import PrematchQueryNode from '@/relay/__generated__/PrematchQuery.graphql'
+import type { ShortcutRow$key } from '@/relay/__generated__/ShortcutRow.graphql'
 
 export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQuery> }) {
   const preloaded = usePreloadedQuery<PrematchQuery>(PrematchQueryNode, props.queryRef)

@@ -4,14 +4,14 @@ import { RotateCwIcon, SearchXIcon } from 'lucide-react'
 import { Suspense, useCallback, useEffect, useTransition } from 'react'
 import ReactCountryFlag from 'react-country-flag'
 import { graphql, useFragment, useRefetchableFragment } from 'react-relay'
-import type { Tournament$key } from '@/app/sport/[[...slug]]/__generated__/Tournament.graphql'
-import type { TournamentEventList$key } from '@/app/sport/[[...slug]]/__generated__/TournamentEventList.graphql'
 import PrematchEvent, { PrematchEventSkeleton } from '@/app/sport/[[...slug]]/prematch-event'
 import { ListViewMarketDropdowns } from '@/components/list-view-markets'
 import { SportIcon, SportIconBadge } from '@/components/sport-icon'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useT } from '@/context/providers'
 import { getSportTheme } from '@/lib/sport-theme'
+import type { Tournament$key } from '@/relay/__generated__/Tournament.graphql'
+import type { TournamentEventList$key } from '@/relay/__generated__/TournamentEventList.graphql'
 
 export default function Tournament(props: { queryRef: Tournament$key }) {
   const [data, refetch] = useRefetchableFragment(

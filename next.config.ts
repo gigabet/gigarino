@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
     removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error'] } : false,
     relay: {
       src: '.',
+      artifactDirectory: './relay/__generated__',
       language: 'typescript',
     },
   },

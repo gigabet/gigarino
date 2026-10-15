@@ -13,17 +13,17 @@ import {
   usePreloadedQuery,
   useQueryLoader,
 } from 'react-relay'
-import type { TicketCard$key } from '@/components/__generated__/TicketCard.graphql'
-import type { TicketCardAcknowledgeMutation } from '@/components/__generated__/TicketCardAcknowledgeMutation.graphql'
-import type { TicketCardCashoutMutation } from '@/components/__generated__/TicketCardCashoutMutation.graphql'
-import type { TicketCardCashoutQuoteQuery } from '@/components/__generated__/TicketCardCashoutQuoteQuery.graphql'
-import TicketCardCashoutQuoteQueryNode from '@/components/__generated__/TicketCardCashoutQuoteQuery.graphql'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useT } from '@/context/providers'
 import { unseenResettlementsAtom } from '@/context/tickets'
 import { tKey } from '@/i18n/tKey'
 import { cn, formatBalance } from '@/lib/utils'
+import type { TicketCard$key } from '@/relay/__generated__/TicketCard.graphql'
+import type { TicketCardAcknowledgeMutation } from '@/relay/__generated__/TicketCardAcknowledgeMutation.graphql'
+import type { TicketCardCashoutMutation } from '@/relay/__generated__/TicketCardCashoutMutation.graphql'
+import type { TicketCardCashoutQuoteQuery } from '@/relay/__generated__/TicketCardCashoutQuoteQuery.graphql'
+import TicketCardCashoutQuoteQueryNode from '@/relay/__generated__/TicketCardCashoutQuoteQuery.graphql'
 import type { BetItemStatus, TicketStatus } from '@/types'
 
 const CASHOUT_ELIGIBLE = new Set<TicketStatus>(['ACCEPTED', 'PARTIALLY_CASHED_OUT'])

@@ -3,8 +3,8 @@
 import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
-import type { BetslipSubscription$variables } from '@/context/__generated__/BetslipSubscription.graphql'
 import { tKey } from '@/i18n/tKey'
+import type { BetslipSubscription$variables } from '@/relay/__generated__/BetslipSubscription.graphql'
 import type { BetRejectionCode, OddsChangePolicy } from '@/types'
 
 export type BetslipInput = BetslipSubscription$variables['input']

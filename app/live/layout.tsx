@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation'
 import { Suspense, startTransition, useEffect, useMemo } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { graphql, useQueryLoader } from 'react-relay'
-import type { LiveLayoutQuery } from '@/app/live/__generated__/LiveLayoutQuery.graphql'
 import LiveEventSidebar, {
   LiveEventSidebarSkeleton,
 } from '@/app/live/event/[id]/live-event-sidebar'
@@ -17,6 +16,7 @@ import Betslip, { BetslipDrawer, BetslipMobileBar } from '@/components/betslip'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { useBetslipQuote } from '@/context/providers'
 import { cn } from '@/lib/utils'
+import type { LiveLayoutQuery } from '@/relay/__generated__/LiveLayoutQuery.graphql'
 
 export default function LiveLayout({ children }: React.PropsWithChildren) {
   const pathname = usePathname()

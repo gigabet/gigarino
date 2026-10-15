@@ -3,12 +3,12 @@
 import { useEffect, useRef } from 'react'
 import { useQueryLoader } from 'react-relay'
 import { graphql } from 'relay-runtime'
-import type { PrematchQuery } from '@/app/sport/[[...slug]]/__generated__/PrematchQuery.graphql'
 import SportPageSkeleton from '@/app/sport/[[...slug]]/loading'
 import ShortcutRow from '@/app/sport/[[...slug]]/shortcut-row'
 import TournamentList, { useTournamentKeysFromUrl } from '@/app/sport/[[...slug]]/tournament-list'
 import Carousel from '@/app/sport/carousel'
 import { useSidebarSearch } from '@/context/hooks'
+import type { PrematchQuery } from '@/relay/__generated__/PrematchQuery.graphql'
 
 export default function SportPage() {
   // const params = useParams<{ slug?: string[] }>()

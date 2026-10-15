@@ -16,19 +16,6 @@ import {
   useRefetchableFragment,
   useRelayEnvironment,
 } from 'react-relay'
-import type { PrematchLayoutQuery } from '@/app/sport/__generated__/PrematchLayoutQuery.graphql'
-import PrematchLayoutQueryNode from '@/app/sport/__generated__/PrematchLayoutQuery.graphql'
-import type { Sidebar$data, Sidebar$key } from '@/app/sport/__generated__/Sidebar.graphql'
-import type { SidebarCountryItem$key } from '@/app/sport/__generated__/SidebarCountryItem.graphql'
-import type { SidebarCountryList$key } from '@/app/sport/__generated__/SidebarCountryList.graphql'
-import type { SidebarSport$key } from '@/app/sport/__generated__/SidebarSport.graphql'
-import SidebarSportDetailsNode, {
-  type SidebarSportDetails,
-} from '@/app/sport/__generated__/SidebarSportDetails.graphql'
-import type { SidebarTournaments$key } from '@/app/sport/__generated__/SidebarTournaments.graphql'
-import SidebarTournamentsLoadNode, {
-  type SidebarTournamentsLoad,
-} from '@/app/sport/__generated__/SidebarTournamentsLoad.graphql'
 import SidebarSearch from '@/app/sport/sidebar-search'
 import { SportIcon, SportIconBadge } from '@/components/sport-icon'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -38,6 +25,19 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useSelectedTournaments } from '@/context/hooks'
 import { useLocale, useT } from '@/context/providers'
 import { getCountryName } from '@/i18n/countryNames'
+import type { PrematchLayoutQuery } from '@/relay/__generated__/PrematchLayoutQuery.graphql'
+import PrematchLayoutQueryNode from '@/relay/__generated__/PrematchLayoutQuery.graphql'
+import type { Sidebar$data, Sidebar$key } from '@/relay/__generated__/Sidebar.graphql'
+import type { SidebarCountryItem$key } from '@/relay/__generated__/SidebarCountryItem.graphql'
+import type { SidebarCountryList$key } from '@/relay/__generated__/SidebarCountryList.graphql'
+import type { SidebarSport$key } from '@/relay/__generated__/SidebarSport.graphql'
+import SidebarSportDetailsNode, {
+  type SidebarSportDetails,
+} from '@/relay/__generated__/SidebarSportDetails.graphql'
+import type { SidebarTournaments$key } from '@/relay/__generated__/SidebarTournaments.graphql'
+import SidebarTournamentsLoadNode, {
+  type SidebarTournamentsLoad,
+} from '@/relay/__generated__/SidebarTournamentsLoad.graphql'
 
 const sportOrder = [
   'football',
@@ -395,7 +395,10 @@ function CountryList(props: { queryRef: PreloadedQuery<SidebarSportDetails> }) {
           <div
             key={country.key}
             className='animate-fade-in'
-            style={{ animationDelay: `${Math.min(i, 8) * 40}ms`, animationFillMode: 'backwards' }}
+            style={{
+              animationDelay: `${Math.min(i, 8) * 40}ms`,
+              animationFillMode: 'backwards',
+            }}
           >
             <CountryItem country={country} />
           </div>

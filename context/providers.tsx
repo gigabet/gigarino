@@ -7,11 +7,11 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { graphql, requestSubscription, useRelayEnvironment } from 'react-relay'
 import { BarLoader } from 'react-spinners'
 import { Toaster } from '@/components/ui/sonner'
+import { betslipInputAtom } from '@/context/betslip'
 import type {
   BetslipSubscription,
   BetslipSubscription$data,
-} from '@/context/__generated__/BetslipSubscription.graphql'
-import { betslipInputAtom } from '@/context/betslip'
+} from '@/relay/__generated__/BetslipSubscription.graphql'
 import { RelayProvider } from '@/relay/relay-provider'
 import type { User, Wallet } from '@/types'
 
