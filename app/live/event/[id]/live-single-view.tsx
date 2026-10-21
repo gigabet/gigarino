@@ -1,7 +1,7 @@
 'use client'
 
 import { format } from 'date-fns'
-import { ImageIcon, SearchXIcon } from 'lucide-react'
+import { SearchXIcon } from 'lucide-react'
 import { Suspense, useEffect } from 'react'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
 import StatisticsWidget from '@/app/live/event/[id]/statistics-widget'
@@ -9,6 +9,7 @@ import { LiveTime } from '@/app/live/live-event'
 import { FavouriteButton } from '@/components/favourite-button'
 import MarketGroups, { MarketGroupsSkeleton } from '@/components/market-groups'
 import { SportIcon } from '@/components/sport-icon'
+import { TeamBadge } from '@/components/team-badge'
 import { useT } from '@/context/providers'
 import { getRelativeDayLabel } from '@/lib/utils'
 import type { EventState$key } from '@/relay/__generated__/EventState.graphql'
@@ -24,7 +25,9 @@ export default function LiveSingleView(props: { queryRef: PreloadedQuery<LiveSin
     graphql`
       fragment LiveSingleView on Event {
         homeCompetitor
+        homeImageUrl
         awayCompetitor
+        awayImageUrl
         startTime
         ...LiveSingleHeader
         ...EventState
@@ -45,13 +48,13 @@ export default function LiveSingleView(props: { queryRef: PreloadedQuery<LiveSin
       <section className='flex flex-col gap-3 rounded-2xl border border-white/5 bg-black/20 p-4 sm:gap-4 sm:p-6'>
         <LiveSingleHeader event={data} />
         <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-4'>
-          <Competitor name={data.homeCompetitor} />
+          <Competitor name={data.homeCompetitor} imageUrl={data.homeImageUrl} />
 
           <Suspense fallback={<EventLiveStateFallback startTime={data.startTime} />}>
             <EventState event={data} startTime={data.startTime} />
           </Suspense>
 
-          <Competitor name={data.awayCompetitor} reverse />
+          <Competitor name={data.awayCompetitor} imageUrl={data.awayImageUrl} reverse />
         </div>
       </section>
 
@@ -109,14 +112,16 @@ function LiveSingleHeader(props: { event: LiveSingleHeader$key }) {
   )
 }
 
-function Competitor(props: { name: string; reverse?: boolean }) {
+function Competitor(props: { name: string; imageUrl?: string | null; reverse?: boolean }) {
   return (
     <div
       className={`flex min-w-0 items-center gap-2 sm:gap-3 ${props.reverse ? 'flex-row-reverse text-right' : ''}`}
     >
-      <div className='bg-dark-300 text-muted-foreground flex size-8 min-w-8 items-center justify-center rounded-full sm:size-10 sm:min-w-10'>
-        <ImageIcon className='size-3.5 sm:size-4' />
-      </div>
+      <TeamBadge
+        name={props.name}
+        imageUrl={props.imageUrl}
+        className='size-8 min-w-8 text-xs sm:size-10 sm:min-w-10 sm:text-sm'
+      />
       <span className='truncate text-xs font-semibold text-white sm:text-sm lg:text-base'>
         {props.name}
       </span>

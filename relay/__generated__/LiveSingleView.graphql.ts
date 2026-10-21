@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c2054dcd79c3ccda3c7b3210e5c68153>>
+ * @generated SignedSource<<bdd5c14dbfd29c26cb068c100e5d70dc>>
  * @lightSyntaxTransform
  */
 
@@ -11,7 +11,9 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type LiveSingleView$data = {
   readonly awayCompetitor: string;
+  readonly awayImageUrl: string | null | undefined;
   readonly homeCompetitor: string;
+  readonly homeImageUrl: string | null | undefined;
   readonly startTime: string;
   readonly " $fragmentSpreads": FragmentRefs<"EventState" | "LiveSingleHeader" | "MarketGroups">;
   readonly " $fragmentType": "LiveSingleView";
@@ -38,7 +40,21 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
+      "name": "homeImageUrl",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
       "name": "awayCompetitor",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "awayImageUrl",
       "storageKey": null
     },
     {
@@ -73,6 +89,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "969b31804f1fd98d00e90ad6f6a42578";
+(node as any).hash = "0359a12dd1b5e157e25e6ad239dedbb3";
 
 export default node;
