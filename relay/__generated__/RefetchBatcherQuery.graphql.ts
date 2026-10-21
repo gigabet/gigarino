@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8da1165017bdefe0bbd84686502b165a>>
+ * @generated SignedSource<<eb0b4f1a93945acd1ded4288030af43d>>
  * @lightSyntaxTransform
  */
 
@@ -48,7 +48,7 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "startTime",
+  "name": "key",
   "storageKey": null
 },
 v4 = {
@@ -58,18 +58,8 @@ v4 = {
   "name": "status",
   "storageKey": null
 },
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "key",
-  "storageKey": null
-},
-v6 = [
-  (v5/*:: as any*/)
-],
-v7 = [
-  (v5/*:: as any*/),
+v5 = [
+  (v3/*:: as any*/),
   (v2/*:: as any*/)
 ];
 return {
@@ -93,35 +83,9 @@ return {
             "name": "LiveEvent"
           },
           {
-            "kind": "InlineDataFragmentSpread",
-            "name": "LiveOrder",
-            "selections": [
-              (v2/*:: as any*/),
-              (v3/*:: as any*/),
-              (v4/*:: as any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Sport",
-                "kind": "LinkedField",
-                "name": "sport",
-                "plural": false,
-                "selections": (v6/*:: as any*/),
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Tournament",
-                "kind": "LinkedField",
-                "name": "tournament",
-                "plural": false,
-                "selections": (v6/*:: as any*/),
-                "storageKey": null
-              }
-            ],
             "args": null,
-            "argumentDefinitions": []
+            "kind": "FragmentSpread",
+            "name": "LiveOrder"
           }
         ],
         "storageKey": null
@@ -261,7 +225,7 @@ return {
                     "name": "index",
                     "storageKey": null
                   },
-                  (v5/*:: as any*/),
+                  (v3/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -290,7 +254,13 @@ return {
             "name": "isLive",
             "storageKey": null
           },
-          (v3/*:: as any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "startTime",
+            "storageKey": null
+          },
           (v4/*:: as any*/),
           {
             "alias": null,
@@ -299,7 +269,7 @@ return {
             "kind": "LinkedField",
             "name": "sport",
             "plural": false,
-            "selections": (v7/*:: as any*/),
+            "selections": (v5/*:: as any*/),
             "storageKey": null
           },
           {
@@ -309,7 +279,7 @@ return {
             "kind": "LinkedField",
             "name": "tournament",
             "plural": false,
-            "selections": (v7/*:: as any*/),
+            "selections": (v5/*:: as any*/),
             "storageKey": null
           }
         ],

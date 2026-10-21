@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ca1c88e11abce0f4adb9bb6168eb4b27>>
+ * @generated SignedSource<<ed8ed1392389a7c71dfbc353f1155e6a>>
  * @lightSyntaxTransform
  */
 
@@ -25,24 +25,7 @@ export type FavouriteLiveEvents$key = {
   readonly " $fragmentSpreads": FragmentRefs<"FavouriteLiveEvents">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-},
-v1 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "key",
-    "storageKey": null
-  }
-];
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": {
@@ -89,49 +72,17 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v0/*:: as any*/),
                 {
-                  "kind": "InlineDataFragmentSpread",
-                  "name": "LiveOrder",
-                  "selections": [
-                    (v0/*:: as any*/),
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "startTime",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "status",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "concreteType": "Sport",
-                      "kind": "LinkedField",
-                      "name": "sport",
-                      "plural": false,
-                      "selections": (v1/*:: as any*/),
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "concreteType": "Tournament",
-                      "kind": "LinkedField",
-                      "name": "tournament",
-                      "plural": false,
-                      "selections": (v1/*:: as any*/),
-                      "storageKey": null
-                    }
-                  ],
+                  "alias": null,
                   "args": null,
-                  "argumentDefinitions": []
+                  "kind": "ScalarField",
+                  "name": "id",
+                  "storageKey": null
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "LiveOrder"
                 },
                 {
                   "args": null,
@@ -195,7 +146,6 @@ return {
   "type": "Query",
   "abstractKey": null
 };
-})();
 
 (node as any).hash = "86064618335f29a9e1460111ddf8af74";
 

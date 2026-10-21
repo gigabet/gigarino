@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f4a429b4f75fe0bf6aee2c857b971282>>
+ * @generated SignedSource<<f3580a426b4f57b22aea83ddd22b7be0>>
  * @lightSyntaxTransform
  */
 
@@ -32,15 +32,6 @@ import LiveEventSidebarPaginationQuery_graphql from './LiveEventSidebarPaginatio
 const node: ReaderFragment = (function(){
 var v0 = [
   "liveEvents"
-],
-v1 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "key",
-    "storageKey": null
-  }
 ];
 return {
   "argumentDefinitions": [
@@ -126,53 +117,9 @@ return {
               "plural": false,
               "selections": [
                 {
-                  "kind": "InlineDataFragmentSpread",
-                  "name": "LiveOrder",
-                  "selections": [
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "id",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "startTime",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "status",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "concreteType": "Sport",
-                      "kind": "LinkedField",
-                      "name": "sport",
-                      "plural": false,
-                      "selections": (v1/*:: as any*/),
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "concreteType": "Tournament",
-                      "kind": "LinkedField",
-                      "name": "tournament",
-                      "plural": false,
-                      "selections": (v1/*:: as any*/),
-                      "storageKey": null
-                    }
-                  ],
                   "args": null,
-                  "argumentDefinitions": []
+                  "kind": "FragmentSpread",
+                  "name": "LiveOrder"
                 },
                 {
                   "args": null,

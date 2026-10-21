@@ -4,7 +4,7 @@ import { forwardRef, useCallback, useMemo } from 'react'
 import { graphql, type PreloadedQuery, usePaginationFragment, usePreloadedQuery } from 'react-relay'
 import { GroupedVirtuoso, type TopItemListProps, Virtuoso } from 'react-virtuoso'
 import LiveEvent, { LiveEventSkeleton } from '@/app/live/live-event'
-import { orderLiveEvents } from '@/app/live/live-state'
+import { useOrderedLiveEvents } from '@/app/live/live-state'
 import type { LiveSort } from '@/app/live/live-toolbar'
 import LiveTournament, { LiveMarketsHeader } from '@/app/live/live-tournament'
 import type { LiveEventList$key } from '@/relay/__generated__/LiveEventList.graphql'
@@ -67,15 +67,8 @@ export default function LiveEventList(props: {
     preloaded as LiveEventList$key
   )
 
-  const { events, groups } = useMemo(
-    () =>
-      orderLiveEvents(
-        data.liveEvents.edges.map(e => e.node),
-        props.sort,
-        null
-      ),
-    [data.liveEvents.edges, props.sort]
-  )
+  const nodes = useMemo(() => data.liveEvents.edges.map(e => e.node), [data.liveEvents.edges])
+  const { events, groups } = useOrderedLiveEvents(nodes, props.sort, null)
 
   // tournament headers are plain rows, flattened in front of their events
   const rows = useMemo(

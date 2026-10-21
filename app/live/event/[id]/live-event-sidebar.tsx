@@ -8,7 +8,7 @@ import { GroupedVirtuoso, Virtuoso } from 'react-virtuoso'
 import LiveEventStrip from '@/app/live/event/[id]/live-event-strip'
 import LiveStripTournament from '@/app/live/event/[id]/live-strip-tournament'
 import { FavouriteLiveStrips } from '@/app/live/favourite-live-events'
-import { liveSortState, liveSportFilterState, orderLiveEvents } from '@/app/live/live-state'
+import { liveSortState, liveSportFilterState, useOrderedLiveEvents } from '@/app/live/live-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { LiveEventSidebar$key } from '@/relay/__generated__/LiveEventSidebar.graphql'
 import type { LiveEventSidebarPaginationQuery } from '@/relay/__generated__/LiveEventSidebarPaginationQuery.graphql'
@@ -58,15 +58,8 @@ export default function LiveEventSidebar(props: {
   const sportFilter = useAtomValue(liveSportFilterState)
 
   // the server already filtered by sport and ordered; this only derives groups
-  const { events, groups } = useMemo(
-    () =>
-      orderLiveEvents(
-        data.liveEvents.edges.map(e => e.node),
-        sort,
-        null
-      ),
-    [data.liveEvents.edges, sort]
-  )
+  const nodes = useMemo(() => data.liveEvents.edges.map(e => e.node), [data.liveEvents.edges])
+  const { events, groups } = useOrderedLiveEvents(nodes, sort, null)
 
   const loadMore = () => {
     if (hasNext && !isLoadingNext) loadNext(PAGE_SIZE)

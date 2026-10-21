@@ -1,6 +1,7 @@
 import { atom } from 'jotai'
 import { groupBy, sortBy } from 'lodash'
-import { graphql, readInlineData } from 'relay-runtime'
+import { useMemo } from 'react'
+import { graphql, useFragment } from 'react-relay'
 import type { LiveSort } from '@/app/live/live-toolbar'
 import type { LiveOrder$key } from '@/relay/__generated__/LiveOrder.graphql'
 
@@ -12,7 +13,7 @@ export const ORDER = {
 } as const
 
 const orderFragment = graphql`
-  fragment LiveOrder on Event @inline {
+  fragment LiveOrder on Event @relay(plural: true) {
     id
     startTime
     status
@@ -28,36 +29,38 @@ const orderFragment = graphql`
 const FINISHED = new Set(['ENDED', 'CANCELLED', 'ABANDONED', 'POSTPONED'])
 
 export type OrderedLiveEvent<T> = { id: string; group: string; event: T }
+type LiveOrderRef = LiveOrder$key[number]
 
-export function orderLiveEvents<T extends LiveOrder$key>(
+export function useOrderedLiveEvents<T extends LiveOrderRef>(
   events: ReadonlyArray<T>,
   sort: LiveSort,
   sportFilter: string | null
 ): { events: OrderedLiveEvent<T>[]; groups: OrderedLiveEvent<T>[][] | null } {
-  const rows = events
-    .map(event => {
-      const o = readInlineData<LiveOrder$key>(orderFragment, event)
-      return {
+  const order = useFragment(orderFragment, events as unknown as LiveOrder$key)
+
+  return useMemo(() => {
+    const rows = order
+      .map((o, i) => ({
         id: o.id,
-        event,
+        event: events[i],
         status: o.status,
         sport: o.sport.key,
         group: `${o.sport.key}:${o.tournament.key}`,
         start: Date.parse(o.startTime),
-      }
+      }))
+      .filter(r => !FINISHED.has(r.status))
+      .filter(r => !sportFilter || r.sport === sportFilter)
+
+    const toOut = (r: (typeof rows)[number]): OrderedLiveEvent<T> => ({
+      id: r.id,
+      group: r.group,
+      event: r.event,
     })
-    .filter(r => !FINISHED.has(r.status))
-    .filter(r => !sportFilter || r.sport === sportFilter)
 
-  const toOut = (r: (typeof rows)[number]): OrderedLiveEvent<T> => ({
-    id: r.id,
-    group: r.group,
-    event: r.event,
-  })
+    if (sort === 'chronological')
+      return { events: sortBy(rows, r => r.start).map(toOut), groups: null }
 
-  if (sort === 'chronological')
-    return { events: sortBy(rows, r => r.start).map(toOut), groups: null }
-
-  const groups = Object.values(groupBy(rows, r => r.group)).map(g => g.map(toOut))
-  return { events: groups.flat(), groups }
+    const groups = Object.values(groupBy(rows, r => r.group)).map(g => g.map(toOut))
+    return { events: groups.flat(), groups }
+  }, [order, events, sort, sportFilter])
 }
