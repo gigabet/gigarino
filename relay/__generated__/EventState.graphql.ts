@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<87e661af6b80baa6923a47c87c725faa>>
+ * @generated SignedSource<<96bff8c5d8b1c31ac71336463c6d5f55>>
  * @lightSyntaxTransform
  */
 
@@ -9,13 +9,12 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type EventStatus = "ABANDONED" | "CANCELLED" | "ENDED" | "LIVE" | "POSTPONED" | "SCHEDULED" | "%future added value";
-export type TradingStatus = "CLOSED" | "OPEN" | "SUSPENDED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type EventState$data = {
   readonly awayScore: number | null | undefined;
   readonly homeScore: number | null | undefined;
   readonly status: EventStatus;
-  readonly tradingStatus: TradingStatus;
+  readonly " $fragmentSpreads": FragmentRefs<"LiveTime">;
   readonly " $fragmentType": "EventState";
 };
 export type EventState$key = {
@@ -40,13 +39,6 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "tradingStatus",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
       "name": "homeScore",
       "storageKey": null
     },
@@ -56,12 +48,17 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "awayScore",
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "LiveTime"
     }
   ],
   "type": "Event",
   "abstractKey": null
 };
 
-(node as any).hash = "1de7e7263b4a83f621862c84d7c76fa0";
+(node as any).hash = "df9d36e235e1f964eb25478ad4ff19ae";
 
 export default node;

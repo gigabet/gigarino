@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<10681cc9b8c2a419720bfeefcb8210a2>>
+ * @generated SignedSource<<1596d4b92a87528557fb5fbf2f84f833>>
  * @lightSyntaxTransform
  */
 
@@ -219,6 +219,13 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
+                    "name": "clockDirection",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
                     "name": "clockElapsedSeconds",
                     "storageKey": null
                   },
@@ -389,12 +396,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "adb9a3c6364314cf2eb207f111a6f995",
+    "cacheID": "e657ef059a5f7fb291084f174a72e02d",
     "id": null,
     "metadata": {},
     "name": "LiveEventSidebarPaginationQuery",
     "operationKind": "query",
-    "text": "query LiveEventSidebarPaginationQuery(\n  $after: String\n  $first: Int = 50\n  $orderBy: LiveEventOrder = TOURNAMENT\n  $sport: String\n) {\n  ...LiveEventSidebar_2dsFoV\n}\n\nfragment LiveEventSidebar_2dsFoV on Query {\n  liveEvents(first: $first, after: $after, orderBy: $orderBy, sport: $sport) {\n    edges {\n      node {\n        ...LiveOrder\n        ...LiveEventStrip\n        tournament {\n          ...LiveStripTournament\n          id\n        }\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment LiveEventStrip on Event {\n  id\n  tradingStatus\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...LiveStripOdds\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  status\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  homeScore\n  awayScore\n}\n\nfragment LiveStripMarket on Market {\n  outcomes {\n    id\n    index\n    ...LiveStripOdd\n  }\n}\n\nfragment LiveStripOdd on Outcome {\n  id\n  name\n  price\n  status\n}\n\nfragment LiveStripOdds on Event {\n  tradingStatus\n  mainMarkets: markets(groups: [MAIN]) {\n    id\n    kind\n    ...LiveStripMarket\n  }\n}\n\nfragment LiveStripTournament on Tournament {\n  name\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    id\n  }\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on Event {\n  period\n  clockRunning\n  clockElapsedSeconds\n  clockAnchorAt\n  tradingStatus\n}\n"
+    "text": "query LiveEventSidebarPaginationQuery(\n  $after: String\n  $first: Int = 50\n  $orderBy: LiveEventOrder = TOURNAMENT\n  $sport: String\n) {\n  ...LiveEventSidebar_2dsFoV\n}\n\nfragment LiveEventSidebar_2dsFoV on Query {\n  liveEvents(first: $first, after: $after, orderBy: $orderBy, sport: $sport) {\n    edges {\n      node {\n        ...LiveOrder\n        ...LiveEventStrip\n        tournament {\n          ...LiveStripTournament\n          id\n        }\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment LiveEventStrip on Event {\n  id\n  tradingStatus\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...LiveStripOdds\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  status\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  homeScore\n  awayScore\n}\n\nfragment LiveStripMarket on Market {\n  outcomes {\n    id\n    index\n    ...LiveStripOdd\n  }\n}\n\nfragment LiveStripOdd on Outcome {\n  id\n  name\n  price\n  status\n}\n\nfragment LiveStripOdds on Event {\n  tradingStatus\n  mainMarkets: markets(groups: [MAIN]) {\n    id\n    kind\n    ...LiveStripMarket\n  }\n}\n\nfragment LiveStripTournament on Tournament {\n  name\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    id\n  }\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on Event {\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  tradingStatus\n}\n"
   }
 };
 })();

@@ -1,11 +1,11 @@
 'use client'
 
 import { format } from 'date-fns'
-import { ExternalLinkIcon, ImageIcon, SearchXIcon } from 'lucide-react'
-import Link from 'next/link'
+import { ImageIcon, SearchXIcon } from 'lucide-react'
 import { Suspense, useEffect } from 'react'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
 import StatisticsWidget from '@/app/live/event/[id]/statistics-widget'
+import { LiveTime } from '@/app/live/live-event'
 import { FavouriteButton } from '@/components/favourite-button'
 import MarketGroups, { MarketGroupsSkeleton } from '@/components/market-groups'
 import { SportIcon } from '@/components/sport-icon'
@@ -124,40 +124,35 @@ function Competitor(props: { name: string; reverse?: boolean }) {
   )
 }
 
+const SHOWS_SCORE = new Set(['LIVE', 'ENDED', 'ABANDONED'])
+
 function EventState(props: { event: EventState$key; startTime: string }) {
   const data = useFragment(
     graphql`
       fragment EventState on Event {
         status
-        tradingStatus
         homeScore
         awayScore
+        ...LiveTime
       }
     `,
     props.event
   )
 
-  if (data.status !== 'LIVE') return <KickoffTime startTime={props.startTime} />
+  if (!SHOWS_SCORE.has(data.status)) return <KickoffTime startTime={props.startTime} />
 
   return (
     <div className='flex shrink-0 flex-col items-center gap-1 px-1'>
       <span className='text-base leading-none font-bold text-white sm:text-lg'>
         {data.homeScore ?? 0} - {data.awayScore ?? 0}
       </span>
-      <span className='text-secondary text-[0.6rem] uppercase sm:text-[0.65rem]'>
-        {data.tradingStatus}
-      </span>
+      <div className='text-secondary text-[0.6rem] uppercase sm:text-[0.65rem]'>
+        <LiveTime event={data} aside className='flex-wrap justify-center gap-x-2' />
+      </div>
     </div>
   )
 }
 
-/**
- * Suspense fallback while `EventState` resolves. `startTime` is a plain
- * prop (already available from the cached, non-suspending part of the
- * fragment tree) so we can show the correct kick-off time immediately
- * instead of a generic skeleton — it only needs correcting in the rare case
- * the match has since gone live, which swaps in a moment later.
- */
 export function EventLiveStateFallback(props: { startTime: string }) {
   return <KickoffTime startTime={props.startTime} />
 }

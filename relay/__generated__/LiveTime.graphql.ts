@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8b23fb467588a71f38099709809859cc>>
+ * @generated SignedSource<<33b0a020f26fea5b055e702ea6fae7f0>>
  * @lightSyntaxTransform
  */
 
@@ -8,14 +8,18 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type ClockDirection = "DOWN" | "UP" | "%future added value";
+export type EventStatus = "ABANDONED" | "CANCELLED" | "ENDED" | "LIVE" | "POSTPONED" | "SCHEDULED" | "%future added value";
 export type MatchPeriod = "BREAK" | "EXTRA_TIME" | "FIFTH_SET" | "FIRST_HALF" | "FIRST_PERIOD" | "FIRST_SET" | "FOURTH_PERIOD" | "FOURTH_SET" | "HALF_TIME" | "OVERTIME" | "PENALTIES" | "SECOND_HALF" | "SECOND_PERIOD" | "SECOND_SET" | "THIRD_PERIOD" | "THIRD_SET" | "%future added value";
 export type TradingStatus = "CLOSED" | "OPEN" | "SUSPENDED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type LiveTime$data = {
   readonly clockAnchorAt: string | null | undefined;
+  readonly clockDirection: ClockDirection | null | undefined;
   readonly clockElapsedSeconds: number | null | undefined;
   readonly clockRunning: boolean;
   readonly period: MatchPeriod | null | undefined;
+  readonly status: EventStatus;
   readonly tradingStatus: TradingStatus;
   readonly " $fragmentType": "LiveTime";
 };
@@ -34,6 +38,13 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
+      "name": "status",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
       "name": "period",
       "storageKey": null
     },
@@ -42,6 +53,13 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "ScalarField",
       "name": "clockRunning",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "clockDirection",
       "storageKey": null
     },
     {
@@ -70,6 +88,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "6c6f8525c6a1ff8f79cfda2cff503ee2";
+(node as any).hash = "6df15a1cb647241fb7ea0fc31bd2d31f";
 
 export default node;

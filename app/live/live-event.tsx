@@ -4,6 +4,7 @@ import { BanIcon, ChartNoAxesColumnIcon, TriangleAlert } from 'lucide-react'
 import Link from 'next/link'
 import { graphql, useFragment } from 'react-relay'
 import { getPeriod, useNow } from '@/app/live/helpers'
+import { FINISHED } from '@/app/live/live-state'
 import { useLiveRowRegistration } from '@/app/live/live-subscriptions'
 import { useRefetchRegistration } from '@/app/live/refetch-context'
 import { FavouriteButton } from '@/components/favourite-button'
@@ -12,11 +13,19 @@ import { TeamBadge } from '@/components/team-badge'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useT } from '@/context/providers'
+import { tKey } from '@/i18n/tKey'
 import { cn } from '@/lib/utils'
 import type { LiveEvent$key } from '@/relay/__generated__/LiveEvent.graphql'
 import type { LiveScore$key } from '@/relay/__generated__/LiveScore.graphql'
 import type { LiveTeams$key } from '@/relay/__generated__/LiveTeams.graphql'
 import type { LiveTime$key } from '@/relay/__generated__/LiveTime.graphql'
+
+const STATUS_LABEL: Record<string, string> = {
+  ENDED: tKey('Ended'),
+  CANCELLED: tKey('Cancelled'),
+  ABANDONED: tKey('Abandoned'),
+  POSTPONED: tKey('Postponed'),
+}
 
 export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
   const event = useFragment(
@@ -88,12 +97,14 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
   )
 }
 
-export function LiveTime(props: { event: LiveTime$key; aside?: boolean }) {
+export function LiveTime(props: { event: LiveTime$key; aside?: boolean; className?: string }) {
   const data = useFragment(
     graphql`
       fragment LiveTime on Event {
+        status
         period
         clockRunning
+        clockDirection
         clockElapsedSeconds
         clockAnchorAt
         tradingStatus
@@ -101,12 +112,26 @@ export function LiveTime(props: { event: LiveTime$key; aside?: boolean }) {
     `,
     props.event
   )
-  const now = useNow(data.clockRunning)
+  const finished = FINISHED.has(data.status)
+  // a finished match must not keep ticking, whatever clockRunning says
+  const now = useNow(data.clockRunning && !finished)
   const t = useT()
 
+  if (finished) {
+    return (
+      <div className={cn('flex items-center gap-1.5', props.className)}>
+        <div className='size-2 rounded-full bg-neutral-500' />
+        <span className='text-foreground'>{t(STATUS_LABEL[data.status] ?? 'Ended')}</span>
+      </div>
+    )
+  }
+
   let seconds = data.clockElapsedSeconds
-  if (seconds != null && data.clockRunning && data.clockAnchorAt)
-    seconds += Math.max(0, (now - Date.parse(data.clockAnchorAt)) / 1000)
+  if (seconds != null && data.clockRunning && data.clockAnchorAt) {
+    const delta = Math.max(0, (now - Date.parse(data.clockAnchorAt)) / 1000)
+    // UP = elapsed, DOWN = time remaining in the period
+    seconds = data.clockDirection === 'DOWN' ? Math.max(0, seconds - delta) : seconds + delta
+  }
 
   const mins = Math.floor((seconds ?? 0) / 60)
   const secs = Math.floor((seconds ?? 0) % 60)
@@ -115,7 +140,8 @@ export function LiveTime(props: { event: LiveTime$key; aside?: boolean }) {
     <div
       className={cn(
         'flex items-center justify-between gap-1',
-        props.aside ? 'flex-row' : 'flex-row gap-2 lg:flex-col lg:gap-1'
+        props.aside ? 'flex-row' : 'flex-row gap-2 lg:flex-col lg:gap-1',
+        props.className
       )}
     >
       <div className='text-foreground flex gap-1.5'>
@@ -123,7 +149,6 @@ export function LiveTime(props: { event: LiveTime$key; aside?: boolean }) {
           <div className='absolute size-2 animate-ping rounded-full bg-red-500' />
           <div className='size-2 rounded-full bg-red-500' />
         </div>
-        {/* @ts-expect-error: %future added value */}
         {t(getPeriod(data.period).long)}
       </div>
       {!props.aside && seconds !== null && <span className='lg:hidden'>·</span>}

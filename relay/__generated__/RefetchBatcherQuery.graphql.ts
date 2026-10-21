@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<eb0b4f1a93945acd1ded4288030af43d>>
+ * @generated SignedSource<<419143553fdb80abcf01a8879dfeb0cf>>
  * @lightSyntaxTransform
  */
 
@@ -48,18 +48,18 @@ v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "key",
+  "name": "status",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "status",
+  "name": "key",
   "storageKey": null
 },
 v5 = [
-  (v3/*:: as any*/),
+  (v4/*:: as any*/),
   (v2/*:: as any*/)
 ];
 return {
@@ -151,6 +151,7 @@ return {
             "name": "oddCount",
             "storageKey": null
           },
+          (v3/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -163,6 +164,13 @@ return {
             "args": null,
             "kind": "ScalarField",
             "name": "clockRunning",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "clockDirection",
             "storageKey": null
           },
           {
@@ -225,7 +233,7 @@ return {
                     "name": "index",
                     "storageKey": null
                   },
-                  (v3/*:: as any*/),
+                  (v4/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -233,7 +241,7 @@ return {
                     "name": "price",
                     "storageKey": null
                   },
-                  (v4/*:: as any*/)
+                  (v3/*:: as any*/)
                 ],
                 "storageKey": null
               }
@@ -261,7 +269,6 @@ return {
             "name": "startTime",
             "storageKey": null
           },
-          (v4/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -288,12 +295,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9295f57658c836b4fe56650e20a8df05",
+    "cacheID": "783c223216cec69fdf6baf05fb9446d3",
     "id": null,
     "metadata": {},
     "name": "RefetchBatcherQuery",
     "operationKind": "query",
-    "text": "query RefetchBatcherQuery(\n  $ids: [ID!]!\n) {\n  eventsByIds(ids: $ids) {\n    ...LiveEvent\n    ...LiveOrder\n    id\n  }\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment ListViewMarket on Market {\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n  }\n}\n\nfragment ListViewMarkets on Event {\n  markets {\n    id\n    kind\n    ...ListViewMarket\n  }\n}\n\nfragment LiveEvent on Event {\n  id\n  homeCompetitor\n  awayCompetitor\n  homeScore\n  awayScore\n  tradingStatus\n  oddCount\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...ListViewMarkets\n  ...FavouriteButton\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  status\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  homeScore\n  awayScore\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on Event {\n  period\n  clockRunning\n  clockElapsedSeconds\n  clockAnchorAt\n  tradingStatus\n}\n"
+    "text": "query RefetchBatcherQuery(\n  $ids: [ID!]!\n) {\n  eventsByIds(ids: $ids) {\n    ...LiveEvent\n    ...LiveOrder\n    id\n  }\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment ListViewMarket on Market {\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n  }\n}\n\nfragment ListViewMarkets on Event {\n  markets {\n    id\n    kind\n    ...ListViewMarket\n  }\n}\n\nfragment LiveEvent on Event {\n  id\n  homeCompetitor\n  awayCompetitor\n  homeScore\n  awayScore\n  tradingStatus\n  oddCount\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...ListViewMarkets\n  ...FavouriteButton\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  status\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  homeScore\n  awayScore\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on Event {\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  tradingStatus\n}\n"
   }
 };
 })();

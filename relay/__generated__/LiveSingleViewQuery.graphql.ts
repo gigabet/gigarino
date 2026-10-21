@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ab5d00f7e6dcab9cc4dee71290924beb>>
+ * @generated SignedSource<<7d2b76f0250f0e380df2b521bee828f6>>
  * @lightSyntaxTransform
  */
 
@@ -194,13 +194,6 @@ return {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
-            "name": "tradingStatus",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
             "name": "homeScore",
             "storageKey": null
           },
@@ -209,6 +202,48 @@ return {
             "args": null,
             "kind": "ScalarField",
             "name": "awayScore",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "period",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "clockRunning",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "clockDirection",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "clockElapsedSeconds",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "clockAnchorAt",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "tradingStatus",
             "storageKey": null
           },
           {
@@ -282,12 +317,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "39cc02d7a12e509f80d3e3c356c4efc0",
+    "cacheID": "b8785cdc06ed4dae0ff44e3c7caf8021",
     "id": null,
     "metadata": {},
     "name": "LiveSingleViewQuery",
     "operationKind": "query",
-    "text": "query LiveSingleViewQuery(\n  $id: ID!\n) {\n  event(id: $id) {\n    ...LiveSingleView\n    id\n  }\n}\n\nfragment EventState on Event {\n  status\n  tradingStatus\n  homeScore\n  awayScore\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment LiveSingleHeader on Event {\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    name\n    id\n  }\n  category {\n    name\n    id\n  }\n  status\n  ...FavouriteButton\n}\n\nfragment LiveSingleView on Event {\n  homeCompetitor\n  awayCompetitor\n  startTime\n  ...LiveSingleHeader\n  ...EventState\n  ...MarketGroups @defer(label: \"LiveSingleView$defer$MarketGroups\")\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  outcomes {\n    id\n    index\n    name\n    price\n    status\n  }\n}\n\nfragment MarketGroups on Event {\n  markets {\n    id\n    groups\n    kind\n    index\n    ...MarketCard\n  }\n}\n"
+    "text": "query LiveSingleViewQuery(\n  $id: ID!\n) {\n  event(id: $id) {\n    ...LiveSingleView\n    id\n  }\n}\n\nfragment EventState on Event {\n  status\n  homeScore\n  awayScore\n  ...LiveTime\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment LiveSingleHeader on Event {\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    name\n    id\n  }\n  category {\n    name\n    id\n  }\n  status\n  ...FavouriteButton\n}\n\nfragment LiveSingleView on Event {\n  homeCompetitor\n  awayCompetitor\n  startTime\n  ...LiveSingleHeader\n  ...EventState\n  ...MarketGroups @defer(label: \"LiveSingleView$defer$MarketGroups\")\n}\n\nfragment LiveTime on Event {\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  tradingStatus\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  outcomes {\n    id\n    index\n    name\n    price\n    status\n  }\n}\n\nfragment MarketGroups on Event {\n  markets {\n    id\n    groups\n    kind\n    index\n    ...MarketCard\n  }\n}\n"
   }
 };
 })();

@@ -32,7 +32,7 @@ export function useNow(active = true) {
   return useSyncExternalStore(active ? subscribe : noop, snapshot, snapshot)
 }
 
-export function getPeriod(period: MatchPeriod | null) {
+export function getPeriod(period: MatchPeriod | null | undefined) {
   switch (period) {
     case 'BREAK':
       return tKeysObj({ long: 'Break', short: 'Break' })

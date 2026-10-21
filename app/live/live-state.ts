@@ -26,7 +26,7 @@ const orderFragment = graphql`
   }
 `
 
-const FINISHED = new Set(['ENDED', 'CANCELLED', 'ABANDONED', 'POSTPONED'])
+export const FINISHED = new Set(['ENDED', 'CANCELLED', 'ABANDONED', 'POSTPONED'])
 
 export type OrderedLiveEvent<T> = { id: string; group: string; event: T }
 type LiveOrderRef = LiveOrder$key[number]
