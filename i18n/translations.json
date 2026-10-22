@@ -435,6 +435,10 @@
     "de": "Seitenleiste ausklappen",
     "tr": "Kenar çubuğunu genişlet"
   },
+  "Expired": {
+    "de": "",
+    "tr": ""
+  },
   "Extra Time": {
     "de": "Verlängerung",
     "tr": "Uzatma"
@@ -759,6 +763,10 @@
     "de": "Zuletzt",
     "tr": "Son"
   },
+  "Reconnecting": {
+    "de": "",
+    "tr": ""
+  },
   "Refresh": {
     "de": "Aktualisieren",
     "tr": "Yenile"
@@ -918,6 +926,10 @@
   "Stake per bet": {
     "de": "Einsatz pro Wette",
     "tr": "Bahis başına miktar"
+  },
+  "Stale": {
+    "de": "",
+    "tr": ""
   },
   "Suspended": {
     "de": "Gesperrt",

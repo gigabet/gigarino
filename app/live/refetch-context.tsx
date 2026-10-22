@@ -7,13 +7,11 @@ import { type Environment, fetchQuery, graphql } from 'relay-runtime'
 const SWEEP_INTERVAL_MS = 30_000
 
 export function createRefetchBatcher(environment: Environment) {
-  // ids currently mounted on screen (Virtuoso's rendered window + overscan).
-  // A row registers on mount and unregisters on unmount — including when
-  // Virtuoso virtualizes it away and later remounts it, which naturally
-  // re-adds it here without any extra bookkeeping.
+  // ids currently mounted on screen (Virtuoso's rendered window + overscan)
   const visible = new Map<string, number>()
 
   let timer: ReturnType<typeof setInterval> | null = null
+  let listening = false
 
   function sweep() {
     if (visible.size === 0) return
@@ -34,20 +32,37 @@ export function createRefetchBatcher(environment: Environment) {
     })
   }
 
+  const onWake = () => {
+    if (document.visibilityState === 'visible') sweep()
+  }
+
+  function start() {
+    timer ??= setInterval(sweep, SWEEP_INTERVAL_MS)
+    if (!listening) {
+      document.addEventListener('visibilitychange', onWake)
+      window.addEventListener('online', sweep)
+      listening = true
+    }
+  }
+
   return {
     register(id: string) {
       visible.set(id, (visible.get(id) ?? 0) + 1)
-      timer ??= setInterval(sweep, SWEEP_INTERVAL_MS)
+      start() // only ever reached from useEffect, so the browser globals exist
     },
     unregister(id: string) {
       const n = (visible.get(id) ?? 0) - 1
       if (n > 0) visible.set(id, n)
       else visible.delete(id)
     },
-    // call on unmount of the whole list
     dispose() {
       if (timer) clearInterval(timer)
       timer = null
+      if (listening) {
+        document.removeEventListener('visibilitychange', onWake)
+        window.removeEventListener('online', sweep)
+        listening = false
+      }
       visible.clear()
     },
   }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<33b0a020f26fea5b055e702ea6fae7f0>>
+ * @generated SignedSource<<e0dc28a233e8748ed2974a402a0a1814>>
  * @lightSyntaxTransform
  */
 
@@ -18,6 +18,7 @@ export type LiveTime$data = {
   readonly clockDirection: ClockDirection | null | undefined;
   readonly clockElapsedSeconds: number | null | undefined;
   readonly clockRunning: boolean;
+  readonly liveSeenAt: string | null | undefined;
   readonly period: MatchPeriod | null | undefined;
   readonly status: EventStatus;
   readonly tradingStatus: TradingStatus;
@@ -80,6 +81,13 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
+      "name": "liveSeenAt",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
       "name": "tradingStatus",
       "storageKey": null
     }
@@ -88,6 +96,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "6df15a1cb647241fb7ea0fc31bd2d31f";
+(node as any).hash = "600c97878cab3ee63a63ff510a46b8c3";
 
 export default node;

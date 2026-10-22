@@ -6,7 +6,7 @@ import { Suspense, useEffect } from 'react'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
 import StatisticsWidget from '@/app/live/event/[id]/statistics-widget'
 import { getPeriod } from '@/app/live/helpers'
-import { LiveTime, useLiveTime } from '@/app/live/live-event'
+import { useLiveClock } from '@/app/live/live-event'
 import { FavouriteButton } from '@/components/favourite-button'
 import MarketGroups, { MarketGroupsSkeleton } from '@/components/market-groups'
 import { SportIcon } from '@/components/sport-icon'
@@ -146,7 +146,9 @@ function EventState(props: { event: EventState$key; startTime: string }) {
     props.event
   )
 
-  const time = useLiveTime(data)
+  const { seconds } = useLiveClock(data)
+  const mins = Math.floor((seconds ?? 0) / 60)
+  const secs = Math.floor((seconds ?? 0) % 60)
 
   if (!SHOWS_SCORE.has(data.status)) return <KickoffTime startTime={props.startTime} />
 
@@ -155,8 +157,10 @@ function EventState(props: { event: EventState$key; startTime: string }) {
       <span className='text-base leading-none font-bold text-white sm:text-lg'>
         {data.homeScore ?? 0} - {data.awayScore ?? 0}
       </span>
-      {!!time && (
-        <div className='text-secondary font-mono text-[0.6rem] sm:text-[0.65rem]'>{time}</div>
+      {seconds !== null && (
+        <div className='text-secondary font-mono text-[0.6rem] sm:text-[0.65rem]'>
+          {String(mins).padStart(2, '0')}:{String(secs).padStart(2, '0')}
+        </div>
       )}
     </div>
   )

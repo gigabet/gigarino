@@ -7,6 +7,7 @@ import { Toggle } from 'radix-ui'
 import { graphql, useFragment } from 'react-relay'
 import { LiveScore, LiveTeams, LiveTime } from '@/app/live/live-event'
 import { useLiveRowRegistration } from '@/app/live/live-subscriptions'
+import { useRefetchRegistration } from '@/app/live/refetch-context'
 import { OddDelta } from '@/components/odd-delta'
 import { useHasOdd, useToggleOdd } from '@/context/betslip'
 import { useUpDown } from '@/context/hooks'
@@ -33,6 +34,7 @@ export default function LiveEventStrip(props: { event: LiveEventStrip$key; activ
   )
 
   useLiveRowRegistration(data.id)
+  useRefetchRegistration(data.id)
   const t = useT()
 
   return (

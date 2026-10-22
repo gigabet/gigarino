@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<12f70fb82ecfd7ff480a0fe81d3a026a>>
+ * @generated SignedSource<<58656e65d5e834e0079570e682822c1d>>
  * @lightSyntaxTransform
  */
 
@@ -184,6 +184,13 @@ return {
                 "kind": "ScalarField",
                 "name": "clockAnchorAt",
                 "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "liveSeenAt",
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -194,12 +201,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "fea9faf2ea45cbf1a3ff67509d4ff5f3",
+    "cacheID": "271ccd6e926708d2ef21434209f7fd9c",
     "id": null,
     "metadata": {},
     "name": "LiveStateSubscription",
     "operationKind": "subscription",
-    "text": "subscription LiveStateSubscription(\n  $eventIds: [ID!]!\n) {\n  eventStateUpdated(eventIds: $eventIds) {\n    event {\n      id\n      status\n      tradingStatus\n      ...LiveScore\n      ...LiveTime\n    }\n  }\n}\n\nfragment LiveScore on Event {\n  homeScore\n  awayScore\n}\n\nfragment LiveTime on Event {\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  tradingStatus\n}\n"
+    "text": "subscription LiveStateSubscription(\n  $eventIds: [ID!]!\n) {\n  eventStateUpdated(eventIds: $eventIds) {\n    event {\n      id\n      status\n      tradingStatus\n      ...LiveScore\n      ...LiveTime\n    }\n  }\n}\n\nfragment LiveScore on Event {\n  homeScore\n  awayScore\n}\n\nfragment LiveTime on Event {\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n"
   }
 };
 })();

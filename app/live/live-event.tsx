@@ -37,7 +37,6 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
         awayCompetitor
         homeScore
         awayScore
-        # status
         tradingStatus
         oddCount
         ...LiveTime
@@ -55,7 +54,8 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
   useLiveRowRegistration(event.id)
   useRefetchRegistration(event.id)
 
-  const suspended = event.tradingStatus !== 'OPEN'
+  const { stale } = useLiveClock(event)
+  const suspended = stale || event.tradingStatus !== 'OPEN'
 
   return (
     <div className='sport-texture group relative flex h-32 flex-col gap-2 overflow-hidden border-b py-3 last:border-b-0 sm:gap-3 sm:rounded-2xl sm:border-b-0 sm:border-white/5 sm:bg-black/20 sm:px-4 lg:h-27 lg:flex-row lg:flex-nowrap lg:items-center lg:gap-4 lg:px-5'>
@@ -98,32 +98,9 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
   )
 }
 
-export const useLiveTime = (event: LiveTime$key) => {
-  const data = useFragment(LiveTimeNode, event)
-  const finished = FINISHED.has(data.status)
+const STALE_AFTER_MS = 2 * 60_000
 
-  const now = useNow(data.clockRunning && !finished)
-  const t = useT()
-
-  if (finished) return t(STATUS_LABEL[data.status] ?? 'Ended')
-
-  let seconds = data.clockElapsedSeconds
-
-  if (typeof seconds !== 'number') return null
-
-  if (data.clockRunning && data.clockAnchorAt) {
-    const delta = Math.max(0, (now - Date.parse(data.clockAnchorAt)) / 1000)
-    // UP = elapsed, DOWN = time remaining in the period
-    seconds = data.clockDirection === 'DOWN' ? Math.max(0, seconds - delta) : seconds + delta
-  }
-
-  const mins = Math.floor((seconds ?? 0) / 60)
-  const secs = Math.floor((seconds ?? 0) % 60)
-
-  return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
-}
-
-export function LiveTime(props: { event: LiveTime$key; aside?: boolean; className?: string }) {
+export function useLiveClock(event: LiveTime$key) {
   const data = useFragment(
     graphql`
       fragment LiveTime on Event {
@@ -133,14 +110,35 @@ export function LiveTime(props: { event: LiveTime$key; aside?: boolean; classNam
         clockDirection
         clockElapsedSeconds
         clockAnchorAt
+        liveSeenAt
         tradingStatus
       }
     `,
-    props.event
+    event
   )
+
   const finished = FINISHED.has(data.status)
-  // a finished match must not keep ticking, whatever clockRunning says
-  const now = useNow(data.clockRunning && !finished)
+  const seenAt = data.liveSeenAt ? Date.parse(data.liveSeenAt) : null
+  const running = data.clockRunning && !finished && seenAt !== null
+  const now = useNow(running)
+
+  // Never extrapolate past the last server confirmation + grace.
+  // The clock stops where trust ran out instead of jumping backwards.
+  const horizon = seenAt !== null ? seenAt + STALE_AFTER_MS : now
+  const effectiveNow = Math.min(now, horizon)
+  const stale = seenAt !== null && !finished && now > horizon
+
+  let seconds = data.clockElapsedSeconds
+  if (seconds != null && running && data.clockAnchorAt) {
+    const delta = Math.max(0, (effectiveNow - Date.parse(data.clockAnchorAt)) / 1000)
+    seconds = data.clockDirection === 'DOWN' ? Math.max(0, seconds - delta) : seconds + delta
+  }
+
+  return { data, finished, seconds, stale }
+}
+
+export function LiveTime(props: { event: LiveTime$key; aside?: boolean; className?: string }) {
+  const { data, finished, seconds, stale } = useLiveClock(props.event)
   const t = useT()
 
   if (finished) {
@@ -152,13 +150,6 @@ export function LiveTime(props: { event: LiveTime$key; aside?: boolean; classNam
     )
   }
 
-  let seconds = data.clockElapsedSeconds
-  if (seconds != null && data.clockRunning && data.clockAnchorAt) {
-    const delta = Math.max(0, (now - Date.parse(data.clockAnchorAt)) / 1000)
-    // UP = elapsed, DOWN = time remaining in the period
-    seconds = data.clockDirection === 'DOWN' ? Math.max(0, seconds - delta) : seconds + delta
-  }
-
   const mins = Math.floor((seconds ?? 0) / 60)
   const secs = Math.floor((seconds ?? 0) % 60)
 
@@ -166,22 +157,22 @@ export function LiveTime(props: { event: LiveTime$key; aside?: boolean; classNam
     <div
       className={cn(
         'flex items-center justify-between gap-1',
-        props.aside ? 'flex-row' : 'flex-row-reverse gap-2 lg:flex-col lg:gap-1',
+        props.aside ? 'flex-row' : 'flex-row gap-2 lg:flex-col lg:gap-1',
         props.className
       )}
     >
       <div className='text-foreground flex items-center gap-1.5'>
-        <div className='relative mt-px flex shrink-0 items-center justify-center'>
-          <div className='absolute size-2 animate-ping rounded-full bg-red-500' />
-          <div className='size-2 rounded-full bg-red-500' />
+        <div className='relative flex shrink-0 items-center justify-center'>
+          {!stale && <div className='absolute size-2 animate-ping rounded-full bg-red-500' />}
+          <div className={cn('size-2 rounded-full', !stale ? 'bg-red-500' : 'bg-gray-400')} />
         </div>
-        {seconds !== null ? (
+        {!stale && seconds !== null && (
           <time className='text-foreground font-mono'>
             {String(mins).padStart(2, '0')}:{String(secs).padStart(2, '0')}
           </time>
-        ) : (
-          <span>{t('Live')}</span>
         )}
+        {!stale && seconds === null && <span>{t('Live')}</span>}
+        {stale && <span>{t('Expired')}</span>}
       </div>
       {!props.aside && seconds !== null && data.period && <span className='lg:hidden'>·</span>}
       {data.period && <div>{t(getPeriod(data.period).long)}</div>}
