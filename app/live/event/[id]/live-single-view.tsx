@@ -5,7 +5,8 @@ import { SearchXIcon } from 'lucide-react'
 import { Suspense, useEffect } from 'react'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
 import StatisticsWidget from '@/app/live/event/[id]/statistics-widget'
-import { LiveTime } from '@/app/live/live-event'
+import { getPeriod } from '@/app/live/helpers'
+import { LiveTime, useLiveTime } from '@/app/live/live-event'
 import { FavouriteButton } from '@/components/favourite-button'
 import MarketGroups, { MarketGroupsSkeleton } from '@/components/market-groups'
 import { SportIcon } from '@/components/sport-icon'
@@ -82,6 +83,7 @@ function LiveSingleHeader(props: { event: LiveSingleHeader$key }) {
           name
         }
         status
+        period
         ...FavouriteButton
       }
     `,
@@ -98,7 +100,7 @@ function LiveSingleHeader(props: { event: LiveSingleHeader$key }) {
             <div className='bg-destructive absolute size-2 animate-ping rounded-full' />
             <div className='bg-destructive absolute size-2 rounded-full' />
           </div>
-          {t('Live')}
+          {t(getPeriod(data.period).long)}
         </div>
       )}
       <SportIcon sport={data.sport.key} className='size-3.5 shrink-0' />
@@ -144,6 +146,8 @@ function EventState(props: { event: EventState$key; startTime: string }) {
     props.event
   )
 
+  const time = useLiveTime(data)
+
   if (!SHOWS_SCORE.has(data.status)) return <KickoffTime startTime={props.startTime} />
 
   return (
@@ -151,9 +155,7 @@ function EventState(props: { event: EventState$key; startTime: string }) {
       <span className='text-base leading-none font-bold text-white sm:text-lg'>
         {data.homeScore ?? 0} - {data.awayScore ?? 0}
       </span>
-      <div className='text-secondary text-[0.6rem] uppercase sm:text-[0.65rem]'>
-        <LiveTime event={data} aside className='flex-wrap justify-center gap-x-2' />
-      </div>
+      <div className='text-secondary font-mono text-[0.6rem] sm:text-[0.65rem]'>{time}</div>
     </div>
   )
 }

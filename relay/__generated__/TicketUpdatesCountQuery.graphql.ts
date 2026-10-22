@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<87ddaf05e3786e7a0175ea96946abb72>>
+ * @generated SignedSource<<f9892419eff32fe2be586cc6ec769d2b>>
  * @lightSyntaxTransform
  */
 
@@ -10,7 +10,7 @@
 import { ConcreteRequest } from 'relay-runtime';
 export type TicketUpdatesCountQuery$variables = Record<PropertyKey, never>;
 export type TicketUpdatesCountQuery$data = {
-  readonly unseenResettlementCount: number;
+  readonly unseenResettlementCount: number | null | undefined;
 };
 export type TicketUpdatesCountQuery = {
   response: TicketUpdatesCountQuery$data;

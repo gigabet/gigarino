@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5782cec8f45233d59fabca34b8e47ab1>>
+ * @generated SignedSource<<9429c98f539e15fd9aec7e22590d4f76>>
  * @lightSyntaxTransform
  */
 
@@ -19,7 +19,7 @@ export type MyTicketsList$data = {
         readonly " $fragmentSpreads": FragmentRefs<"TicketCard">;
       };
     }>;
-  };
+  } | null | undefined;
   readonly " $fragmentType": "MyTicketsList";
 };
 export type MyTicketsList$key = {

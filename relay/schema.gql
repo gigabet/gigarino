@@ -33,6 +33,7 @@ type BetRejection {
 }
 
 enum BetRejectionCode {
+  BOOST_LIMIT
   BOOST_UNAVAILABLE
   CASHOUT_UNAVAILABLE
   CUTOFF_PASSED
@@ -44,6 +45,9 @@ enum BetRejectionCode {
   LIVE_STATE_CHANGED
   MULTI_SINGLE_NOT_SUPPORTED
   ODDS_LIMIT
+    @deprecated(
+      reason: "No longer returned: bets over the caps are accepted with a capped payout (see payoutCapped)."
+    )
   ODDS_UNAVAILABLE
   OUTCOME_NOT_AVAILABLE
   PRICE_CHANGED
@@ -78,10 +82,20 @@ type BetslipQuote {
   blockers: [BetRejectionCode!]!
 
   """
+  The quote is at a Bet Boost price (boostId given and valid): effectiveOdds is the boosted price.
+  """
+  boostApplied: Boolean!
+
+  """
   Combined odds across available selections.
   """
   effectiveOdds: Decimal!
   items: [BetslipQuoteItem!]!
+
+  """
+  potentialPayout was cut to the maximum winnings (odds or payout cap). The bet is still placeable; show the player that the payout is limited.
+  """
+  payoutCapped: Boolean!
 
   """
   True when placeBet with these selections would pass validation right now.
@@ -89,7 +103,7 @@ type BetslipQuote {
   placeable: Boolean!
 
   """
-  stake × effectiveOdds if every selection wins.
+  What the bet pays if every selection wins, within the maximum winnings.
   """
   potentialPayout: Decimal!
   quotedAt: DateTimeISO!
@@ -98,6 +112,11 @@ type BetslipQuote {
 
 input BetslipQuoteInput {
   betType: TicketType!
+
+  """
+  A Bet Boost (FeaturedBet id) to quote at its boosted price. Its selections must be the whole slip: a single for one, MULTIPLE for several.
+  """
+  boostId: ID
   items: [BetslipItemInput!]!
   stake: String!
   systemSize: Int
@@ -142,7 +161,7 @@ type BetslipQuoteItem implements Node {
   status: OutcomeStatus
 
   """
-  Why the selection is locked when `availability` is SUSPENDED; null otherwise.
+  Why the selection is locked when `availability` is SUSPENDED, or why the match cannot be bet when EVENT_NOT_BETTABLE; null otherwise.
   """
   suspensionReason: SuspensionReason
 }
@@ -312,6 +331,11 @@ type Event implements Node {
   id: ID!
 
   """
+  Statistics-widget data: head-to-head, each team's recent form, league positions, venue, referee and live/final match stats. Null when the provider has none. Ask for it on the event page only (one provider call per event, cached).
+  """
+  insights: MatchInsights
+
+  """
   Whether the signed-in player bookmarked this event; false when signed out.
   """
   isFavourite: Boolean!
@@ -320,6 +344,11 @@ type Event implements Node {
   True while the match is in play. Prematch views should skip events where this is true; live views list only these.
   """
   isLive: Boolean!
+
+  """
+  Live only: when the feed last confirmed the match is in play (refreshed every few seconds, even when nothing changes). If this is more than ~2 minutes old the client is showing stale state: refetch, and stop running the clock. Null when not live.
+  """
+  liveSeenAt: DateTimeISO
 
   """
   Markets currently offered: live markets while live, prematch otherwise.
@@ -423,6 +452,11 @@ An admin-curated promotional bet for the sport carousel.
 """
 type FeaturedBet {
   """
+  BET_BOOST only: boosted bets the signed-in player may still place on it (0 = used). Null when signed out.
+  """
+  betsRemaining: Int
+
+  """
   BET_BOOST only: the enhanced price offered (above the fair combined price).
   """
   boostedPrice: Decimal
@@ -435,7 +469,7 @@ type FeaturedBet {
   kind: FeaturedBetKind!
 
   """
-  BET_BOOST only: max stake accepted at the boosted price (liability cap).
+  BET_BOOST only: the most one bet may stake at the boosted price, in the signed-in player's currency. Null when signed out.
   """
   maxStake: Decimal
   selections: [FeaturedBetSelection!]!
@@ -579,6 +613,57 @@ enum MarketStatus {
 }
 
 """
+Statistics-widget data for an event: form, head-to-head, positions and match stats.
+"""
+type MatchInsights {
+  """
+  League position of the away team.
+  """
+  awayPosition: Int
+
+  """
+  The away team's latest matches, newest first (up to 5).
+  """
+  awayRecent: [PastMatch!]!
+
+  """
+  Earlier meetings of the two teams, newest first (up to 5).
+  """
+  headToHead: [PastMatch!]!
+
+  """
+  League position of the home team.
+  """
+  homePosition: Int
+
+  """
+  The home team's latest matches, newest first (up to 5).
+  """
+  homeRecent: [PastMatch!]!
+  referee: String
+  round: String
+
+  """
+  Live or final match statistics; empty before kick-off.
+  """
+  stats: [MatchStat!]!
+
+  """
+  Stadium (and city).
+  """
+  venue: String
+}
+
+"""
+Win / draw / loss from the point of view of the team the list belongs to.
+"""
+enum MatchOutcome {
+  D
+  L
+  W
+}
+
+"""
 Phase of a live match (half/period/break).
 """
 enum MatchPeriod {
@@ -598,6 +683,19 @@ enum MatchPeriod {
   SECOND_SET
   THIRD_PERIOD
   THIRD_SET
+}
+
+"""
+One match statistic as a home / away pair.
+"""
+type MatchStat {
+  away: String!
+  home: String!
+
+  """
+  Provider stat name, stable for translation: possession_rt, attacks, dangerous_attacks, on_target, off_target, shots_blocked, corners, fouls, offsides, saves, yellowcards, redcards, penalties, substitutions, xg, passing_accuracy, key_passes, ...
+  """
+  key: String!
 }
 
 type Mutation {
@@ -730,6 +828,23 @@ type PageInfo {
 }
 
 """
+A finished match from a team history.
+"""
+type PastMatch {
+  awayName: String!
+  awayScore: String
+  competition: String
+  homeName: String!
+  homeScore: String
+
+  """
+  Result for the list's team (headToHead: the event's home team).
+  """
+  outcome: MatchOutcome
+  startTime: DateTimeISO!
+}
+
+"""
 Score within one period: a half, quarter, hockey period or tennis set (games).
 """
 type PeriodScore {
@@ -802,9 +917,9 @@ type Query {
   betslipQuote(input: BetslipQuoteInput!): BetslipQuote!
 
   """
-  What the book would pay right now to buy this ticket back.
+  What the book would pay right now to buy this ticket back. Null with an UNAUTHENTICATED error when the session is missing or expired.
   """
-  cashoutQuote(ticketId: ID!): CashoutQuote!
+  cashoutQuote(ticketId: ID!): CashoutQuote
 
   """
   Fetch a single event by its global `id`, prematch or in play.
@@ -866,7 +981,7 @@ type Query {
   eventsByIds(ids: [ID!]!): [Event!]!
 
   """
-  Active curated carousel bets — combo of the week, bet boost, featured game — each live-priced. Optionally filter by kind. Public: builds a betslip, moves no money.
+  Active curated carousel bets — combo of the week, bet boost, featured game — each live-priced. Optionally filter by kind. Public: builds a betslip, moves no money. Signed in, boosts include the player's site and branch ones, with stake limits in their currency.
   """
   featuredBets(kind: FeaturedBetKind): [FeaturedBet!]!
 
@@ -895,9 +1010,9 @@ type Query {
   ): EventConnection!
 
   """
-  The caller's tickets, newest first (forward-only pagination).
+  The caller's tickets, newest first (forward-only pagination). Null with an UNAUTHENTICATED error when the session is missing or expired.
   """
-  myTickets(after: String, first: Int): TicketConnection!
+  myTickets(after: String, first: Int): TicketConnection
 
   """
   Relay-required global lookup. Resolves an opaque global ID to the concrete node, or null when the record no longer exists.
@@ -930,9 +1045,9 @@ type Query {
   tournaments(ids: [ID!], keys: [String!], sport: String): [Tournament!]!
 
   """
-  How many of the caller's tickets were corrected since last acknowledged - the resettlement notification badge.
+  How many of the caller's tickets were corrected since last acknowledged - the resettlement notification badge. Null with an UNAUTHENTICATED error when the session is missing or expired.
   """
-  unseenResettlementCount: Int!
+  unseenResettlementCount: Int
 }
 
 """
@@ -968,6 +1083,41 @@ type Sport implements Node {
   """
   liveEventCount: Int!
   name: String!
+}
+
+"""
+One table: the whole league, or one group of a cup.
+"""
+type StandingGroup {
+  name: String
+  rows: [StandingRow!]!
+}
+
+type StandingRow {
+  drawn: Int!
+  goalsAgainst: Int!
+  goalsFor: Int!
+  lost: Int!
+  played: Int!
+  points: Int!
+  position: Int!
+  teamName: String!
+  won: Int!
+
+  """
+  Promotion / relegation zone, e.g. "Champions League".
+  """
+  zone: String
+}
+
+"""
+League table for a tournament.
+"""
+type Standings {
+  currentRound: Int
+  groups: [StandingGroup!]!
+  maxRounds: Int
+  season: String
 }
 
 type Subscription {
@@ -1017,6 +1167,11 @@ enum SuspensionReason {
   MARKET_SUSPENDED
 
   """
+  The match has started but the book is not trading it in play (prematch betting has closed). It reopens if live prices arrive.
+  """
+  NOT_OFFERED_LIVE
+
+  """
   No valid price: it would pay out no more than the stake (<= 1.00).
   """
   NO_PRICE
@@ -1028,6 +1183,11 @@ A player's placed bet.
 type Ticket {
   acceptedAt: DateTimeISO
   betType: TicketType!
+
+  """
+  Set when placed with a Bet Boost; null otherwise. Boosted tickets offer no cash-out.
+  """
+  boost: TicketBoost
 
   """
   Corrections, oldest first.
@@ -1053,7 +1213,12 @@ type Ticket {
   payout: Decimal
 
   """
-  stake × effectiveOdds if every item wins.
+  potentialPayout was cut to the maximum winnings (odds or payout cap).
+  """
+  payoutCapped: Boolean!
+
+  """
+  What the ticket pays if every item wins, within the maximum winnings.
   """
   potentialPayout: Decimal!
   rejectReason: String
@@ -1075,6 +1240,26 @@ type Ticket {
   settledAt: DateTimeISO
   stake: Decimal!
   status: TicketStatus!
+}
+
+"""
+The Bet Boost a ticket was placed with.
+"""
+type TicketBoost {
+  """
+  The boost (FeaturedBet) id.
+  """
+  boostId: ID!
+
+  """
+  The price the ticket pays if every leg wins.
+  """
+  boostedOdds: Decimal!
+
+  """
+  The legs' normal combined price at placement, to show the boost against.
+  """
+  normalOdds: Decimal!
 }
 
 type TicketConnection {
@@ -1242,6 +1427,11 @@ type Tournament implements Node {
   key: String!
   name: String!
   sport: Sport!
+
+  """
+  League table (position, W/D/L, goals, points, promotion zone). Null for competitions without one (cups, friendlies).
+  """
+  standings: Standings
 
   """
   Editorial importance on one global cross-sport scale (0 = unranked, higher = more important). Sort tournaments or their events by this to surface marquee competitions first. Reflects the admin/back-office weight table.

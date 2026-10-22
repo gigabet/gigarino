@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5d83c580f09f7db3b6c981bb88ae682e>>
+ * @generated SignedSource<<d8fa4f8c1dde893889c402622abb8ff6>>
  * @lightSyntaxTransform
  */
 
@@ -8,7 +8,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type BetRejectionCode = "BOOST_UNAVAILABLE" | "CASHOUT_UNAVAILABLE" | "CUTOFF_PASSED" | "DUPLICATE_EVENT" | "EVENT_NOT_BETTABLE" | "INSUFFICIENT_FUNDS" | "INTERNAL_ERROR" | "LIABILITY_LIMIT" | "LIVE_STATE_CHANGED" | "MULTI_SINGLE_NOT_SUPPORTED" | "ODDS_LIMIT" | "ODDS_UNAVAILABLE" | "OUTCOME_NOT_AVAILABLE" | "PRICE_CHANGED" | "PROVIDER_CURRENCY" | "RESPONSIBLE_GAMING" | "STAKE_LIMIT" | "SYSTEM_NOT_SUPPORTED" | "WALLET_UNAVAILABLE" | "%future added value";
+export type BetRejectionCode = "BOOST_LIMIT" | "BOOST_UNAVAILABLE" | "CASHOUT_UNAVAILABLE" | "CUTOFF_PASSED" | "DUPLICATE_EVENT" | "EVENT_NOT_BETTABLE" | "INSUFFICIENT_FUNDS" | "INTERNAL_ERROR" | "LIABILITY_LIMIT" | "LIVE_STATE_CHANGED" | "MULTI_SINGLE_NOT_SUPPORTED" | "ODDS_LIMIT" | "ODDS_UNAVAILABLE" | "OUTCOME_NOT_AVAILABLE" | "PRICE_CHANGED" | "PROVIDER_CURRENCY" | "RESPONSIBLE_GAMING" | "STAKE_LIMIT" | "SYSTEM_NOT_SUPPORTED" | "WALLET_UNAVAILABLE" | "%future added value";
 export type BetslipItemAvailability = "AVAILABLE" | "CUTOFF_PASSED" | "DUPLICATE_EVENT" | "EVENT_NOT_BETTABLE" | "NOT_FOUND" | "SUSPENDED" | "%future added value";
 export type TicketType = "MULTIPLE" | "SINGLE" | "SYSTEM" | "%future added value";
 import { FragmentRefs } from "relay-runtime";

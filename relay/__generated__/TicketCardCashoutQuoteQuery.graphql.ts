@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<09647f786d48d3503e9f58c0fe6f67ef>>
+ * @generated SignedSource<<225da6b62dcd83f49e22a5962acfab85>>
  * @lightSyntaxTransform
  */
 
@@ -18,7 +18,7 @@ export type TicketCardCashoutQuoteQuery$data = {
     readonly currency: string;
     readonly message: string | null | undefined;
     readonly ticketId: string;
-  };
+  } | null | undefined;
 };
 export type TicketCardCashoutQuoteQuery = {
   response: TicketCardCashoutQuoteQuery$data;

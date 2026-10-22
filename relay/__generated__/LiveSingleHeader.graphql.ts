@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<09b96b207615f3d8e6e7fb143cdf056a>>
+ * @generated SignedSource<<8126e7a7278daef3781c6d2ab4521cba>>
  * @lightSyntaxTransform
  */
 
@@ -9,11 +9,13 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type EventStatus = "ABANDONED" | "CANCELLED" | "ENDED" | "LIVE" | "POSTPONED" | "SCHEDULED" | "%future added value";
+export type MatchPeriod = "BREAK" | "EXTRA_TIME" | "FIFTH_SET" | "FIRST_HALF" | "FIRST_PERIOD" | "FIRST_SET" | "FOURTH_PERIOD" | "FOURTH_SET" | "HALF_TIME" | "OVERTIME" | "PENALTIES" | "SECOND_HALF" | "SECOND_PERIOD" | "SECOND_SET" | "THIRD_PERIOD" | "THIRD_SET" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type LiveSingleHeader$data = {
   readonly category: {
     readonly name: string;
   };
+  readonly period: MatchPeriod | null | undefined;
   readonly sport: {
     readonly key: string;
   };
@@ -96,6 +98,13 @@ return {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "period",
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "FavouriteButton"
@@ -106,6 +115,6 @@ return {
 };
 })();
 
-(node as any).hash = "9072f7adacedfd96bf544acb3e7a00b0";
+(node as any).hash = "d46c54b78090c02834ccd947c08bc17f";
 
 export default node;

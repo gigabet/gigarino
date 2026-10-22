@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dda58d5237add00d569a70c25dfb1d64>>
+ * @generated SignedSource<<8565e4f6a5265ac5918edf3dae793f43>>
  * @lightSyntaxTransform
  */
 
@@ -12,6 +12,7 @@ import { FragmentRefs } from "relay-runtime";
 export type TicketType = "MULTIPLE" | "SINGLE" | "SYSTEM" | "%future added value";
 export type BetslipQuoteInput = {
   betType: TicketType;
+  boostId?: string | null | undefined;
   items: ReadonlyArray<BetslipItemInput>;
   stake: string;
   systemSize?: number | null | undefined;

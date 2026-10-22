@@ -143,6 +143,10 @@
     "de": "5S",
     "tr": "5S"
   },
+  "Abandoned": {
+    "de": "",
+    "tr": ""
+  },
   "About Us": {
     "de": "Über uns",
     "tr": "Hakkımızda"
@@ -250,6 +254,10 @@
   "Break": {
     "de": "Pause",
     "tr": "Ara"
+  },
+  "Cancelled": {
+    "de": "",
+    "tr": ""
   },
   "Cash Out": {
     "de": "Cashout",
@@ -386,6 +394,10 @@
   "Email or Username": {
     "de": "E-Mail oder Benutzername",
     "tr": "E-posta veya Kullanıcı Adı"
+  },
+  "Ended": {
+    "de": "",
+    "tr": ""
   },
   "Ends in {time}": {
     "de": "Endet in {time}",
@@ -722,6 +734,10 @@
   "Please try again.": {
     "de": "Bitte erneut versuchen.",
     "tr": "Lütfen tekrar deneyin."
+  },
+  "Postponed": {
+    "de": "",
+    "tr": ""
   },
   "Potential payout": {
     "de": "Möglicher Gewinn",

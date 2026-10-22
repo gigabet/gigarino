@@ -19,6 +19,7 @@ import type { LiveEvent$key } from '@/relay/__generated__/LiveEvent.graphql'
 import type { LiveScore$key } from '@/relay/__generated__/LiveScore.graphql'
 import type { LiveTeams$key } from '@/relay/__generated__/LiveTeams.graphql'
 import type { LiveTime$key } from '@/relay/__generated__/LiveTime.graphql'
+import LiveTimeNode from '@/relay/__generated__/LiveTime.graphql'
 
 const STATUS_LABEL: Record<string, string> = {
   ENDED: tKey('Ended'),
@@ -97,6 +98,31 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
   )
 }
 
+export const useLiveTime = (event: LiveTime$key) => {
+  const data = useFragment(LiveTimeNode, event)
+  const finished = FINISHED.has(data.status)
+
+  const now = useNow(data.clockRunning && !finished)
+  const t = useT()
+
+  if (finished) return t(STATUS_LABEL[data.status] ?? 'Ended')
+
+  let seconds = data.clockElapsedSeconds
+
+  if (typeof seconds !== 'number') return null
+
+  if (data.clockRunning && data.clockAnchorAt) {
+    const delta = Math.max(0, (now - Date.parse(data.clockAnchorAt)) / 1000)
+    // UP = elapsed, DOWN = time remaining in the period
+    seconds = data.clockDirection === 'DOWN' ? Math.max(0, seconds - delta) : seconds + delta
+  }
+
+  const mins = Math.floor((seconds ?? 0) / 60)
+  const secs = Math.floor((seconds ?? 0) % 60)
+
+  return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`
+}
+
 export function LiveTime(props: { event: LiveTime$key; aside?: boolean; className?: string }) {
   const data = useFragment(
     graphql`
@@ -140,23 +166,25 @@ export function LiveTime(props: { event: LiveTime$key; aside?: boolean; classNam
     <div
       className={cn(
         'flex items-center justify-between gap-1',
-        props.aside ? 'flex-row' : 'flex-row gap-2 lg:flex-col lg:gap-1',
+        props.aside ? 'flex-row' : 'flex-row-reverse gap-2 lg:flex-col lg:gap-1',
         props.className
       )}
     >
-      <div className='text-foreground flex gap-1.5'>
-        <div className='relative flex items-center justify-center'>
+      <div className='text-foreground flex items-center gap-1.5'>
+        <div className='relative mt-px flex shrink-0 items-center justify-center'>
           <div className='absolute size-2 animate-ping rounded-full bg-red-500' />
           <div className='size-2 rounded-full bg-red-500' />
         </div>
-        {t(getPeriod(data.period).long)}
+        {seconds !== null ? (
+          <time className='text-foreground font-mono'>
+            {String(mins).padStart(2, '0')}:{String(secs).padStart(2, '0')}
+          </time>
+        ) : (
+          <span>{t('Live')}</span>
+        )}
       </div>
-      {!props.aside && seconds !== null && <span className='lg:hidden'>·</span>}
-      {seconds !== null && (
-        <time className='text-foreground font-mono'>
-          {String(mins).padStart(2, '0')}:{String(secs).padStart(2, '0')}
-        </time>
-      )}
+      {!props.aside && seconds !== null && data.period && <span className='lg:hidden'>·</span>}
+      {data.period && <div>{t(getPeriod(data.period).long)}</div>}
       {data.tradingStatus === 'SUSPENDED' && (
         <div className='flex items-center gap-1 truncate text-[0.6rem] text-amber-400'>
           <TriangleAlert className='size-3' /> <span>{t('Suspended')}</span>
