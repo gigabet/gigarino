@@ -155,7 +155,9 @@ function EventState(props: { event: EventState$key; startTime: string }) {
       <span className='text-base leading-none font-bold text-white sm:text-lg'>
         {data.homeScore ?? 0} - {data.awayScore ?? 0}
       </span>
-      <div className='text-secondary font-mono text-[0.6rem] sm:text-[0.65rem]'>{time}</div>
+      {!!time && (
+        <div className='text-secondary font-mono text-[0.6rem] sm:text-[0.65rem]'>{time}</div>
+      )}
     </div>
   )
 }
