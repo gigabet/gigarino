@@ -5,9 +5,9 @@ import { ExternalLinkIcon, ImageIcon, SearchXIcon } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense, useEffect } from 'react'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
-import StatisticsWidget from '@/app/sport/event/[id]/statistics-widget'
 import MarketGroups, { MarketGroupsSkeleton } from '@/components/market-groups'
 import { SportIcon } from '@/components/sport-icon'
+import StatisticsWidget, { StatisticsWidgetSkeleton } from '@/components/statistics-widget'
 import { getRelativeDayLabel } from '@/lib/utils'
 import type { EventLiveState$key } from '@/relay/__generated__/EventLiveState.graphql'
 import type { PrematchSingleHeader$key } from '@/relay/__generated__/PrematchSingleHeader.graphql'
@@ -31,6 +31,7 @@ export default function PrematchSingleView(props: {
         startTime
         ...PrematchSingleHeader
         ...EventLiveState
+        ...StatisticsWidget @defer
         ...MarketGroups @defer
       }
     `,
@@ -58,7 +59,9 @@ export default function PrematchSingleView(props: {
         </div>
       </section>
 
-      <StatisticsWidget />
+      <Suspense fallback={<StatisticsWidgetSkeleton />}>
+        <StatisticsWidget event={data} />
+      </Suspense>
 
       <Suspense fallback={<MarketGroupsSkeleton />}>
         <MarketGroups event={data} />

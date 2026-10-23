@@ -5,7 +5,7 @@ import { graphql, useFragment } from 'react-relay'
 import { ListViewMarketDropdowns } from '@/components/list-view-markets'
 import { SportIconBadge } from '@/components/sport-icon'
 import { getSportTheme } from '@/lib/sport-theme'
-import { cn } from '@/lib/utils'
+import { cn, stripCategory } from '@/lib/utils'
 import type { LiveTournament$key } from '@/relay/__generated__/LiveTournament.graphql'
 
 export function HeaderRow(props: { left?: React.ReactNode }) {
@@ -84,7 +84,7 @@ export function TournamentTitle(props: { tournamentRef: LiveTournament$key }) {
           className='w-5 shrink-0 rounded-xs shadow-xs'
           style={{ width: undefined, height: undefined }}
         />
-        <span className='min-w-0 truncate'>{data.name.replace(data.category.name, '')}</span>
+        <span className='min-w-0 truncate'>{stripCategory(data.name, data.category.name)}</span>
       </h2>
     </>
   )

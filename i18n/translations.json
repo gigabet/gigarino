@@ -195,6 +195,10 @@
     "de": "American Football",
     "tr": "Amerikan Futbolu"
   },
+  "Attacks": {
+    "de": "",
+    "tr": ""
+  },
   "Autoplay": {
     "de": "Autoplay",
     "tr": "Otomatik Oynatma"
@@ -343,6 +347,10 @@
     "de": "Cookie-Hinweis",
     "tr": "Çerez Bildirimi"
   },
+  "Corners": {
+    "de": "",
+    "tr": ""
+  },
   "Corrected": {
     "de": "Korrigiert",
     "tr": "Düzeltildi"
@@ -366,6 +374,10 @@
   "Creating account...": {
     "de": "Konto wird erstellt...",
     "tr": "Hesap oluşturuluyor..."
+  },
+  "Dangerous attacks": {
+    "de": "",
+    "tr": ""
   },
   "Deposit": {
     "de": "Einzahlung",
@@ -475,6 +487,14 @@
     "de": "Passwort vergessen?",
     "tr": "Şifrenizi mi unuttunuz?"
   },
+  "Form": {
+    "de": "",
+    "tr": ""
+  },
+  "Fouls": {
+    "de": "",
+    "tr": ""
+  },
   "Free Spins (ingame)": {
     "de": "Freispiele (Ingame)",
     "tr": "Bedava Çevrim (oyun içi)"
@@ -510,6 +530,10 @@
   "Handicap": {
     "de": "Handicap",
     "tr": "Handikap"
+  },
+  "Head to head": {
+    "de": "",
+    "tr": ""
   },
   "Help Centre": {
     "de": "Hilfecenter",
@@ -550,6 +574,10 @@
   "Join now": {
     "de": "Jetzt beitreten",
     "tr": "Hemen katıl"
+  },
+  "Key passes": {
+    "de": "",
+    "tr": ""
   },
   "L": {
     "de": "N",
@@ -639,6 +667,14 @@
     "de": "Noch keine Tickets",
     "tr": "Henüz bilet yok"
   },
+  "Offline": {
+    "de": "",
+    "tr": ""
+  },
+  "Offsides": {
+    "de": "",
+    "tr": ""
+  },
   "Open": {
     "de": "Offen",
     "tr": "Açık"
@@ -674,6 +710,10 @@
   "Partners": {
     "de": "Partner",
     "tr": "İş Ortakları"
+  },
+  "Passing accuracy": {
+    "de": "",
+    "tr": ""
   },
   "Password": {
     "de": "Passwort",
@@ -739,6 +779,10 @@
     "de": "Bitte erneut versuchen.",
     "tr": "Lütfen tekrar deneyin."
   },
+  "Possession": {
+    "de": "",
+    "tr": ""
+  },
   "Postponed": {
     "de": "",
     "tr": ""
@@ -764,6 +808,14 @@
     "tr": "Son"
   },
   "Reconnecting": {
+    "de": "",
+    "tr": ""
+  },
+  "Red cards": {
+    "de": "",
+    "tr": ""
+  },
+  "Referee": {
     "de": "",
     "tr": ""
   },
@@ -815,9 +867,17 @@
     "de": "Ergebnis korrigiert",
     "tr": "Sonuç düzeltildi"
   },
+  "Results from the perspective of {team}": {
+    "de": "",
+    "tr": ""
+  },
   "Retry": {
     "de": "Erneut versuchen",
     "tr": "Tekrar dene"
+  },
+  "Saves": {
+    "de": "",
+    "tr": ""
   },
   "Scroll left": {
     "de": "Nach links scrollen",
@@ -879,6 +939,18 @@
     "de": "Shop",
     "tr": "Mağaza"
   },
+  "Shots blocked": {
+    "de": "",
+    "tr": ""
+  },
+  "Shots off target": {
+    "de": "",
+    "tr": ""
+  },
+  "Shots on target": {
+    "de": "",
+    "tr": ""
+  },
   "Sign in to view your tickets": {
     "de": "Anmelden, um Tickets zu sehen",
     "tr": "Biletleri görmek için giriş yapın"
@@ -928,6 +1000,14 @@
     "tr": "Bahis başına miktar"
   },
   "Stale": {
+    "de": "",
+    "tr": ""
+  },
+  "Stats": {
+    "de": "",
+    "tr": ""
+  },
+  "Substitutions": {
     "de": "",
     "tr": ""
   },
@@ -1038,6 +1118,14 @@
   "Won": {
     "de": "Gewonnen",
     "tr": "Kazandı"
+  },
+  "xG": {
+    "de": "",
+    "tr": ""
+  },
+  "Yellow cards": {
+    "de": "",
+    "tr": ""
   },
   "You'll receive": {
     "de": "Sie erhalten",

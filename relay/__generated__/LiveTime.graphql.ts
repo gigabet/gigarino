@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e0dc28a233e8748ed2974a402a0a1814>>
+ * @generated SignedSource<<1be3dd31b563dbe7af10f22afb50dc76>>
  * @lightSyntaxTransform
  */
 
@@ -18,6 +18,7 @@ export type LiveTime$data = {
   readonly clockDirection: ClockDirection | null | undefined;
   readonly clockElapsedSeconds: number | null | undefined;
   readonly clockRunning: boolean;
+  readonly id: string;
   readonly liveSeenAt: string | null | undefined;
   readonly period: MatchPeriod | null | undefined;
   readonly status: EventStatus;
@@ -35,6 +36,13 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "LiveTime",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -96,6 +104,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "600c97878cab3ee63a63ff510a46b8c3";
+(node as any).hash = "e4e5ca028166b771c1645a3f71a71c34";
 
 export default node;

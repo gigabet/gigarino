@@ -6,10 +6,11 @@ import ReactCountryFlag from 'react-country-flag'
 import { graphql, useFragment, useRefetchableFragment } from 'react-relay'
 import PrematchEvent, { PrematchEventSkeleton } from '@/app/sport/[[...slug]]/prematch-event'
 import { ListViewMarketDropdowns } from '@/components/list-view-markets'
-import { SportIcon, SportIconBadge } from '@/components/sport-icon'
+import { SportIconBadge } from '@/components/sport-icon'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useT } from '@/context/providers'
 import { getSportTheme } from '@/lib/sport-theme'
+import { stripCategory } from '@/lib/utils'
 import type { Tournament$key } from '@/relay/__generated__/Tournament.graphql'
 import type { TournamentEventList$key } from '@/relay/__generated__/TournamentEventList.graphql'
 
@@ -98,7 +99,7 @@ export default function Tournament(props: { queryRef: Tournament$key }) {
             className='w-5 shrink-0 rounded-xs shadow-xs'
             style={{ width: undefined, height: undefined }}
           />
-          <span className='min-w-0 truncate'>{data.name.replace(data.category.name, '')}</span>
+          <span className='min-w-0 truncate'>{stripCategory(data.name, data.category.name)}</span>
         </h2>
         <ListViewMarketDropdowns />
         <div className='hidden sm:block sm:w-0 lg:w-29' />

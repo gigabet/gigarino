@@ -44,7 +44,7 @@ export default function LiveLayout({ children }: React.PropsWithChildren) {
     startTransition(() => {
       loadQuery(
         { orderBy: ORDER[sort], sport: sportFilter, hasUser },
-        { fetchPolicy: 'store-or-network' }
+        { fetchPolicy: 'store-and-network' }
       )
     })
   }, [loadQuery, sort, sportFilter, hasUser])

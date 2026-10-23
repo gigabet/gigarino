@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<79749589ce36981d2690194895644099>>
+ * @generated SignedSource<<6acb79aa1d618eaf7f719958cc846893>>
  * @lightSyntaxTransform
  */
 
@@ -41,31 +41,99 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "key",
+  "name": "homeCompetitor",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "awayCompetitor",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "startTime",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "status",
+  "name": "key",
   "storageKey": null
 },
 v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "status",
+  "storageKey": null
+},
+v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "homeScore",
+  "storageKey": null
+},
+v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "awayScore",
+  "storageKey": null
+},
+v11 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "homeName",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "awayName",
+    "storageKey": null
+  },
+  (v9/*:: as any*/),
+  (v10/*:: as any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "competition",
+    "storageKey": null
+  },
+  (v4/*:: as any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "outcome",
+    "storageKey": null
+  }
+],
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -113,27 +181,9 @@ return {
         "name": "event",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "homeCompetitor",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "awayCompetitor",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "startTime",
-            "storageKey": null
-          },
+          (v2/*:: as any*/),
+          (v3/*:: as any*/),
+          (v4/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -142,8 +192,8 @@ return {
             "name": "sport",
             "plural": false,
             "selections": [
-              (v2/*:: as any*/),
-              (v3/*:: as any*/)
+              (v5/*:: as any*/),
+              (v6/*:: as any*/)
             ],
             "storageKey": null
           },
@@ -155,9 +205,9 @@ return {
             "name": "tournament",
             "plural": false,
             "selections": [
-              (v2/*:: as any*/),
-              (v4/*:: as any*/),
-              (v3/*:: as any*/)
+              (v5/*:: as any*/),
+              (v7/*:: as any*/),
+              (v6/*:: as any*/)
             ],
             "storageKey": null
           },
@@ -169,12 +219,12 @@ return {
             "name": "category",
             "plural": false,
             "selections": [
-              (v4/*:: as any*/),
-              (v3/*:: as any*/)
+              (v7/*:: as any*/),
+              (v6/*:: as any*/)
             ],
             "storageKey": null
           },
-          (v5/*:: as any*/),
+          (v8/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -182,19 +232,120 @@ return {
             "name": "tradingStatus",
             "storageKey": null
           },
+          (v9/*:: as any*/),
+          (v10/*:: as any*/),
           {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "homeScore",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "awayScore",
-            "storageKey": null
+            "if": null,
+            "kind": "Defer",
+            "label": "PrematchSingleView$defer$StatisticsWidget",
+            "selections": [
+              (v6/*:: as any*/),
+              (v8/*:: as any*/),
+              (v2/*:: as any*/),
+              (v3/*:: as any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "MatchInsights",
+                "kind": "LinkedField",
+                "name": "insights",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "homePosition",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "awayPosition",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "venue",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "referee",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "round",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "MatchStat",
+                    "kind": "LinkedField",
+                    "name": "stats",
+                    "plural": true,
+                    "selections": [
+                      (v5/*:: as any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "home",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "away",
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "PastMatch",
+                    "kind": "LinkedField",
+                    "name": "homeRecent",
+                    "plural": true,
+                    "selections": (v11/*:: as any*/),
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "PastMatch",
+                    "kind": "LinkedField",
+                    "name": "awayRecent",
+                    "plural": true,
+                    "selections": (v11/*:: as any*/),
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "PastMatch",
+                    "kind": "LinkedField",
+                    "name": "headToHead",
+                    "plural": true,
+                    "selections": (v11/*:: as any*/),
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ]
           },
           {
             "if": null,
@@ -209,7 +360,7 @@ return {
                 "name": "markets",
                 "plural": true,
                 "selections": [
-                  (v3/*:: as any*/),
+                  (v6/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -224,8 +375,8 @@ return {
                     "name": "kind",
                     "storageKey": null
                   },
-                  (v6/*:: as any*/),
-                  (v4/*:: as any*/),
+                  (v12/*:: as any*/),
+                  (v7/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -233,7 +384,7 @@ return {
                     "name": "line",
                     "storageKey": null
                   },
-                  (v5/*:: as any*/),
+                  (v8/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -242,9 +393,9 @@ return {
                     "name": "outcomes",
                     "plural": true,
                     "selections": [
-                      (v3/*:: as any*/),
                       (v6/*:: as any*/),
-                      (v4/*:: as any*/),
+                      (v12/*:: as any*/),
+                      (v7/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -252,7 +403,7 @@ return {
                         "name": "price",
                         "storageKey": null
                       },
-                      (v5/*:: as any*/)
+                      (v8/*:: as any*/)
                     ],
                     "storageKey": null
                   }
@@ -261,19 +412,19 @@ return {
               }
             ]
           },
-          (v3/*:: as any*/)
+          (v6/*:: as any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "959cd68f0c79dc7828b45ff99aff4fe9",
+    "cacheID": "5a17d9101dadace57b965379a4410a29",
     "id": null,
     "metadata": {},
     "name": "PrematchSingleViewQuery",
     "operationKind": "query",
-    "text": "query PrematchSingleViewQuery(\n  $id: ID!\n) {\n  event(id: $id) {\n    ...PrematchSingleView\n    id\n  }\n}\n\nfragment EventLiveState on Event {\n  status\n  tradingStatus\n  homeScore\n  awayScore\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  outcomes {\n    id\n    index\n    name\n    price\n    status\n  }\n}\n\nfragment MarketGroups on Event {\n  markets {\n    id\n    groups\n    kind\n    index\n    ...MarketCard\n  }\n}\n\nfragment PrematchSingleHeader on Event {\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    name\n    id\n  }\n  category {\n    name\n    id\n  }\n  status\n}\n\nfragment PrematchSingleView on Event {\n  homeCompetitor\n  awayCompetitor\n  startTime\n  ...PrematchSingleHeader\n  ...EventLiveState\n  ...MarketGroups @defer(label: \"PrematchSingleView$defer$MarketGroups\")\n}\n"
+    "text": "query PrematchSingleViewQuery(\n  $id: ID!\n) {\n  event(id: $id) {\n    ...PrematchSingleView\n    id\n  }\n}\n\nfragment EventLiveState on Event {\n  status\n  tradingStatus\n  homeScore\n  awayScore\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  outcomes {\n    id\n    index\n    name\n    price\n    status\n  }\n}\n\nfragment MarketGroups on Event {\n  markets {\n    id\n    groups\n    kind\n    index\n    ...MarketCard\n  }\n}\n\nfragment PrematchSingleHeader on Event {\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    name\n    id\n  }\n  category {\n    name\n    id\n  }\n  status\n}\n\nfragment PrematchSingleView on Event {\n  homeCompetitor\n  awayCompetitor\n  startTime\n  ...PrematchSingleHeader\n  ...EventLiveState\n  ...StatisticsWidget @defer(label: \"PrematchSingleView$defer$StatisticsWidget\")\n  ...MarketGroups @defer(label: \"PrematchSingleView$defer$MarketGroups\")\n}\n\nfragment StatisticsWidget on Event {\n  id\n  status\n  homeCompetitor\n  awayCompetitor\n  insights {\n    homePosition\n    awayPosition\n    venue\n    referee\n    round\n    stats {\n      key\n      home\n      away\n    }\n    homeRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    awayRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    headToHead {\n      ...StatisticsWidgetPastMatch\n    }\n  }\n}\n\nfragment StatisticsWidgetPastMatch on PastMatch {\n  homeName\n  awayName\n  homeScore\n  awayScore\n  competition\n  startTime\n  outcome\n}\n"
   }
 };
 })();

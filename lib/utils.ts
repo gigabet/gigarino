@@ -150,3 +150,21 @@ export function initials(name: string): string {
   if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
   return (parts[0][0] + parts[1][0]).toUpperCase()
 }
+
+/**
+ * Removes the category name from a tournament name ("England Premier League"
+ * -> "Premier League") without cutting into other words ("Australian
+ * Championship" with category "Australia" is left alone). Falls back to the
+ * full name if nothing meaningful remains.
+ */
+export function stripCategory(name: string, category: string): string {
+  if (!category) return name
+  const escaped = category.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  // unicode-aware word boundaries: \b only understands ASCII
+  const re = new RegExp(`(?<![\\p{L}\\p{N}])${escaped}(?![\\p{L}\\p{N}])`, 'iu')
+  const stripped = name
+    .replace(re, '')
+    .replace(/\s{2,}/g, ' ')
+    .replace(/^[\s\-–:·,]+|[\s\-–:·,]+$/g, '')
+  return stripped || name
+}

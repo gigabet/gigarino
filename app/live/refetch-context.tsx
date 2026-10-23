@@ -13,8 +13,13 @@ export function createRefetchBatcher(environment: Environment) {
   let timer: ReturnType<typeof setInterval> | null = null
   let listening = false
 
-  function sweep() {
-    if (visible.size === 0) return
+  const REFRESH_COOLDOWN_MS = 15_000
+  const lastRefresh = new Map<string, number>()
+  const pending = new Set<string>()
+  let flushTimer: ReturnType<typeof setTimeout> | null = null
+
+  function fetchIds(ids: string[]) {
+    if (ids.length === 0) return
     fetchQuery(
       environment,
       graphql`
@@ -25,13 +30,14 @@ export function createRefetchBatcher(environment: Environment) {
           }
         }
       `,
-      { ids: Array.from(visible.keys()) },
+      { ids },
       { fetchPolicy: 'network-only' }
     ).subscribe({
-      error: (err: Error) => console.error('[live-batcher] sweep failed', err),
+      error: (err: Error) => console.error('[live-batcher] fetch failed', err),
     })
   }
 
+  const sweep = () => fetchIds(Array.from(visible.keys()))
   const onWake = () => {
     if (document.visibilityState === 'visible') sweep()
   }
@@ -55,9 +61,27 @@ export function createRefetchBatcher(environment: Environment) {
       if (n > 0) visible.set(id, n)
       else visible.delete(id)
     },
+    refresh(id: string) {
+      const now = Date.now()
+      if (now - (lastRefresh.get(id) ?? 0) < REFRESH_COOLDOWN_MS) return
+      lastRefresh.set(id, now)
+      pending.add(id)
+      flushTimer ??= setTimeout(() => {
+        flushTimer = null
+        const ids = Array.from(pending)
+        pending.clear()
+        fetchIds(ids)
+      }, 100)
+    },
     dispose() {
       if (timer) clearInterval(timer)
       timer = null
+
+      clearTimeout(flushTimer ?? undefined)
+      flushTimer = null
+      pending.clear()
+      lastRefresh.clear()
+
       if (listening) {
         document.removeEventListener('visibilitychange', onWake)
         window.removeEventListener('online', sweep)

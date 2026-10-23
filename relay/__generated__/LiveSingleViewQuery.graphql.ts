@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<12b8e61f202b06e309c7f8c3a708cf03>>
+ * @generated SignedSource<<b80a8c87014000aa48b7812b899b4a02>>
  * @lightSyntaxTransform
  */
 
@@ -41,31 +41,99 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "key",
+  "name": "homeCompetitor",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "awayCompetitor",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "name",
+  "name": "startTime",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "status",
+  "name": "key",
   "storageKey": null
 },
 v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "status",
+  "storageKey": null
+},
+v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "homeScore",
+  "storageKey": null
+},
+v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "awayScore",
+  "storageKey": null
+},
+v11 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "homeName",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "awayName",
+    "storageKey": null
+  },
+  (v9/*:: as any*/),
+  (v10/*:: as any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "competition",
+    "storageKey": null
+  },
+  (v4/*:: as any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "outcome",
+    "storageKey": null
+  }
+],
+v12 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -113,13 +181,7 @@ return {
         "name": "event",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "homeCompetitor",
-            "storageKey": null
-          },
+          (v2/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -127,13 +189,7 @@ return {
             "name": "homeImageUrl",
             "storageKey": null
           },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "awayCompetitor",
-            "storageKey": null
-          },
+          (v3/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -141,13 +197,7 @@ return {
             "name": "awayImageUrl",
             "storageKey": null
           },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "startTime",
-            "storageKey": null
-          },
+          (v4/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -156,8 +206,8 @@ return {
             "name": "sport",
             "plural": false,
             "selections": [
-              (v2/*:: as any*/),
-              (v3/*:: as any*/)
+              (v5/*:: as any*/),
+              (v6/*:: as any*/)
             ],
             "storageKey": null
           },
@@ -169,9 +219,9 @@ return {
             "name": "tournament",
             "plural": false,
             "selections": [
-              (v2/*:: as any*/),
-              (v4/*:: as any*/),
-              (v3/*:: as any*/)
+              (v5/*:: as any*/),
+              (v7/*:: as any*/),
+              (v6/*:: as any*/)
             ],
             "storageKey": null
           },
@@ -183,12 +233,12 @@ return {
             "name": "category",
             "plural": false,
             "selections": [
-              (v4/*:: as any*/),
-              (v3/*:: as any*/)
+              (v7/*:: as any*/),
+              (v6/*:: as any*/)
             ],
             "storageKey": null
           },
-          (v5/*:: as any*/),
+          (v8/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -196,7 +246,7 @@ return {
             "name": "period",
             "storageKey": null
           },
-          (v3/*:: as any*/),
+          (v6/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -211,20 +261,8 @@ return {
             "name": "isLive",
             "storageKey": null
           },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "homeScore",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "awayScore",
-            "storageKey": null
-          },
+          (v9/*:: as any*/),
+          (v10/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -270,6 +308,119 @@ return {
           {
             "if": null,
             "kind": "Defer",
+            "label": "LiveSingleView$defer$StatisticsWidget",
+            "selections": [
+              (v6/*:: as any*/),
+              (v8/*:: as any*/),
+              (v2/*:: as any*/),
+              (v3/*:: as any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "MatchInsights",
+                "kind": "LinkedField",
+                "name": "insights",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "homePosition",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "awayPosition",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "venue",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "referee",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "round",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "MatchStat",
+                    "kind": "LinkedField",
+                    "name": "stats",
+                    "plural": true,
+                    "selections": [
+                      (v5/*:: as any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "home",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "away",
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "PastMatch",
+                    "kind": "LinkedField",
+                    "name": "homeRecent",
+                    "plural": true,
+                    "selections": (v11/*:: as any*/),
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "PastMatch",
+                    "kind": "LinkedField",
+                    "name": "awayRecent",
+                    "plural": true,
+                    "selections": (v11/*:: as any*/),
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "PastMatch",
+                    "kind": "LinkedField",
+                    "name": "headToHead",
+                    "plural": true,
+                    "selections": (v11/*:: as any*/),
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              }
+            ]
+          },
+          {
+            "if": null,
+            "kind": "Defer",
             "label": "LiveSingleView$defer$MarketGroups",
             "selections": [
               {
@@ -280,7 +431,7 @@ return {
                 "name": "markets",
                 "plural": true,
                 "selections": [
-                  (v3/*:: as any*/),
+                  (v6/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -295,8 +446,8 @@ return {
                     "name": "kind",
                     "storageKey": null
                   },
-                  (v6/*:: as any*/),
-                  (v4/*:: as any*/),
+                  (v12/*:: as any*/),
+                  (v7/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -304,7 +455,7 @@ return {
                     "name": "line",
                     "storageKey": null
                   },
-                  (v5/*:: as any*/),
+                  (v8/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -313,9 +464,9 @@ return {
                     "name": "outcomes",
                     "plural": true,
                     "selections": [
-                      (v3/*:: as any*/),
                       (v6/*:: as any*/),
-                      (v4/*:: as any*/),
+                      (v12/*:: as any*/),
+                      (v7/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -323,7 +474,7 @@ return {
                         "name": "price",
                         "storageKey": null
                       },
-                      (v5/*:: as any*/)
+                      (v8/*:: as any*/)
                     ],
                     "storageKey": null
                   }
@@ -338,12 +489,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1d0662169d996bb4a9edaf9135bee523",
+    "cacheID": "f32425d39128c81ab908301562222098",
     "id": null,
     "metadata": {},
     "name": "LiveSingleViewQuery",
     "operationKind": "query",
-    "text": "query LiveSingleViewQuery(\n  $id: ID!\n) {\n  event(id: $id) {\n    ...LiveSingleView\n    id\n  }\n}\n\nfragment EventState on Event {\n  status\n  homeScore\n  awayScore\n  ...LiveTime\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment LiveSingleHeader on Event {\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    name\n    id\n  }\n  category {\n    name\n    id\n  }\n  status\n  period\n  ...FavouriteButton\n}\n\nfragment LiveSingleView on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  ...LiveSingleHeader\n  ...EventState\n  ...MarketGroups @defer(label: \"LiveSingleView$defer$MarketGroups\")\n}\n\nfragment LiveTime on Event {\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  outcomes {\n    id\n    index\n    name\n    price\n    status\n  }\n}\n\nfragment MarketGroups on Event {\n  markets {\n    id\n    groups\n    kind\n    index\n    ...MarketCard\n  }\n}\n"
+    "text": "query LiveSingleViewQuery(\n  $id: ID!\n) {\n  event(id: $id) {\n    ...LiveSingleView\n    id\n  }\n}\n\nfragment EventState on Event {\n  status\n  homeScore\n  awayScore\n  ...LiveTime\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment LiveSingleHeader on Event {\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    name\n    id\n  }\n  category {\n    name\n    id\n  }\n  status\n  period\n  ...FavouriteButton\n}\n\nfragment LiveSingleView on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  ...LiveSingleHeader\n  ...EventState\n  ...StatisticsWidget @defer(label: \"LiveSingleView$defer$StatisticsWidget\")\n  ...MarketGroups @defer(label: \"LiveSingleView$defer$MarketGroups\")\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  outcomes {\n    id\n    index\n    name\n    price\n    status\n  }\n}\n\nfragment MarketGroups on Event {\n  markets {\n    id\n    groups\n    kind\n    index\n    ...MarketCard\n  }\n}\n\nfragment StatisticsWidget on Event {\n  id\n  status\n  homeCompetitor\n  awayCompetitor\n  insights {\n    homePosition\n    awayPosition\n    venue\n    referee\n    round\n    stats {\n      key\n      home\n      away\n    }\n    homeRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    awayRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    headToHead {\n      ...StatisticsWidgetPastMatch\n    }\n  }\n}\n\nfragment StatisticsWidgetPastMatch on PastMatch {\n  homeName\n  awayName\n  homeScore\n  awayScore\n  competition\n  startTime\n  outcome\n}\n"
   }
 };
 })();

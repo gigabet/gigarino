@@ -3,7 +3,7 @@
 import { graphql, useFragment } from 'react-relay'
 import { SportIconBadge } from '@/components/sport-icon'
 import { getSportTheme } from '@/lib/sport-theme'
-import { cn } from '@/lib/utils'
+import { cn, stripCategory } from '@/lib/utils'
 import type { LiveStripTournament$key } from '@/relay/__generated__/LiveStripTournament.graphql'
 
 export default function LiveStripTournament(props: {
@@ -45,7 +45,7 @@ export default function LiveStripTournament(props: {
           {data.category.name}
         </p>
         <p className='text-foreground truncate text-sm font-semibold'>
-          {data.name.replace(data.category.name, '').trim() || data.name}
+          {stripCategory(data.name, data.category.name)}
         </p>
       </div>
     </div>

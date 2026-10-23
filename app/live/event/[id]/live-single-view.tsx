@@ -4,12 +4,12 @@ import { format } from 'date-fns'
 import { SearchXIcon } from 'lucide-react'
 import { Suspense, useEffect } from 'react'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
-import StatisticsWidget from '@/app/live/event/[id]/statistics-widget'
 import { getPeriod } from '@/app/live/helpers'
 import { useLiveClock } from '@/app/live/live-event'
 import { FavouriteButton } from '@/components/favourite-button'
 import MarketGroups, { MarketGroupsSkeleton } from '@/components/market-groups'
 import { SportIcon } from '@/components/sport-icon'
+import StatisticsWidget, { StatisticsWidgetSkeleton } from '@/components/statistics-widget'
 import { TeamBadge } from '@/components/team-badge'
 import { useT } from '@/context/providers'
 import { getRelativeDayLabel } from '@/lib/utils'
@@ -32,6 +32,7 @@ export default function LiveSingleView(props: { queryRef: PreloadedQuery<LiveSin
         startTime
         ...LiveSingleHeader
         ...EventState
+        ...StatisticsWidget @defer
         ...MarketGroups @defer
       }
     `,
@@ -59,7 +60,9 @@ export default function LiveSingleView(props: { queryRef: PreloadedQuery<LiveSin
         </div>
       </section>
 
-      <StatisticsWidget />
+      <Suspense fallback={<StatisticsWidgetSkeleton />}>
+        <StatisticsWidget event={data} />
+      </Suspense>
 
       <Suspense fallback={<MarketGroupsSkeleton />}>
         <MarketGroups event={data} />
@@ -153,12 +156,12 @@ function EventState(props: { event: EventState$key; startTime: string }) {
   if (!SHOWS_SCORE.has(data.status)) return <KickoffTime startTime={props.startTime} />
 
   return (
-    <div className='flex shrink-0 flex-col items-center gap-1 px-1'>
+    <div className='relative flex shrink-0 flex-col items-center gap-1 px-1'>
       <span className='text-base leading-none font-bold text-white sm:text-lg'>
         {data.homeScore ?? 0} - {data.awayScore ?? 0}
       </span>
       {seconds !== null && (
-        <div className='text-secondary font-mono text-[0.6rem] sm:text-[0.65rem]'>
+        <div className='text-secondary absolute top-full left-1/2 mt-1 -translate-x-1/2 font-mono text-[0.6rem] whitespace-nowrap sm:text-[0.65rem]'>
           {String(mins).padStart(2, '0')}:{String(secs).padStart(2, '0')}
         </div>
       )}

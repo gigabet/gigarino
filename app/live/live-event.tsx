@@ -1,16 +1,21 @@
 'use client'
 
-import { BanIcon, ChartNoAxesColumnIcon, TriangleAlert } from 'lucide-react'
+import { BanIcon, TriangleAlert, WifiOff } from 'lucide-react'
 import Link from 'next/link'
+import { useEffect } from 'react'
+import {
+  MdSignalWifiStatusbarConnectedNoInternet,
+  MdSignalWifiStatusbarConnectedNoInternet1,
+} from 'react-icons/md'
 import { graphql, useFragment } from 'react-relay'
 import { getPeriod, useNow } from '@/app/live/helpers'
 import { FINISHED } from '@/app/live/live-state'
 import { useLiveRowRegistration } from '@/app/live/live-subscriptions'
-import { useRefetchRegistration } from '@/app/live/refetch-context'
+import { useRefetchBatcher, useRefetchRegistration } from '@/app/live/refetch-context'
 import { FavouriteButton } from '@/components/favourite-button'
 import { ListViewMarkets } from '@/components/list-view-markets'
 import { TeamBadge } from '@/components/team-badge'
-import { Button, buttonVariants } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useT } from '@/context/providers'
 import { tKey } from '@/i18n/tKey'
@@ -19,7 +24,6 @@ import type { LiveEvent$key } from '@/relay/__generated__/LiveEvent.graphql'
 import type { LiveScore$key } from '@/relay/__generated__/LiveScore.graphql'
 import type { LiveTeams$key } from '@/relay/__generated__/LiveTeams.graphql'
 import type { LiveTime$key } from '@/relay/__generated__/LiveTime.graphql'
-import LiveTimeNode from '@/relay/__generated__/LiveTime.graphql'
 
 const STATUS_LABEL: Record<string, string> = {
   ENDED: tKey('Ended'),
@@ -49,8 +53,6 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
     props.eventRef
   )
 
-  // keeps this row's id in the batcher's currently-visible set for as long
-  // as it's mounted; Virtuoso mounts/unmounts rows as they scroll in and out
   useLiveRowRegistration(event.id)
   useRefetchRegistration(event.id)
 
@@ -58,15 +60,17 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
   const suspended = stale || event.tradingStatus !== 'OPEN'
 
   return (
-    <div className='sport-texture group relative flex h-32 flex-col gap-2 overflow-hidden border-b py-3 last:border-b-0 sm:gap-3 sm:rounded-2xl sm:border-b-0 sm:border-white/5 sm:bg-black/20 sm:px-4 lg:h-27 lg:flex-row lg:flex-nowrap lg:items-center lg:gap-4 lg:px-5'>
-      <div
-        className={cn('relative flex items-center gap-4 lg:contents', suspended && 'opacity-60')}
-      >
+    <div
+      className={cn(
+        'sport-texture group relative flex h-32 flex-col gap-2 overflow-hidden border-b py-3 last:border-b-0 sm:gap-3 sm:rounded-2xl sm:border-b-0 sm:border-white/5 sm:bg-black/20 sm:px-4 lg:h-27 lg:flex-row lg:flex-nowrap lg:items-center lg:gap-4 lg:px-5',
+        suspended && 'opacity-60'
+      )}
+    >
+      <div className='relative flex items-center gap-4 lg:contents'>
         <div className='flex w-34 min-w-0 shrink-0 justify-between text-xs sm:w-40 sm:gap-2 sm:text-sm lg:order-3 lg:ml-1 lg:w-60 lg:flex-none'>
           <LiveTeams event={event} />
           <LiveScore event={event} />
         </div>
-
         <ListViewMarkets event={event} />
       </div>
 
@@ -104,6 +108,7 @@ export function useLiveClock(event: LiveTime$key) {
   const data = useFragment(
     graphql`
       fragment LiveTime on Event {
+        id
         status
         period
         clockRunning
@@ -134,6 +139,11 @@ export function useLiveClock(event: LiveTime$key) {
     seconds = data.clockDirection === 'DOWN' ? Math.max(0, seconds - delta) : seconds + delta
   }
 
+  const batcher = useRefetchBatcher()
+  useEffect(() => {
+    if (stale) batcher.refresh(data.id)
+  }, [stale, batcher, data.id])
+
   return { data, finished, seconds, stale }
 }
 
@@ -162,17 +172,22 @@ export function LiveTime(props: { event: LiveTime$key; aside?: boolean; classNam
       )}
     >
       <div className='text-foreground flex items-center gap-1.5'>
-        <div className='relative flex shrink-0 items-center justify-center'>
-          {!stale && <div className='absolute size-2 animate-ping rounded-full bg-red-500' />}
-          <div className={cn('size-2 rounded-full', !stale ? 'bg-red-500' : 'bg-gray-400')} />
-        </div>
-        {!stale && seconds !== null && (
-          <time className='text-foreground font-mono'>
-            {String(mins).padStart(2, '0')}:{String(secs).padStart(2, '0')}
-          </time>
+        {!stale && (
+          <>
+            <div className='relative flex shrink-0 items-center justify-center'>
+              <div className='absolute size-2 animate-ping rounded-full bg-red-500' />
+              <div className='size-2 rounded-full bg-red-500' />
+            </div>
+            {seconds !== null ? (
+              <time className='text-foreground font-mono'>
+                {String(mins).padStart(2, '0')}:{String(secs).padStart(2, '0')}
+              </time>
+            ) : (
+              <span>{t('Live')}</span>
+            )}
+          </>
         )}
-        {!stale && seconds === null && <span>{t('Live')}</span>}
-        {stale && <span>{t('Expired')}</span>}
+        {stale && <MdSignalWifiStatusbarConnectedNoInternet1 className='text-destructive size-5' />}
       </div>
       {!props.aside && seconds !== null && data.period && <span className='lg:hidden'>·</span>}
       {data.period && <div>{t(getPeriod(data.period).long)}</div>}
