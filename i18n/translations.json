@@ -355,6 +355,14 @@
     "de": "",
     "tr": ""
   },
+  "Corners 1st half": {
+    "de": "",
+    "tr": ""
+  },
+  "Corners full time": {
+    "de": "",
+    "tr": ""
+  },
   "Corrected": {
     "de": "Korrigiert",
     "tr": "Düzeltildi"
@@ -407,10 +415,6 @@
     "de": "Draw No Bet",
     "tr": "Beraberlikte İade"
   },
-  "Draws": {
-    "de": "",
-    "tr": ""
-  },
   "Email": {
     "de": "E-Mail",
     "tr": "E-posta"
@@ -455,13 +459,13 @@
     "de": "Gerade/Ungerade",
     "tr": "Çift/Tek"
   },
+  "Event not found": {
+    "de": "",
+    "tr": ""
+  },
   "Expand sidebar": {
     "de": "Seitenleiste ausklappen",
     "tr": "Kenar çubuğunu genişlet"
-  },
-  "Expired": {
-    "de": "",
-    "tr": ""
   },
   "Extra Time": {
     "de": "Verlängerung",
@@ -530,6 +534,10 @@
   "Games by {name}": {
     "de": "Spiele von {name}",
     "tr": "{name} oyunları"
+  },
+  "Goal attempts": {
+    "de": "",
+    "tr": ""
   },
   "Good luck — track it under My Tickets.": {
     "de": "Viel Glück – verfolgen Sie sie unter Tickets.",
@@ -687,10 +695,6 @@
     "de": "Noch keine Tickets",
     "tr": "Henüz bilet yok"
   },
-  "Offline": {
-    "de": "",
-    "tr": ""
-  },
   "Offsides": {
     "de": "",
     "tr": ""
@@ -710,6 +714,10 @@
   "OT": {
     "de": "Verl.",
     "tr": "UZ"
+  },
+  "Other matches in this tournament": {
+    "de": "",
+    "tr": ""
   },
   "Over/Under": {
     "de": "Über/Unter",
@@ -827,10 +835,6 @@
     "de": "Zuletzt",
     "tr": "Son"
   },
-  "Reconnecting": {
-    "de": "",
-    "tr": ""
-  },
   "Red cards": {
     "de": "",
     "tr": ""
@@ -886,10 +890,6 @@
   "Result corrected": {
     "de": "Ergebnis korrigiert",
     "tr": "Sonuç düzeltildi"
-  },
-  "Results from the perspective of {team}": {
-    "de": "",
-    "tr": ""
   },
   "Retry": {
     "de": "Erneut versuchen",
@@ -975,6 +975,14 @@
     "de": "",
     "tr": ""
   },
+  "Show all {n} stats": {
+    "de": "",
+    "tr": ""
+  },
+  "Show fewer stats": {
+    "de": "",
+    "tr": ""
+  },
   "Sign in to view your tickets": {
     "de": "Anmelden, um Tickets zu sehen",
     "tr": "Biletleri görmek için giriş yapın"
@@ -1023,10 +1031,6 @@
     "de": "Einsatz pro Wette",
     "tr": "Bahis başına miktar"
   },
-  "Stale": {
-    "de": "",
-    "tr": ""
-  },
   "Stats": {
     "de": "",
     "tr": ""
@@ -1062,6 +1066,10 @@
   "This event is no longer available.": {
     "de": "Dieses Ereignis ist nicht mehr verfügbar.",
     "tr": "Bu etkinlik artık mevcut değil."
+  },
+  "This event may have ended, been removed, or is temporarily unavailable.": {
+    "de": "",
+    "tr": ""
   },
   "Top Games": {
     "de": "Top-Spiele",
@@ -1152,6 +1160,10 @@
     "tr": ""
   },
   "Yellow cards": {
+    "de": "",
+    "tr": ""
+  },
+  "Yellow/red cards": {
     "de": "",
     "tr": ""
   },

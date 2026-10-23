@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<941e38246c847179cdd10b728b3f4711>>
+ * @generated SignedSource<<83005895e7cd8fd5a2eff55b560aa91c>>
  * @lightSyntaxTransform
  */
 
@@ -22,6 +22,7 @@ export type PrematchSingleHeader$data = {
     readonly key: string;
     readonly name: string;
   };
+  readonly " $fragmentSpreads": FragmentRefs<"FavouriteButton">;
   readonly " $fragmentType": "PrematchSingleHeader";
 };
 export type PrematchSingleHeader$key = {
@@ -93,6 +94,11 @@ return {
       "kind": "ScalarField",
       "name": "status",
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "FavouriteButton"
     }
   ],
   "type": "Event",
@@ -100,6 +106,6 @@ return {
 };
 })();
 
-(node as any).hash = "81d5dcb8805b059517c5789aa668406f";
+(node as any).hash = "3bff88a5161deda9b8468d6946a606cb";
 
 export default node;

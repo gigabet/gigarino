@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<99b2f3c6b7587e1068ba25bf3f138b47>>
+ * @generated SignedSource<<c85cbdef4c287a3e36a282f18c676454>>
  * @lightSyntaxTransform
  */
 
@@ -11,7 +11,9 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PrematchSingleView$data = {
   readonly awayCompetitor: string;
+  readonly awayImageUrl: string | null | undefined;
   readonly homeCompetitor: string;
+  readonly homeImageUrl: string | null | undefined;
   readonly startTime: string;
   readonly " $fragmentSpreads": FragmentRefs<"EventLiveState" | "MarketGroups" | "PrematchSingleHeader" | "StatisticsWidget">;
   readonly " $fragmentType": "PrematchSingleView";
@@ -38,7 +40,21 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
+      "name": "homeImageUrl",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
       "name": "awayCompetitor",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "awayImageUrl",
       "storageKey": null
     },
     {
@@ -83,6 +99,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "532f1dfa4abec66f39f322b127038335";
+(node as any).hash = "269f49c9697ef0945d0aa05d68c70c02";
 
 export default node;

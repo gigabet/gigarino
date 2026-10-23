@@ -1,7 +1,8 @@
 'use client'
 
 import { format } from 'date-fns'
-import { useEffect } from 'react'
+import { ChevronDownIcon } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import {
   fetchQuery,
   graphql,
@@ -39,6 +40,10 @@ const STAT_LABEL: Record<string, string> = {
   xg: tKey('xG'),
   passing_accuracy: tKey('Passing accuracy'),
   key_passes: tKey('Key passes'),
+  goalattempts: tKey('Goal attempts'),
+  yellowred_cards: tKey('Yellow/red cards'),
+  corner_f: tKey('Corners full time'),
+  corner_h: tKey('Corners 1st half'),
 }
 const STAT_ORDER = Object.keys(STAT_LABEL)
 
@@ -155,40 +160,22 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key })
           </Tabs.List>
 
           <Tabs.Content value='stats'>
-            <Panel
-              header={
-                <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-4'>
-                  <TeamLabel name={data.homeCompetitor} side='home' />
-                  <span />
-                  <TeamLabel name={data.awayCompetitor} side='away' reverse />
-                </div>
-              }
-            >
-              {stats.map(stat => (
-                <StatRow
-                  key={stat.key}
-                  stat={stat}
-                  label={t(STAT_LABEL[stat.key] ?? prettify(stat.key))}
-                />
-              ))}
-            </Panel>
+            <StatsTab home={data.homeCompetitor} away={data.awayCompetitor} stats={stats} />
           </Tabs.Content>
 
           <Tabs.Content value='form'>
-            <div className='grid gap-8 sm:grid-cols-2 sm:gap-x-10'>
-              <FormColumn
-                name={data.homeCompetitor}
-                side='home'
-                position={insights.homePosition}
-                matches={insights.homeRecent}
-              />
-              <FormColumn
-                name={data.awayCompetitor}
-                side='away'
-                position={insights.awayPosition}
-                matches={insights.awayRecent}
-              />
-            </div>
+            <FormTab
+              home={{
+                name: data.homeCompetitor,
+                position: insights.homePosition,
+                matches: insights.homeRecent,
+              }}
+              away={{
+                name: data.awayCompetitor,
+                position: insights.awayPosition,
+                matches: insights.awayRecent,
+              }}
+            />
           </Tabs.Content>
 
           <Tabs.Content value='h2h'>
@@ -224,14 +211,6 @@ function prettify(key: string) {
   return s.charAt(0).toUpperCase() + s.slice(1)
 }
 
-/* -------------------------------------------------------------------------- */
-/*  Shared design language                                                    */
-/*                                                                            */
-/*  Every tab is a Panel whose header names the two teams. The fixture's      */
-/*  home team is lime and its away team is purple, in all three tabs. Result  */
-/*  chips and score boxes are the same components wherever they appear.       */
-/* -------------------------------------------------------------------------- */
-
 type Side = 'home' | 'away'
 
 const TEAM = {
@@ -264,10 +243,19 @@ const RESULT_STYLE: Record<string, string> = {
   L: 'bg-red-500 text-white',
 }
 
-function Panel(props: { header?: React.ReactNode; children: React.ReactNode }) {
+function Panel(props: {
+  header?: React.ReactNode
+  headerClassName?: string
+  className?: string
+  children: React.ReactNode
+}) {
   return (
-    <div>
-      {props.header && <div className='border-b border-white/5 pb-3'>{props.header}</div>}
+    <div className={props.className}>
+      {props.header && (
+        <div className={cn('border-b border-white/5 pb-3', props.headerClassName)}>
+          {props.header}
+        </div>
+      )}
       <div className='divide-y divide-white/4'>{props.children}</div>
     </div>
   )
@@ -357,6 +345,59 @@ const pastMatchFragment = graphql`
 
 /* -------------------------------- Stats ----------------------------------- */
 
+// Rows shown before "Show all". Stats where both sides are 0 sink to the end,
+// so the collapsed list is the 8 most informative ones.
+const COLLAPSED_STATS = 8
+
+function StatsTab(props: {
+  home: string
+  away: string
+  stats: ReadonlyArray<{ key: string; home: string; away: string }>
+}) {
+  const t = useT()
+  const [expanded, setExpanded] = useState(false)
+
+  const empty = (s: { home: string; away: string }) => num(s.home) + num(s.away) === 0
+  const ranked = [...props.stats.filter(s => !empty(s)), ...props.stats.filter(empty)]
+  const visible = expanded ? ranked : ranked.slice(0, COLLAPSED_STATS)
+
+  return (
+    <Panel
+      header={
+        <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-4'>
+          <TeamLabel name={props.home} side='home' />
+          <span />
+          <TeamLabel name={props.away} side='away' reverse />
+        </div>
+      }
+    >
+      {/* two columns from sm up: half the height */}
+      <div className='grid gap-y-1 pt-2 sm:grid-cols-2 sm:gap-x-10'>
+        {visible.map(stat => (
+          <StatRow
+            key={stat.key}
+            stat={stat}
+            label={t(STAT_LABEL[stat.key] ?? prettify(stat.key))}
+          />
+        ))}
+      </div>
+      {ranked.length > COLLAPSED_STATS && (
+        <button
+          type='button'
+          onClick={() => setExpanded(e => !e)}
+          aria-expanded={expanded}
+          className='text-secondary hover:text-foreground flex w-full items-center justify-center gap-1.5 py-2.5 text-xs transition-colors'
+        >
+          {expanded ? t('Show fewer stats') : t('Show all {n} stats', { n: ranked.length })}
+          <ChevronDownIcon
+            className={cn('size-3.5 transition-transform', expanded && 'rotate-180')}
+          />
+        </button>
+      )}
+    </Panel>
+  )
+}
+
 function StatRow(props: { stat: { home: string; away: string }; label: string }) {
   const h = num(props.stat.home)
   const a = num(props.stat.away)
@@ -365,27 +406,22 @@ function StatRow(props: { stat: { home: string; away: string }; label: string })
   const awayPct = total === 0 ? 0 : 100 - homePct
 
   return (
-    <div className='flex flex-col gap-2 py-3'>
+    <div className='flex flex-col gap-1 py-1.5'>
       <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-xs'>
-        <span
-          className={cn(
-            'font-mono text-sm font-semibold',
-            h >= a ? TEAM.home.text : 'text-white/60'
-          )}
-        >
+        <span className={cn('font-mono font-semibold', h >= a ? TEAM.home.text : 'text-white/60')}>
           {props.stat.home}
         </span>
         <span className='text-secondary text-center'>{props.label}</span>
         <span
           className={cn(
-            'text-right font-mono text-sm font-semibold',
+            'text-right font-mono font-semibold',
             a >= h ? TEAM.away.text : 'text-white/60'
           )}
         >
           {props.stat.away}
         </span>
       </div>
-      <div className='flex h-1.5 gap-1'>
+      <div className='flex h-1 gap-1'>
         <div className='flex flex-1 justify-end overflow-hidden rounded-full bg-white/5'>
           <div
             className={cn(
@@ -411,15 +447,61 @@ function StatRow(props: { stat: { home: string; away: string }; label: string })
 
 /* --------------------------------- Form ----------------------------------- */
 
-function FormColumn(props: {
+type FormTeam = {
   name: string
-  side: Side
   position: number | null | undefined
   matches: ReadonlyArray<StatisticsWidgetPastMatch$key>
-}) {
+}
+
+/**
+ * sm and up: both teams side by side.
+ * Below sm: one team at a time behind a switcher, which halves the height.
+ */
+function FormTab(props: { home: FormTeam; away: FormTeam }) {
+  const [active, setActive] = useState<Side>('home')
+
   return (
-    <Panel header={<TeamLabel name={props.name} side={props.side} position={props.position} />}>
-      {props.matches.map((m, i) => (
+    <div className='flex flex-col gap-3'>
+      <div className='bg-dark-200 flex gap-1 rounded-full p-1 sm:hidden'>
+        {(['home', 'away'] as const).map(side => (
+          <button
+            key={side}
+            type='button'
+            onClick={() => setActive(side)}
+            aria-pressed={active === side}
+            className={cn(
+              'flex min-w-0 flex-1 items-center justify-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium transition-colors',
+              active === side ? 'bg-white/10 text-white' : 'text-white/50'
+            )}
+          >
+            <span className={cn('size-2 shrink-0 rounded-full', TEAM[side].dot)} />
+            <span className='truncate'>{props[side].name}</span>
+          </button>
+        ))}
+      </div>
+
+      <div className='grid gap-8 sm:grid-cols-2 sm:gap-x-10'>
+        {(['home', 'away'] as const).map(side => (
+          <FormColumn
+            key={side}
+            side={side}
+            team={props[side]}
+            className={active !== side ? 'max-sm:hidden' : undefined}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function FormColumn(props: { team: FormTeam; side: Side; className?: string }) {
+  return (
+    <Panel
+      className={props.className}
+      headerClassName='max-sm:hidden' // the switcher is the header on mobile
+      header={<TeamLabel name={props.team.name} side={props.side} position={props.team.position} />}
+    >
+      {props.team.matches.map((m, i) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: past matches have no id
         <PastMatchRow key={i} match={m} />
       ))}
@@ -431,7 +513,7 @@ function PastMatchRow(props: { match: StatisticsWidgetPastMatch$key }) {
   const m = useFragment(pastMatchFragment, props.match)
 
   return (
-    <div className='grid grid-cols-[auto_1fr_auto_1fr] items-center gap-x-3 gap-y-1 py-3'>
+    <div className='grid grid-cols-[auto_1fr_auto_1fr] items-center gap-x-3 gap-y-1 py-2.5'>
       <Chip className={cn('row-span-2', (m.outcome && RESULT_STYLE[m.outcome]) || 'bg-white/10')}>
         {m.outcome ?? ''}
       </Chip>
@@ -515,7 +597,7 @@ function H2HRow(props: { match: StatisticsWidgetPastMatch$key }) {
   const tone = m.outcome === 'W' ? TEAM.home : m.outcome === 'L' ? TEAM.away : TEAM.draw
 
   return (
-    <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-x-3 gap-y-2 py-3 sm:grid-cols-[9rem_1fr_auto_1fr_8.5rem] sm:gap-x-5'>
+    <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-x-3 gap-y-2 py-2.5 sm:grid-cols-[9rem_1fr_auto_1fr_8.5rem] sm:gap-x-5'>
       {/* mobile: result + date share the top line; desktop: they become grid cells */}
       <div className='col-span-3 flex items-center justify-between gap-3 sm:contents'>
         <Chip

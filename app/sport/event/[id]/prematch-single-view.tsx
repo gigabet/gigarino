@@ -1,13 +1,17 @@
 'use client'
 
 import { format } from 'date-fns'
-import { ExternalLinkIcon, ImageIcon, SearchXIcon } from 'lucide-react'
+import { ExternalLinkIcon, SearchXIcon } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense, useEffect } from 'react'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
+import { EventHeaderRow } from '@/components/event-header-row'
+import { FavouriteButton } from '@/components/favourite-button'
 import MarketGroups, { MarketGroupsSkeleton } from '@/components/market-groups'
 import { SportIcon } from '@/components/sport-icon'
 import StatisticsWidget, { StatisticsWidgetSkeleton } from '@/components/statistics-widget'
+import { TeamBadge } from '@/components/team-badge'
+import { useT } from '@/context/providers'
 import { getRelativeDayLabel } from '@/lib/utils'
 import type { EventLiveState$key } from '@/relay/__generated__/EventLiveState.graphql'
 import type { PrematchSingleHeader$key } from '@/relay/__generated__/PrematchSingleHeader.graphql'
@@ -27,7 +31,9 @@ export default function PrematchSingleView(props: {
     graphql`
       fragment PrematchSingleView on Event {
         homeCompetitor
+        homeImageUrl
         awayCompetitor
+        awayImageUrl
         startTime
         ...PrematchSingleHeader
         ...EventLiveState
@@ -45,17 +51,17 @@ export default function PrematchSingleView(props: {
   if (!data) return <EventNotFound />
 
   return (
-    <main className='mx-auto flex w-full max-w-7xl flex-col gap-4 sm:gap-6'>
+    <main className='mx-auto flex w-full max-w-7xl min-w-0 flex-col gap-4 sm:gap-6'>
       <section className='flex flex-col gap-3 rounded-2xl border border-white/5 bg-black/20 p-4 sm:gap-4 sm:p-6'>
         <PrematchSingleHeader event={data} />
         <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-4'>
-          <Competitor name={data.homeCompetitor} />
+          <Competitor name={data.homeCompetitor} imageUrl={data.homeImageUrl} />
 
           <Suspense fallback={<EventLiveStateFallback startTime={data.startTime} />}>
             <EventLiveState event={data} startTime={data.startTime} />
           </Suspense>
 
-          <Competitor name={data.awayCompetitor} reverse />
+          <Competitor name={data.awayCompetitor} imageUrl={data.awayImageUrl} reverse />
         </div>
       </section>
 
@@ -85,48 +91,58 @@ function PrematchSingleHeader(props: { event: PrematchSingleHeader$key }) {
           name
         }
         status
+        ...FavouriteButton
       }
     `,
     props.event
   )
 
   return (
-    <div className='text-secondary flex flex-wrap items-center gap-x-2 gap-y-1 text-xs uppercase'>
-      {data.status === 'LIVE' && (
-        <div className='text-foreground flex shrink-0 items-center gap-1.5 text-xs'>
-          <div className='relative size-2'>
-            <div className='bg-destructive absolute size-2 animate-ping rounded-full' />
-            <div className='bg-destructive absolute size-2 rounded-full' />
-          </div>
-          Live
-        </div>
-      )}
-      <SportIcon sport={data.sport.key} className='size-3.5 shrink-0' />
-      <Link
-        href={{
-          pathname: '/sport',
-          query: { tournaments: `${data.sport.key}:${data.tournament.key}` },
-        }}
-        className='group relative flex min-w-0 items-center gap-2 text-current transition-colors hover:text-white'
-      >
-        <span className='max-w-40 truncate sm:max-w-none'>{data.tournament.name}</span>
-        <span className='shrink-0'>·</span>
-        <span className='max-w-32 truncate sm:max-w-none'>{data.category.name}</span>
-        <ExternalLinkIcon className='size-3 shrink-0' />
-        <span className='bg-primary absolute -bottom-0.5 h-px w-full opacity-0 transition-all group-hover:opacity-100' />
-      </Link>
-    </div>
+    <EventHeaderRow
+      left={
+        <>
+          {data.status === 'LIVE' && (
+            <div className='text-foreground flex shrink-0 items-center gap-1.5 text-xs'>
+              <div className='relative size-2'>
+                <div className='bg-destructive absolute size-2 animate-ping rounded-full' />
+                <div className='bg-destructive absolute size-2 rounded-full' />
+              </div>
+              Live
+            </div>
+          )}
+          <SportIcon sport={data.sport.key} className='size-3.5 shrink-0' />
+          <Link
+            href={{
+              pathname: '/sport',
+              query: {
+                tournaments: `${data.sport.key}:${data.tournament.key}`,
+              },
+            }}
+            className='group relative flex min-w-0 items-center gap-2 text-current transition-colors hover:text-white'
+          >
+            <span className='truncate'>{data.tournament.name}</span>
+            <span className='shrink-0'>·</span>
+            <span className='truncate'>{data.category.name}</span>
+            <ExternalLinkIcon className='size-3 shrink-0' />
+            <span className='bg-primary absolute bottom-0 h-px w-full opacity-0 transition-all group-hover:opacity-100' />
+          </Link>
+        </>
+      }
+      favourite={<FavouriteButton event={data} />}
+    />
   )
 }
 
-function Competitor(props: { name: string; reverse?: boolean }) {
+function Competitor(props: { name: string; imageUrl?: string | null; reverse?: boolean }) {
   return (
     <div
       className={`flex min-w-0 items-center gap-2 sm:gap-3 ${props.reverse ? 'flex-row-reverse text-right' : ''}`}
     >
-      <div className='bg-dark-300 text-muted-foreground flex size-8 min-w-8 items-center justify-center rounded-full sm:size-10 sm:min-w-10'>
-        <ImageIcon className='size-3.5 sm:size-4' />
-      </div>
+      <TeamBadge
+        name={props.name}
+        imageUrl={props.imageUrl}
+        className='size-8 min-w-8 text-xs sm:size-10 sm:min-w-10 sm:text-sm'
+      />
       <span className='truncate text-xs font-semibold text-white sm:text-sm lg:text-base'>
         {props.name}
       </span>
@@ -187,15 +203,16 @@ function KickoffTime(props: { startTime: string }) {
 }
 
 function EventNotFound() {
+  const t = useT()
   return (
-    <main className='mx-auto flex w-full max-w-7xl flex-col items-center justify-center gap-4 px-4 py-16 text-center sm:py-24'>
+    <main className='mx-auto flex w-full max-w-7xl min-w-0 flex-col items-center justify-center gap-4 px-4 py-16 text-center sm:py-24'>
       <div className='bg-dark-300 text-muted-foreground flex size-14 items-center justify-center rounded-full'>
         <SearchXIcon className='size-6' />
       </div>
       <div className='space-y-1'>
-        <h3 className='text-foreground text-sm font-semibold'>Event not found</h3>
+        <h3 className='text-foreground text-sm font-semibold'>{t('Event not found')}</h3>
         <p className='text-secondary text-xs'>
-          This event may have ended, been removed, or is temporarily unavailable.
+          {t('This event may have ended, been removed, or is temporarily unavailable.')}
         </p>
       </div>
     </main>

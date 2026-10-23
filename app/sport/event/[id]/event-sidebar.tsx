@@ -1,14 +1,17 @@
 'use client'
 
-import { cx } from 'class-variance-authority'
 import { sortBy } from 'lodash'
+import { ChevronRightIcon } from 'lucide-react'
 import Link from 'next/link'
-import { Toggle } from 'radix-ui'
+import { Toggle, VisuallyHidden } from 'radix-ui'
+import { useState } from 'react'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
+import { Drawer } from 'vaul'
 import { SportIconBadge } from '@/components/sport-icon'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useHasOdd, useToggleOdd } from '@/context/betslip'
 import { useUpDown } from '@/context/hooks'
+import { useT } from '@/context/providers'
 import { cn, getRelativeDayLabel } from '@/lib/utils'
 import type { EventSidebar$key } from '@/relay/__generated__/EventSidebar.graphql'
 import type { EventSidebarMarket$key } from '@/relay/__generated__/EventSidebarMarket.graphql'
@@ -39,17 +42,24 @@ export default function EventSidebar(props: {
 
   const tournament = data?.event?.tournament
 
-  if (!tournament) {
-    return (
-      <div className='bg-dark-200 hidden rounded-2xl border border-white/5 p-4 text-center text-xs text-white/40 xl:block'>
-        No other events in this tournament right now.
-      </div>
-    )
-  }
+  if (!tournament) return <NoOtherEvents />
 
   return <EventSidebarTournament tournament={tournament} activeEventId={props.eventId} />
 }
 
+function NoOtherEvents() {
+  return (
+    <div className='bg-dark-200 hidden rounded-2xl border border-white/5 p-4 text-center text-xs text-white/40 xl:block'>
+      No other events in this tournament right now.
+    </div>
+  )
+}
+
+/**
+ * xl and up: sticky aside in the left grid column.
+ * Below xl the aside is gone, so the same list is reachable through a bar at
+ * the top of the page that opens it in a drawer.
+ */
 function EventSidebarTournament(props: {
   tournament: EventSidebarTournament$key
   activeEventId: string
@@ -75,36 +85,104 @@ function EventSidebarTournament(props: {
     props.tournament
   )
 
-  if (tournament.events.edges.length === 0) {
-    return (
-      <div className='bg-dark-200 hidden rounded-2xl border border-white/5 p-4 text-center text-xs text-white/40 xl:block'>
-        No other events in this tournament right now.
-      </div>
-    )
-  }
+  const [open, setOpen] = useState(false)
+  const t = useT()
+
+  if (tournament.events.edges.length === 0) return <NoOtherEvents />
 
   const events = tournament.events.edges.map(e => e.node)
 
+  const list = (onNavigate?: () => void) => (
+    <TournamentEvents
+      name={tournament.name}
+      sportKey={tournament.sport.key}
+      events={events}
+      activeEventId={props.activeEventId}
+      onNavigate={onNavigate}
+    />
+  )
+
   return (
-    <aside className='scrollbar-hide! scrollbar-thumb-dark-300 sticky top-26.25 hidden max-h-[calc(100dvh-7rem)] w-full scrollbar-thin scrollbar-track-transparent flex-col gap-3 place-self-start overflow-y-auto xl:flex'>
+    <>
+      <aside className='scrollbar-hide! scrollbar-thumb-dark-300 sticky top-26.25 hidden max-h-[calc(100dvh-7rem)] w-full scrollbar-thin scrollbar-track-transparent flex-col gap-3 place-self-start overflow-y-auto xl:flex'>
+        {list()}
+      </aside>
+
+      {/* below xl: opener bar + drawer. -mb-4 halves the grid gap to the content. */}
+      <div className='-mb-4 xl:hidden'>
+        <button
+          type='button'
+          onClick={() => setOpen(true)}
+          className='bg-dark-200 hover:bg-dark-300 flex w-full items-center gap-3 rounded-2xl border border-white/5 px-4 py-3 text-left transition-colors'
+        >
+          <SportIconBadge sport={tournament.sport.key} size='sm' />
+          <div className='min-w-0 flex-1'>
+            <p className='text-secondary text-[0.65rem]'>{t('Other matches in this tournament')}</p>
+            <p className='truncate text-sm font-semibold text-white'>{tournament.name}</p>
+          </div>
+          <span className='bg-dark-300 rounded-full px-2 py-0.5 font-mono text-[0.65rem]'>
+            {events.length}
+          </span>
+          <ChevronRightIcon className='text-secondary size-4 shrink-0' />
+        </button>
+
+        <Drawer.Root open={open} onOpenChange={setOpen} direction='left'>
+          <Drawer.Portal>
+            <Drawer.Overlay className='fixed inset-0 z-50 bg-black/50' />
+            <Drawer.Content
+              className='bg-dark-200 fixed inset-y-0 left-0 z-50 flex w-[88vw] max-w-sm flex-col outline-none'
+              aria-describedby={undefined}
+            >
+              <VisuallyHidden.Root>
+                <Drawer.Title>{tournament.name}</Drawer.Title>
+              </VisuallyHidden.Root>
+              <div className='flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-4'>
+                {list(() => setOpen(false))}
+              </div>
+            </Drawer.Content>
+          </Drawer.Portal>
+        </Drawer.Root>
+      </div>
+    </>
+  )
+}
+
+function TournamentEvents(props: {
+  name: string
+  sportKey: string
+  events: ReadonlyArray<{ id: string } & EventStripCard$key>
+  activeEventId: string
+  onNavigate?: () => void
+}) {
+  return (
+    <>
       <div className='flex items-center gap-2 px-1'>
-        <SportIconBadge sport={tournament.sport.key} size='sm' />
+        <SportIconBadge sport={props.sportKey} size='sm' />
         <div className='min-w-0'>
           <p className='text-secondary text-[0.65rem] tracking-wider uppercase'>Tournament</p>
-          <p className='truncate text-sm font-semibold text-white'>{tournament.name}</p>
+          <p className='truncate text-sm font-semibold text-white'>{props.name}</p>
         </div>
       </div>
 
       <div className='flex flex-col gap-2'>
-        {events.map(event => (
-          <EventStripCard key={event.id} event={event} active={event.id === props.activeEventId} />
+        {props.events.map(event => (
+          <EventStripCard
+            key={event.id}
+            event={event}
+            active={event.id === props.activeEventId}
+            onNavigate={props.onNavigate}
+          />
         ))}
       </div>
-    </aside>
+    </>
   )
 }
 
-function EventStripCard(props: { event: EventStripCard$key; active: boolean }) {
+function EventStripCard(props: {
+  event: EventStripCard$key
+  active: boolean
+  onNavigate?: () => void
+}) {
   const event = useFragment(
     graphql`
       fragment EventStripCard on Event {
@@ -127,7 +205,7 @@ function EventStripCard(props: { event: EventStripCard$key; active: boolean }) {
 
   return (
     <div
-      className={cx(
+      className={cn(
         'group relative flex flex-col gap-2 rounded-xl border p-3 transition-colors',
         props.active
           ? 'border-primary bg-primary/10 shadow-primary/30 shadow-[0_0_12px]'
@@ -143,6 +221,7 @@ function EventStripCard(props: { event: EventStripCard$key; active: boolean }) {
       <Link
         href={`/sport/event/${event.id}`}
         replace
+        onClick={props.onNavigate}
         aria-current={props.active || undefined}
         className={cn('flex flex-col gap-1 text-xs', props.active && 'pointer-events-none')}
       >

@@ -6,6 +6,7 @@ import { Suspense, useEffect } from 'react'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
 import { getPeriod } from '@/app/live/helpers'
 import { useLiveClock } from '@/app/live/live-event'
+import { EventHeaderRow } from '@/components/event-header-row'
 import { FavouriteButton } from '@/components/favourite-button'
 import MarketGroups, { MarketGroupsSkeleton } from '@/components/market-groups'
 import { SportIcon } from '@/components/sport-icon'
@@ -96,24 +97,28 @@ function LiveSingleHeader(props: { event: LiveSingleHeader$key }) {
   const t = useT()
 
   return (
-    <div className='text-secondary flex flex-wrap items-center gap-x-2 gap-y-1 text-xs uppercase'>
-      {data.status === 'LIVE' && (
-        <div className='text-foreground flex shrink-0 items-center gap-1.5 text-xs'>
-          <div className='relative size-2'>
-            <div className='bg-destructive absolute size-2 animate-ping rounded-full' />
-            <div className='bg-destructive absolute size-2 rounded-full' />
+    <EventHeaderRow
+      left={
+        <>
+          {data.status === 'LIVE' && (
+            <div className='text-foreground flex shrink-0 items-center gap-1.5 text-xs'>
+              <div className='relative size-2'>
+                <div className='bg-destructive absolute size-2 animate-ping rounded-full' />
+                <div className='bg-destructive absolute size-2 rounded-full' />
+              </div>
+              {t(getPeriod(data.period).long)}
+            </div>
+          )}
+          <SportIcon sport={data.sport.key} className='size-3.5 shrink-0' />
+          <div className='flex min-w-0 items-center gap-2'>
+            <span className='truncate'>{data.tournament.name}</span>
+            <span className='shrink-0'>·</span>
+            <span className='truncate'>{data.category.name}</span>
           </div>
-          {t(getPeriod(data.period).long)}
-        </div>
-      )}
-      <SportIcon sport={data.sport.key} className='size-3.5 shrink-0' />
-      <div className='group relative flex min-w-0 items-center gap-2'>
-        <span className='max-w-40 truncate sm:max-w-none'>{data.tournament.name}</span>
-        <span className='shrink-0'>·</span>
-        <span className='max-w-32 truncate sm:max-w-none'>{data.category.name}</span>
-      </div>
-      <FavouriteButton event={data} className='ml-auto' />
-    </div>
+        </>
+      }
+      favourite={<FavouriteButton event={data} />}
+    />
   )
 }
 

@@ -74,7 +74,7 @@ export default function MarketGroups(props: { event: MarketGroups$key }) {
 
   return (
     <Tabs.Root defaultValue={populatedGroups[0]} className='w-full gap-4'>
-      <Tabs.List className='h-auto w-fit scrollbar-none justify-start gap-2 overflow-x-auto bg-transparent p-0'>
+      <Tabs.List className='h-auto w-fit max-w-full scrollbar-none justify-start gap-2 overflow-x-auto bg-transparent p-0'>
         {populatedGroups.map(group => (
           <Tabs.Trigger
             key={group}
