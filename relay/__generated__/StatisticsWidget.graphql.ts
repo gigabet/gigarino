@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<da194543f6e56f14f017e9d83529f3d0>>
+ * @generated SignedSource<<353fbe37d87917e49b1ee00727e13af6>>
  * @lightSyntaxTransform
  */
 
@@ -9,6 +9,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type EventStatus = "ABANDONED" | "CANCELLED" | "ENDED" | "LIVE" | "POSTPONED" | "SCHEDULED" | "%future added value";
+export type MatchOutcome = "D" | "L" | "W" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type StatisticsWidget$data = {
   readonly awayCompetitor: string;
@@ -20,6 +21,7 @@ export type StatisticsWidget$data = {
       readonly " $fragmentSpreads": FragmentRefs<"StatisticsWidgetPastMatch">;
     }>;
     readonly headToHead: ReadonlyArray<{
+      readonly outcome: MatchOutcome | null | undefined;
       readonly " $fragmentSpreads": FragmentRefs<"StatisticsWidgetPastMatch">;
     }>;
     readonly homePosition: number | null | undefined;
@@ -46,12 +48,13 @@ export type StatisticsWidget$key = {
 import StatisticsWidgetRefetch_graphql from './StatisticsWidgetRefetch.graphql';
 
 const node: ReaderFragment = (function(){
-var v0 = [
-  {
-    "args": null,
-    "kind": "FragmentSpread",
-    "name": "StatisticsWidgetPastMatch"
-  }
+var v0 = {
+  "args": null,
+  "kind": "FragmentSpread",
+  "name": "StatisticsWidgetPastMatch"
+},
+v1 = [
+  (v0/*:: as any*/)
 ];
 return {
   "argumentDefinitions": [],
@@ -181,7 +184,7 @@ return {
           "kind": "LinkedField",
           "name": "homeRecent",
           "plural": true,
-          "selections": (v0/*:: as any*/),
+          "selections": (v1/*:: as any*/),
           "storageKey": null
         },
         {
@@ -191,7 +194,7 @@ return {
           "kind": "LinkedField",
           "name": "awayRecent",
           "plural": true,
-          "selections": (v0/*:: as any*/),
+          "selections": (v1/*:: as any*/),
           "storageKey": null
         },
         {
@@ -201,7 +204,16 @@ return {
           "kind": "LinkedField",
           "name": "headToHead",
           "plural": true,
-          "selections": (v0/*:: as any*/),
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "outcome",
+              "storageKey": null
+            },
+            (v0/*:: as any*/)
+          ],
           "storageKey": null
         }
       ],
@@ -213,6 +225,6 @@ return {
 };
 })();
 
-(node as any).hash = "58b62acf7a962411c4296de66f80b3d1";
+(node as any).hash = "0ac2c4ceab42994396616327e5c313c9";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6acb79aa1d618eaf7f719958cc846893>>
+ * @generated SignedSource<<e5da37467594edad4d68a941bdf2d058>>
  * @lightSyntaxTransform
  */
 
@@ -100,40 +100,44 @@ v10 = {
   "name": "awayScore",
   "storageKey": null
 },
-v11 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "homeName",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "awayName",
-    "storageKey": null
-  },
+v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "homeName",
+  "storageKey": null
+},
+v12 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "awayName",
+  "storageKey": null
+},
+v13 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "competition",
+  "storageKey": null
+},
+v14 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "outcome",
+  "storageKey": null
+},
+v15 = [
+  (v11/*:: as any*/),
+  (v12/*:: as any*/),
   (v9/*:: as any*/),
   (v10/*:: as any*/),
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "competition",
-    "storageKey": null
-  },
+  (v13/*:: as any*/),
   (v4/*:: as any*/),
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "outcome",
-    "storageKey": null
-  }
+  (v14/*:: as any*/)
 ],
-v12 = {
+v16 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -319,7 +323,7 @@ return {
                     "kind": "LinkedField",
                     "name": "homeRecent",
                     "plural": true,
-                    "selections": (v11/*:: as any*/),
+                    "selections": (v15/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -329,7 +333,7 @@ return {
                     "kind": "LinkedField",
                     "name": "awayRecent",
                     "plural": true,
-                    "selections": (v11/*:: as any*/),
+                    "selections": (v15/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -339,7 +343,15 @@ return {
                     "kind": "LinkedField",
                     "name": "headToHead",
                     "plural": true,
-                    "selections": (v11/*:: as any*/),
+                    "selections": [
+                      (v14/*:: as any*/),
+                      (v11/*:: as any*/),
+                      (v12/*:: as any*/),
+                      (v9/*:: as any*/),
+                      (v10/*:: as any*/),
+                      (v13/*:: as any*/),
+                      (v4/*:: as any*/)
+                    ],
                     "storageKey": null
                   }
                 ],
@@ -375,7 +387,7 @@ return {
                     "name": "kind",
                     "storageKey": null
                   },
-                  (v12/*:: as any*/),
+                  (v16/*:: as any*/),
                   (v7/*:: as any*/),
                   {
                     "alias": null,
@@ -394,7 +406,7 @@ return {
                     "plural": true,
                     "selections": [
                       (v6/*:: as any*/),
-                      (v12/*:: as any*/),
+                      (v16/*:: as any*/),
                       (v7/*:: as any*/),
                       {
                         "alias": null,
@@ -419,12 +431,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5a17d9101dadace57b965379a4410a29",
+    "cacheID": "934631c487a694b1c7aeb0b079217884",
     "id": null,
     "metadata": {},
     "name": "PrematchSingleViewQuery",
     "operationKind": "query",
-    "text": "query PrematchSingleViewQuery(\n  $id: ID!\n) {\n  event(id: $id) {\n    ...PrematchSingleView\n    id\n  }\n}\n\nfragment EventLiveState on Event {\n  status\n  tradingStatus\n  homeScore\n  awayScore\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  outcomes {\n    id\n    index\n    name\n    price\n    status\n  }\n}\n\nfragment MarketGroups on Event {\n  markets {\n    id\n    groups\n    kind\n    index\n    ...MarketCard\n  }\n}\n\nfragment PrematchSingleHeader on Event {\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    name\n    id\n  }\n  category {\n    name\n    id\n  }\n  status\n}\n\nfragment PrematchSingleView on Event {\n  homeCompetitor\n  awayCompetitor\n  startTime\n  ...PrematchSingleHeader\n  ...EventLiveState\n  ...StatisticsWidget @defer(label: \"PrematchSingleView$defer$StatisticsWidget\")\n  ...MarketGroups @defer(label: \"PrematchSingleView$defer$MarketGroups\")\n}\n\nfragment StatisticsWidget on Event {\n  id\n  status\n  homeCompetitor\n  awayCompetitor\n  insights {\n    homePosition\n    awayPosition\n    venue\n    referee\n    round\n    stats {\n      key\n      home\n      away\n    }\n    homeRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    awayRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    headToHead {\n      ...StatisticsWidgetPastMatch\n    }\n  }\n}\n\nfragment StatisticsWidgetPastMatch on PastMatch {\n  homeName\n  awayName\n  homeScore\n  awayScore\n  competition\n  startTime\n  outcome\n}\n"
+    "text": "query PrematchSingleViewQuery(\n  $id: ID!\n) {\n  event(id: $id) {\n    ...PrematchSingleView\n    id\n  }\n}\n\nfragment EventLiveState on Event {\n  status\n  tradingStatus\n  homeScore\n  awayScore\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  outcomes {\n    id\n    index\n    name\n    price\n    status\n  }\n}\n\nfragment MarketGroups on Event {\n  markets {\n    id\n    groups\n    kind\n    index\n    ...MarketCard\n  }\n}\n\nfragment PrematchSingleHeader on Event {\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    name\n    id\n  }\n  category {\n    name\n    id\n  }\n  status\n}\n\nfragment PrematchSingleView on Event {\n  homeCompetitor\n  awayCompetitor\n  startTime\n  ...PrematchSingleHeader\n  ...EventLiveState\n  ...StatisticsWidget @defer(label: \"PrematchSingleView$defer$StatisticsWidget\")\n  ...MarketGroups @defer(label: \"PrematchSingleView$defer$MarketGroups\")\n}\n\nfragment StatisticsWidget on Event {\n  id\n  status\n  homeCompetitor\n  awayCompetitor\n  insights {\n    homePosition\n    awayPosition\n    venue\n    referee\n    round\n    stats {\n      key\n      home\n      away\n    }\n    homeRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    awayRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    headToHead {\n      outcome\n      ...StatisticsWidgetPastMatch\n    }\n  }\n}\n\nfragment StatisticsWidgetPastMatch on PastMatch {\n  homeName\n  awayName\n  homeScore\n  awayScore\n  competition\n  startTime\n  outcome\n}\n"
   }
 };
 })();

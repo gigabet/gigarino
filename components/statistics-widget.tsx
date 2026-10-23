@@ -70,6 +70,7 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key })
             ...StatisticsWidgetPastMatch
           }
           headToHead {
+            outcome
             ...StatisticsWidgetPastMatch
           }
         }
@@ -113,7 +114,7 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key })
   ) as ('stats' | 'form' | 'h2h')[]
 
   const meta = [
-    insights.round,
+    insights.round && `${t('Round')} ${insights.round}`,
     insights.venue,
     insights.referee && `${t('Referee')}: ${insights.referee}`,
   ]
@@ -126,6 +127,13 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key })
     stats: t('Stats'),
     form: t('Form'),
     h2h: t('Head to head'),
+  }
+
+  // outcomes are relative to the event's home team
+  const h2hTally = {
+    home: insights.headToHead.filter(m => m.outcome === 'W').length,
+    draw: insights.headToHead.filter(m => m.outcome === 'D').length,
+    away: insights.headToHead.filter(m => m.outcome === 'L').length,
   }
 
   return (
@@ -146,46 +154,64 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key })
             ))}
           </Tabs.List>
 
-          <Tabs.Content value='stats' className='flex flex-col gap-4'>
-            <div className='text-foreground grid grid-cols-[1fr_auto_1fr] gap-3 text-xs font-semibold'>
-              <span className='truncate'>{data.homeCompetitor}</span>
-              <span />
-              <span className='truncate text-right'>{data.awayCompetitor}</span>
-            </div>
-            {stats.map(stat => (
-              <StatRow
-                key={stat.key}
-                stat={stat}
-                label={t(STAT_LABEL[stat.key] ?? prettify(stat.key))}
-              />
-            ))}
+          <Tabs.Content value='stats'>
+            <Panel
+              header={
+                <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-4'>
+                  <TeamLabel name={data.homeCompetitor} side='home' />
+                  <span />
+                  <TeamLabel name={data.awayCompetitor} side='away' reverse />
+                </div>
+              }
+            >
+              {stats.map(stat => (
+                <StatRow
+                  key={stat.key}
+                  stat={stat}
+                  label={t(STAT_LABEL[stat.key] ?? prettify(stat.key))}
+                />
+              ))}
+            </Panel>
           </Tabs.Content>
 
           <Tabs.Content value='form'>
-            <div className='grid gap-6 sm:grid-cols-2'>
+            <div className='grid gap-8 sm:grid-cols-2 sm:gap-x-10'>
               <FormColumn
                 name={data.homeCompetitor}
+                side='home'
                 position={insights.homePosition}
                 matches={insights.homeRecent}
               />
               <FormColumn
                 name={data.awayCompetitor}
+                side='away'
                 position={insights.awayPosition}
                 matches={insights.awayRecent}
               />
             </div>
           </Tabs.Content>
 
-          <Tabs.Content value='h2h' className='flex flex-col gap-3'>
-            <p className='text-secondary text-[0.65rem]'>
-              {t('Results from the perspective of {team}', {
-                team: data.homeCompetitor,
-              })}
-            </p>
-            {insights.headToHead.map((m, i) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: past matches have no id
-              <PastMatchRow key={i} match={m} />
-            ))}
+          <Tabs.Content value='h2h'>
+            <Panel
+              header={
+                <H2HHeader
+                  home={data.homeCompetitor}
+                  away={data.awayCompetitor}
+                  tally={h2hTally}
+                  total={insights.headToHead.length}
+                />
+              }
+            >
+              <div className='text-secondary hidden grid-cols-[9rem_1fr_auto_1fr_8.5rem] items-center gap-x-5 py-2 text-xs sm:grid'>
+                <span>{t('Winner')}</span>
+                <span className='col-span-3 text-center'>{t('Match')}</span>
+                <span className='text-right'>{t('Date')}</span>
+              </div>
+              {insights.headToHead.map((m, i) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: past matches have no id
+                <H2HRow key={i} match={m} />
+              ))}
+            </Panel>
           </Tabs.Content>
         </Tabs.Root>
       )}
@@ -198,6 +224,139 @@ function prettify(key: string) {
   return s.charAt(0).toUpperCase() + s.slice(1)
 }
 
+/* -------------------------------------------------------------------------- */
+/*  Shared design language                                                    */
+/*                                                                            */
+/*  Every tab is a Panel whose header names the two teams. The fixture's      */
+/*  home team is lime and its away team is purple, in all three tabs. Result  */
+/*  chips and score boxes are the same components wherever they appear.       */
+/* -------------------------------------------------------------------------- */
+
+type Side = 'home' | 'away'
+
+const TEAM = {
+  home: {
+    dot: 'bg-primary',
+    text: 'text-primary',
+    bar: 'bg-primary',
+    barDim: 'bg-primary/30',
+    pill: 'bg-primary/10 text-primary',
+  },
+  away: {
+    dot: 'bg-purple-accent',
+    text: 'text-purple-accent',
+    bar: 'bg-purple-accent',
+    barDim: 'bg-purple-accent/30',
+    pill: 'bg-purple-accent/15 text-purple-accent',
+  },
+  draw: {
+    dot: 'bg-white/40',
+    text: 'text-white',
+    bar: 'bg-white/30',
+    barDim: 'bg-white/15',
+    pill: 'bg-white/10 text-white/70',
+  },
+} as const
+
+const RESULT_STYLE: Record<string, string> = {
+  W: 'bg-primary text-black',
+  D: 'bg-white/20 text-white',
+  L: 'bg-red-500 text-white',
+}
+
+function Panel(props: { header?: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <div>
+      {props.header && <div className='border-b border-white/5 pb-3'>{props.header}</div>}
+      <div className='divide-y divide-white/4'>{props.children}</div>
+    </div>
+  )
+}
+
+function TeamLabel(props: {
+  name: string
+  side: Side
+  reverse?: boolean
+  position?: number | null
+  value?: number
+}) {
+  return (
+    <div
+      className={cn(
+        'flex min-w-0 items-center gap-2.5',
+        props.reverse && 'flex-row-reverse text-right'
+      )}
+    >
+      <span className={cn('size-2.5 shrink-0 rounded-full', TEAM[props.side].dot)} />
+      <span className='truncate text-sm font-semibold text-white'>{props.name}</span>
+      {props.position != null && (
+        <span className='bg-dark-300 rounded-full px-2 py-0.5 font-mono text-[0.65rem]'>
+          #{props.position}
+        </span>
+      )}
+      {props.value != null && (
+        <span className={cn('font-mono text-2xl leading-none font-bold', TEAM[props.side].text)}>
+          {props.value}
+        </span>
+      )}
+    </div>
+  )
+}
+
+function Chip(props: { className?: string; children: React.ReactNode }) {
+  return (
+    <span
+      className={cn(
+        'inline-flex h-6 min-w-6 items-center justify-center rounded-md px-1.5 text-[0.65rem] font-bold',
+        props.className
+      )}
+    >
+      {props.children}
+    </span>
+  )
+}
+
+function ScoreBox(props: { home?: string | null; away?: string | null }) {
+  return (
+    <span className='flex min-w-12 shrink-0 items-center justify-center gap-1.5 font-mono text-sm font-bold text-white tabular-nums'>
+      <span>{props.home ?? '-'}</span>
+      <span className='text-white/30'>:</span>
+      <span>{props.away ?? '-'}</span>
+    </span>
+  )
+}
+
+/** Three grid cells: home name, score, away name. The parent supplies the grid. */
+function MatchCells(props: {
+  homeName: string
+  awayName: string
+  homeScore?: string | null
+  awayScore?: string | null
+}) {
+  return (
+    <>
+      <span className='min-w-0 truncate text-right text-sm text-white/90'>{props.homeName}</span>
+      <ScoreBox home={props.homeScore} away={props.awayScore} />
+      <span className='min-w-0 truncate text-left text-sm text-white/90'>{props.awayName}</span>
+    </>
+  )
+}
+
+// shared by the Form rows and the H2H rows (a fragment can only be declared once)
+const pastMatchFragment = graphql`
+  fragment StatisticsWidgetPastMatch on PastMatch {
+    homeName
+    awayName
+    homeScore
+    awayScore
+    competition
+    startTime
+    outcome
+  }
+`
+
+/* -------------------------------- Stats ----------------------------------- */
+
 function StatRow(props: { stat: { home: string; away: string }; label: string }) {
   const h = num(props.stat.home)
   const a = num(props.stat.away)
@@ -206,29 +365,32 @@ function StatRow(props: { stat: { home: string; away: string }; label: string })
   const awayPct = total === 0 ? 0 : 100 - homePct
 
   return (
-    <div className='flex flex-col gap-1.5'>
+    <div className='flex flex-col gap-2 py-3'>
       <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-xs'>
-        <span className={cn('font-mono font-semibold', h > a ? 'text-white' : 'text-secondary')}>
-          {props.stat.home}
-        </span>
-        <span className='text-secondary text-center text-[0.65rem] tracking-wide uppercase'>
-          {props.label}
-        </span>
         <span
           className={cn(
-            'text-right font-mono font-semibold',
-            a > h ? 'text-white' : 'text-secondary'
+            'font-mono text-sm font-semibold',
+            h >= a ? TEAM.home.text : 'text-white/60'
+          )}
+        >
+          {props.stat.home}
+        </span>
+        <span className='text-secondary text-center'>{props.label}</span>
+        <span
+          className={cn(
+            'text-right font-mono text-sm font-semibold',
+            a >= h ? TEAM.away.text : 'text-white/60'
           )}
         >
           {props.stat.away}
         </span>
       </div>
-      <div className='flex h-1 gap-1'>
+      <div className='flex h-1.5 gap-1'>
         <div className='flex flex-1 justify-end overflow-hidden rounded-full bg-white/5'>
           <div
             className={cn(
               'h-full rounded-full transition-all',
-              h >= a ? 'bg-primary' : 'bg-white/30'
+              h >= a ? TEAM.home.bar : TEAM.home.barDim
             )}
             style={{ width: `${homePct}%` }}
           />
@@ -237,7 +399,7 @@ function StatRow(props: { stat: { home: string; away: string }; label: string })
           <div
             className={cn(
               'h-full rounded-full transition-all',
-              a >= h ? 'bg-primary' : 'bg-white/30'
+              a >= h ? TEAM.away.bar : TEAM.away.barDim
             )}
             style={{ width: `${awayPct}%` }}
           />
@@ -247,74 +409,138 @@ function StatRow(props: { stat: { home: string; away: string }; label: string })
   )
 }
 
+/* --------------------------------- Form ----------------------------------- */
+
 function FormColumn(props: {
   name: string
+  side: Side
   position: number | null | undefined
   matches: ReadonlyArray<StatisticsWidgetPastMatch$key>
 }) {
   return (
-    <div className='flex min-w-0 flex-col gap-3'>
-      <div className='flex items-center gap-2'>
-        <p className='truncate text-sm font-semibold text-white'>{props.name}</p>
-        {props.position != null && (
-          <span className='bg-dark-300 rounded-full px-2 py-0.5 font-mono text-[0.65rem]'>
-            #{props.position}
-          </span>
-        )}
-      </div>
+    <Panel header={<TeamLabel name={props.name} side={props.side} position={props.position} />}>
       {props.matches.map((m, i) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: past matches have no id
         <PastMatchRow key={i} match={m} />
       ))}
+    </Panel>
+  )
+}
+
+function PastMatchRow(props: { match: StatisticsWidgetPastMatch$key }) {
+  const m = useFragment(pastMatchFragment, props.match)
+
+  return (
+    <div className='grid grid-cols-[auto_1fr_auto_1fr] items-center gap-x-3 gap-y-1 py-3'>
+      <Chip className={cn('row-span-2', (m.outcome && RESULT_STYLE[m.outcome]) || 'bg-white/10')}>
+        {m.outcome ?? ''}
+      </Chip>
+      <MatchCells
+        homeName={m.homeName}
+        awayName={m.awayName}
+        homeScore={m.homeScore}
+        awayScore={m.awayScore}
+      />
+      <span
+        className='text-secondary col-span-3 col-start-2 truncate text-center text-[0.7rem]'
+        suppressHydrationWarning
+      >
+        {m.competition ? `${m.competition} · ` : ''}
+        {format(m.startTime, 'dd MMM yyyy')}
+      </span>
     </div>
   )
 }
 
-const OUTCOME_STYLE: Record<string, string> = {
-  W: 'bg-primary text-black',
-  D: 'bg-white/30 text-white',
-  L: 'bg-red-500 text-white',
-}
+/* ---------------------------- Head to head -------------------------------- */
 
-function PastMatchRow(props: { match: StatisticsWidgetPastMatch$key }) {
-  const m = useFragment(
-    graphql`
-      fragment StatisticsWidgetPastMatch on PastMatch {
-        homeName
-        awayName
-        homeScore
-        awayScore
-        competition
-        startTime
-        outcome
-      }
-    `,
-    props.match
-  )
+function H2HHeader(props: {
+  home: string
+  away: string
+  tally: { home: number; draw: number; away: number }
+  total: number
+}) {
+  const t = useT()
+  const { tally } = props
 
   return (
-    <div className='flex items-center gap-2 text-xs'>
-      <span
-        className={cn(
-          'flex size-5 shrink-0 items-center justify-center rounded-full text-[0.6rem] font-bold',
-          (m.outcome && OUTCOME_STYLE[m.outcome]) || 'bg-white/10'
-        )}
-      >
-        {m.outcome ?? ''}
-      </span>
-      <div className='min-w-0 flex-1'>
-        <p className='truncate text-white/90'>
-          {m.homeName}{' '}
-          <span className='text-foreground px-2 font-mono font-semibold'>
-            {m.homeScore ?? '-'} - {m.awayScore ?? '-'}
-          </span>{' '}
-          {m.awayName}
-        </p>
-        <p className='text-secondary truncate text-[0.65rem]' suppressHydrationWarning>
-          {m.competition ? `${m.competition} · ` : ''}
-          {format(m.startTime, 'dd MMM yyyy')}
-        </p>
+    <div className='flex flex-col gap-3'>
+      <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-4'>
+        <TeamLabel name={props.home} side='home' value={tally.home} />
+        <div className='text-secondary text-center text-xs'>
+          {tally.draw > 0
+            ? t('{n} draws', { n: tally.draw })
+            : t('Last {n} meetings', { n: props.total })}
+        </div>
+        <TeamLabel name={props.away} side='away' value={tally.away} reverse />
       </div>
+
+      <div
+        className='flex h-1.5 gap-1'
+        role='img'
+        aria-label={`${tally.home} - ${tally.draw} - ${tally.away}`}
+      >
+        {tally.home > 0 && (
+          <div className={cn('rounded-full', TEAM.home.bar)} style={{ flexGrow: tally.home }} />
+        )}
+        {tally.draw > 0 && (
+          <div className={cn('rounded-full', TEAM.draw.bar)} style={{ flexGrow: tally.draw }} />
+        )}
+        {tally.away > 0 && (
+          <div className={cn('rounded-full', TEAM.away.bar)} style={{ flexGrow: tally.away }} />
+        )}
+      </div>
+    </div>
+  )
+}
+
+function H2HRow(props: { match: StatisticsWidgetPastMatch$key }) {
+  const m = useFragment(pastMatchFragment, props.match)
+  const t = useT()
+
+  const homeScore = m.homeScore == null ? null : Number(m.homeScore)
+  const awayScore = m.awayScore == null ? null : Number(m.awayScore)
+  const played =
+    homeScore !== null && awayScore !== null && !Number.isNaN(homeScore) && !Number.isNaN(awayScore)
+
+  // winner's name comes from the scores; colour from the outcome, which is
+  // relative to the upcoming fixture's home team
+  const winnerName = !played
+    ? null
+    : homeScore > awayScore
+      ? m.homeName
+      : awayScore > homeScore
+        ? m.awayName
+        : null
+  const tone = m.outcome === 'W' ? TEAM.home : m.outcome === 'L' ? TEAM.away : TEAM.draw
+
+  return (
+    <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-x-3 gap-y-2 py-3 sm:grid-cols-[9rem_1fr_auto_1fr_8.5rem] sm:gap-x-5'>
+      {/* mobile: result + date share the top line; desktop: they become grid cells */}
+      <div className='col-span-3 flex items-center justify-between gap-3 sm:contents'>
+        <Chip
+          className={cn('h-7 max-w-full justify-self-start px-3 text-xs font-semibold', tone.pill)}
+        >
+          <span className='truncate'>{winnerName ?? t('Draw')}</span>
+        </Chip>
+
+        <div
+          className='text-secondary flex shrink-0 flex-col items-end text-[0.7rem] leading-snug sm:order-last sm:justify-self-end'
+          suppressHydrationWarning
+        >
+          <span className='text-white/70'>{format(m.startTime, 'dd MMM yyyy')}</span>
+          {m.competition && (
+            <span className='hidden max-w-full truncate sm:block'>{m.competition}</span>
+          )}
+        </div>
+      </div>
+
+      <MatchCells
+        homeName={m.homeName}
+        awayName={m.awayName}
+        homeScore={m.homeScore}
+        awayScore={m.awayScore}
+      />
     </div>
   )
 }

@@ -7,6 +7,10 @@
     "de": "{n} {selection}",
     "tr": "{n} {selection}"
   },
+  "{n} draws": {
+    "de": "",
+    "tr": ""
+  },
   "{n} Games": {
     "de": "{n} Spiele",
     "tr": "{n} Oyun"
@@ -379,6 +383,10 @@
     "de": "",
     "tr": ""
   },
+  "Date": {
+    "de": "",
+    "tr": ""
+  },
   "Deposit": {
     "de": "Einzahlung",
     "tr": "Para yatırma"
@@ -398,6 +406,10 @@
   "Draw No Bet": {
     "de": "Draw No Bet",
     "tr": "Beraberlikte İade"
+  },
+  "Draws": {
+    "de": "",
+    "tr": ""
   },
   "Email": {
     "de": "E-Mail",
@@ -583,6 +595,10 @@
     "de": "N",
     "tr": "M"
   },
+  "Last {n} meetings": {
+    "de": "",
+    "tr": ""
+  },
   "Licensed": {
     "de": "Lizenziert",
     "tr": "Lisanslı"
@@ -622,6 +638,10 @@
   "Lost": {
     "de": "Verloren",
     "tr": "Kaybetti"
+  },
+  "Match": {
+    "de": "",
+    "tr": ""
   },
   "Match Winner": {
     "de": "Spielsieger",
@@ -875,6 +895,10 @@
     "de": "Erneut versuchen",
     "tr": "Tekrar dene"
   },
+  "Round": {
+    "de": "",
+    "tr": ""
+  },
   "Saves": {
     "de": "",
     "tr": ""
@@ -1114,6 +1138,10 @@
   "Welcome Offer": {
     "de": "Willkommensangebot",
     "tr": "Hoş Geldin Teklifi"
+  },
+  "Winner": {
+    "de": "",
+    "tr": ""
   },
   "Won": {
     "de": "Gewonnen",
