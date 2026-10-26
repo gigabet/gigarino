@@ -105,6 +105,9 @@ function MyTicketsContent() {
   }, [inView, hasNext, isLoadingNext, loadNext])
 
   const t = useT()
+
+  if (!data.myTickets) return <EmptyTickets />
+
   const tickets = data.myTickets.edges.map(e => e.node)
   const open = tickets.filter(t => OPEN_STATUSES.has(t.status))
   const settled = tickets.filter(t => !OPEN_STATUSES.has(t.status))

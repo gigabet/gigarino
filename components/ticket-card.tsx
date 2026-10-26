@@ -381,11 +381,11 @@ function CashoutQuote(props: {
   const [error, setError] = useState<string | null>(null)
   const t = useT()
 
-  if (!cashoutQuote.available) {
+  if (!cashoutQuote?.available) {
     return (
       <div className='flex items-start gap-2 text-xs text-red-400'>
         <AlertTriangleIcon className='mt-0.5 size-3.5 shrink-0' />
-        <p>{cashoutQuote.message || t('Cash out is not available for this ticket right now.')}</p>
+        <p>{cashoutQuote?.message || t('Cash out is not available for this ticket right now.')}</p>
       </div>
     )
   }
