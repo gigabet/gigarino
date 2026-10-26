@@ -26,7 +26,6 @@ const BelowNavbar = forwardRef<HTMLDivElement, TopItemListProps>(function BelowN
   )
 })
 
-/** Padding, not margin or gap: Virtuoso only measures an item's own box. */
 function Row(props: { children: React.ReactNode }) {
   return <div className='sm:pb-3'>{props.children}</div>
 }
@@ -127,6 +126,7 @@ export default function LiveEventList(props: {
           components={{ TopItemList: BelowNavbar }}
           groupContent={() => <LiveMarketsHeader />} //stuck={stuck} />}
           itemContent={chronoItem}
+          defaultItemHeight={128}
         />
       </div>
     )
@@ -140,6 +140,7 @@ export default function LiveEventList(props: {
       increaseViewportBy={{ top: 800, bottom: 800 }}
       endReached={loadMore}
       itemContent={groupedItem}
+      defaultItemHeight={128}
     />
   )
 }
