@@ -1,12 +1,9 @@
 'use client'
 
-import { BanIcon, TriangleAlert, WifiOff } from 'lucide-react'
+import { BanIcon, TriangleAlert } from 'lucide-react'
 import Link from 'next/link'
-import { useEffect, useRef } from 'react'
-import {
-  MdSignalWifiStatusbarConnectedNoInternet,
-  MdSignalWifiStatusbarConnectedNoInternet1,
-} from 'react-icons/md'
+import { useEffect } from 'react'
+import { MdSignalWifiStatusbarConnectedNoInternet1 } from 'react-icons/md'
 import { graphql, useFragment } from 'react-relay'
 import { getPeriod, useNow } from '@/app/live/helpers'
 import { FINISHED } from '@/app/live/live-state'
@@ -70,6 +67,7 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
         <Link
           href={`/live/event/${event.id}`}
           className='flex w-34 min-w-0 shrink-0 justify-between text-xs sm:w-40 sm:gap-2 sm:text-sm lg:order-3 lg:ml-1 lg:w-60 lg:flex-none'
+          prefetch={false}
         >
           <LiveTeams event={event} />
           <LiveScore event={event} />
@@ -93,6 +91,7 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
           <Link
             href={`/live/event/${event.id}`}
             className={buttonVariants({ variant: 'ghost', size: 'sm' })}
+            prefetch={false}
           >
             +{event.oddCount}
           </Link>
