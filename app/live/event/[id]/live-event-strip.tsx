@@ -139,7 +139,7 @@ function LiveStripOdd(props: { outcome: LiveStripOdd$key; suspended: boolean }) 
       disabled={props.suspended || outcome.status !== 'OPEN'}
       suppressHydrationWarning
       className={cn(
-        'group/odd hover:bg-primary/5 hover:border-primary/20 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-1 flex-col items-center gap-0.5 rounded-lg border border-white/5 bg-black/20 py-1.5 transition disabled:pointer-events-none disabled:opacity-40',
+        'group/odd hover:bg-primary/5 hover:border-primary/20 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-1 flex-col items-center gap-0.5 rounded-lg border border-white/15 bg-black/20 py-1.5 transition disabled:pointer-events-none disabled:opacity-40',
         upDown === 'up' && 'animate-odds-flash-up',
         upDown === 'down' && 'animate-odds-flash-down'
       )}

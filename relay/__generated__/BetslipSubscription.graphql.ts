@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8565e4f6a5265ac5918edf3dae793f43>>
+ * @generated SignedSource<<b2115d38736ebe05b404964225184070>>
  * @lightSyntaxTransform
  */
 
@@ -199,6 +199,13 @@ return {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
+                "name": "name",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
                 "name": "key",
                 "storageKey": null
               },
@@ -218,12 +225,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6f69d7794d592eed90eb2674018daba2",
+    "cacheID": "a63640a8793c7c5910a9fc1612386692",
     "id": null,
     "metadata": {},
     "name": "BetslipSubscription",
     "operationKind": "subscription",
-    "text": "subscription BetslipSubscription(\n  $input: BetslipQuoteInput!\n) {\n  betslipUpdated(input: $input) {\n    ...Betslip\n    ...BetslipMobileBar\n  }\n}\n\nfragment Betslip on BetslipQuote {\n  stake\n  effectiveOdds\n  potentialPayout\n  placeable\n  betType\n  blockers\n  items {\n    outcomeId\n    availability\n    price\n    expectedPrice\n    priceChanged\n    ...Tip\n    id\n  }\n}\n\nfragment BetslipMobileBar on BetslipQuote {\n  effectiveOdds\n  items {\n    id\n  }\n}\n\nfragment Tip on BetslipQuoteItem {\n  outcomeId\n  eventName\n  marketName\n  key\n  price\n  expectedPrice\n  priceChanged\n  availability\n}\n"
+    "text": "subscription BetslipSubscription(\n  $input: BetslipQuoteInput!\n) {\n  betslipUpdated(input: $input) {\n    ...Betslip\n    ...BetslipMobileBar\n  }\n}\n\nfragment Betslip on BetslipQuote {\n  stake\n  effectiveOdds\n  potentialPayout\n  placeable\n  betType\n  blockers\n  items {\n    outcomeId\n    availability\n    price\n    expectedPrice\n    priceChanged\n    ...Tip\n    id\n  }\n}\n\nfragment BetslipMobileBar on BetslipQuote {\n  effectiveOdds\n  items {\n    id\n  }\n}\n\nfragment Tip on BetslipQuoteItem {\n  outcomeId\n  eventName\n  marketName\n  name\n  key\n  price\n  expectedPrice\n  priceChanged\n  availability\n}\n"
   }
 };
 })();

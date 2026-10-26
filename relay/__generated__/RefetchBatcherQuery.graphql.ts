@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3d3a48ddf3c5af2e59223b066d70b05d>>
+ * @generated SignedSource<<e296a0a65bd07e12d587d9960ba3e1bc>>
  * @lightSyntaxTransform
  */
 
@@ -55,11 +55,18 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "period",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "key",
   "storageKey": null
 },
-v5 = [
-  (v4/*:: as any*/),
+v6 = [
+  (v5/*:: as any*/),
   (v2/*:: as any*/)
 ];
 return {
@@ -152,13 +159,7 @@ return {
             "storageKey": null
           },
           (v3/*:: as any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "period",
-            "storageKey": null
-          },
+          (v4/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -224,6 +225,14 @@ return {
                 "name": "kind",
                 "storageKey": null
               },
+              (v4/*:: as any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "line",
+                "storageKey": null
+              },
               {
                 "alias": null,
                 "args": null,
@@ -232,6 +241,13 @@ return {
                 "name": "outcomes",
                 "plural": true,
                 "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "price",
+                    "storageKey": null
+                  },
                   (v2/*:: as any*/),
                   {
                     "alias": null,
@@ -240,14 +256,7 @@ return {
                     "name": "index",
                     "storageKey": null
                   },
-                  (v4/*:: as any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "price",
-                    "storageKey": null
-                  },
+                  (v5/*:: as any*/),
                   (v3/*:: as any*/)
                 ],
                 "storageKey": null
@@ -283,7 +292,7 @@ return {
             "kind": "LinkedField",
             "name": "sport",
             "plural": false,
-            "selections": (v5/*:: as any*/),
+            "selections": (v6/*:: as any*/),
             "storageKey": null
           },
           {
@@ -293,7 +302,7 @@ return {
             "kind": "LinkedField",
             "name": "tournament",
             "plural": false,
-            "selections": (v5/*:: as any*/),
+            "selections": (v6/*:: as any*/),
             "storageKey": null
           }
         ],
@@ -302,12 +311,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "1203b370827f7667993235dea8b6288b",
+    "cacheID": "845b77c262326a7dc16d7b7fcb41d5dc",
     "id": null,
     "metadata": {},
     "name": "RefetchBatcherQuery",
     "operationKind": "query",
-    "text": "query RefetchBatcherQuery(\n  $ids: [ID!]!\n) {\n  eventsByIds(ids: $ids) {\n    ...LiveEvent\n    ...LiveOrder\n    id\n  }\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment ListViewMarket on Market {\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n  }\n}\n\nfragment ListViewMarkets on Event {\n  markets {\n    id\n    kind\n    ...ListViewMarket\n  }\n}\n\nfragment LiveEvent on Event {\n  id\n  homeCompetitor\n  awayCompetitor\n  homeScore\n  awayScore\n  tradingStatus\n  oddCount\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...ListViewMarkets\n  ...FavouriteButton\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  status\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  homeScore\n  awayScore\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n"
+    "text": "query RefetchBatcherQuery(\n  $ids: [ID!]!\n) {\n  eventsByIds(ids: $ids) {\n    ...LiveEvent\n    ...LiveOrder\n    id\n  }\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment ListViewMarket on Market {\n  kind\n  line\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n  }\n}\n\nfragment ListViewMarkets on Event {\n  markets {\n    id\n    kind\n    period\n    line\n    outcomes {\n      price\n      id\n    }\n    ...ListViewMarket\n  }\n}\n\nfragment LiveEvent on Event {\n  id\n  homeCompetitor\n  awayCompetitor\n  homeScore\n  awayScore\n  tradingStatus\n  oddCount\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...ListViewMarkets\n  ...FavouriteButton\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  status\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  homeScore\n  awayScore\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n"
   }
 };
 })();

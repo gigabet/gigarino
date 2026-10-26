@@ -1,6 +1,9 @@
 'use client'
 
 import { entries, groupBy, sortBy } from 'lodash'
+import { Accordion } from 'radix-ui'
+import { useState } from 'react'
+import { FaCaretDown } from 'react-icons/fa'
 import { graphql, useFragment } from 'react-relay'
 import MarketCard from '@/components/market-card'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -37,13 +40,15 @@ const GROUP_LABEL: Record<MarketGroup, string> = {
   '%future added value': '',
 }
 
+const DEFAULT_OPEN_COUNT = 3
+
 export default function MarketGroups(props: { event: MarketGroups$key }) {
   const data = useFragment(
     graphql`
       fragment MarketGroups on Event {
         markets {
           id
-          groups
+          groups @required(action: NONE)
           kind
           index
           ...MarketCard
@@ -53,9 +58,12 @@ export default function MarketGroups(props: { event: MarketGroups$key }) {
     props.event
   )
 
-  const byGroup = sortBy(data.markets, e => e.index).reduce(
+  // remembered per tab so switching tabs doesn't undo what the user collapsed
+  const [openByGroup, setOpenByGroup] = useState<Partial<Record<MarketGroup, string[]>>>({})
+
+  const byGroup = sortBy(data.markets, e => e?.index).reduce(
     (acc, curr) => {
-      curr.groups.forEach(group => {
+      curr?.groups.forEach(group => {
         acc[group] = [...(acc[group] || []), curr]
       })
       return acc
@@ -73,39 +81,55 @@ export default function MarketGroups(props: { event: MarketGroups$key }) {
   }
 
   return (
-    <Tabs.Root defaultValue={populatedGroups[0]} className='w-full gap-4'>
+    <Tabs.Root defaultValue={populatedGroups[0]} className='w-full gap-2'>
       <Tabs.List className='h-auto w-fit max-w-full scrollbar-none justify-start gap-2 overflow-x-auto bg-transparent p-0'>
         {populatedGroups.map(group => (
           <Tabs.Trigger
             key={group}
             value={group}
-            className='bg-dark-200 data-[state=active]:bg-primary group shrink-0 rounded-full px-4 py-2 text-xs font-medium whitespace-nowrap text-gray-300 shadow-none data-[state=active]:text-black'
+            className='data-[state=active]:bg-primary group shrink-0 rounded-full bg-white/8 px-4 py-2 text-xs font-medium whitespace-nowrap text-white shadow-none data-[state=active]:text-black'
           >
             {GROUP_LABEL[group]}
-            <span className='text-secondary ml-1.5 group-data-[state=active]:text-black'>
-              {byGroup[group].length}
-            </span>
+            <span className='ml-1.5 opacity-60'>{byGroup[group].length}</span>
           </Tabs.Trigger>
         ))}
       </Tabs.List>
 
-      {populatedGroups.map(group => (
-        <Tabs.Content key={group} value={group} className='flex flex-col gap-3'>
-          {entries(groupBy(byGroup[group], m => m.kind)).map(([kind, markets]) => (
-            <div
-              className='flex flex-col gap-2 rounded-xl border border-white/5 bg-black/20 p-4'
-              key={kind}
+      {populatedGroups.map(group => {
+        const kinds = entries(groupBy(byGroup[group], m => m?.kind))
+        const open = openByGroup[group] ?? kinds.slice(0, DEFAULT_OPEN_COUNT).map(([kind]) => kind)
+
+        return (
+          <Tabs.Content key={group} value={group}>
+            <Accordion.Root
+              type='multiple'
+              value={open}
+              onValueChange={value => setOpenByGroup(prev => ({ ...prev, [group]: value }))}
             >
-              <p className='mb-4 text-sm font-medium tracking-wide uppercase'>
-                {kind.replaceAll('_', ' ')}
-              </p>
-              {markets.map(market => (
-                <MarketCard key={market.id} market={market} />
+              {kinds.map(([kind, markets]) => (
+                <Accordion.Item key={kind} value={kind}>
+                  <Accordion.Header>
+                    <Accordion.Trigger className='group flex w-full items-center gap-2 py-4 text-left text-sm font-semibold tracking-wide text-white uppercase'>
+                      <span className='min-w-0 truncate'>{kind.replaceAll('_', ' ')}</span>
+                      <FaCaretDown className='size-4 shrink-0 -rotate-90 transition-transform duration-200 group-data-[state=open]:rotate-0' />
+                    </Accordion.Trigger>
+                  </Accordion.Header>
+                  {/* -m/p pair: the clip box grows 12px each way so the selected glow isn't cut off; layout is unchanged */}
+                  <Accordion.Content className='data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down -mx-3 -mt-3 overflow-hidden px-3 pt-3'>
+                    <div className='flex flex-col gap-4 pb-5'>
+                      {markets
+                        .filter(m => !!m)
+                        .map(market => (
+                          <MarketCard key={market.id} market={market} header={kind} />
+                        ))}
+                    </div>
+                  </Accordion.Content>
+                </Accordion.Item>
               ))}
-            </div>
-          ))}
-        </Tabs.Content>
-      ))}
+            </Accordion.Root>
+          </Tabs.Content>
+        )
+      })}
     </Tabs.Root>
   )
 }

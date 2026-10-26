@@ -152,7 +152,7 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key })
               <Tabs.Trigger
                 key={tab}
                 value={tab}
-                className='bg-dark-200 data-[state=active]:bg-primary shrink-0 rounded-full px-4 py-2 text-xs font-medium whitespace-nowrap text-gray-300 shadow-none data-[state=active]:text-black'
+                className='data-[state=active]:bg-primary shrink-0 rounded-full bg-white/8 px-4 py-2 text-xs font-medium whitespace-nowrap text-gray-300 shadow-none data-[state=active]:text-black'
               >
                 {TAB_LABEL[tab]}
               </Tabs.Trigger>

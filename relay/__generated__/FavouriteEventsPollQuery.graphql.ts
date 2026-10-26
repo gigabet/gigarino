@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4f3a1712cc89b02c8efe2a651eb8d3cd>>
+ * @generated SignedSource<<84b1bd4404d4c75b621c1e00c5f49141>>
  * @lightSyntaxTransform
  */
 
@@ -165,11 +165,32 @@ return {
                           {
                             "alias": null,
                             "args": null,
+                            "kind": "ScalarField",
+                            "name": "period",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "line",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
                             "concreteType": "Outcome",
                             "kind": "LinkedField",
                             "name": "outcomes",
                             "plural": true,
                             "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "price",
+                                "storageKey": null
+                              },
                               (v1/*:: as any*/),
                               {
                                 "alias": null,
@@ -183,13 +204,6 @@ return {
                                 "args": null,
                                 "kind": "ScalarField",
                                 "name": "key",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "price",
                                 "storageKey": null
                               },
                               {
@@ -269,12 +283,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "2bf03885f49e0a22a7738e8790aa961a",
+    "cacheID": "65be881dd7f81d973bdfed468c18ccf0",
     "id": null,
     "metadata": {},
     "name": "FavouriteEventsPollQuery",
     "operationKind": "query",
-    "text": "query FavouriteEventsPollQuery {\n  ...FavouriteEvents\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment FavouriteEvents on Query {\n  events(first: 50, favourites: true) {\n    edges {\n      node {\n        id\n        isLive\n        ...PrematchEvent\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ListViewMarket on Market {\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n  }\n}\n\nfragment ListViewMarkets on Event {\n  markets {\n    id\n    kind\n    ...ListViewMarket\n  }\n}\n\nfragment PrematchEvent on Event {\n  id\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  oddCount\n  ...FavouriteButton\n  ...ListViewMarkets @defer(label: \"PrematchEvent$defer$ListViewMarkets\")\n}\n"
+    "text": "query FavouriteEventsPollQuery {\n  ...FavouriteEvents\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment FavouriteEvents on Query {\n  events(first: 50, favourites: true) {\n    edges {\n      node {\n        id\n        isLive\n        ...PrematchEvent\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ListViewMarket on Market {\n  kind\n  line\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n  }\n}\n\nfragment ListViewMarkets on Event {\n  markets {\n    id\n    kind\n    period\n    line\n    outcomes {\n      price\n      id\n    }\n    ...ListViewMarket\n  }\n}\n\nfragment PrematchEvent on Event {\n  id\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  oddCount\n  ...FavouriteButton\n  ...ListViewMarkets @defer(label: \"PrematchEvent$defer$ListViewMarkets\")\n}\n"
   }
 };
 })();

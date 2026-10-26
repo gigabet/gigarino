@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5d37b240eaee37fadd6cb8f5eb4f38a1>>
+ * @generated SignedSource<<77e83ffa3996494b75ccf4d1c0e7051a>>
  * @lightSyntaxTransform
  */
 
@@ -11,6 +11,8 @@ import { ReaderFragment } from 'relay-runtime';
 export type OutcomeStatus = "OPEN" | "REMOVED" | "SUSPENDED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type ListViewMarket$data = {
+  readonly kind: string;
+  readonly line: any | null | undefined;
   readonly outcomes: ReadonlyArray<{
     readonly id: string;
     readonly index: number;
@@ -31,6 +33,20 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "ListViewMarket",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "kind",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "line",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -82,6 +98,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "a348d1f55f15495eb64f898df64c2732";
+(node as any).hash = "25bb753dd889b8bbd124575fc680348a";
 
 export default node;

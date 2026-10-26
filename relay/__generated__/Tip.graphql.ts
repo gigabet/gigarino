@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<885a8cf39d2e2306d19f3de6e3dd50a5>>
+ * @generated SignedSource<<8763bbe56c8f627be721ceeff70b659c>>
  * @lightSyntaxTransform
  */
 
@@ -16,6 +16,7 @@ export type Tip$data = {
   readonly expectedPrice: any | null | undefined;
   readonly key: string;
   readonly marketName: string | null | undefined;
+  readonly name: string | null | undefined;
   readonly outcomeId: string;
   readonly price: any | null | undefined;
   readonly priceChanged: boolean;
@@ -51,6 +52,13 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "ScalarField",
       "name": "marketName",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "name",
       "storageKey": null
     },
     {
@@ -93,6 +101,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "98e21a50bacc066f318c7de4c15e5fcf";
+(node as any).hash = "edb343b11ccf60a44d854ea0a9e9a6cc";
 
 export default node;

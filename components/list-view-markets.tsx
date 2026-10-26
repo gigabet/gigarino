@@ -1,7 +1,7 @@
 'use client'
 
 import { atom, useAtom, useAtomValue } from 'jotai'
-import { entries, keys, sortBy } from 'lodash'
+import { entries, keys, minBy, sortBy } from 'lodash'
 import { ChevronsUpIcon, LockKeyhole, PlusIcon, TrendingUpIcon } from 'lucide-react'
 import { motion } from 'motion/react'
 import { Toggle } from 'radix-ui'
@@ -47,6 +47,27 @@ export const selectedMarketsState = atom(
   keys(availableMarkets) as (keyof typeof availableMarkets)[]
 )
 
+type PickableMarket = {
+  kind: string
+  period: string
+  line: unknown
+  outcomes: ReadonlyArray<{ price: unknown }>
+}
+
+/** One market per column: full-time only, and the main line when there are several. */
+function pickMarket<T extends PickableMarket>(markets: ReadonlyArray<T>, kind: string): T | null {
+  const all = markets.filter(m => m.kind === kind)
+  const fullTime = all.filter(m => m.period === 'FULL_TIME' || m.period === 'INCLUDING_OVERTIME')
+  const pool = fullTime.length > 0 ? fullTime : all
+  if (pool.length < 2 || pool.some(m => m.line == null)) return pool[0] ?? null
+
+  const spread = (m: T) => {
+    const prices = m.outcomes.map(o => Number(o.price))
+    return Math.max(...prices) - Math.min(...prices)
+  }
+  return minBy(pool, spread) ?? null
+}
+
 export function ListViewMarkets(props: { event: ListViewMarkets$key }) {
   const data = useFragment(
     graphql`
@@ -54,6 +75,11 @@ export function ListViewMarkets(props: { event: ListViewMarkets$key }) {
         markets {
           id
           kind
+          period
+          line
+          outcomes {
+            price
+          }
           ...ListViewMarket
         }
       }
@@ -65,7 +91,7 @@ export function ListViewMarkets(props: { event: ListViewMarkets$key }) {
 
   if (!data?.markets) return <div className='ml-auto grow' />
 
-  const marketByKind = (kind: string) => data.markets.find(m => m.kind === kind) ?? null
+  const marketByKind = (kind: string) => pickMarket(data.markets, kind)
   const sortedMarkets = selectedMarkets.map(marketByKind)
 
   return (
@@ -139,6 +165,8 @@ function Market(props: { className?: string; market: ListViewMarket$key }) {
   const data = useFragment(
     graphql`
       fragment ListViewMarket on Market {
+        kind
+        line
         outcomes {
           id
           index
@@ -156,7 +184,11 @@ function Market(props: { className?: string; market: ListViewMarket$key }) {
       className={cn('flex h-15 max-w-50 min-w-42 flex-1 grow gap-1 xl:max-w-60', props.className)}
     >
       {sortBy(data.outcomes, e => e.index).map(odd => (
-        <OddToggle key={odd.id} odd={odd} />
+        <OddToggle
+          key={odd.id}
+          odd={odd}
+          line={data.kind === 'over_under' && data.line != null ? String(Number(data.line)) : null}
+        />
       ))}
     </div>
   )
@@ -164,6 +196,7 @@ function Market(props: { className?: string; market: ListViewMarket$key }) {
 
 function OddToggle(props: {
   odd: { id: string; key: string; price: unknown; status: OutcomeStatus }
+  line?: string | null
 }) {
   const hasOdd = useHasOdd()
   const toggleOdd = useToggleOdd()
@@ -173,7 +206,7 @@ function OddToggle(props: {
     <Toggle.Root
       suppressHydrationWarning
       className={cn(
-        'group hover:bg-primary/5 hover:border-primary/20 shadow-primary/60 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-1 flex-col items-center justify-center gap-1 rounded-lg border border-white/5 bg-black/20 transition-all disabled:pointer-events-none disabled:opacity-40',
+        'group hover:bg-primary/5 hover:border-primary/20 shadow-primary/60 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-1 flex-col items-center justify-center gap-1 rounded-lg border border-white/10 bg-black/20 transition-all disabled:pointer-events-none disabled:opacity-40',
         'data-[state=on]:shadow-[0_0_12px]',
         upDown === 'up' && 'animate-odds-flash-up',
         upDown === 'down' && 'animate-odds-flash-down'
@@ -184,6 +217,7 @@ function OddToggle(props: {
     >
       <span className='group-data-[state=on]:text-foreground text-shadow-foreground text-secondary text-xs group-data-[state=on]:text-shadow-[0_0_8px]'>
         <span className='capitalize'>{props.odd.key}</span>
+        {props.line && <span> {props.line}</span>}
       </span>
       <span className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground relative flex flex-col items-center justify-center gap-1 text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'>
         {props.odd.status === 'OPEN' ? (

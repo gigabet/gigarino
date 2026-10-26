@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<192d0c8afc927e23aef4ca40f5b1be2b>>
+ * @generated SignedSource<<bd13fabe10f091a39dec97b6ae8804f6>>
  * @lightSyntaxTransform
  */
 
@@ -8,11 +8,17 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type MarketPeriod = "FIRST_HALF" | "FIRST_PERIOD" | "FIRST_SET" | "FOURTH_PERIOD" | "FULL_TIME" | "INCLUDING_OVERTIME" | "SECOND_HALF" | "SECOND_PERIOD" | "SECOND_SET" | "THIRD_PERIOD" | "THIRD_SET" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type ListViewMarkets$data = {
   readonly markets: ReadonlyArray<{
     readonly id: string;
     readonly kind: string;
+    readonly line: any | null | undefined;
+    readonly outcomes: ReadonlyArray<{
+      readonly price: any;
+    }>;
+    readonly period: MarketPeriod;
     readonly " $fragmentSpreads": FragmentRefs<"ListViewMarket">;
   }>;
   readonly " $fragmentType": "ListViewMarkets";
@@ -51,6 +57,38 @@ const node: ReaderFragment = {
           "storageKey": null
         },
         {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "period",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "line",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "Outcome",
+          "kind": "LinkedField",
+          "name": "outcomes",
+          "plural": true,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "price",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
           "args": null,
           "kind": "FragmentSpread",
           "name": "ListViewMarket"
@@ -63,6 +101,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "3bab0d46874caa713f2022feaebb9f8d";
+(node as any).hash = "eda106edb7dbc8fd8f410e58e72a1bf5";
 
 export default node;

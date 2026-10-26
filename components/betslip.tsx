@@ -834,13 +834,21 @@ function PlaceBetButton(props: {
 function getLabel(
   eventName: string | null | undefined,
   key: string,
+  name: string | null | undefined,
+  marketName: string | null | undefined,
   t: (key: string, params?: Record<string, string | number>) => string
 ) {
   const [home, away] = eventName?.split(' vs ') ?? []
-  return key
+  const byKey = key
     .replace('home', home ?? t('Home'))
     .replace('away', away ?? t('Away'))
     .replace('draw', t('Draw'))
+
+  // home/away/draw resolve to team names; anything else (over, under, yes, no…) uses the outcome name
+  if (byKey !== key) return byKey
+  const base = name || key.charAt(0).toUpperCase() + key.slice(1)
+  const line = marketName?.match(/-?\d+(\.\d+)?$/)?.[0]
+  return line && !base.includes(line) ? `${base} ${line}` : base
 }
 
 function Tip(props: {
@@ -856,6 +864,7 @@ function Tip(props: {
         outcomeId
         eventName
         marketName
+        name
         key
         price
         expectedPrice
@@ -875,7 +884,7 @@ function Tip(props: {
   return (
     <div
       className={cn(
-        'rounded-xl border bg-black/20 px-3 py-2 transition-colors',
+        'mb-2 rounded-xl border bg-black/20 px-3 py-2 transition-colors',
         blocked ? 'border-neutral-500/30 bg-neutral-500/5 opacity-80' : 'border-white/5'
       )}
     >
@@ -887,7 +896,7 @@ function Tip(props: {
               blocked ? 'text-secondary line-through' : 'text-primary'
             )}
           >
-            {getLabel(data.eventName, data.key, t) ?? '—'}
+            {getLabel(data.eventName, data.key, data.name, data.marketName, t) ?? '—'}
           </p>
           <p className='text-secondary truncate text-[0.7rem] leading-tight'>{subline}</p>
         </div>

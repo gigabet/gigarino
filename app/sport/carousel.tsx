@@ -565,7 +565,7 @@ function FeaturedOutcomeToggle(props: {
       disabled={suspended}
       suppressHydrationWarning
       className={cn(
-        'group/odd flex flex-1 flex-col items-center justify-center gap-0.5 rounded-lg border border-white/5 bg-black/20 py-1.5 transition hover:border-sky-400/20 hover:bg-sky-400/5 disabled:pointer-events-none disabled:opacity-40 data-[state=on]:border-sky-400 data-[state=on]:bg-sky-400/10',
+        'group/odd flex flex-1 flex-col items-center justify-center gap-0.5 rounded-lg border border-white/15 bg-black/20 py-1.5 transition hover:border-sky-400/20 hover:bg-sky-400/5 disabled:pointer-events-none disabled:opacity-40 data-[state=on]:border-sky-400 data-[state=on]:bg-sky-400/10',
         upDown === 'up' && 'animate-odds-flash-up',
         upDown === 'down' && 'animate-odds-flash-down'
       )}

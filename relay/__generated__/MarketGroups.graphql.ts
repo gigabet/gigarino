@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f6a77372ecf50263f455aabf2973e3b5>>
+ * @generated SignedSource<<e2308868e0092418c72bbb20d9cc9025>>
  * @lightSyntaxTransform
  */
 
@@ -17,7 +17,7 @@ export type MarketGroups$data = {
     readonly index: number;
     readonly kind: string;
     readonly " $fragmentSpreads": FragmentRefs<"MarketCard">;
-  }>;
+  } | null | undefined>;
   readonly " $fragmentType": "MarketGroups";
 };
 export type MarketGroups$key = {
@@ -47,11 +47,15 @@ const node: ReaderFragment = {
           "storageKey": null
         },
         {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "groups",
-          "storageKey": null
+          "kind": "RequiredField",
+          "field": {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "groups",
+            "storageKey": null
+          },
+          "action": "NONE"
         },
         {
           "alias": null,
@@ -80,6 +84,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "5121b65b02b4cd13bf369cfcf4659458";
+(node as any).hash = "5d59c1cbff785ebdc5acdfcdfb855377";
 
 export default node;
