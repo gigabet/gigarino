@@ -67,10 +67,13 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
       )}
     >
       <div className='relative flex items-center gap-4 lg:contents'>
-        <div className='flex w-34 min-w-0 shrink-0 justify-between text-xs sm:w-40 sm:gap-2 sm:text-sm lg:order-3 lg:ml-1 lg:w-60 lg:flex-none'>
+        <Link
+          href={`/live/event/${event.id}`}
+          className='flex w-34 min-w-0 shrink-0 justify-between text-xs sm:w-40 sm:gap-2 sm:text-sm lg:order-3 lg:ml-1 lg:w-60 lg:flex-none'
+        >
           <LiveTeams event={event} />
           <LiveScore event={event} />
-        </div>
+        </Link>
         <ListViewMarkets event={event} />
       </div>
 
