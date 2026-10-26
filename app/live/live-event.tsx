@@ -2,7 +2,7 @@
 
 import { BanIcon, TriangleAlert, WifiOff } from 'lucide-react'
 import Link from 'next/link'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import {
   MdSignalWifiStatusbarConnectedNoInternet,
   MdSignalWifiStatusbarConnectedNoInternet1,
@@ -241,12 +241,31 @@ export function LiveScore(props: { event: LiveScore$key }) {
   const data = useFragment(
     graphql`
       fragment LiveScore on Event {
+        # id #DEBUG
         homeScore
         awayScore
       }
     `,
     props.event
   )
+
+  // // FIXME
+  // /** DEBUG */
+  // const prevScore = useRef<string | null>(null)
+  // useEffect(() => {
+  //   const score = `${data.homeScore ?? '-'}:${data.awayScore ?? '-'}`
+  //   // skip the first render; only log real changes
+  //   if (prevScore.current !== null && prevScore.current !== score) {
+  //     console.warn('[live-score] rendered', {
+  //       eventId: data.id,
+  //       from: prevScore.current,
+  //       to: score,
+  //       renderedAt: new Date().toISOString(),
+  //     })
+  //   }
+  //   prevScore.current = score
+  // }, [data.id, data.homeScore, data.awayScore])
+  // /** END DEBUG */
 
   return (
     <div className='text-foreground ml-auto grid grid-cols-1 gap-y-2 font-mono font-semibold'>

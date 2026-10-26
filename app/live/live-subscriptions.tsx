@@ -22,13 +22,19 @@ const oddsSubscription = graphql`
   }
 `
 
+// FIXME
 const stateSubscription = graphql`
   subscription LiveStateSubscription($eventIds: [ID!]!) {
     eventStateUpdated(eventIds: $eventIds) {
+      updatedAt #DEBUG
       event {
         id
         status
         tradingStatus
+        homeCompetitor #DEBUG
+        awayCompetitor #DEBUG
+        homeScore #DEBUG
+        awayScore #DEBUG
         ...LiveScore
         ...LiveTime
       }
@@ -42,6 +48,9 @@ function createLiveSubscriptions(environment: Environment) {
   let subscribedKey = ''
   let active: Disposable[] = []
   let timer: ReturnType<typeof setTimeout> | undefined
+
+  // FIXME: last score seen per event, so we only log actual score changes
+  const lastScores = new Map<string, string>()
 
   const onError = (err: Error) => console.error('[live-subscriptions]', err)
 
@@ -65,6 +74,31 @@ function createLiveSubscriptions(environment: Environment) {
             requestSubscription<LiveStateSubscription>(environment, {
               subscription: stateSubscription,
               variables: { eventIds: ids },
+              // FIXME
+              /** DEBUG */
+              onNext: res => {
+                const update = res?.eventStateUpdated
+                if (!update) return
+
+                const { id, homeCompetitor, awayCompetitor, homeScore, awayScore } = update.event
+                const score = `${homeScore ?? '-'}:${awayScore ?? '-'}`
+                const previous = lastScores.get(id)
+                lastScores.set(id, score)
+
+                // first sighting is just a baseline; unchanged score means clock/status noise
+                if (previous === undefined || previous === score) return
+
+                const receivedAt = Date.now()
+                console.warn('[live-score] push received', {
+                  event: `${homeCompetitor} - ${awayCompetitor}`,
+                  from: previous,
+                  to: score,
+                  serverUpdatedAt: update.updatedAt,
+                  receivedAt: new Date(receivedAt).toISOString(),
+                  lagMs: receivedAt - Date.parse(update.updatedAt),
+                })
+              },
+              /** END DEBUG */
               onError,
             }),
           ]

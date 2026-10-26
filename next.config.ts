@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   reactCompiler: true,
   compiler: {
-    removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['error'] } : false,
+    removeConsole: process.env.NODE_ENV === 'production' ? { exclude: ['warn', 'error'] } : false,
     relay: {
       src: '.',
       artifactDirectory: './relay/__generated__',
