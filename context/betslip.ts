@@ -124,7 +124,7 @@ export function betCodeCopy(
   t: (key: string, params?: Record<string, string | number>) => string
 ): string | null {
   const key = COPY[code as BetRejectionCode]
-  return key ? t(key) : null
+  return key ? t(key) : t('Outcome unavailable.')
 }
 
 export type ActiveBoost = {

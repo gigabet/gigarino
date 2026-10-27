@@ -870,6 +870,8 @@ function Tip(props: {
         expectedPrice
         priceChanged
         availability
+        isLive
+        eventId
       }
     `,
     props.item
@@ -888,7 +890,11 @@ function Tip(props: {
         blocked ? 'border-neutral-500/30 bg-neutral-500/5 opacity-80' : 'border-white/5'
       )}
     >
-      <div className='flex items-start gap-2'>
+      <Link
+        prefetch={false}
+        href={`/${data.isLive ? 'live' : 'sport'}/event/${data.eventId}`}
+        className='flex items-start gap-2'
+      >
         <div className='min-w-0 flex-1'>
           <p
             className={cn(
@@ -930,7 +936,7 @@ function Tip(props: {
         >
           <XIcon className='size-3.5' />
         </button>
-      </div>
+      </Link>
 
       {blocked && (
         <p className='mt-1 flex items-center gap-1.5 text-xs text-red-400'>

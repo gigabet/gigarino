@@ -138,6 +138,11 @@ type BetslipQuoteItem implements Node {
   id: ID!
 
   """
+  True while the event is in play (same as Event.isLive): open the live event page; false: the prematch event page.
+  """
+  isLive: Boolean!
+
+  """
   Outcome key (home / over / yes …).
   """
   key: String!
@@ -387,6 +392,11 @@ type Event implements Node {
   sport: Sport!
 
   """
+  Sportradar (Betradar) match id, for the live match tracker embed. Null when no cross-reference is known.
+  """
+  sportradarMatchId: String
+
+  """
   Kick-off (UTC).
   """
   startTime: DateTimeISO!
@@ -432,6 +442,11 @@ type EventStateUpdate {
   The updated Event. Select the live fields (homeScore, awayScore, clock*, status, tradingStatus, period) and the node merges into the cached record by id.
   """
   event: Event!
+
+  """
+  Pipeline timestamps for this update; null for pushes not caused by the feed (e.g. a feed-gate change).
+  """
+  timings: LiveTimings
   updatedAt: DateTimeISO!
 }
 
@@ -529,6 +544,36 @@ enum LiveEventOrder {
   Tournament weight (highest first), each tournament kept together, then kick-off.
   """
   TOURNAMENT
+}
+
+"""
+Where this update was when, for latency tracing. feedReceivedAt and scraperPublishedAt use the scraper PC clock, the backend times the server clock; log your own receive time next to them.
+"""
+type LiveTimings {
+  """
+  This server handed the update to your subscription stream.
+  """
+  backendEmittedAt: DateTimeISO!
+
+  """
+  The backend published the state change.
+  """
+  backendPushedAt: DateTimeISO!
+
+  """
+  The backend took it from Redis.
+  """
+  backendReceivedAt: DateTimeISO!
+
+  """
+  The bet365 frame reached our scraper.
+  """
+  feedReceivedAt: DateTimeISO!
+
+  """
+  The scraper sent it to Redis (null from an older scraper).
+  """
+  scraperPublishedAt: DateTimeISO
 }
 
 """

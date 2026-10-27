@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8763bbe56c8f627be721ceeff70b659c>>
+ * @generated SignedSource<<87f96eb9019033c989cd669390953c70>>
  * @lightSyntaxTransform
  */
 
@@ -12,8 +12,10 @@ export type BetslipItemAvailability = "AVAILABLE" | "CUTOFF_PASSED" | "DUPLICATE
 import { FragmentRefs } from "relay-runtime";
 export type Tip$data = {
   readonly availability: BetslipItemAvailability;
+  readonly eventId: string | null | undefined;
   readonly eventName: string | null | undefined;
   readonly expectedPrice: any | null | undefined;
+  readonly isLive: boolean;
   readonly key: string;
   readonly marketName: string | null | undefined;
   readonly name: string | null | undefined;
@@ -95,12 +97,26 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "availability",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "isLive",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "eventId",
+      "storageKey": null
     }
   ],
   "type": "BetslipQuoteItem",
   "abstractKey": null
 };
 
-(node as any).hash = "edb343b11ccf60a44d854ea0a9e9a6cc";
+(node as any).hash = "a23cfa09360e984f4d5e50df5bf094d5";
 
 export default node;
