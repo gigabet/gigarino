@@ -32,6 +32,12 @@ export function useNow(active = true) {
   return useSyncExternalStore(active ? subscribe : noop, snapshot, snapshot)
 }
 
+/** Re-renders only when `select(now)` changes. */
+export function useNowSelector<T>(select: (now: number) => T, active = true): T {
+  const get = () => select(snapshot())
+  return useSyncExternalStore(active ? subscribe : noop, get, get)
+}
+
 export function getPeriod(period: MatchPeriod | null | undefined) {
   switch (period) {
     case 'BREAK':

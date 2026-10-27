@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useEffect } from 'react'
 import { MdSignalWifiStatusbarConnectedNoInternet1 } from 'react-icons/md'
 import { graphql, useFragment } from 'react-relay'
-import { getPeriod, useNow } from '@/app/live/helpers'
+import { getPeriod, useNow, useNowSelector } from '@/app/live/helpers'
 import { FINISHED } from '@/app/live/live-state'
 import { useLiveRowRegistration } from '@/app/live/live-subscriptions'
 import { useRefetchBatcher, useRefetchRegistration } from '@/app/live/refetch-context'
@@ -53,7 +53,7 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
   useLiveRowRegistration(event.id)
   useRefetchRegistration(event.id)
 
-  const { stale } = useLiveClock(event)
+  const stale = useIsStale(event)
   const suspended = stale || event.tradingStatus !== 'OPEN'
 
   return (
@@ -106,8 +106,8 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
 
 const STALE_AFTER_MS = 2 * 60_000
 
-export function useLiveClock(event: LiveTime$key) {
-  const data = useFragment(
+function useLiveTimeData(event: LiveTime$key) {
+  return useFragment(
     graphql`
       fragment LiveTime on Event {
         id
@@ -123,6 +123,37 @@ export function useLiveClock(event: LiveTime$key) {
     `,
     event
   )
+}
+
+function useRefreshWhenStale(id: string, stale: boolean) {
+  const batcher = useRefetchBatcher()
+  useEffect(() => {
+    if (stale) batcher.refresh(id)
+  }, [stale, batcher, id])
+}
+
+/**
+ * Staleness only. Ticks internally but re-renders the caller solely when the
+ * boolean flips, so rows don't repaint every second.
+ */
+export function useIsStale(event: LiveTime$key) {
+  const data = useLiveTimeData(event)
+  const finished = FINISHED.has(data.status)
+  const seenAt = data.liveSeenAt ? Date.parse(data.liveSeenAt) : null
+  const watching = seenAt !== null && !finished
+
+  const stale = useNowSelector(
+    now => seenAt !== null && !finished && now > seenAt + STALE_AFTER_MS,
+    watching
+  )
+
+  useRefreshWhenStale(data.id, stale)
+  return stale
+}
+
+/** Ticking clock. Use only in leaves that actually display the time. */
+export function useLiveClock(event: LiveTime$key) {
+  const data = useLiveTimeData(event)
 
   const finished = FINISHED.has(data.status)
   const seenAt = data.liveSeenAt ? Date.parse(data.liveSeenAt) : null
@@ -130,7 +161,6 @@ export function useLiveClock(event: LiveTime$key) {
   const now = useNow(running)
 
   // Never extrapolate past the last server confirmation + grace.
-  // The clock stops where trust ran out instead of jumping backwards.
   const horizon = seenAt !== null ? seenAt + STALE_AFTER_MS : now
   const effectiveNow = Math.min(now, horizon)
   const stale = seenAt !== null && !finished && now > horizon
@@ -141,10 +171,7 @@ export function useLiveClock(event: LiveTime$key) {
     seconds = data.clockDirection === 'DOWN' ? Math.max(0, seconds - delta) : seconds + delta
   }
 
-  const batcher = useRefetchBatcher()
-  useEffect(() => {
-    if (stale) batcher.refresh(data.id)
-  }, [stale, batcher, data.id])
+  useRefreshWhenStale(data.id, stale)
 
   return { data, finished, seconds, stale }
 }
