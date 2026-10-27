@@ -27,6 +27,14 @@ const stateSubscription = graphql`
   subscription LiveStateSubscription($eventIds: [ID!]!) {
     eventStateUpdated(eventIds: $eventIds) {
       updatedAt #DEBUG
+      timings {
+        #DEBUG
+        backendEmittedAt
+        backendPushedAt
+        backendReceivedAt
+        feedReceivedAt
+        scraperPublishedAt
+      }
       event {
         id
         status
@@ -96,6 +104,7 @@ function createLiveSubscriptions(environment: Environment) {
                   serverUpdatedAt: update.updatedAt,
                   receivedAt: new Date(receivedAt).toISOString(),
                   lagMs: receivedAt - Date.parse(update.updatedAt),
+                  timings: update.timings,
                 })
               },
               /** END DEBUG */

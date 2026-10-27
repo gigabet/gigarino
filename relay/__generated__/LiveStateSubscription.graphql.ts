@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c2e7a47d291eeaee9703fd664fe88501>>
+ * @generated SignedSource<<93f80cb8b8d1220af948a985689e6304>>
  * @lightSyntaxTransform
  */
 
@@ -26,6 +26,13 @@ export type LiveStateSubscription$data = {
       readonly tradingStatus: TradingStatus;
       readonly " $fragmentSpreads": FragmentRefs<"LiveScore" | "LiveTime">;
     };
+    readonly timings: {
+      readonly backendEmittedAt: string;
+      readonly backendPushedAt: string;
+      readonly backendReceivedAt: string;
+      readonly feedReceivedAt: string;
+      readonly scraperPublishedAt: string | null | undefined;
+    } | null | undefined;
     readonly updatedAt: string;
   };
 };
@@ -59,46 +66,92 @@ v2 = {
 v3 = {
   "alias": null,
   "args": null,
-  "kind": "ScalarField",
-  "name": "id",
+  "concreteType": "LiveTimings",
+  "kind": "LinkedField",
+  "name": "timings",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "backendEmittedAt",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "backendPushedAt",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "backendReceivedAt",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "feedReceivedAt",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "scraperPublishedAt",
+      "storageKey": null
+    }
+  ],
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "status",
+  "name": "id",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "tradingStatus",
+  "name": "status",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "homeCompetitor",
+  "name": "tradingStatus",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "awayCompetitor",
+  "name": "homeCompetitor",
   "storageKey": null
 },
 v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "homeScore",
+  "name": "awayCompetitor",
   "storageKey": null
 },
 v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "homeScore",
+  "storageKey": null
+},
+v10 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -121,6 +174,7 @@ return {
         "plural": false,
         "selections": [
           (v2/*:: as any*/),
+          (v3/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -129,13 +183,13 @@ return {
             "name": "event",
             "plural": false,
             "selections": [
-              (v3/*:: as any*/),
               (v4/*:: as any*/),
               (v5/*:: as any*/),
               (v6/*:: as any*/),
               (v7/*:: as any*/),
               (v8/*:: as any*/),
               (v9/*:: as any*/),
+              (v10/*:: as any*/),
               {
                 "args": null,
                 "kind": "FragmentSpread",
@@ -171,6 +225,7 @@ return {
         "plural": false,
         "selections": [
           (v2/*:: as any*/),
+          (v3/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -179,13 +234,13 @@ return {
             "name": "event",
             "plural": false,
             "selections": [
-              (v3/*:: as any*/),
               (v4/*:: as any*/),
               (v5/*:: as any*/),
               (v6/*:: as any*/),
               (v7/*:: as any*/),
               (v8/*:: as any*/),
               (v9/*:: as any*/),
+              (v10/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -237,16 +292,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b1b2c2bf9d9aa940b21ef5501fbda263",
+    "cacheID": "005a15f3f3b2e60a986802df70d8f15b",
     "id": null,
     "metadata": {},
     "name": "LiveStateSubscription",
     "operationKind": "subscription",
-    "text": "subscription LiveStateSubscription(\n  $eventIds: [ID!]!\n) {\n  eventStateUpdated(eventIds: $eventIds) {\n    updatedAt\n    event {\n      id\n      status\n      tradingStatus\n      homeCompetitor\n      awayCompetitor\n      homeScore\n      awayScore\n      ...LiveScore\n      ...LiveTime\n    }\n  }\n}\n\nfragment LiveScore on Event {\n  homeScore\n  awayScore\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n"
+    "text": "subscription LiveStateSubscription(\n  $eventIds: [ID!]!\n) {\n  eventStateUpdated(eventIds: $eventIds) {\n    updatedAt\n    timings {\n      backendEmittedAt\n      backendPushedAt\n      backendReceivedAt\n      feedReceivedAt\n      scraperPublishedAt\n    }\n    event {\n      id\n      status\n      tradingStatus\n      homeCompetitor\n      awayCompetitor\n      homeScore\n      awayScore\n      ...LiveScore\n      ...LiveTime\n    }\n  }\n}\n\nfragment LiveScore on Event {\n  homeScore\n  awayScore\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n"
   }
 };
 })();
 
-(node as any).hash = "e3236dad61cbadb736f5b967c4cfe57b";
+(node as any).hash = "2562cc7e8560470322e8b482d349fb80";
 
 export default node;
