@@ -241,7 +241,7 @@ function MatchTracker(props: { matchId: string }) {
       <iframe
         ref={ref}
         title='Match tracker'
-        src={`/matchtracker.html#${locale}/${props.matchId}`}
+        src={`/api/matchtracker#${locale}/${props.matchId}`}
         style={{ height }}
         className='block w-full border-0 transition-[height] duration-200'
         loading='lazy'
