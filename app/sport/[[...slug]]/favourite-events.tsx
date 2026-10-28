@@ -12,10 +12,11 @@ import {
   useRelayEnvironment,
 } from 'react-relay'
 import PrematchEvent from '@/app/sport/[[...slug]]/prematch-event'
-import { ListViewMarketDropdowns } from '@/components/list-view-markets'
+import { HEADER_LEAD, ListViewMarketDropdowns } from '@/components/list-view-markets'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { useT, useUser } from '@/context/providers'
 import { getSportTheme } from '@/lib/sport-theme'
+import { cn } from '@/lib/utils'
 import type { FavouriteEvents$key } from '@/relay/__generated__/FavouriteEvents.graphql'
 import FavouriteEventsPollQueryNode from '@/relay/__generated__/FavouriteEventsPollQuery.graphql'
 import type { PrematchQuery } from '@/relay/__generated__/PrematchQuery.graphql'
@@ -87,7 +88,7 @@ function FavouriteEventsList(props: { queryRef: PreloadedQuery<PrematchQuery> })
             background: `linear-gradient(90deg, ${theme.primary}, transparent 65%)`,
           }}
         />
-        <h2 className='flex w-34 shrink-0 items-center gap-2 overflow-hidden sm:w-44 lg:w-90 lg:flex-none'>
+        <h2 className={cn(HEADER_LEAD, 'flex items-center gap-2')}>
           <StarIcon className='mb-0.5 size-4 shrink-0 fill-yellow-400 text-yellow-400' />
           <span className='text-foreground font-display min-w-0 truncate text-lg font-bold'>
             {t('Favourites')}

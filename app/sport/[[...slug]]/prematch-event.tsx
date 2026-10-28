@@ -4,12 +4,12 @@ import Link from 'next/link'
 import { Suspense } from 'react'
 import { fetchQuery, graphql, useFragment, useRelayEnvironment } from 'react-relay'
 import { FavouriteButton } from '@/components/favourite-button'
-import { ListViewMarkets, ListViewMarketsSkeleton } from '@/components/list-view-markets'
+import { ListViewMarkets, ListViewMarketsSkeleton, ROW_LEAD } from '@/components/list-view-markets'
 import { TeamBadge } from '@/components/team-badge'
 import { buttonVariants } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
-import { getRelativeDayLabel } from '@/lib/utils'
+import { cn, getRelativeDayLabel } from '@/lib/utils'
 import type { PrematchEvent$key } from '@/relay/__generated__/PrematchEvent.graphql'
 import PrematchSingleViewQueryNode from '@/relay/__generated__/PrematchSingleViewQuery.graphql'
 
@@ -49,7 +49,10 @@ export default function PrematchEvent(props: { node: PrematchEvent$key }) {
       {/* mobile row 1: teams + odds */}
       <div className='relative flex items-center gap-4 lg:contents'>
         <Link
-          className='flex w-34 min-w-0 shrink-0 flex-col gap-1 text-xs sm:w-40 sm:gap-2 sm:text-sm lg:order-3 lg:ml-1 lg:w-60 lg:flex-none'
+          className={cn(
+            ROW_LEAD,
+            'flex flex-col gap-1 text-xs sm:gap-2 sm:text-sm lg:order-3 lg:ml-1'
+          )}
           href={`/sport/event/${data.id}`}
           onMouseEnter={prefetch}
           onMouseDown={prefetch}

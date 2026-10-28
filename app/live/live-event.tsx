@@ -1,6 +1,5 @@
 'use client'
 
-import { dataTagErrorSymbol } from '@tanstack/react-query'
 import { BanIcon, TriangleAlert } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect } from 'react'
@@ -11,7 +10,7 @@ import { FINISHED } from '@/app/live/live-state'
 import { useLiveRowRegistration } from '@/app/live/live-subscriptions'
 import { useRefetchBatcher, useRefetchRegistration } from '@/app/live/refetch-context'
 import { FavouriteButton } from '@/components/favourite-button'
-import { ListViewMarkets } from '@/components/list-view-markets'
+import { ListViewMarkets, ROW_LEAD } from '@/components/list-view-markets'
 import { TeamBadge } from '@/components/team-badge'
 import { buttonVariants } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -68,7 +67,10 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
       <div className='relative flex items-center gap-4 lg:contents'>
         <Link
           href={`/live/event/${event.id}`}
-          className='flex w-34 min-w-0 shrink-0 justify-between text-xs sm:w-40 sm:gap-2 sm:text-sm lg:order-3 lg:ml-1 lg:w-60 lg:flex-none'
+          className={cn(
+            ROW_LEAD,
+            'flex justify-between text-xs sm:gap-2 sm:text-sm lg:order-3 lg:ml-1'
+          )}
           prefetch={false}
         >
           <LiveTeams event={event} />

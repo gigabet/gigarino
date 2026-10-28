@@ -5,12 +5,12 @@ import { Suspense, useCallback, useEffect, useTransition } from 'react'
 import ReactCountryFlag from 'react-country-flag'
 import { graphql, useFragment, useRefetchableFragment } from 'react-relay'
 import PrematchEvent, { PrematchEventSkeleton } from '@/app/sport/[[...slug]]/prematch-event'
-import { ListViewMarketDropdowns } from '@/components/list-view-markets'
+import { HEADER_LEAD, ListViewMarketDropdowns } from '@/components/list-view-markets'
 import { SportIconBadge } from '@/components/sport-icon'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useT } from '@/context/providers'
 import { getSportTheme } from '@/lib/sport-theme'
-import { stripCategory } from '@/lib/utils'
+import { cn, stripCategory } from '@/lib/utils'
 import type { Tournament$key } from '@/relay/__generated__/Tournament.graphql'
 import type { TournamentEventList$key } from '@/relay/__generated__/TournamentEventList.graphql'
 
@@ -91,7 +91,7 @@ export default function Tournament(props: { queryRef: Tournament$key }) {
             background: `linear-gradient(90deg, ${theme.primary}, transparent 65%)`,
           }}
         />
-        <h2 className='flex w-34 shrink-0 items-center gap-2 overflow-hidden sm:w-44 lg:w-90 lg:flex-none'>
+        <h2 className={cn(HEADER_LEAD, 'flex items-center gap-2')}>
           <SportIconBadge sport={data.sport.key} size='sm' />
           <ReactCountryFlag
             svg

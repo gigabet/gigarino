@@ -2,10 +2,8 @@
 
 import { atom, useAtom, useAtomValue } from 'jotai'
 import { entries, keys, minBy, sortBy } from 'lodash'
-import { ChevronsUpIcon, LockKeyhole, PlusIcon, TrendingUpIcon } from 'lucide-react'
-import { motion } from 'motion/react'
+import { LockKeyhole } from 'lucide-react'
 import { Toggle } from 'radix-ui'
-import { FaCaretDown, FaCaretUp } from 'react-icons/fa'
 import { graphql, useFragment } from 'react-relay'
 import { OddDelta } from '@/components/odd-delta'
 import {
@@ -17,7 +15,7 @@ import {
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useHasOdd, useToggleOdd } from '@/context/betslip'
-import { useDelta, useUpDown } from '@/context/hooks'
+import { useUpDown } from '@/context/hooks'
 import { useT } from '@/context/providers'
 import { tKey } from '@/i18n/tKey'
 import { cn, swap } from '@/lib/utils'
@@ -26,6 +24,20 @@ import type {
   OutcomeStatus,
 } from '@/relay/__generated__/ListViewMarket.graphql'
 import type { ListViewMarkets$key } from '@/relay/__generated__/ListViewMarkets.graphql'
+
+// Odds area: grows first (huge grow factor) up to a cap of 4 cells + gaps,
+// so everything beyond the cap flows to the name block.
+export const MARKETS_COL =
+  '@container/markets flex min-w-0 flex-[1_1_10.5rem] max-w-212 items-center justify-end gap-4 lg:flex-[1000_1_0%] xl:max-w-252'
+
+// One odds column. No max-w: it fills the container.
+export const MARKET_CELL = 'min-w-42 flex-1'
+
+// Teams + score block in a row
+export const ROW_LEAD = 'min-w-0 shrink-0 grow basis-34 sm:basis-40 lg:basis-60'
+
+// Tournament title block in a header row
+export const HEADER_LEAD = 'min-w-0 shrink-0 grow basis-34 overflow-hidden sm:basis-44 lg:basis-90'
 
 const marketVisibility = [
   '', // (10.5 + 1 + 10.5) + 11.5 + 11.5...
@@ -95,17 +107,14 @@ export function ListViewMarkets(props: { event: ListViewMarkets$key }) {
   const sortedMarkets = selectedMarkets.map(marketByKind)
 
   return (
-    <div className='@container/markets flex min-w-0 flex-1 items-center justify-end gap-4 lg:order-4'>
+    <div className={cn(MARKETS_COL, 'lg:order-4')}>
       {sortedMarkets.map((market, i) =>
         market ? (
           <Market key={market.id} className={marketVisibility[i] ?? 'hidden'} market={market} />
         ) : (
           <div
             key={selectedMarkets[i]}
-            className={cn(
-              'flex h-15 max-w-50 min-w-42 flex-1 grow gap-1 xl:max-w-60',
-              marketVisibility[i] ?? 'hidden'
-            )}
+            className={cn(MARKET_CELL, 'flex h-15 gap-1', marketVisibility[i] ?? 'hidden')}
           />
         )
       )}
@@ -115,7 +124,7 @@ export function ListViewMarkets(props: { event: ListViewMarkets$key }) {
 
 export function ListViewMarketsSkeleton() {
   return (
-    <div className='@container/markets flex min-w-0 flex-1 items-center justify-end gap-4 lg:order-4'>
+    <div className={cn(MARKETS_COL, 'lg:order-4')}>
       {[0, 1, 2, 3].map(i => (
         <MarketSkeleton key={i} className={marketVisibility[i] ?? 'hidden'} />
       ))}
@@ -128,7 +137,7 @@ export function ListViewMarketDropdowns() {
   const t = useT()
 
   return (
-    <div className='text-foreground @container/markets flex min-w-0 flex-1 items-center justify-end gap-4'>
+    <div className={cn(MARKETS_COL, 'text-foreground')}>
       {selectedMarkets.map((market, i) => (
         <Select
           key={market}
@@ -142,10 +151,7 @@ export function ListViewMarketDropdowns() {
             })
           }
         >
-          <SelectTrigger
-            className={cn('max-w-50 min-w-42 flex-1 xl:max-w-60', marketVisibility[i] ?? 'hidden')}
-            size='sm'
-          >
+          <SelectTrigger className={cn(MARKET_CELL, marketVisibility[i] ?? 'hidden')} size='sm'>
             <SelectValue>{t(availableMarkets[market])}</SelectValue>
           </SelectTrigger>
           <SelectContent>
@@ -180,9 +186,7 @@ function Market(props: { className?: string; market: ListViewMarket$key }) {
   )
 
   return (
-    <div
-      className={cn('flex h-15 max-w-50 min-w-42 flex-1 grow gap-1 xl:max-w-60', props.className)}
-    >
+    <div className={cn(MARKET_CELL, 'flex h-15 gap-1', props.className)}>
       {sortBy(data.outcomes, e => e.index).map(odd => (
         <OddToggle
           key={odd.id}
@@ -235,9 +239,7 @@ function OddToggle(props: {
 
 function MarketSkeleton(props: { className?: string }) {
   return (
-    <div
-      className={cn('flex h-15 max-w-50 min-w-42 flex-1 grow gap-1 xl:max-w-60', props.className)}
-    >
+    <div className={cn(MARKET_CELL, 'flex h-15 gap-1', props.className)}>
       <Skeleton className='h-full w-full flex-1' />
       <Skeleton className='h-full w-full flex-1' />
       <Skeleton className='h-full w-full flex-1' />

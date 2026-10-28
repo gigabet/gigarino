@@ -2,7 +2,7 @@
 
 import ReactCountryFlag from 'react-country-flag'
 import { graphql, useFragment } from 'react-relay'
-import { ListViewMarketDropdowns } from '@/components/list-view-markets'
+import { HEADER_LEAD, ListViewMarketDropdowns } from '@/components/list-view-markets'
 import { SportIconBadge } from '@/components/sport-icon'
 import { getSportTheme } from '@/lib/sport-theme'
 import { cn, stripCategory } from '@/lib/utils'
@@ -11,7 +11,7 @@ import type { LiveTournament$key } from '@/relay/__generated__/LiveTournament.gr
 export function HeaderRow(props: { left?: React.ReactNode }) {
   return (
     <div className='text-secondary relative flex h-12 items-center gap-4 border-b border-white/5 text-sm'>
-      <div className='w-34 shrink-0 overflow-hidden sm:w-44 lg:w-90 lg:flex-none'>{props.left}</div>
+      <div className={HEADER_LEAD}>{props.left}</div>
       <ListViewMarketDropdowns />
       <div className='hidden sm:block sm:w-0 lg:w-29' />
     </div>
