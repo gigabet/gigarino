@@ -243,7 +243,7 @@ function MatchTracker(props: { matchId: string }) {
         title='Match tracker'
         src={`https://googstreams.com/matchtracker.html#${locale}/${props.matchId}`}
         style={{ height }}
-        className='block w-full border-0 transition-[height] duration-200'
+        className='block w-full overflow-hidden border-0 transition-[height] duration-200'
         loading='lazy'
       />
     </div>
