@@ -1,0 +1,92 @@
+<html lang="en">
+
+<head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      background: transparent;
+      overflow: hidden;
+    }
+
+    .sr-widget {
+      filter: invert(0.92) hue-rotate(180deg);
+    }
+
+    .sr-widget .srm-isLmt {
+      filter: invert(1) hue-rotate(180deg);
+    }
+  </style>
+</head>
+
+<body>
+  <div class='sr-widget'></div>
+
+  <script>
+    const matchID = location.hash.split('/')[1]
+
+    function setMatchTrackerLib(callback = null) {
+      if (window.SIR) {
+        callback?.()
+        return
+      }
+
+      var lang = location.hash.split('/')[0].replace('#', '')
+      if (lang === 'ge') lang = 'ka';
+      if (lang === 'az') lang = 'aze';
+      if (lang === 'ot') lang = 'tr';
+      if (lang === 'gl_ru') lang = 'ru';
+      if (lang === 'ua') lang = 'ukr';
+      if (lang === 'he') lang = 'heb';
+
+      ((a, b, c, d, e, f, g, h, i) => {
+        // biome-ignore lint:biomelint/suspicious/noAssignInExpressions 
+        a[e] || (i = a[e] = function () { (a[e].q = a[e].q || []).push(arguments) }, i.l = 1 * new Date, i.o = f,
+          // biome-ignore lint:biomelint/suspicious/noAssignInExpressions 
+          g = b.createElement(c), h = b.getElementsByTagName(c)[0], g.async = 1, g.src = d, g.setAttribute('n', e), h.parentNode.insertBefore(g, h)
+        )
+      })(window, document, 'script', 'https://widgets.sir.sportradar.com/522bf3d3429de302a483a45e5f272e0e/widgetloader', 'SIR', {
+        language: lang,
+        theme: 'neutral',
+      });
+
+      callback?.()
+    }
+
+    function updateHeight() {
+      var mainEl = document.querySelector('.sr-lmt-plus')
+      if (!mainEl) {
+        setTimeout(updateHeight, 200)
+        return
+      }
+
+      var observer = new ResizeObserver(() => {
+        window.parent.postMessage({
+          msg: 'bmt_updateHeight',
+          height: mainEl.offsetHeight
+        }, '*')
+      })
+
+      observer.observe(mainEl)
+    }
+
+
+    void function setup() {
+      setMatchTrackerLib(() => {
+        SIR('addWidget', '.sr-widget', 'match.lmtPlus', {
+          matchId: matchID,
+          scoreboard: 'disable',
+          showOdds: false
+        })
+
+        updateHeight()
+      })
+    }()
+  </script>
+</body>
+
+</html>

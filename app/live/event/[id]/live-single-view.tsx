@@ -13,7 +13,7 @@ import { SportIcon } from '@/components/sport-icon'
 import StatisticsWidget, { StatisticsWidgetSkeleton } from '@/components/statistics-widget'
 import { TeamBadge } from '@/components/team-badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useT } from '@/context/providers'
+import { useLocale, useT } from '@/context/providers'
 import { getRelativeDayLabel } from '@/lib/utils'
 import type { EventState$key } from '@/relay/__generated__/EventState.graphql'
 import type { LiveSingleHeader$key } from '@/relay/__generated__/LiveSingleHeader.graphql'
@@ -234,12 +234,14 @@ function MatchTracker(props: { matchId: string }) {
     return () => window.removeEventListener('message', onMessage)
   }, [])
 
+  const locale = useLocale()
+
   return (
     <div className='overflow-hidden rounded-2xl border border-white/5 bg-black/20'>
       <iframe
         ref={ref}
         title='Match tracker'
-        src={`https://googstreams.com/matchtracker.html#en/${props.matchId}`}
+        src={`/matchtracker.html#${locale}/${props.matchId}`}
         style={{ height }}
         className='block w-full border-0 transition-[height] duration-200'
         loading='lazy'
