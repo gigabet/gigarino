@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a7af28753b74dd28e6b6e810cca21960>>
+ * @generated SignedSource<<3acdfc522e9931ea5481bb853dc89baa>>
  * @lightSyntaxTransform
  */
 
@@ -17,7 +17,6 @@ export type LiveEvent$data = {
   readonly homeScore: number | null | undefined;
   readonly id: string;
   readonly oddCount: number;
-  readonly sportradarMatchId: string | null | undefined;
   readonly tradingStatus: TradingStatus;
   readonly " $fragmentSpreads": FragmentRefs<"FavouriteButton" | "ListViewMarkets" | "LiveScore" | "LiveTeams" | "LiveTime">;
   readonly " $fragmentType": "LiveEvent";
@@ -83,13 +82,6 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "sportradarMatchId",
-      "storageKey": null
-    },
-    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "LiveTime"
@@ -119,6 +111,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "c37c7d8c1f94fab0a9f36b2e2e793aa5";
+(node as any).hash = "c5cf9fec05e4d250e12c573faf3b87a4";
 
 export default node;

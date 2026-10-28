@@ -41,8 +41,7 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
         awayScore
         tradingStatus
         oddCount
-        #debug
-        sportradarMatchId
+        # sportradarMatchId
         ...LiveTime
         ...LiveTeams
         ...LiveScore
@@ -87,9 +86,9 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
             </span> */}
 
             <LiveTime event={event} />
-            <span className='text-muted-foreground text-[0.5rem]'>
+            {/* <span className='text-muted-foreground text-[0.5rem]'>
               widget:{event.sportradarMatchId ?? 'null'}
-            </span>
+            </span> */}
           </div>
         </div>
 

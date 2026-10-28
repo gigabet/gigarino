@@ -2,7 +2,7 @@
 
 import { format } from 'date-fns'
 import { SearchXIcon } from 'lucide-react'
-import { Suspense, useEffect } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
 import { getPeriod } from '@/app/live/helpers'
 import { useLiveClock } from '@/app/live/live-event'
@@ -12,6 +12,7 @@ import MarketGroups, { MarketGroupsSkeleton } from '@/components/market-groups'
 import { SportIcon } from '@/components/sport-icon'
 import StatisticsWidget, { StatisticsWidgetSkeleton } from '@/components/statistics-widget'
 import { TeamBadge } from '@/components/team-badge'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useT } from '@/context/providers'
 import { getRelativeDayLabel } from '@/lib/utils'
 import type { EventState$key } from '@/relay/__generated__/EventState.graphql'
@@ -62,12 +63,7 @@ export default function LiveSingleView(props: { queryRef: PreloadedQuery<LiveSin
         </div>
       </section>
 
-      {!!data.sportradarMatchId && (
-        <iframe
-          title='Widget'
-          src={`https://googstreams.com/matchtracker.html#en/${data.sportradarMatchId}`}
-        />
-      )}
+      {data.sportradarMatchId && <MatchTracker matchId={data.sportradarMatchId} />}
 
       <Suspense fallback={<StatisticsWidgetSkeleton />}>
         <StatisticsWidget event={data} />
@@ -198,6 +194,62 @@ function KickoffTime(props: { startTime: string }) {
       {format(props.startTime, 'HH:mm')}
     </time>
   )
+}
+
+const TRACKER_FALLBACK_HEIGHT = 420
+
+/** Pulls a pixel height out of the shapes embeds commonly postMessage. */
+function readHeight(data: unknown): number | null {
+  let d = data
+  if (typeof d === 'string') {
+    try {
+      d = JSON.parse(d)
+    } catch {
+      const m = String(d).match(/height\D{0,3}(\d+(?:\.\d+)?)/i)
+      return m ? Number(m[1]) : null
+    }
+  }
+  if (typeof d === 'number') return d
+  if (d && typeof d === 'object') {
+    const o = d as Record<string, unknown>
+    const v = o.height ?? o.frameHeight ?? o.contentHeight ?? o.scrollHeight
+    const n = typeof v === 'string' ? Number.parseFloat(v) : v
+    if (typeof n === 'number' && Number.isFinite(n) && n > 0) return n
+  }
+  return null
+}
+
+function MatchTracker(props: { matchId: string }) {
+  const ref = useRef<HTMLIFrameElement>(null)
+  const [height, setHeight] = useState(TRACKER_FALLBACK_HEIGHT)
+
+  useEffect(() => {
+    const onMessage = (e: MessageEvent) => {
+      // only trust messages coming from our own iframe
+      if (e.source !== ref.current?.contentWindow) return
+      const h = readHeight(e.data)
+      if (h && h > 50) setHeight(Math.ceil(h))
+    }
+    window.addEventListener('message', onMessage)
+    return () => window.removeEventListener('message', onMessage)
+  }, [])
+
+  return (
+    <div className='overflow-hidden rounded-2xl border border-white/5 bg-black/20'>
+      <iframe
+        ref={ref}
+        title='Match tracker'
+        src={`https://googstreams.com/matchtracker.html#en/${props.matchId}`}
+        style={{ height }}
+        className='block w-full border-0 transition-[height] duration-200'
+        loading='lazy'
+      />
+    </div>
+  )
+}
+
+export function MatchTrackerSkeleton() {
+  return <Skeleton className='w-full rounded-2xl' style={{ height: TRACKER_FALLBACK_HEIGHT }} />
 }
 
 function EventNotFound() {
