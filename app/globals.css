@@ -464,8 +464,41 @@ layer(base);
   *,
   *::before,
   *::after {
+    /* biome-ignore lint/complexity/noImportantStyles: a11y */
     animation-duration: 0.01ms !important;
+    /* biome-ignore lint/complexity/noImportantStyles: a11y */
     animation-iteration-count: 1 !important;
+    /* biome-ignore lint/complexity/noImportantStyles: a11y */
     transition-duration: 0.01ms !important;
+  }
+}
+
+@utility fade-bottom {
+  mask-image: linear-gradient(to bottom, black calc(100% - 2.5rem), transparent);
+}
+
+/* optional: fade the top too, but only once the user has scrolled (Chrome/Safari 26+; ignored elsewhere) */
+@utility fade-y {
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    black var(--fade-top, 0),
+    black calc(100% - 2.5rem),
+    transparent
+  );
+  animation: fade-top linear both;
+  animation-timeline: scroll(self);
+  animation-range: 0 2rem;
+}
+
+@property --fade-top {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes fade-top {
+  to {
+    --fade-top: 2rem;
   }
 }

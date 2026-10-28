@@ -14,8 +14,11 @@ import type {
   MarketGroups$key,
 } from '@/relay/__generated__/MarketGroups.graphql'
 
-const GROUP_ORDER: MarketGroup[] = [
+type TabGroup = MarketGroup | 'ALL'
+
+const GROUP_ORDER: TabGroup[] = [
   'MAIN',
+  'ALL',
   'GOALS',
   'GAMES',
   'POINTS',
@@ -26,8 +29,9 @@ const GROUP_ORDER: MarketGroup[] = [
   'SPECIAL',
 ]
 
-const GROUP_LABEL: Record<MarketGroup, string> = {
+const GROUP_LABEL: Record<TabGroup, string> = {
   MAIN: 'Main',
+  ALL: 'All',
   GOALS: 'Goals',
   GAMES: 'Games',
   POINTS: 'Points',
@@ -37,7 +41,7 @@ const GROUP_LABEL: Record<MarketGroup, string> = {
   PLAYERS: 'Players',
   SPECIAL: 'Special',
   // eslint-disable-next-line relay/no-future-added-value
-  '%future added value': '',
+  '%future added value': 'Other',
 }
 
 const DEFAULT_OPEN_COUNT = 3
@@ -59,17 +63,22 @@ export default function MarketGroups(props: { event: MarketGroups$key }) {
   )
 
   // remembered per tab so switching tabs doesn't undo what the user collapsed
-  const [openByGroup, setOpenByGroup] = useState<Partial<Record<MarketGroup, string[]>>>({})
+  const [openByGroup, setOpenByGroup] = useState<Partial<Record<TabGroup, string[]>>>({})
 
-  const byGroup = sortBy(data.markets, e => e?.index).reduce(
+  const sortedMarkets = sortBy(data.markets, e => e?.index)
+
+  const byGroup = sortedMarkets.reduce(
     (acc, curr) => {
       curr?.groups.forEach(group => {
         acc[group] = [...(acc[group] || []), curr]
       })
       return acc
     },
-    {} as Record<MarketGroup, MarketGroups$data['markets']>
+    {} as Record<TabGroup, MarketGroups$data['markets']>
   )
+  // "All" holds every market exactly once, even if it belongs to several groups
+  byGroup.ALL = sortedMarkets.filter(m => !!m)
+
   const populatedGroups = GROUP_ORDER.filter(g => byGroup[g]?.length)
 
   if (populatedGroups.length === 0) {

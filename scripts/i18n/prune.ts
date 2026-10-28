@@ -5,7 +5,13 @@ import { collectMarkedStrings } from '@/i18n/extractMarkers'
 import { sortDictKeys } from '@/i18n/sortDict'
 
 const DICT_PATH = path.resolve('i18n/translations.json')
-const SOURCE_GLOBS = ['app/**/*.tsx', 'app/**/*.ts', 'components/**/*.tsx', 'constants/**/*.ts']
+const SOURCE_GLOBS = [
+  'app/**/*.{ts,tsx}',
+  'components/**/*.{ts,tsx}',
+  'lib/**/*.{ts,tsx}',
+  'context/**/*.{ts,tsx}',
+  'constants/**/*.{ts,tsx}',
+]
 
 function collectUsedKeys(): Set<string> {
   const project = new Project({ tsConfigFilePath: 'tsconfig.json' })

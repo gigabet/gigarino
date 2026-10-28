@@ -158,7 +158,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
         </div>
 
         {expanded && (
-          <div className='bg-dark-200 absolute top-0 left-full ml-2 max-h-[calc(100dvh-7rem)] w-72 overflow-y-auto rounded-2xl border border-white/5 p-3 shadow-2xl'>
+          <div className='bg-dark-200 fade-bottom absolute top-0 left-full ml-2 max-h-[calc(100dvh-7rem)] w-72 overflow-y-auto rounded-2xl border border-white/5 p-3 pb-10 shadow-2xl'>
             <FullSidebarContent
               filteredSports={filteredSports}
               topTournamentsEventCount={topTournamentsEventCount}
@@ -168,7 +168,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
       </div>
 
       {/* ---- xl and up: full sidebar ---- */}
-      <aside className='scrollbar-hide! scrollbar-thumb-dark-300 sticky top-26.25 hidden max-h-[calc(100dvh-7rem)] w-full scrollbar-thin scrollbar-track-transparent place-self-start overflow-y-auto xl:block'>
+      <aside className='scrollbar-hide! scrollbar-thumb-dark-300 fade-bottom sticky top-26.25 hidden max-h-[calc(100dvh-7rem)] w-full scrollbar-thin scrollbar-track-transparent place-self-start overflow-y-auto pb-10 xl:block'>
         <FullSidebarContent
           filteredSports={filteredSports}
           topTournamentsEventCount={topTournamentsEventCount}

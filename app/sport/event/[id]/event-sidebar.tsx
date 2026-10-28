@@ -104,7 +104,7 @@ function EventSidebarTournament(props: {
 
   return (
     <>
-      <aside className='scrollbar-hide! scrollbar-thumb-dark-300 sticky top-26.25 hidden max-h-[calc(100dvh-7rem)] w-full scrollbar-thin scrollbar-track-transparent flex-col gap-3 place-self-start overflow-y-auto xl:flex'>
+      <aside className='scrollbar-hide! scrollbar-thumb-dark-300 fade-bottom sticky top-26.25 hidden max-h-[calc(100dvh-7rem)] w-full scrollbar-thin scrollbar-track-transparent flex-col gap-3 place-self-start overflow-y-auto pb-10 xl:flex'>
         {list()}
       </aside>
 

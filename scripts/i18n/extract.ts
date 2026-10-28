@@ -6,7 +6,13 @@ import { sortDictKeys } from '@/i18n/sortDict'
 
 const DICT_PATH = path.resolve('i18n/translations.json')
 const TARGET_LOCALES = ['de', 'tr']
-const SOURCE_GLOBS = ['app/**/*.tsx', 'app/**/*.ts', 'components/**/*.tsx']
+const SOURCE_GLOBS = [
+  'app/**/*.{ts,tsx}',
+  'components/**/*.{ts,tsx}',
+  'lib/**/*.{ts,tsx}',
+  'context/**/*.{ts,tsx}',
+  'constants/**/*.{ts,tsx}',
+]
 
 function loadDict(): Record<string, Record<string, string>> {
   if (!fs.existsSync(DICT_PATH)) return {}

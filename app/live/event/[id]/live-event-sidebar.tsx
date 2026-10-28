@@ -101,7 +101,7 @@ export default function LiveEventSidebar(props: {
       {groups ? (
         <GroupedVirtuoso
           key='grouped'
-          className='scrollbar-hide'
+          className='scrollbar-hide fade-bottom'
           style={{ height: '100%' }}
           groupCounts={groups.map(g => g.length)}
           overscan={400}
@@ -111,7 +111,7 @@ export default function LiveEventSidebar(props: {
             <LiveStripTournament tournament={groups[i][0].event.tournament} pad={i > 0} />
           )}
           itemContent={item}
-          components={{ Header: FavouritesHeader }}
+          components={{ Header: FavouritesHeader, Footer: ListFooter }}
           context={headerContext}
         />
       ) : (
@@ -125,7 +125,7 @@ export default function LiveEventSidebar(props: {
           initialTopMostItemIndex={initialIndex}
           computeItemKey={i => events[i].id}
           itemContent={item}
-          components={{ Header: FavouritesHeader }}
+          components={{ Header: FavouritesHeader, Footer: ListFooter }}
           context={headerContext}
         />
       )}
@@ -140,6 +140,11 @@ type HeaderContext = {
 
 function FavouritesHeader({ context }: { context: HeaderContext }) {
   return <FavouriteLiveStrips queryRef={context.queryRef} activeId={context.activeId} />
+}
+
+// spacer so the last card can scroll above the fade
+function ListFooter() {
+  return <div className='h-10' />
 }
 
 export function LiveEventSidebarSkeleton() {

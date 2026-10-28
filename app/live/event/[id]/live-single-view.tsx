@@ -31,6 +31,7 @@ export default function LiveSingleView(props: { queryRef: PreloadedQuery<LiveSin
         awayCompetitor
         awayImageUrl
         startTime
+        sportradarMatchId
         ...LiveSingleHeader
         ...EventState
         ...StatisticsWidget @defer
@@ -60,6 +61,13 @@ export default function LiveSingleView(props: { queryRef: PreloadedQuery<LiveSin
           <Competitor name={data.awayCompetitor} imageUrl={data.awayImageUrl} reverse />
         </div>
       </section>
+
+      {!!data.sportradarMatchId && (
+        <iframe
+          title='Widget'
+          src={`https://googstreams.com/matchtracker.html#en/${data.sportradarMatchId}`}
+        />
+      )}
 
       <Suspense fallback={<StatisticsWidgetSkeleton />}>
         <StatisticsWidget event={data} />

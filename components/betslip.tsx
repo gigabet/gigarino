@@ -45,6 +45,7 @@ import {
 } from '@/context/betslip'
 import { useMediaQuery } from '@/context/hooks'
 import { useCurrency, useT, useUser } from '@/context/providers'
+import { MARKET_NAME, OUTCOME_NAME, splitMarketName } from '@/lib/market-labels'
 import { cn, formatBalance, nCk } from '@/lib/utils'
 import type { Betslip$data, Betslip$key } from '@/relay/__generated__/Betslip.graphql'
 import type { BetslipMobileBar$key } from '@/relay/__generated__/BetslipMobileBar.graphql'
@@ -809,7 +810,7 @@ function PlaceBetButton(props: {
       type='button'
       disabled={props.disabled}
       onClick={props.onClick}
-      className='group/button bg-primary hover:shadow-glow-lg text-primary-foreground relative flex w-full items-center justify-center gap-3 overflow-hidden rounded-full px-10 py-3 text-base font-bold tracking-wide uppercase transition-all duration-300 select-none disabled:pointer-events-none disabled:bg-neutral-400 disabled:text-neutral-700'
+      className='group/button bg-primary hover:shadow-glow-lg text-primary-foreground relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-4 py-3 text-sm font-bold tracking-wide whitespace-nowrap uppercase transition-all duration-300 select-none disabled:pointer-events-none disabled:bg-neutral-400 disabled:text-neutral-700 sm:text-base'
     >
       <div className='from-primary to-primary absolute inset-0 bg-linear-to-r via-white/30 opacity-0 transition-opacity duration-500 group-hover/button:opacity-100' />
       <div className='absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/40 to-transparent transition-transform duration-1000 group-hover/button:translate-x-full' />
@@ -819,9 +820,10 @@ function PlaceBetButton(props: {
           {t('Placing bet...')}
         </span>
       ) : (
-        <span className='relative'>
-          {t('Place bet')} · {formatBalance(props.stake, currency)}
-        </span>
+        <>
+          <span className='relative min-w-0 truncate'>{t('Place bet')}</span>
+          <span className='relative shrink-0'>· {formatBalance(props.stake, currency)}</span>
+        </>
       )}
     </button>
   )
@@ -839,16 +841,12 @@ function getLabel(
   t: (key: string, params?: Record<string, string | number>) => string
 ) {
   const [home, away] = eventName?.split(' vs ') ?? []
-  const byKey = key
-    .replace('home', home ?? t('Home'))
-    .replace('away', away ?? t('Away'))
-    .replace('draw', t('Draw'))
+  if (key === 'home') return home ?? t('Home')
+  if (key === 'away') return away ?? t('Away')
 
-  // home/away/draw resolve to team names; anything else (over, under, yes, no…) uses the outcome name
-  if (byKey !== key) return byKey
-  const base = name || key.charAt(0).toUpperCase() + key.slice(1)
-  const line = marketName?.match(/-?\d+(\.\d+)?$/)?.[0]
-  return line && !base.includes(line) ? `${base} ${line}` : base
+  const label = OUTCOME_NAME[key] ? t(OUTCOME_NAME[key]) : name || key
+  const { line } = splitMarketName(marketName)
+  return line && !label.includes(line) ? `${label} ${line}` : label
 }
 
 function Tip(props: {
@@ -881,7 +879,13 @@ function Tip(props: {
   const changed = data.priceChanged && !!data.expectedPrice && !!data.price
   const up = changed && Number(data.price) > Number(data.expectedPrice)
   const blocked = data.availability !== 'AVAILABLE'
-  const subline = [data.marketName, data.eventName].filter(Boolean).join(' · ') || '—'
+
+  const { base, line } = splitMarketName(data.marketName)
+  const marketLabel = MARKET_NAME[base] ? t(MARKET_NAME[base]) : base
+  const subline =
+    [marketLabel && `${marketLabel}${line ? ` ${line}` : ''}`, data.eventName]
+      .filter(Boolean)
+      .join(' · ') || '—'
 
   return (
     <div

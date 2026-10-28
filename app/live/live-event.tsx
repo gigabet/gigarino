@@ -1,5 +1,6 @@
 'use client'
 
+import { dataTagErrorSymbol } from '@tanstack/react-query'
 import { BanIcon, TriangleAlert } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect } from 'react'
@@ -40,6 +41,8 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
         awayScore
         tradingStatus
         oddCount
+        #debug
+        sportradarMatchId
         ...LiveTime
         ...LiveTeams
         ...LiveScore
@@ -77,13 +80,16 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
 
       <div className='relative flex items-center justify-between gap-4 lg:contents'>
         <div className='text-secondary shrink-0 text-xs leading-relaxed lg:order-1 lg:w-16 lg:text-center'>
-          <div className='flex items-center justify-center gap-1.5'>
+          <div className='flex flex-col items-center justify-center gap-1.5'>
             {/* <span className='relative inline-flex size-1.5'>
               <span className='bg-destructive absolute inline-flex size-full animate-ping rounded-full opacity-75' />
               <span className='bg-destructive relative inline-flex size-1.5 rounded-full' />
             </span> */}
 
             <LiveTime event={event} />
+            <span className='text-muted-foreground text-[0.5rem]'>
+              widget:{event.sportradarMatchId ?? 'null'}
+            </span>
           </div>
         </div>
 
