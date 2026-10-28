@@ -49,11 +49,11 @@ const marketVisibility = [
 const availableMarkets = {
   match_winner: tKey('Match Winner'),
   over_under: tKey('Over/Under'),
-  draw_no_bet: tKey('Draw No Bet'),
+  both_teams_to_score: tKey('Both to Score'),
   double_chance: tKey('Double Chance'),
   handicap: tKey('Handicap'),
   even_odd: tKey('Even/Odd'),
-  both_teams_to_score: tKey('Both to Score'),
+  draw_no_bet: tKey('Draw No Bet'),
 }
 export const selectedMarketsState = atom(
   keys(availableMarkets) as (keyof typeof availableMarkets)[]
