@@ -52,12 +52,21 @@ function TrackerToggle(props: { eventId: string; className?: string }) {
       type='button'
       variant='ghost'
       size='icon-sm'
-      className={cn('rounded-full', props.className)}
+      className={cn(
+        'rounded-full transition-shadow',
+        props.className,
+        active && 'hover:drop-shadow-none!'
+      )}
       aria-pressed={active}
       aria-label={active ? t('Hide match tracker') : t('Show match tracker')}
       onClick={() => toggle(props.eventId)}
     >
-      <GiSoccerField className={cn('size-4 transition-colors', active && 'text-primary')} />
+      <GiSoccerField
+        className={cn(
+          'size-4 transition-colors',
+          active && 'text-primary drop-shadow-primary drop-shadow-[0_0_2px,0_0_6px,0_0_12px]'
+        )}
+      />
     </Button>
   )
 }
