@@ -49,7 +49,7 @@ const STAT_ORDER = Object.keys(STAT_LABEL)
 
 const num = (v: string) => Number.parseFloat(v.replace('%', '')) || 0
 
-export default function StatisticsWidget(props: { event: StatisticsWidget$key }) {
+export default function StatisticsWidget(props: { event: StatisticsWidget$key; bare?: boolean }) {
   const [data] = useRefetchableFragment(
     graphql`
       fragment StatisticsWidget on Event @refetchable(queryName: "StatisticsWidgetRefetch") {
@@ -142,7 +142,12 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key })
   }
 
   return (
-    <section className='flex flex-col gap-4 rounded-2xl border border-white/5 bg-black/20 p-4 sm:p-6'>
+    <section
+      className={cn(
+        'flex flex-col gap-4',
+        !props.bare && 'rounded-2xl border border-white/5 bg-black/20 p-4 sm:p-6'
+      )}
+    >
       {meta && <p className='text-secondary truncate text-xs'>{meta}</p>}
 
       {tabs.length > 0 && (
@@ -189,7 +194,7 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key })
                 />
               }
             >
-              <div className='text-secondary hidden grid-cols-[9rem_1fr_auto_1fr_8.5rem] items-center gap-x-5 py-2 text-xs sm:grid'>
+              <div className='text-secondary hidden grid-cols-[9rem_1fr_auto_1fr_12rem] items-center gap-x-5 py-2 text-xs sm:grid'>
                 <span>{t('Winner')}</span>
                 <span className='col-span-3 text-center'>{t('Match')}</span>
                 <span className='text-right'>{t('Date')}</span>
@@ -597,7 +602,7 @@ function H2HRow(props: { match: StatisticsWidgetPastMatch$key }) {
   const tone = m.outcome === 'W' ? TEAM.home : m.outcome === 'L' ? TEAM.away : TEAM.draw
 
   return (
-    <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-x-3 gap-y-2 py-2.5 sm:grid-cols-[9rem_1fr_auto_1fr_8.5rem] sm:gap-x-5'>
+    <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-x-3 gap-y-2 py-2.5 sm:grid-cols-[9rem_1fr_auto_1fr_12rem] sm:gap-x-5'>
       {/* mobile: result + date share the top line; desktop: they become grid cells */}
       <div className='col-span-3 flex items-center justify-between gap-3 sm:contents'>
         <Chip
@@ -607,12 +612,14 @@ function H2HRow(props: { match: StatisticsWidgetPastMatch$key }) {
         </Chip>
 
         <div
-          className='text-secondary flex shrink-0 flex-col items-end text-[0.7rem] leading-snug sm:order-last sm:justify-self-end'
+          className='text-secondary flex min-w-0 shrink-0 flex-col items-end text-[0.7rem] leading-snug sm:order-last sm:justify-self-end'
           suppressHydrationWarning
         >
           <span className='text-white/70'>{format(m.startTime, 'dd MMM yyyy')}</span>
           {m.competition && (
-            <span className='hidden max-w-full truncate sm:block'>{m.competition}</span>
+            <span className='hidden max-w-full truncate sm:block' title={m.competition}>
+              {m.competition}
+            </span>
           )}
         </div>
       </div>

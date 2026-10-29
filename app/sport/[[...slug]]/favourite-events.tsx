@@ -98,7 +98,7 @@ function FavouriteEventsList(props: { queryRef: PreloadedQuery<PrematchQuery> })
           </span>
         </h2>
         <ListViewMarketDropdowns />
-        <div className='hidden sm:block sm:w-0 lg:w-29' />
+        <div className='hidden sm:block sm:w-0 lg:w-37' />
       </div>
       <div className='flex flex-col gap-3'>
         {events.map(node => (

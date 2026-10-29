@@ -20,6 +20,7 @@ import { PiTicket, PiTrash } from 'react-icons/pi'
 import { graphql, useFragment, useMutation } from 'react-relay'
 import { Drawer } from 'vaul'
 import { loginDialogOpenAtom } from '@/components/login-dialog'
+import { BetslipTracker } from '@/components/match-tracker'
 import MyTickets from '@/components/my-tickets'
 import { Button } from '@/components/ui/button'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group'
@@ -111,6 +112,7 @@ export default function Betslip(props: {
           : 'sticky top-26.25 max-h-[calc(100dvh-8rem)] rounded-2xl border border-white/5'
       )}
     >
+      <BetslipTracker variant={props.variant === 'drawer' ? 'drawer' : 'panel'} />
       <BetslipHeader
         tab={mainTab}
         onTabChange={setMainTab}

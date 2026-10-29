@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ed905e533920c97058a006a026006575>>
+ * @generated SignedSource<<ff114f63c7d4d12a2522c3a2f3d869fe>>
  * @lightSyntaxTransform
  */
 
@@ -14,9 +14,8 @@ export type LiveSingleView$data = {
   readonly awayImageUrl: string | null | undefined;
   readonly homeCompetitor: string;
   readonly homeImageUrl: string | null | undefined;
-  readonly sportradarMatchId: string | null | undefined;
   readonly startTime: string;
-  readonly " $fragmentSpreads": FragmentRefs<"EventState" | "LiveSingleHeader" | "MarketGroups" | "StatisticsWidget">;
+  readonly " $fragmentSpreads": FragmentRefs<"EventState" | "LiveSingleHeader" | "MarketGroups" | "MatchTracker" | "StatisticsWidget">;
   readonly " $fragmentType": "LiveSingleView";
 };
 export type LiveSingleView$key = {
@@ -66,13 +65,6 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "sportradarMatchId",
-      "storageKey": null
-    },
-    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "LiveSingleHeader"
@@ -81,6 +73,11 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "EventState"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "MatchTracker"
     },
     {
       "kind": "Defer",
@@ -107,6 +104,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "622fd718d859854ffa9b78196d844985";
+(node as any).hash = "bb8d1e01234bfcc279e2a3748da995e2";
 
 export default node;

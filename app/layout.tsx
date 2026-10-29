@@ -6,6 +6,7 @@ import ParticleBackground from '@/components/particle-background'
 import Providers, { LocaleProvider } from '@/context/providers'
 import { getToken, getUser, getUserWallet } from '@/lib/auth'
 import './globals.css'
+import SiteChrome from '@/components/site-chrome'
 import TicketUpdates from '@/context/ticket-updates'
 import { resolveLocale } from '@/i18n/t'
 import dict from '@/i18n/translations.json'
@@ -82,14 +83,20 @@ export default async function RootLayout({
             style={{ animationDelay: '2s' }}
           />
         </div>
-        <ParticleBackground />
+        <SiteChrome>
+          <ParticleBackground />
+        </SiteChrome>
 
         <Providers user={user} wallet={wallet}>
           <LocaleProvider locale={locale} dict={flatDict}>
             <TicketUpdates />
-            <Navbar token={token} />
+            <SiteChrome>
+              <Navbar token={token} />
+            </SiteChrome>
             {children}
-            <Footer />
+            <SiteChrome>
+              <Footer />
+            </SiteChrome>
           </LocaleProvider>
         </Providers>
       </body>

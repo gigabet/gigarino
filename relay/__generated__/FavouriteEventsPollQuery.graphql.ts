@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<84b1bd4404d4c75b621c1e00c5f49141>>
+ * @generated SignedSource<<c1341aeefa2e18c6d39d61e55913c5a5>>
  * @lightSyntaxTransform
  */
 
@@ -139,6 +139,13 @@ return {
                     "args": null,
                     "kind": "ScalarField",
                     "name": "isFavourite",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "sportradarMatchId",
                     "storageKey": null
                   },
                   {
@@ -283,12 +290,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "65be881dd7f81d973bdfed468c18ccf0",
+    "cacheID": "1df8194feef7fa304357d8c491e1777a",
     "id": null,
     "metadata": {},
     "name": "FavouriteEventsPollQuery",
     "operationKind": "query",
-    "text": "query FavouriteEventsPollQuery {\n  ...FavouriteEvents\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment FavouriteEvents on Query {\n  events(first: 50, favourites: true) {\n    edges {\n      node {\n        id\n        isLive\n        ...PrematchEvent\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ListViewMarket on Market {\n  kind\n  line\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n  }\n}\n\nfragment ListViewMarkets on Event {\n  markets {\n    id\n    kind\n    period\n    line\n    outcomes {\n      price\n      id\n    }\n    ...ListViewMarket\n  }\n}\n\nfragment PrematchEvent on Event {\n  id\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  oddCount\n  ...FavouriteButton\n  ...ListViewMarkets @defer(label: \"PrematchEvent$defer$ListViewMarkets\")\n}\n"
+    "text": "query FavouriteEventsPollQuery {\n  ...FavouriteEvents\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment FavouriteEvents on Query {\n  events(first: 50, favourites: true) {\n    edges {\n      node {\n        id\n        isLive\n        ...PrematchEvent\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ListViewMarket on Market {\n  kind\n  line\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n  }\n}\n\nfragment ListViewMarkets on Event {\n  markets {\n    id\n    kind\n    period\n    line\n    outcomes {\n      price\n      id\n    }\n    ...ListViewMarket\n  }\n}\n\nfragment PrematchEvent on Event {\n  id\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  oddCount\n  ...FavouriteButton\n  ...TrackerButton\n  ...ListViewMarkets @defer(label: \"PrematchEvent$defer$ListViewMarkets\")\n}\n\nfragment TrackerButton on Event {\n  id\n  sportradarMatchId\n}\n"
   }
 };
 })();

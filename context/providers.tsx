@@ -1,6 +1,6 @@
 'use client'
 import { environmentManager, QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { cx } from 'class-variance-authority'
 import { atom, useAtomValue } from 'jotai'
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
@@ -49,7 +49,7 @@ export default function Providers({
           <LoadingOverlay />
           <UserProvider {...props}>{children}</UserProvider>
           <Toaster position='top-center' />
-          <ReactQueryDevtools initialIsOpen={false} />
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         </BetslipQuoteProvider>
       </QueryClientProvider>
     </RelayProvider>

@@ -102,7 +102,7 @@ export default function Tournament(props: { queryRef: Tournament$key }) {
           <span className='min-w-0 truncate'>{stripCategory(data.name, data.category.name)}</span>
         </h2>
         <ListViewMarketDropdowns />
-        <div className='hidden sm:block sm:w-0 lg:w-29' />
+        <div className='hidden sm:block sm:w-0 lg:w-37' />
       </div>
       <Suspense fallback={<EventListSkeleton />}>
         <EventList tournament={data} />
@@ -145,7 +145,7 @@ export function TournamentSkeleton() {
     <section>
       <div className='text-secondary mb-4 flex flex-col gap-2 border-b py-2 text-sm sm:flex-row sm:items-end sm:gap-4'>
         <Skeleton className='my-1 flex h-4 w-full sm:w-90' />
-        <div className='h-8.5 w-29 max-sm:hidden' />
+        <div className='h-8.5 w-37 max-sm:hidden' />
       </div>
       <EventListSkeleton />
     </section>

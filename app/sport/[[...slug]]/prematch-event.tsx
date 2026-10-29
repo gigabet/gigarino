@@ -6,6 +6,7 @@ import { fetchQuery, graphql, useFragment, useRelayEnvironment } from 'react-rel
 import { FavouriteButton } from '@/components/favourite-button'
 import { ListViewMarkets, ListViewMarketsSkeleton, ROW_LEAD } from '@/components/list-view-markets'
 import { TeamBadge } from '@/components/team-badge'
+import { TrackerButton } from '@/components/tracker-button'
 import { buttonVariants } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -25,6 +26,7 @@ export default function PrematchEvent(props: { node: PrematchEvent$key }) {
         startTime
         oddCount
         ...FavouriteButton
+        ...TrackerButton
         ...ListViewMarkets @defer
       }
     `,
@@ -84,7 +86,8 @@ export default function PrematchEvent(props: { node: PrematchEvent$key }) {
           <br className='hidden lg:block' /> {format(data.startTime, 'HH:mm')}
         </time>
 
-        <div className='flex items-center lg:order-5 lg:w-24 lg:justify-end'>
+        <div className='flex items-center lg:order-5 lg:w-32 lg:justify-end'>
+          <TrackerButton event={data} className='mb-0.5' />
           {data.oddCount > 0 && (
             <Link
               href={`/sport/event/${data.id}`}

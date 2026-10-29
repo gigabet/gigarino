@@ -12,6 +12,7 @@ import { useRefetchBatcher, useRefetchRegistration } from '@/app/live/refetch-co
 import { FavouriteButton } from '@/components/favourite-button'
 import { ListViewMarkets, ROW_LEAD } from '@/components/list-view-markets'
 import { TeamBadge } from '@/components/team-badge'
+import { TrackerButton } from '@/components/tracker-button'
 import { buttonVariants } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useT } from '@/context/providers'
@@ -40,12 +41,12 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
         awayScore
         tradingStatus
         oddCount
-        # sportradarMatchId
         ...LiveTime
         ...LiveTeams
         ...LiveScore
         ...ListViewMarkets
         ...FavouriteButton
+        ...TrackerButton
       }
     `,
     props.eventRef
@@ -94,7 +95,8 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
           </div>
         </div>
 
-        <div className='flex items-center lg:order-5 lg:w-24 lg:justify-end'>
+        <div className='flex items-center lg:order-5 lg:w-32 lg:justify-end'>
+          <TrackerButton event={event} />
           <Link
             href={`/live/event/${event.id}`}
             className={buttonVariants({ variant: 'ghost', size: 'sm' })}

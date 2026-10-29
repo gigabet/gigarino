@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9837e81b17661b402aa27a350e38be4f>>
+ * @generated SignedSource<<662955111fa7d1ae3c37820c881cffbe>>
  * @lightSyntaxTransform
  */
 
@@ -17,7 +17,7 @@ export type PrematchEvent$data = {
   readonly id: string;
   readonly oddCount: number;
   readonly startTime: string;
-  readonly " $fragmentSpreads": FragmentRefs<"FavouriteButton" | "ListViewMarkets">;
+  readonly " $fragmentSpreads": FragmentRefs<"FavouriteButton" | "ListViewMarkets" | "TrackerButton">;
   readonly " $fragmentType": "PrematchEvent";
 };
 export type PrematchEvent$key = {
@@ -86,6 +86,11 @@ const node: ReaderFragment = {
       "name": "FavouriteButton"
     },
     {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "TrackerButton"
+    },
+    {
       "kind": "Defer",
       "selections": [
         {
@@ -100,6 +105,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "32f11f76fa46a9967d357b2f5d77998c";
+(node as any).hash = "e02a183e132de1ad9d140bd5d708bb92";
 
 export default node;

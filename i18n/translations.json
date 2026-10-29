@@ -1294,5 +1294,25 @@
   "Your betslip is empty": {
     "de": "Ihr Wettschein ist leer",
     "tr": "Kuponunuz boş"
+  },
+  "Close match tracker": {
+    "de": "",
+    "tr": ""
+  },
+  "Hide match tracker": {
+    "de": "",
+    "tr": ""
+  },
+  "Show match tracker": {
+    "de": "",
+    "tr": ""
+  },
+  "Show statistics": {
+    "de": "",
+    "tr": ""
+  },
+  "Statistics": {
+    "de": "",
+    "tr": ""
   }
 }
