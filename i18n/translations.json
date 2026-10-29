@@ -1296,23 +1296,23 @@
     "tr": "Kuponunuz boş"
   },
   "Close match tracker": {
-    "de": "",
-    "tr": ""
+    "de": "Tracker schließen",
+    "tr": "Takipçiyi kapat"
   },
   "Hide match tracker": {
-    "de": "",
-    "tr": ""
+    "de": "Tracker ausblenden",
+    "tr": "Takipçiyi gizle"
   },
   "Show match tracker": {
-    "de": "",
-    "tr": ""
+    "de": "Tracker anzeigen",
+    "tr": "Takipçiyi göster"
   },
   "Show statistics": {
-    "de": "",
-    "tr": ""
+    "de": "Statistik anzeigen",
+    "tr": "İstatistikleri göster"
   },
   "Statistics": {
-    "de": "",
-    "tr": ""
+    "de": "Statistik",
+    "tr": "İstatistikler"
   }
 }
