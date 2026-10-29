@@ -16,6 +16,7 @@ import { RefetchBatcherProvider } from '@/app/live/refetch-context'
 import Betslip, { BetslipDrawer, BetslipMobileBar } from '@/components/betslip'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { useBetslipQuote, useUser } from '@/context/providers'
+import { RailPortal } from '@/context/rail'
 import { cn } from '@/lib/utils'
 import type { LiveLayoutQuery } from '@/relay/__generated__/LiveLayoutQuery.graphql'
 
@@ -58,9 +59,7 @@ export default function LiveLayout({ children }: React.PropsWithChildren) {
           <div
             className={cn(
               'grid grid-cols-1 gap-8',
-              eventId
-                ? 'xl:grid-cols-[16rem_minmax(auto,1fr)_20rem]'
-                : 'xl:grid-cols-[minmax(auto,1fr)_20rem]'
+              eventId && 'xl:grid-cols-[16rem_minmax(auto,1fr)]'
             )}
           >
             {eventId && (
@@ -89,11 +88,11 @@ export default function LiveLayout({ children }: React.PropsWithChildren) {
               {children}
             </div>
 
-            <div className='sticky top-26.25 hidden self-start xl:flex'>
+            <RailPortal>
               <ErrorBoundary FallbackComponent={SectionErrorFallback}>
                 <Betslip query={betslip} />
               </ErrorBoundary>
-            </div>
+            </RailPortal>
             <div className='xl:hidden'>
               <BetslipMobileBar query={betslip} />
               <BetslipDrawer query={betslip} />

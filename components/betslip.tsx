@@ -104,14 +104,7 @@ export default function Betslip(props: {
   })
 
   return (
-    <div
-      className={cn(
-        'bg-dark-200 flex w-full shrink flex-col overflow-hidden',
-        props.variant === 'drawer'
-          ? 'h-full min-h-0 flex-1'
-          : 'sticky top-26.25 max-h-[calc(100dvh-8rem)] rounded-2xl border border-white/5'
-      )}
-    >
+    <div className='bg-dark-200 scrollbar-hide flex h-full min-h-0 w-full flex-col overflow-y-auto'>
       <BetslipTracker variant={props.variant === 'drawer' ? 'drawer' : 'panel'} />
       <BetslipHeader
         tab={mainTab}
@@ -478,9 +471,9 @@ function BetslipBody(props: {
     !totals.overBoostMax
 
   return (
-    <div className='flex min-h-0 flex-1 flex-col'>
-      {/* One scroll region: tabs, actionable banners and tips. Tips get all remaining height. */}
-      <div className='scrollbar-hide min-h-0 flex-1 overflow-y-auto'>
+    <div className='flex flex-1 flex-col'>
+      {/* tabs, actionable banners and tips; scrolls with the rail */}
+      <div className='flex-1'>
         <BetTypeTabs data={data} />
         <SystemSizeSelect data={data} />
 
@@ -506,8 +499,8 @@ function BetslipBody(props: {
         <SelectionList data={data} />
       </div>
 
-      {/* Pinned footer: compact, never competes with the tips for space */}
-      <div className='shrink-0 border-t border-white/5'>
+      {/* pinned to the bottom of the rail/drawer */}
+      <div className='bg-dark-200 sticky bottom-0 z-20 shrink-0 border-t border-white/5'>
         <PlaceErrorBanner message={bet.placeError} />
         {!data.placeable && unavailable.size === 0 && !changes.show && (
           <BlockersBanner blockers={data.blockers} />

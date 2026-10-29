@@ -9,6 +9,7 @@ import Sidebar, { SidebarSkeleton } from '@/app/sport/sidebar'
 import Betslip, { BetslipDrawer, BetslipMobileBar } from '@/components/betslip'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { useBetslipQuote } from '@/context/providers'
+import { RailPortal } from '@/context/rail'
 import { cn } from '@/lib/utils'
 import type { PrematchLayoutQuery } from '@/relay/__generated__/PrematchLayoutQuery.graphql'
 import PrematchLayoutQueryNode from '@/relay/__generated__/PrematchLayoutQuery.graphql'
@@ -69,8 +70,8 @@ export default function SportLayout({ children }: React.PropsWithChildren) {
         // xl+: full sidebar + content + betslip aside
         'grid-cols-1',
         eventId
-          ? 'xl:grid-cols-[16rem_minmax(auto,1fr)_20rem]'
-          : 'lg:grid-cols-[4rem_minmax(auto,1fr)] xl:grid-cols-[16rem_minmax(auto,1fr)_20rem]'
+          ? 'xl:grid-cols-[16rem_minmax(auto,1fr)]'
+          : 'lg:grid-cols-[4rem_minmax(auto,1fr)] xl:grid-cols-[16rem_minmax(auto,1fr)]'
       )}
     >
       <Suspense fallback={eventId ? <EventSidebarSkeleton /> : <SidebarSkeleton />}>
@@ -92,11 +93,11 @@ export default function SportLayout({ children }: React.PropsWithChildren) {
       </Suspense>
 
       {children}
-      <div className='sticky top-26.25 hidden self-start xl:flex'>
+      <RailPortal>
         <ErrorBoundary FallbackComponent={SectionErrorFallback}>
           <Betslip query={betslip} />
         </ErrorBoundary>
-      </div>
+      </RailPortal>
       <div className='xl:hidden'>
         <BetslipMobileBar query={betslip} />
         <BetslipDrawer query={betslip} />

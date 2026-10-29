@@ -27,7 +27,7 @@ export default function MyTickets() {
   const { user } = useUser()
 
   return (
-    <div className='scrollbar-hide flex-1 overflow-y-auto'>
+    <div className='flex-1'>
       {!user ? (
         <LoggedOutTickets />
       ) : (

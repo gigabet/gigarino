@@ -23,7 +23,7 @@ import type { MatchTracker$key } from '@/relay/__generated__/MatchTracker.graphq
 import type { MatchTrackerPanel$key } from '@/relay/__generated__/MatchTrackerPanel.graphql'
 import type { MatchTrackerPanelQuery } from '@/relay/__generated__/MatchTrackerPanelQuery.graphql'
 
-const TRACKER_FALLBACK_HEIGHT = 420
+const TRACKER_FALLBACK_HEIGHT = 277
 
 // get the widget height
 function readHeight(data: unknown): number | null {
@@ -189,11 +189,11 @@ function TrackerPanel(props: {
           <XIcon className='size-4' />
         </Button>
       </div>
-      <MatchTracker event={data} className='max-h-[40dvh] overflow-y-auto bg-black/20' />
+      <MatchTracker event={data} className='bg-black/20' />
     </>
   )
 }
 
 function TrackerPanelSkeleton() {
-  return <Skeleton className='h-60 w-full rounded-none' />
+  return <Skeleton className='h-81.5 w-full rounded-none' />
 }

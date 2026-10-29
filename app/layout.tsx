@@ -7,6 +7,7 @@ import Providers, { LocaleProvider } from '@/context/providers'
 import { getToken, getUser, getUserWallet } from '@/lib/auth'
 import './globals.css'
 import SiteChrome from '@/components/site-chrome'
+import { RailSlot } from '@/context/rail'
 import TicketUpdates from '@/context/ticket-updates'
 import { resolveLocale } from '@/i18n/t'
 import dict from '@/i18n/translations.json'
@@ -93,10 +94,15 @@ export default async function RootLayout({
             <SiteChrome>
               <Navbar token={token} />
             </SiteChrome>
-            {children}
-            <SiteChrome>
-              <Footer />
-            </SiteChrome>
+            <div className='relative z-1 flex flex-1 items-stretch'>
+              <div className='flex min-w-0 flex-1 flex-col'>
+                {children}
+                <SiteChrome>
+                  <Footer />
+                </SiteChrome>
+              </div>
+              <RailSlot />
+            </div>
           </LocaleProvider>
         </Providers>
       </body>
