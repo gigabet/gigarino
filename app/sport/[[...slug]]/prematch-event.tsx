@@ -86,7 +86,7 @@ export default function PrematchEvent(props: { node: PrematchEvent$key }) {
           <br className='hidden lg:block' /> {format(data.startTime, 'HH:mm')}
         </time>
 
-        <div className='flex items-center lg:order-5 lg:w-32 lg:justify-end'>
+        <div className='flex items-center lg:order-5 lg:w-29 lg:justify-between'>
           <TrackerButton event={data} className='mb-0.5' />
           {data.oddCount > 0 && (
             <Link

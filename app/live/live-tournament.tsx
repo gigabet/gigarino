@@ -13,7 +13,7 @@ export function HeaderRow(props: { left?: React.ReactNode }) {
     <div className='text-secondary relative flex h-12 items-center gap-4 border-b border-white/5 text-sm'>
       <div className={HEADER_LEAD}>{props.left}</div>
       <ListViewMarketDropdowns />
-      <div className='hidden sm:block sm:w-0 lg:w-37' />
+      <div className='hidden sm:block sm:w-0 lg:w-34' />
     </div>
   )
 }

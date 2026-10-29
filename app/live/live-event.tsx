@@ -95,7 +95,7 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
           </div>
         </div>
 
-        <div className='flex items-center lg:order-5 lg:w-32 lg:justify-end'>
+        <div className='flex items-center lg:order-5 lg:w-29 lg:justify-between'>
           <TrackerButton event={event} />
           <Link
             href={`/live/event/${event.id}`}

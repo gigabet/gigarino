@@ -102,7 +102,7 @@ export default function Tournament(props: { queryRef: Tournament$key }) {
           <span className='min-w-0 truncate'>{stripCategory(data.name, data.category.name)}</span>
         </h2>
         <ListViewMarketDropdowns />
-        <div className='hidden sm:block sm:w-0 lg:w-37' />
+        <div className='hidden sm:block sm:w-0 lg:w-34' />
       </div>
       <Suspense fallback={<EventListSkeleton />}>
         <EventList tournament={data} />

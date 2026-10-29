@@ -94,7 +94,7 @@ export default async function RootLayout({
             <SiteChrome>
               <Navbar token={token} />
             </SiteChrome>
-            <div className='relative z-1 flex flex-1 items-stretch'>
+            <div className='relative z-1 mx-auto flex w-full max-w-480 flex-1 items-stretch'>
               <div className='flex min-w-0 flex-1 flex-col'>
                 {children}
                 <SiteChrome>

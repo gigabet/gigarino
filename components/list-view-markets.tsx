@@ -34,10 +34,11 @@ export const MARKETS_COL =
 export const MARKET_CELL = 'min-w-42 flex-1'
 
 // Teams + score block in a row
-export const ROW_LEAD = 'min-w-0 shrink-0 grow basis-34 sm:basis-40 lg:basis-60'
+export const ROW_LEAD = 'min-w-0 shrink-0 grow basis-34 sm:basis-40 lg:basis-44'
 
 // Tournament title block in a header row
-export const HEADER_LEAD = 'min-w-0 shrink-0 grow basis-34 overflow-hidden sm:basis-44 lg:basis-90'
+// (lg: row lead basis + time column, gaps, separator and row padding = lead + 7.5rem)
+export const HEADER_LEAD = 'min-w-0 shrink-0 grow basis-34 overflow-hidden sm:basis-44 lg:basis-74'
 
 const marketVisibility = [
   '', // (10.5 + 1 + 10.5) + 11.5 + 11.5...
