@@ -7,6 +7,7 @@ import LiveEvent, { LiveEventSkeleton } from '@/app/live/live-event'
 import { useOrderedLiveEvents } from '@/app/live/live-state'
 import type { LiveSort } from '@/app/live/live-toolbar'
 import LiveTournament, { LiveMarketsHeader } from '@/app/live/live-tournament'
+import { MIXED_SCOPE } from '@/lib/sport-markets'
 import type { LiveEventList$key } from '@/relay/__generated__/LiveEventList.graphql'
 import type { LiveEventListPaginationQuery } from '@/relay/__generated__/LiveEventListPaginationQuery.graphql'
 import type { LiveEventsQuery } from '@/relay/__generated__/LiveEventsQuery.graphql'
@@ -88,7 +89,7 @@ export default function LiveEventList(props: {
   const chronoItem = useCallback(
     (i: number) => (
       <Row>
-        <LiveEvent eventRef={events[i].event} />
+        <LiveEvent eventRef={events[i].event} scope={MIXED_SCOPE} />
       </Row>
     ),
     [events]

@@ -46,7 +46,7 @@ import {
 } from '@/context/betslip'
 import { useMediaQuery } from '@/context/hooks'
 import { useCurrency, useT, useUser } from '@/context/providers'
-import { MARKET_NAME, OUTCOME_NAME, splitMarketName } from '@/lib/market-labels'
+import { MARKET_NAME, OUTCOME_NAME, splitMarketName } from '@/lib/sport-markets'
 import { cn, formatBalance, nCk } from '@/lib/utils'
 import type { Betslip$data, Betslip$key } from '@/relay/__generated__/Betslip.graphql'
 import type { BetslipMobileBar$key } from '@/relay/__generated__/BetslipMobileBar.graphql'

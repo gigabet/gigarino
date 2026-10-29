@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dbb391035832303915b2db6daef32a0d>>
+ * @generated SignedSource<<359316a7630c9d3ff13f4e3c3a1eb78a>>
  * @lightSyntaxTransform
  */
 
@@ -10,14 +10,10 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type LiveTournament$data = {
-  readonly category: {
-    readonly countryCode: string | null | undefined;
-    readonly name: string;
-  };
-  readonly name: string;
   readonly sport: {
     readonly key: string;
   };
+  readonly " $fragmentSpreads": FragmentRefs<"LiveTournamentTitle">;
   readonly " $fragmentType": "LiveTournament";
 };
 export type LiveTournament$key = {
@@ -25,21 +21,12 @@ export type LiveTournament$key = {
   readonly " $fragmentSpreads": FragmentRefs<"LiveTournament">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
-};
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "LiveTournament",
   "selections": [
-    (v0/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -59,30 +46,15 @@ return {
       "storageKey": null
     },
     {
-      "alias": null,
       "args": null,
-      "concreteType": "Category",
-      "kind": "LinkedField",
-      "name": "category",
-      "plural": false,
-      "selections": [
-        (v0/*:: as any*/),
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "countryCode",
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
+      "kind": "FragmentSpread",
+      "name": "LiveTournamentTitle"
     }
   ],
   "type": "Tournament",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "f6c9ac12655fa3f01a3e03692f22a79e";
+(node as any).hash = "2db3c78e74ef3aa76207bbd206b8f1b7";
 
 export default node;

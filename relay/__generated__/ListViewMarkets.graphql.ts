@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<bd13fabe10f091a39dec97b6ae8804f6>>
+ * @generated SignedSource<<229f1f55cccc53d327f0e434696887a3>>
  * @lightSyntaxTransform
  */
 
@@ -21,6 +21,9 @@ export type ListViewMarkets$data = {
     readonly period: MarketPeriod;
     readonly " $fragmentSpreads": FragmentRefs<"ListViewMarket">;
   }>;
+  readonly sport: {
+    readonly key: string;
+  };
   readonly " $fragmentType": "ListViewMarkets";
 };
 export type ListViewMarkets$key = {
@@ -34,6 +37,24 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "ListViewMarkets",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Sport",
+      "kind": "LinkedField",
+      "name": "sport",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "key",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -101,6 +122,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "eda106edb7dbc8fd8f410e58e72a1bf5";
+(node as any).hash = "32f2252bdfa15b62b788f0d49adeedfe";
 
 export default node;

@@ -7,12 +7,13 @@ import { SportIconBadge } from '@/components/sport-icon'
 import { getSportTheme } from '@/lib/sport-theme'
 import { cn, stripCategory } from '@/lib/utils'
 import type { LiveTournament$key } from '@/relay/__generated__/LiveTournament.graphql'
+import type { LiveTournamentTitle$key } from '@/relay/__generated__/LiveTournamentTitle.graphql'
 
-export function HeaderRow(props: { left?: React.ReactNode }) {
+export function HeaderRow(props: { left?: React.ReactNode; sport?: string | null }) {
   return (
     <div className='text-secondary relative flex h-12 items-center gap-4 border-b border-white/5 text-sm'>
       <div className={HEADER_LEAD}>{props.left}</div>
-      <ListViewMarketDropdowns />
+      <ListViewMarketDropdowns sport={props.sport} />
       <div className='hidden sm:block sm:w-0 lg:w-34' />
     </div>
   )
@@ -50,10 +51,10 @@ export function LiveMarketsHeader(props: { stuck?: boolean }) {
 // }
 
 /** Title + accent line. Positions against HeaderRow (the nearest `relative`). */
-export function TournamentTitle(props: { tournamentRef: LiveTournament$key }) {
+export function TournamentTitle(props: { tournamentRef: LiveTournamentTitle$key }) {
   const data = useFragment(
     graphql`
-      fragment LiveTournament on Tournament {
+      fragment LiveTournamentTitle on Tournament {
         name
         sport {
           key
@@ -92,9 +93,21 @@ export function TournamentTitle(props: { tournamentRef: LiveTournament$key }) {
 
 /** Tournament header row: title on the left, market dropdowns on the right. */
 export default function LiveTournament(props: { tournamentRef: LiveTournament$key }) {
+  const data = useFragment(
+    graphql`
+      fragment LiveTournament on Tournament {
+        sport {
+          key
+        }
+        ...LiveTournamentTitle
+      }
+    `,
+    props.tournamentRef
+  )
+
   return (
     <div className={cn('pt-0.5', GAP)}>
-      <HeaderRow left={<TournamentTitle tournamentRef={props.tournamentRef} />} />
+      <HeaderRow sport={data.sport.key} left={<TournamentTitle tournamentRef={data} />} />
     </div>
   )
 }

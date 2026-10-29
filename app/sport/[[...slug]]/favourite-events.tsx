@@ -15,6 +15,7 @@ import PrematchEvent from '@/app/sport/[[...slug]]/prematch-event'
 import { HEADER_LEAD, ListViewMarketDropdowns } from '@/components/list-view-markets'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { useT, useUser } from '@/context/providers'
+import { MIXED_SCOPE } from '@/lib/sport-markets'
 import { getSportTheme } from '@/lib/sport-theme'
 import { cn } from '@/lib/utils'
 import type { FavouriteEvents$key } from '@/relay/__generated__/FavouriteEvents.graphql'
@@ -102,7 +103,7 @@ function FavouriteEventsList(props: { queryRef: PreloadedQuery<PrematchQuery> })
       </div>
       <div className='flex flex-col gap-3'>
         {events.map(node => (
-          <PrematchEvent key={node.id} node={node} />
+          <PrematchEvent key={node.id} node={node} scope={MIXED_SCOPE} />
         ))}
       </div>
     </section>

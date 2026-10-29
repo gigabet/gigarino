@@ -14,7 +14,7 @@ import { cn, getRelativeDayLabel } from '@/lib/utils'
 import type { PrematchEvent$key } from '@/relay/__generated__/PrematchEvent.graphql'
 import PrematchSingleViewQueryNode from '@/relay/__generated__/PrematchSingleViewQuery.graphql'
 
-export default function PrematchEvent(props: { node: PrematchEvent$key }) {
+export default function PrematchEvent(props: { node: PrematchEvent$key; scope?: string }) {
   const data = useFragment(
     graphql`
       fragment PrematchEvent on Event {
@@ -71,7 +71,7 @@ export default function PrematchEvent(props: { node: PrematchEvent$key }) {
         </Link>
 
         <Suspense fallback={<ListViewMarketsSkeleton />}>
-          <ListViewMarkets event={data} />
+          <ListViewMarkets event={data} scope={props.scope} />
         </Suspense>
       </div>
 

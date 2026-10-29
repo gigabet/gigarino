@@ -11,6 +11,7 @@ import { liveSportFilterState, useOrderedLiveEvents } from '@/app/live/live-stat
 import { HeaderRow } from '@/app/live/live-tournament'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { useT, useUser } from '@/context/providers'
+import { MIXED_SCOPE } from '@/lib/sport-markets'
 import { getSportTheme } from '@/lib/sport-theme'
 import type { FavouriteLiveEvents$key } from '@/relay/__generated__/FavouriteLiveEvents.graphql'
 import type { LiveLayoutQuery } from '@/relay/__generated__/LiveLayoutQuery.graphql'
@@ -99,7 +100,7 @@ function ListSection(props: { queryRef: LayoutRef }) {
       <div className='flex flex-col'>
         {events.map(e => (
           <div key={e.id} className='sm:pb-3'>
-            <LiveEvent eventRef={e.event} />
+            <LiveEvent eventRef={e.event} scope={MIXED_SCOPE} />
           </div>
         ))}
       </div>

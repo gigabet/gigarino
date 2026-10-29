@@ -30,7 +30,7 @@ const STATUS_LABEL: Record<string, string> = {
   POSTPONED: tKey('Postponed'),
 }
 
-export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
+export default function LiveEvent(props: { eventRef: LiveEvent$key; scope?: string }) {
   const event = useFragment(
     graphql`
       fragment LiveEvent on Event {
@@ -77,7 +77,7 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key }) {
           <LiveTeams event={event} />
           <LiveScore event={event} />
         </Link>
-        <ListViewMarkets event={event} />
+        <ListViewMarkets event={event} scope={props.scope} />
       </div>
 
       <div className='relative flex items-center justify-between gap-4 lg:contents'>

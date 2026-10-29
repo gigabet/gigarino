@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1e7d8639ad5f7dbf1afc9998beead31c>>
+ * @generated SignedSource<<77fcc98227305b6d8827abd77ec63fb3>>
  * @lightSyntaxTransform
  */
 
@@ -183,8 +183,8 @@ return {
                     "selections": [
                       (v4/*:: as any*/),
                       (v2/*:: as any*/),
-                      (v6/*:: as any*/),
                       (v5/*:: as any*/),
+                      (v6/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -439,12 +439,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e2f1ab11b259352da47ea7b790fb557f",
+    "cacheID": "5d54276d5db9d72abb3947ecf357f741",
     "id": null,
     "metadata": {},
     "name": "LiveEventListPaginationQuery",
     "operationKind": "query",
-    "text": "query LiveEventListPaginationQuery(\n  $after: String\n  $first: Int = 20\n  $orderBy: LiveEventOrder = TOURNAMENT\n  $sport: String\n) {\n  ...LiveEventList_2dsFoV\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment ListViewMarket on Market {\n  kind\n  line\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n  }\n}\n\nfragment ListViewMarkets on Event {\n  markets {\n    id\n    kind\n    period\n    line\n    outcomes {\n      price\n      id\n    }\n    ...ListViewMarket\n  }\n}\n\nfragment LiveEvent on Event {\n  id\n  homeCompetitor\n  awayCompetitor\n  homeScore\n  awayScore\n  tradingStatus\n  oddCount\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...ListViewMarkets\n  ...FavouriteButton\n  ...TrackerButton\n}\n\nfragment LiveEventList_2dsFoV on Query {\n  liveEvents(first: $first, after: $after, orderBy: $orderBy, sport: $sport) {\n    edges {\n      node {\n        ...LiveOrder\n        ...LiveEvent\n        tournament {\n          ...LiveTournament\n          id\n        }\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  status\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  homeScore\n  awayScore\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n\nfragment LiveTournament on Tournament {\n  name\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n}\n\nfragment TrackerButton on Event {\n  id\n  sportradarMatchId\n}\n"
+    "text": "query LiveEventListPaginationQuery(\n  $after: String\n  $first: Int = 20\n  $orderBy: LiveEventOrder = TOURNAMENT\n  $sport: String\n) {\n  ...LiveEventList_2dsFoV\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment ListViewMarket on Market {\n  kind\n  line\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n  }\n}\n\nfragment ListViewMarkets on Event {\n  sport {\n    key\n    id\n  }\n  markets {\n    id\n    kind\n    period\n    line\n    outcomes {\n      price\n      id\n    }\n    ...ListViewMarket\n  }\n}\n\nfragment LiveEvent on Event {\n  id\n  homeCompetitor\n  awayCompetitor\n  homeScore\n  awayScore\n  tradingStatus\n  oddCount\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...ListViewMarkets\n  ...FavouriteButton\n  ...TrackerButton\n}\n\nfragment LiveEventList_2dsFoV on Query {\n  liveEvents(first: $first, after: $after, orderBy: $orderBy, sport: $sport) {\n    edges {\n      node {\n        ...LiveOrder\n        ...LiveEvent\n        tournament {\n          ...LiveTournament\n          id\n        }\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  status\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  homeScore\n  awayScore\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n\nfragment LiveTournament on Tournament {\n  sport {\n    key\n    id\n  }\n  ...LiveTournamentTitle\n}\n\nfragment LiveTournamentTitle on Tournament {\n  name\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n}\n\nfragment TrackerButton on Event {\n  id\n  sportradarMatchId\n}\n"
   }
 };
 })();

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2b6d227f0802dbc41ebb6045fcaca6ea>>
+ * @generated SignedSource<<d84b408994b35da14792be27d13af220>>
  * @lightSyntaxTransform
  */
 
@@ -60,6 +60,19 @@ v3 = {
 v4 = {
   "alias": null,
   "args": null,
+  "concreteType": "Sport",
+  "kind": "LinkedField",
+  "name": "sport",
+  "plural": false,
+  "selections": [
+    (v3/*:: as any*/),
+    (v2/*:: as any*/)
+  ],
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
@@ -116,19 +129,7 @@ return {
           {
             "kind": "InlineFragment",
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Sport",
-                "kind": "LinkedField",
-                "name": "sport",
-                "plural": false,
-                "selections": [
-                  (v3/*:: as any*/),
-                  (v2/*:: as any*/)
-                ],
-                "storageKey": null
-              },
+              (v4/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -137,7 +138,7 @@ return {
                 "name": "category",
                 "plural": false,
                 "selections": [
-                  (v4/*:: as any*/),
+                  (v5/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -149,7 +150,7 @@ return {
                 ],
                 "storageKey": null
               },
-              (v4/*:: as any*/),
+              (v5/*:: as any*/),
               {
                 "if": null,
                 "kind": "Defer",
@@ -254,6 +255,7 @@ return {
                                 "kind": "Defer",
                                 "label": "PrematchEvent$defer$ListViewMarkets",
                                 "selections": [
+                                  (v4/*:: as any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -344,12 +346,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ee945e285b8aca4ba81ea7c03df6e3ea",
+    "cacheID": "a7812250b23f7c56ff96f2257688b7ae",
     "id": null,
     "metadata": {},
     "name": "TournamentRefetch",
     "operationKind": "query",
-    "text": "query TournamentRefetch(\n  $eventCount: Int\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...Tournament\n    id\n  }\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment ListViewMarket on Market {\n  kind\n  line\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n  }\n}\n\nfragment ListViewMarkets on Event {\n  markets {\n    id\n    kind\n    period\n    line\n    outcomes {\n      price\n      id\n    }\n    ...ListViewMarket\n  }\n}\n\nfragment PrematchEvent on Event {\n  id\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  oddCount\n  ...FavouriteButton\n  ...TrackerButton\n  ...ListViewMarkets @defer(label: \"PrematchEvent$defer$ListViewMarkets\")\n}\n\nfragment Tournament on Tournament {\n  id\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n  name\n  ...TournamentEventList @defer(label: \"Tournament$defer$TournamentEventList\")\n}\n\nfragment TournamentEventList on Tournament {\n  events(first: $eventCount) {\n    edges {\n      node {\n        id\n        isLive\n        ...PrematchEvent\n      }\n    }\n  }\n}\n\nfragment TrackerButton on Event {\n  id\n  sportradarMatchId\n}\n"
+    "text": "query TournamentRefetch(\n  $eventCount: Int\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...Tournament\n    id\n  }\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment ListViewMarket on Market {\n  kind\n  line\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n  }\n}\n\nfragment ListViewMarkets on Event {\n  sport {\n    key\n    id\n  }\n  markets {\n    id\n    kind\n    period\n    line\n    outcomes {\n      price\n      id\n    }\n    ...ListViewMarket\n  }\n}\n\nfragment PrematchEvent on Event {\n  id\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  oddCount\n  ...FavouriteButton\n  ...TrackerButton\n  ...ListViewMarkets @defer(label: \"PrematchEvent$defer$ListViewMarkets\")\n}\n\nfragment Tournament on Tournament {\n  id\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n  name\n  ...TournamentEventList @defer(label: \"Tournament$defer$TournamentEventList\")\n}\n\nfragment TournamentEventList on Tournament {\n  events(first: $eventCount) {\n    edges {\n      node {\n        id\n        isLive\n        ...PrematchEvent\n      }\n    }\n  }\n}\n\nfragment TrackerButton on Event {\n  id\n  sportradarMatchId\n}\n"
   }
 };
 })();

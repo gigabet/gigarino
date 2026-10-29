@@ -1,9 +1,10 @@
 'use client'
 
-import { atom, useAtom, useAtomValue } from 'jotai'
+import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { entries, keys, minBy, sortBy } from 'lodash'
 import { LockKeyhole } from 'lucide-react'
 import { Toggle } from 'radix-ui'
+import { useCallback } from 'react'
 import { graphql, useFragment } from 'react-relay'
 import { OddDelta } from '@/components/odd-delta'
 import {
@@ -18,6 +19,12 @@ import { useHasOdd, useToggleOdd } from '@/context/betslip'
 import { useUpDown } from '@/context/hooks'
 import { useT } from '@/context/providers'
 import { tKey } from '@/i18n/tKey'
+import {
+  getAvailableMarkets,
+  MARKET_LABEL,
+  MAX_COLUMNS,
+  type MarketKind,
+} from '@/lib/sport-markets'
 import { cn, swap } from '@/lib/utils'
 import type {
   ListViewMarket$key,
@@ -46,6 +53,39 @@ const marketVisibility = [
   'hidden @min-[33.5rem]/markets:flex', // 536px
   'hidden @min-[45rem]/markets:flex', // 720px
 ]
+
+// column selection per scope (a sport key, or MIXED_SCOPE)
+const selectedMarketsByScope = atom<Record<string, MarketKind[]>>({})
+
+function useMarketColumns(scope?: string | null) {
+  const available = getAvailableMarkets(scope)
+  const key = scope ?? 'mixed'
+  const stored = useAtomValue(selectedMarketsByScope)[key]
+  const setAll = useSetAtom(selectedMarketsByScope)
+
+  // drop anything the sport doesn't offer, then fill up from the defaults
+  const selected = (stored ?? []).filter(k => available.includes(k))
+  for (const k of available) {
+    if (selected.length >= MAX_COLUMNS) break
+    if (!selected.includes(k)) selected.push(k)
+  }
+
+  const choose = useCallback(
+    (index: number, value: MarketKind) =>
+      setAll(prev => {
+        const current = prev[key] ?? selected
+        const target = current.indexOf(value)
+        const next =
+          target === -1
+            ? current.map((m, i) => (i === index ? value : m))
+            : swap(current, index, target)
+        return { ...prev, [key]: next }
+      }),
+    [setAll, key, selected]
+  )
+
+  return { selected: selected.slice(0, MAX_COLUMNS), available, choose }
+}
 
 const availableMarkets = {
   match_winner: tKey('Match Winner'),
@@ -81,10 +121,13 @@ function pickMarket<T extends PickableMarket>(markets: ReadonlyArray<T>, kind: s
   return minBy(pool, spread) ?? null
 }
 
-export function ListViewMarkets(props: { event: ListViewMarkets$key }) {
+export function ListViewMarkets(props: { event: ListViewMarkets$key; scope?: string }) {
   const data = useFragment(
     graphql`
       fragment ListViewMarkets on Event {
+        sport {
+          key
+        }
         markets {
           id
           kind
@@ -100,12 +143,11 @@ export function ListViewMarkets(props: { event: ListViewMarkets$key }) {
     props.event
   )
 
-  const selectedMarkets = useAtomValue(selectedMarketsState)
+  const { selected } = useMarketColumns(props.scope ?? data?.sport.key)
 
   if (!data?.markets) return <div className='ml-auto grow' />
 
-  const marketByKind = (kind: string) => pickMarket(data.markets, kind)
-  const sortedMarkets = selectedMarkets.map(marketByKind)
+  const sortedMarkets = selected.map(kind => pickMarket(data.markets, kind))
 
   return (
     <div className={cn(MARKETS_COL, 'lg:order-4')}>
@@ -114,7 +156,7 @@ export function ListViewMarkets(props: { event: ListViewMarkets$key }) {
           <Market key={market.id} className={marketVisibility[i] ?? 'hidden'} market={market} />
         ) : (
           <div
-            key={selectedMarkets[i]}
+            key={selected[i]}
             className={cn(MARKET_CELL, 'flex h-15 gap-1', marketVisibility[i] ?? 'hidden')}
           />
         )
@@ -122,7 +164,6 @@ export function ListViewMarkets(props: { event: ListViewMarkets$key }) {
     </div>
   )
 }
-
 export function ListViewMarketsSkeleton() {
   return (
     <div className={cn(MARKETS_COL, 'lg:order-4')}>
@@ -133,32 +174,21 @@ export function ListViewMarketsSkeleton() {
   )
 }
 
-export function ListViewMarketDropdowns() {
-  const [selectedMarkets, setSelectedMarkets] = useAtom(selectedMarketsState)
+export function ListViewMarketDropdowns(props: { sport?: string | null }) {
+  const { selected, available, choose } = useMarketColumns(props.sport)
   const t = useT()
 
   return (
     <div className={cn(MARKETS_COL, 'text-foreground')}>
-      {selectedMarkets.map((market, i) => (
-        <Select
-          key={market}
-          value={market}
-          onValueChange={(value: keyof typeof availableMarkets) =>
-            setSelectedMarkets(markets => {
-              const targetIndex = markets.indexOf(value)
-              return targetIndex === -1
-                ? markets.map((m, mi) => (mi === i ? value : m))
-                : swap(markets, i, targetIndex)
-            })
-          }
-        >
+      {selected.map((market, i) => (
+        <Select key={market} value={market} onValueChange={(v: MarketKind) => choose(i, v)}>
           <SelectTrigger className={cn(MARKET_CELL, marketVisibility[i] ?? 'hidden')} size='sm'>
-            <SelectValue>{t(availableMarkets[market])}</SelectValue>
+            <SelectValue>{t(MARKET_LABEL[market])}</SelectValue>
           </SelectTrigger>
           <SelectContent>
-            {entries(availableMarkets).map(([kind, name]) => (
+            {available.map(kind => (
               <SelectItem key={kind} value={kind}>
-                {t(name)}
+                {t(MARKET_LABEL[kind])}
               </SelectItem>
             ))}
           </SelectContent>
