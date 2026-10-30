@@ -1,8 +1,15 @@
 'use client'
 
-import { forwardRef, useCallback, useMemo } from 'react'
+import { forwardRef, useCallback, useMemo, useRef } from 'react'
 import { graphql, type PreloadedQuery, usePaginationFragment, usePreloadedQuery } from 'react-relay'
-import { GroupedVirtuoso, type TopItemListProps, Virtuoso } from 'react-virtuoso'
+import {
+  GroupedVirtuoso,
+  type GroupedVirtuosoHandle,
+  type StateSnapshot,
+  type TopItemListProps,
+  Virtuoso,
+  type VirtuosoHandle,
+} from 'react-virtuoso'
 import LiveEvent, { LiveEventSkeleton } from '@/app/live/live-event'
 import { useOrderedLiveEvents } from '@/app/live/live-state'
 import type { LiveSort } from '@/app/live/live-toolbar'
@@ -14,6 +21,7 @@ import type { LiveEventsQuery } from '@/relay/__generated__/LiveEventsQuery.grap
 import LiveEventsQueryNode from '@/relay/__generated__/LiveEventsQuery.graphql'
 
 const PAGE_SIZE = 20
+const snapshots = new Map<string, StateSnapshot>()
 
 // Virtuoso's sticky wrapper defaults to top: 0, which is under the h-20 navbar
 const BelowNavbar = forwardRef<HTMLDivElement, TopItemListProps>(function BelowNavbar(
@@ -109,23 +117,41 @@ export default function LiveEventList(props: {
     [rows]
   )
 
+  const snapshotKey = `${props.sort}:${props.queryRef.variables.sport ?? 'all'}`
+
+  const groupedRef = useRef<VirtuosoHandle>(null)
+  const chronoRef = useRef<GroupedVirtuosoHandle>(null)
+
+  // Save whenever scrolling settles. On unmount the ref is already detached,
+  // so snapshotting in a cleanup effect doesn't work reliably.
+  const saveState = useCallback(
+    (scrolling: boolean) => {
+      if (scrolling) return
+      const handle = props.sort === 'chronological' ? chronoRef.current : groupedRef.current
+      handle?.getState(s => snapshots.set(snapshotKey, s))
+    },
+    [props.sort, snapshotKey]
+  )
+
+  const restoreStateFrom = snapshots.get(snapshotKey)
+
   if (events.length === 0) return <EmptyLive />
 
   if (!groups)
     return (
       <div>
-        <div
-          // ref={sentinelRef}
-          className='h-px'
-        />
+        <div className='h-px' />
         <GroupedVirtuoso
+          ref={chronoRef}
           key='chronological'
           useWindowScroll
+          restoreStateFrom={restoreStateFrom}
+          isScrolling={saveState}
           groupCounts={[events.length]}
           increaseViewportBy={{ top: 800, bottom: 800 }}
           endReached={loadMore}
           components={{ TopItemList: BelowNavbar }}
-          groupContent={() => <LiveMarketsHeader />} //stuck={stuck} />}
+          groupContent={() => <LiveMarketsHeader />}
           itemContent={chronoItem}
           defaultItemHeight={128}
         />
@@ -134,8 +160,11 @@ export default function LiveEventList(props: {
 
   return (
     <Virtuoso
+      ref={groupedRef}
       key='grouped'
       useWindowScroll
+      restoreStateFrom={restoreStateFrom}
+      isScrolling={saveState}
       totalCount={rows.length}
       computeItemKey={i => rows[i].key}
       increaseViewportBy={{ top: 800, bottom: 800 }}

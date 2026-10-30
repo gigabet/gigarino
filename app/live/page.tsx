@@ -24,6 +24,13 @@ export default function LivePage() {
 
   useEffect(() => () => disposeQuery(), [disposeQuery])
 
+  useEffect(() => {
+    history.scrollRestoration = 'manual'
+    return () => {
+      history.scrollRestoration = 'auto'
+    }
+  })
+
   return (
     <main className='flex min-w-0 flex-col gap-4'>
       <Suspense fallback={<LiveListSkeleton />}>

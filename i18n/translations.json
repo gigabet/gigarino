@@ -331,6 +331,10 @@
     "de": "Suche löschen",
     "tr": "Aramayı temizle"
   },
+  "Close match tracker": {
+    "de": "Tracker schließen",
+    "tr": "Takipçiyi kapat"
+  },
   "Closed": {
     "de": "Zu",
     "tr": "Kapalı"
@@ -598,6 +602,10 @@
   "Help Centre": {
     "de": "Hilfecenter",
     "tr": "Yardım Merkezi"
+  },
+  "Hide match tracker": {
+    "de": "Tracker ausblenden",
+    "tr": "Takipçiyi gizle"
   },
   "Highlights": {
     "de": "Highlights",
@@ -1079,6 +1087,14 @@
     "de": "Weniger Statistiken",
     "tr": "Daha az istatistik"
   },
+  "Show match tracker": {
+    "de": "Tracker anzeigen",
+    "tr": "Takipçiyi göster"
+  },
+  "Show statistics": {
+    "de": "Statistik anzeigen",
+    "tr": "İstatistikleri göster"
+  },
   "Sign in to view your tickets": {
     "de": "Anmelden, um Tickets zu sehen",
     "tr": "Biletleri görmek için giriş yapın"
@@ -1130,6 +1146,10 @@
   "Stake per bet": {
     "de": "Einsatz pro Wette",
     "tr": "Bahis başına miktar"
+  },
+  "Statistics": {
+    "de": "Statistik",
+    "tr": "İstatistikler"
   },
   "Stats": {
     "de": "Statistiken",
@@ -1294,25 +1314,5 @@
   "Your betslip is empty": {
     "de": "Ihr Wettschein ist leer",
     "tr": "Kuponunuz boş"
-  },
-  "Close match tracker": {
-    "de": "Tracker schließen",
-    "tr": "Takipçiyi kapat"
-  },
-  "Hide match tracker": {
-    "de": "Tracker ausblenden",
-    "tr": "Takipçiyi gizle"
-  },
-  "Show match tracker": {
-    "de": "Tracker anzeigen",
-    "tr": "Takipçiyi göster"
-  },
-  "Show statistics": {
-    "de": "Statistik anzeigen",
-    "tr": "İstatistikleri göster"
-  },
-  "Statistics": {
-    "de": "Statistik",
-    "tr": "İstatistikler"
   }
 }
