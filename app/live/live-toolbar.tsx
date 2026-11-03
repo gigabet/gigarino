@@ -1,8 +1,8 @@
 'use client'
 
+import { cx } from 'class-variance-authority'
 import { LayoutListIcon, Rows3Icon, SlidersHorizontalIcon } from 'lucide-react'
 import * as DropdownMenu from '@/components/ui/dropdown-menu'
-import { cx } from 'class-variance-authority'
 
 export type LiveSort = 'tournament' | 'chronological'
 export type LiveView = 'list' | 'single'
@@ -43,16 +43,16 @@ export default function LiveToolbar(props: {
 
       <div className='bg-dark-200 flex items-center gap-1 rounded-full border border-white/5 p-1'>
         <ViewButton
-          active={props.view === 'list'}
-          onClick={() => props.onViewChangeAction('list')}
-          icon={<Rows3Icon className='size-3.5' />}
-          label='List'
-        />
-        <ViewButton
           active={props.view === 'single'}
           onClick={() => props.onViewChangeAction('single')}
           icon={<LayoutListIcon className='size-3.5' />}
           label='Single'
+        />
+        <ViewButton
+          active={props.view === 'list'}
+          onClick={() => props.onViewChangeAction('list')}
+          icon={<Rows3Icon className='size-3.5' />}
+          label='List'
         />
       </div>
     </div>

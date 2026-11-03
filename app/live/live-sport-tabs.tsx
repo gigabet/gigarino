@@ -6,6 +6,7 @@ import { fetchQuery, graphql, useRefetchableFragment, useRelayEnvironment } from
 import { SportIcon } from '@/components/sport-icon'
 import { useT } from '@/context/providers'
 import { getSportTheme } from '@/lib/sport-theme'
+import { cn } from '@/lib/utils'
 import type { LiveSportTabs$key } from '@/relay/__generated__/LiveSportTabs.graphql'
 import LiveSportTabsRefetchNode from '@/relay/__generated__/LiveSportTabsRefetch.graphql'
 
@@ -46,11 +47,11 @@ export default function LiveSportTabs(props: {
   }, [env])
 
   return (
-    <div className='flex scrollbar-none items-center gap-2 overflow-x-auto'>
+    <div className='flex scrollbar-none items-stretch gap-2 overflow-x-auto py-1 lg:items-center lg:py-0'>
       <Tab
         active={props.active === null}
         onClick={() => props.onChangeAction(null)}
-        icon={<SportIcon sport='highlights' colored className='size-4' />}
+        icon={<SportIcon sport='highlights' colored className='size-5 lg:size-4' />}
         label={t('All')}
         count={total}
       />
@@ -64,7 +65,7 @@ export default function LiveSportTabs(props: {
               key={sport.key}
               active={isActive}
               onClick={() => props.onChangeAction(sport.key)}
-              icon={<SportIcon sport={sport.key} colored className='size-4' />}
+              icon={<SportIcon sport={sport.key} colored className='size-5 lg:size-4' />}
               label={sport.name}
               count={sport.liveEventCount}
               style={
@@ -95,14 +96,20 @@ function Tab(props: {
       type='button'
       onClick={props.onClick}
       style={props.style}
-      className={cx(
-        'bg-dark-200 sport-texture flex shrink-0 items-center gap-2 rounded-2xl border border-white/5 px-3.5 py-2 text-xs whitespace-nowrap transition-colors',
+      className={cn(
+        'bg-dark-200 sport-texture relative shrink-0 border border-white/5 text-xs whitespace-nowrap transition-colors',
+        // <lg: vertical squircle
+        'flex min-w-18 flex-col items-center justify-center gap-1.5 rounded-[1.375rem] px-3 py-3 [corner-shape:squircle]',
+        // lg+: original horizontal pill
+        'lg:min-w-0 lg:flex-row lg:gap-2 lg:rounded-2xl lg:px-3.5 lg:py-2',
         props.active ? 'text-white' : 'text-white/60 hover:bg-white/5 hover:text-white'
       )}
     >
-      {props.icon}
-      {props.label}
-      <span className='text-secondary'>{props.count}</span>
+      <span className='[&>svg]:size-5 lg:[&>svg]:size-4'>{props.icon}</span>
+      <span className='max-w-20 truncate'>{props.label}</span>
+      <span className='text-secondary absolute top-1 right-2 text-[0.65rem] lg:static lg:text-xs'>
+        {props.count}
+      </span>
     </button>
   )
 }
