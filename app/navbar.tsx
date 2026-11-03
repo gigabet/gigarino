@@ -20,7 +20,6 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import BottomBar from '@/app/bottom-bar'
 import Search from '@/app/search'
-import { LocaleSwitcher } from '@/components/locale-switcher'
 import LoginDialog from '@/components/login-dialog'
 import Logo from '@/components/logo'
 import * as DropdownMenu from '@/components/ui/dropdown-menu'
@@ -32,10 +31,10 @@ import { formatBalance } from '@/lib/utils'
 import type { Wallet } from '@/types'
 
 const navLinks = [
-  { label: tKey('Casino'), href: '/', icon: CoinsIcon },
-  { label: tKey('Live Casino'), href: '/casino/live-casino', icon: RadioIcon },
-  { label: tKey('Sports'), href: '/sport', icon: VolleyballIcon },
+  { label: tKey('Sports'), href: '/', icon: VolleyballIcon },
   { label: tKey('In Play'), href: '/live', icon: TvMinimalPlayIcon },
+  { label: tKey('Casino'), href: '/casino', icon: CoinsIcon },
+  { label: tKey('Live Casino'), href: '/casino/live-casino', icon: RadioIcon },
 ]
 const navbarMobileMenuState = atom(false)
 export const NAVBAR_HEIGHT = 'h-20'

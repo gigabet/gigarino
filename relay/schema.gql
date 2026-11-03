@@ -346,7 +346,7 @@ type Event implements Node {
   isFavourite: Boolean!
 
   """
-  True while the match is in play. Prematch views should skip events where this is true; live views list only these.
+  True while the match is on the in-play list. Prematch views should skip events where this is true; live views list only these. With status SCHEDULED it has not kicked off yet ("Starting soon").
   """
   isLive: Boolean!
 
@@ -400,6 +400,10 @@ type Event implements Node {
   Kick-off (UTC).
   """
   startTime: DateTimeISO!
+
+  """
+  Lifecycle state. SCHEDULED together with isLive = true means the match is on the in-play list but has not kicked off yet: show "Starting soon", not a running clock.
+  """
   status: EventStatus!
   tournament: Tournament!
   tradingStatus: TradingStatus!
