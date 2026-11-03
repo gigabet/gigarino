@@ -142,3 +142,24 @@ export function useSidebarSearch() {
 
   return { term, setTerm }
 }
+
+/** Returns an id while a goal "just happened" (score went up), else null. */
+export function useGoalFlash(score: number | null | undefined, enabled = true, ttl = 6000) {
+  const prev = useRef(score)
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const [goalId, setGoalId] = useState<number | null>(null)
+
+  useEffect(() => {
+    const before = prev.current ?? 0
+    prev.current = score // always track, even when disabled
+    if (!enabled || score == null || score <= before) return
+
+    clearTimeout(timer.current)
+    setGoalId(Date.now()) // new key => badge re-animates on back-to-back goals
+    timer.current = setTimeout(() => setGoalId(null), ttl)
+  }, [score, enabled, ttl])
+
+  useEffect(() => () => clearTimeout(timer.current), [])
+
+  return goalId
+}

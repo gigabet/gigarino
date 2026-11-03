@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<93f80cb8b8d1220af948a985689e6304>>
+ * @generated SignedSource<<42f3ab4d7fe93e4afd581ac318dc0030>>
  * @lightSyntaxTransform
  */
 
@@ -244,6 +244,25 @@ return {
               {
                 "alias": null,
                 "args": null,
+                "concreteType": "Sport",
+                "kind": "LinkedField",
+                "name": "sport",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "key",
+                    "storageKey": null
+                  },
+                  (v4/*:: as any*/)
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
                 "kind": "ScalarField",
                 "name": "period",
                 "storageKey": null
@@ -292,12 +311,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "005a15f3f3b2e60a986802df70d8f15b",
+    "cacheID": "344659378aad191e4fe75f1115187495",
     "id": null,
     "metadata": {},
     "name": "LiveStateSubscription",
     "operationKind": "subscription",
-    "text": "subscription LiveStateSubscription(\n  $eventIds: [ID!]!\n) {\n  eventStateUpdated(eventIds: $eventIds) {\n    updatedAt\n    timings {\n      backendEmittedAt\n      backendPushedAt\n      backendReceivedAt\n      feedReceivedAt\n      scraperPublishedAt\n    }\n    event {\n      id\n      status\n      tradingStatus\n      homeCompetitor\n      awayCompetitor\n      homeScore\n      awayScore\n      ...LiveScore\n      ...LiveTime\n    }\n  }\n}\n\nfragment LiveScore on Event {\n  homeScore\n  awayScore\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n"
+    "text": "subscription LiveStateSubscription(\n  $eventIds: [ID!]!\n) {\n  eventStateUpdated(eventIds: $eventIds) {\n    updatedAt\n    timings {\n      backendEmittedAt\n      backendPushedAt\n      backendReceivedAt\n      feedReceivedAt\n      scraperPublishedAt\n    }\n    event {\n      id\n      status\n      tradingStatus\n      homeCompetitor\n      awayCompetitor\n      homeScore\n      awayScore\n      ...LiveScore\n      ...LiveTime\n    }\n  }\n}\n\nfragment LiveScore on Event {\n  status\n  sport {\n    key\n    id\n  }\n  homeScore\n  awayScore\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n"
   }
 };
 })();

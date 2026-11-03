@@ -10,11 +10,13 @@ import { FINISHED } from '@/app/live/live-state'
 import { useLiveRowRegistration } from '@/app/live/live-subscriptions'
 import { useRefetchBatcher, useRefetchRegistration } from '@/app/live/refetch-context'
 import { FavouriteButton } from '@/components/favourite-button'
+import { GoalBadge, hasGoals } from '@/components/goal-badge'
 import { ListViewMarkets, ROW_LEAD } from '@/components/list-view-markets'
 import { TeamBadge } from '@/components/team-badge'
 import { TrackerButton } from '@/components/tracker-button'
 import { buttonVariants } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
+import { useGoalFlash } from '@/context/hooks'
 import { useT } from '@/context/providers'
 import { tKey } from '@/i18n/tKey'
 import { cn } from '@/lib/utils'
@@ -276,7 +278,10 @@ export function LiveScore(props: { event: LiveScore$key }) {
   const data = useFragment(
     graphql`
       fragment LiveScore on Event {
-        # id #DEBUG
+        status
+        sport {
+          key
+        }
         homeScore
         awayScore
       }
@@ -284,33 +289,27 @@ export function LiveScore(props: { event: LiveScore$key }) {
     props.event
   )
 
-  // // FIXME
-  // /** DEBUG */
-  // const prevScore = useRef<string | null>(null)
-  // useEffect(() => {
-  //   const score = `${data.homeScore ?? '-'}:${data.awayScore ?? '-'}`
-  //   // skip the first render; only log real changes
-  //   if (prevScore.current !== null && prevScore.current !== score) {
-  //     console.warn('[live-score] rendered', {
-  //       eventId: data.id,
-  //       from: prevScore.current,
-  //       to: score,
-  //       renderedAt: new Date().toISOString(),
-  //     })
-  //   }
-  //   prevScore.current = score
-  // }, [data.id, data.homeScore, data.awayScore])
-  // /** END DEBUG */
+  const enabled = data.status === 'LIVE' && hasGoals(data.sport.key)
 
   return (
     <div className='text-foreground ml-auto grid grid-cols-1 gap-y-2 font-mono font-semibold'>
-      <span className='flex h-6 items-center' suppressHydrationWarning>
-        {data.homeScore ?? '-'}
-      </span>
-      <span className='flex h-6 items-center' suppressHydrationWarning>
-        {data.awayScore ?? '-'}
-      </span>
+      <ScoreCell value={data.homeScore} enabled={enabled} />
+      <ScoreCell value={data.awayScore} enabled={enabled} />
     </div>
+  )
+}
+
+function ScoreCell(props: { value: number | null | undefined; enabled: boolean }) {
+  const goalId = useGoalFlash(props.value, props.enabled)
+
+  return (
+    <span
+      className={cn('relative flex h-6 items-center transition-colors', goalId && 'text-primary')}
+      suppressHydrationWarning
+    >
+      <GoalBadge goalId={goalId} />
+      {props.value ?? '-'}
+    </span>
   )
 }
 

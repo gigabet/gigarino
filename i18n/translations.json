@@ -1314,5 +1314,9 @@
   "Your betslip is empty": {
     "de": "Ihr Wettschein ist leer",
     "tr": "Kuponunuz boş"
+  },
+  "Goal": {
+    "de": "",
+    "tr": ""
   }
 }

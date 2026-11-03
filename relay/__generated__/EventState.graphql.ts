@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<96bff8c5d8b1c31ac71336463c6d5f55>>
+ * @generated SignedSource<<f4814440153ac909dff1d8805d7991e3>>
  * @lightSyntaxTransform
  */
 
@@ -13,6 +13,9 @@ import { FragmentRefs } from "relay-runtime";
 export type EventState$data = {
   readonly awayScore: number | null | undefined;
   readonly homeScore: number | null | undefined;
+  readonly sport: {
+    readonly key: string;
+  };
   readonly status: EventStatus;
   readonly " $fragmentSpreads": FragmentRefs<"LiveTime">;
   readonly " $fragmentType": "EventState";
@@ -33,6 +36,24 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "ScalarField",
       "name": "status",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Sport",
+      "kind": "LinkedField",
+      "name": "sport",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "key",
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     },
     {
@@ -59,6 +80,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "df9d36e235e1f964eb25478ad4ff19ae";
+(node as any).hash = "38553fe0a77a8e5dcca993919897de75";
 
 export default node;

@@ -8,14 +8,16 @@ import { getPeriod } from '@/app/live/helpers'
 import { useLiveClock } from '@/app/live/live-event'
 import { EventHeaderRow } from '@/components/event-header-row'
 import { FavouriteButton } from '@/components/favourite-button'
+import { GoalBadge, hasGoals } from '@/components/goal-badge'
 import MarketGroups, { MarketGroupsSkeleton } from '@/components/market-groups'
 import { MatchTracker } from '@/components/match-tracker'
 import { SportIcon } from '@/components/sport-icon'
 import StatisticsWidget, { StatisticsWidgetSkeleton } from '@/components/statistics-widget'
 import { TeamBadge } from '@/components/team-badge'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useGoalFlash } from '@/context/hooks'
 import { useLocale, useT } from '@/context/providers'
-import { getRelativeDayLabel } from '@/lib/utils'
+import { cn, getRelativeDayLabel } from '@/lib/utils'
 import type { EventState$key } from '@/relay/__generated__/EventState.graphql'
 import type { LiveSingleHeader$key } from '@/relay/__generated__/LiveSingleHeader.graphql'
 import type { LiveSingleView$key } from '@/relay/__generated__/LiveSingleView.graphql'
@@ -154,6 +156,9 @@ function EventState(props: { event: EventState$key; startTime: string }) {
     graphql`
       fragment EventState on Event {
         status
+        sport {
+          key
+        }
         homeScore
         awayScore
         ...LiveTime
@@ -163,6 +168,10 @@ function EventState(props: { event: EventState$key; startTime: string }) {
   )
 
   const { seconds } = useLiveClock(data)
+  const enabled = data.status === 'LIVE' && hasGoals(data.sport.key)
+  const homeGoal = useGoalFlash(data.homeScore, enabled)
+  const awayGoal = useGoalFlash(data.awayScore, enabled)
+
   const mins = Math.floor((seconds ?? 0) / 60)
   const secs = Math.floor((seconds ?? 0) % 60)
 
@@ -170,7 +179,14 @@ function EventState(props: { event: EventState$key; startTime: string }) {
 
   return (
     <div className='relative flex shrink-0 flex-col items-center gap-1 px-1'>
-      <span className='text-base leading-none font-bold text-white sm:text-lg'>
+      <GoalBadge goalId={homeGoal} side='left' />
+      <GoalBadge goalId={awayGoal} side='right' />
+      <span
+        className={cn(
+          'text-base leading-none font-bold text-white transition-colors sm:text-lg',
+          (homeGoal || awayGoal) && 'text-primary'
+        )}
+      >
         {data.homeScore ?? 0} - {data.awayScore ?? 0}
       </span>
       {seconds !== null && (
