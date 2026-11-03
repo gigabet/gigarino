@@ -288,7 +288,7 @@ function Column(props: { home: React.ReactNode; away: React.ReactNode; className
 }
 
 // scored in sets: the period columns already show them, and the feed's total is unreliable
-const SET_SPORTS = new Set(['tennis', 'etennis', 'volleyball', 'table-tennis'])
+export const SET_SPORTS = new Set(['tennis', 'etennis', 'volleyball', 'table-tennis'])
 export function LiveScore(props: { event: LiveScore$key }) {
   const data = useFragment(
     graphql`
@@ -316,6 +316,8 @@ export function LiveScore(props: { event: LiveScore$key }) {
 
   const live = data.status === 'LIVE'
   const enabled = live && hasGoals(data.sport.key)
+  // in set sports the last entry is the set in play; elsewhere every entry is a finished period
+  const emphasiseLast = live && SET_SPORTS.has(data.sport.key)
   const current = data.periodScores.length - 1
   const showTotal = !SET_SPORTS.has(data.sport.key) || data.periodScores.length === 0
 
@@ -335,7 +337,7 @@ export function LiveScore(props: { event: LiveScore$key }) {
               key={p.period}
               home={p.home}
               away={p.away}
-              className={cn(live && i === current && 'text-foreground font-semibold')}
+              className={cn(emphasiseLast && i === current && 'text-foreground font-semibold')}
             />
           ))}
         </div>
@@ -350,7 +352,7 @@ export function LiveScore(props: { event: LiveScore$key }) {
       )}
 
       {showTotal && (
-        <div className='grid grid-cols-1 gap-y-2'>
+        <div className='grid grid-cols-1 gap-y-2 text-xs'>
           <ScoreCell value={data.homeScore} enabled={enabled} />
           <ScoreCell value={data.awayScore} enabled={enabled} />
         </div>

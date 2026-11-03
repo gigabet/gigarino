@@ -5,8 +5,8 @@ import { SearchXIcon } from 'lucide-react'
 import { Suspense, useEffect } from 'react'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
 import { GoalBadge, hasGoals } from '@/app/live/goal-badge'
-import { getPeriod } from '@/app/live/helpers'
-import { useLiveClock } from '@/app/live/live-event'
+import { getPeriod, getPeriodAt } from '@/app/live/helpers'
+import { SET_SPORTS, useLiveClock } from '@/app/live/live-event'
 import { ServeDot } from '@/app/live/serve-dot'
 import { EventHeaderRow } from '@/components/event-header-row'
 import { FavouriteButton } from '@/components/favourite-button'
@@ -236,8 +236,13 @@ function LiveScoreboard(props: { event: LiveScoreboard$key }) {
     graphql`
       fragment LiveScoreboard on Event {
         status
+        sport {
+          key
+        }
         homeCompetitor
         awayCompetitor
+        homeScore
+        awayScore
         pointScore {
           home
           away
@@ -255,27 +260,27 @@ function LiveScoreboard(props: { event: LiveScoreboard$key }) {
 
   const live = data.status === 'LIVE'
   const points = live ? data.pointScore : null
-  if (data.periodScores.length === 0 && !points) return null
+  const inSets = SET_SPORTS.has(data.sport.key)
+  // set sports are scored by the period columns; elsewhere the total is the running score
+  const showTotal = !inSets && (data.homeScore != null || data.awayScore != null)
+  if (data.periodScores.length === 0 && !points && !showTotal) return null
 
+  const emphasiseLast = live && inSets
   const last = data.periodScores.length - 1
   const rows = [
     {
       side: 'home',
       name: data.homeCompetitor,
-      periods: data.periodScores.map(p => ({
-        period: p.period,
-        score: p.home,
-      })),
+      periods: data.periodScores.map(p => ({ period: p.period, score: p.home })),
       point: points?.home,
+      total: data.homeScore,
     },
     {
       side: 'away',
       name: data.awayCompetitor,
-      periods: data.periodScores.map(p => ({
-        period: p.period,
-        score: p.away,
-      })),
+      periods: data.periodScores.map(p => ({ period: p.period, score: p.away })),
       point: points?.away,
+      total: data.awayScore,
     },
   ]
 
@@ -289,12 +294,17 @@ function LiveScoreboard(props: { event: LiveScoreboard$key }) {
             </th>
             {data.periodScores.map(p => (
               <th key={p.period} scope='col' className='w-8 font-normal'>
-                {p.period}
+                {t(getPeriodAt(data.sport.key, p.period)?.short ?? String(p.period))}
               </th>
             ))}
             {points && (
               <th scope='col' className='text-primary w-10 font-normal'>
                 {t('Pts')}
+              </th>
+            )}
+            {showTotal && (
+              <th scope='col' className='w-12 font-normal text-white'>
+                {t('Total')}
               </th>
             )}
           </tr>
@@ -313,13 +323,16 @@ function LiveScoreboard(props: { event: LiveScoreboard$key }) {
                   key={p.period}
                   className={cn(
                     'text-center',
-                    live && i === last ? 'font-semibold text-white' : 'text-secondary'
+                    emphasiseLast && i === last ? 'font-semibold text-white' : 'text-secondary'
                   )}
                 >
                   {p.score}
                 </td>
               ))}
               {points && <td className='text-primary text-center font-semibold'>{row.point}</td>}
+              {showTotal && (
+                <td className='text-center font-semibold text-white'>{row.total ?? '-'}</td>
+              )}
             </tr>
           ))}
         </tbody>

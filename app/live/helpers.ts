@@ -76,3 +76,34 @@ export function getPeriod(period: MatchPeriod | null | undefined) {
       return { long: 'Live', short: 'Live' }
   }
 }
+
+const HALVES: MatchPeriod[] = ['FIRST_HALF', 'SECOND_HALF', 'EXTRA_TIME']
+const QUARTERS: MatchPeriod[] = [
+  'FIRST_PERIOD',
+  'SECOND_PERIOD',
+  'THIRD_PERIOD',
+  'FOURTH_PERIOD',
+  'OVERTIME',
+]
+const THIRDS: MatchPeriod[] = ['FIRST_PERIOD', 'SECOND_PERIOD', 'THIRD_PERIOD', 'OVERTIME']
+const SETS: MatchPeriod[] = ['FIRST_SET', 'SECOND_SET', 'THIRD_SET', 'FOURTH_SET', 'FIFTH_SET']
+
+// what the n-th entry of Event.periodScores means, per sport
+const PERIODS_BY_SPORT: Record<string, MatchPeriod[]> = {
+  football: HALVES,
+  esoccer: HALVES,
+  basketball: QUARTERS,
+  ebasketball: QUARTERS,
+  'ice-hockey': THIRDS,
+  'e-ice-hockey': THIRDS,
+  tennis: SETS,
+  etennis: SETS,
+  volleyball: SETS,
+  'table-tennis': SETS,
+}
+
+/** Names the n-th (1-based) entry of `periodScores`; null when the sport or index is unmapped. */
+export function getPeriodAt(sport: string, n: number) {
+  const period = PERIODS_BY_SPORT[sport]?.[n - 1]
+  return period ? getPeriod(period) : null
+}

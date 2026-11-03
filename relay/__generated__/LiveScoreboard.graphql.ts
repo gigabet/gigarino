@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c3172e66c825aa2436fced020a853118>>
+ * @generated SignedSource<<d5feb1415156a96ddd763712ce709678>>
  * @lightSyntaxTransform
  */
 
@@ -12,7 +12,9 @@ export type EventStatus = "ABANDONED" | "CANCELLED" | "ENDED" | "LIVE" | "POSTPO
 import { FragmentRefs } from "relay-runtime";
 export type LiveScoreboard$data = {
   readonly awayCompetitor: string;
+  readonly awayScore: number | null | undefined;
   readonly homeCompetitor: string;
+  readonly homeScore: number | null | undefined;
   readonly periodScores: ReadonlyArray<{
     readonly away: string;
     readonly home: string;
@@ -22,6 +24,9 @@ export type LiveScoreboard$data = {
     readonly away: string;
     readonly home: string;
   } | null | undefined;
+  readonly sport: {
+    readonly key: string;
+  };
   readonly status: EventStatus;
   readonly " $fragmentType": "LiveScoreboard";
 };
@@ -61,6 +66,24 @@ return {
     {
       "alias": null,
       "args": null,
+      "concreteType": "Sport",
+      "kind": "LinkedField",
+      "name": "sport",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "key",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
       "kind": "ScalarField",
       "name": "homeCompetitor",
       "storageKey": null
@@ -70,6 +93,20 @@ return {
       "args": null,
       "kind": "ScalarField",
       "name": "awayCompetitor",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "homeScore",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "awayScore",
       "storageKey": null
     },
     {
@@ -111,6 +148,6 @@ return {
 };
 })();
 
-(node as any).hash = "3d859bb18f121934f80f0350fdf79a1f";
+(node as any).hash = "cc49f1c2630dd89c3ed7dfe51727b18e";
 
 export default node;
