@@ -3,9 +3,9 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
 import { values } from 'lodash'
 import CategorySection from '@/app/casino/category-section'
+import { categories, getGameQuery, providersQuery } from '@/app/casino/context'
 import GameSection from '@/app/casino/game-section'
 import HeroBanner from '@/app/casino/hero-banner'
-import { categories, getGameQuery, providersQuery } from '@/app/context'
 
 export default async function Casino() {
   const queryClient = new QueryClient()

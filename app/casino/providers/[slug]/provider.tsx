@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query'
 import GameList from '@/app/casino/[slug]/game-list'
-import { providersQuery } from '@/app/context'
+import { providersQuery } from '@/app/casino/context'
 import { useT } from '@/context/providers'
 
 export default function Provider(props: { slug: string }) {

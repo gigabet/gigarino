@@ -6,9 +6,9 @@ import { atom, useAtom, useAtomValue } from 'jotai'
 import { entries } from 'lodash'
 import { motion } from 'motion/react'
 import { useRef } from 'react'
+import { type categories, getGameQuery, providersQuery } from '@/app/casino/context'
 import GameSection from '@/app/casino/game-section'
 import ProviderSection from '@/app/casino/provider-section'
-import { type categories, getGameQuery, providersQuery } from '@/app/context'
 import { useT } from '@/context/providers'
 
 const categorySectionTabState = atom<keyof typeof categories>('Providers')

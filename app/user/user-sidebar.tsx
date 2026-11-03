@@ -5,7 +5,7 @@ import { CreditCardIcon, GiftIcon, UserIcon, WalletIcon } from 'lucide-react'
 import { motion } from 'motion/react'
 import Link, { type LinkProps } from 'next/link'
 import { redirect, usePathname } from 'next/navigation'
-import { NAVBAR_HEIGHT } from '@/app/casino/navbar'
+import { NAVBAR_HEIGHT } from '@/app/navbar'
 import type { User } from '@/types'
 
 export default function UserSidebar(props: { user: User | null; pt: string }) {

@@ -1,5 +1,5 @@
 import CategoryTabs from '@/app/casino/category-tabs'
-import { categories } from '@/app/context'
+import { categories } from '@/app/casino/context'
 
 export default function CasinoLayout({
   children,

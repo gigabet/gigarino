@@ -1,6 +1,6 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
+import { getGameQuery, providersQuery } from '@/app/casino/context'
 import Provider from '@/app/casino/providers/[slug]/provider'
-import { getGameQuery, providersQuery } from '@/app/context'
 
 export default async function GamesByProvider(props: { params: Promise<{ slug: string }> }) {
   const { slug } = await props.params

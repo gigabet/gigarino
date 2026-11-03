@@ -1,6 +1,6 @@
 import { isArray } from 'lodash'
 import { tKey } from '@/i18n/tKey'
-import { getToken, getUser } from '@/lib/auth'
+import { getToken } from '@/lib/auth'
 import type { ApiResponse, ErrorResponse, GamesResponse, ProvidersResponse } from '@/types'
 
 export const categories = {

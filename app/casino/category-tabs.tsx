@@ -4,7 +4,7 @@ import { cx } from 'class-variance-authority'
 import { entries } from 'lodash'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import type { categories } from '@/app/context'
+import type { categories } from '@/app/casino/context'
 import { useT } from '@/context/providers'
 
 export default function CategoryTabs(props: { categories: typeof categories }) {

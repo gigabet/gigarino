@@ -10,7 +10,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useRef, useState } from 'react'
-import { type categories, getGameDemo, getGameQuery } from '@/app/context'
+import { type categories, getGameDemo, getGameQuery } from '@/app/casino/context'
 import { isLoadingOverlayState, useT } from '@/context/providers'
 import type { Game } from '@/types'
 

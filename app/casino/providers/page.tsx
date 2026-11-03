@@ -1,6 +1,6 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
+import { providersQuery } from '@/app/casino/context'
 import ProviderList from '@/app/casino/providers/provider-list'
-import { providersQuery } from '@/app/context'
 
 export default async function Providers() {
   const queryClient = new QueryClient()

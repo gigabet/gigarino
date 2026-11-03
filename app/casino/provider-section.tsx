@@ -8,7 +8,7 @@ import { motion } from 'motion/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRef, useState } from 'react'
-import { providersQuery } from '@/app/context'
+import { providersQuery } from '@/app/casino/context'
 import type { GameProvider } from '@/types'
 
 // const icons = {

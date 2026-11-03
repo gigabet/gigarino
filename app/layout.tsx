@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { JetBrains_Mono, Poppins, Rajdhani } from 'next/font/google'
-import Navbar from '@/app/casino/navbar'
 import Footer from '@/app/footer'
+import Navbar from '@/app/navbar'
 import ParticleBackground from '@/components/particle-background'
 import Providers, { LocaleProvider } from '@/context/providers'
 import { getToken, getUser, getUserWallet } from '@/lib/auth'

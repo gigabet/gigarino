@@ -9,7 +9,7 @@ import {
   ZapIcon,
 } from 'lucide-react'
 import Link from 'next/link'
-import { categories } from '@/app/context'
+import { categories } from '@/app/casino/context'
 import { LocaleSwitcher } from '@/components/locale-switcher'
 import Logo from '@/components/logo'
 import { getT, resolveLocale } from '@/i18n/t'

@@ -1,7 +1,7 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query'
 import { entries } from 'lodash'
 import GameList from '@/app/casino/[slug]/game-list'
-import { categories, getGameQuery } from '@/app/context'
+import { categories, getGameQuery } from '@/app/casino/context'
 import { getT } from '@/i18n/t'
 
 export default async function GamesByCategory(props: { params: Promise<{ slug: string }> }) {
