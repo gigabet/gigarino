@@ -216,14 +216,26 @@ function Market(props: { className?: string; market: ListViewMarket$key }) {
     props.market
   )
 
+  const lineFor = (outcomeKey: string): string | null => {
+    if (data.line == null) return null
+    const n = Number(data.line)
+    if (Number.isNaN(n)) return null
+
+    if (data.kind === 'over_under') return String(n)
+
+    if (data.kind === 'handicap') {
+      const v = outcomeKey === 'home' ? n : outcomeKey === 'away' ? -n : null
+      if (v === null) return null
+      return v > 0 ? `+${v}` : String(v)
+    }
+
+    return null
+  }
+
   return (
     <div className={cn(MARKET_CELL, 'flex h-15 gap-1', props.className)}>
       {sortBy(data.outcomes, e => e.index).map(odd => (
-        <OddToggle
-          key={odd.id}
-          odd={odd}
-          line={data.kind === 'over_under' && data.line != null ? String(Number(data.line)) : null}
-        />
+        <OddToggle key={odd.id} odd={odd} line={lineFor(odd.key)} />
       ))}
     </div>
   )
