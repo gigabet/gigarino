@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<62935efcc53a0c0ec592c1bbb73b712e>>
+ * @generated SignedSource<<115b3ed80af9308e4722ab60dcdac4e4>>
  * @lightSyntaxTransform
  */
 
@@ -109,6 +109,27 @@ v6 = {
   "kind": "ScalarField",
   "name": "name",
   "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "period",
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "home",
+  "storageKey": null
+},
+v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "away",
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -201,13 +222,7 @@ return {
                     "name": "tradingStatus",
                     "storageKey": null
                   },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "period",
-                    "storageKey": null
-                  },
+                  (v7/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -283,6 +298,40 @@ return {
                     "args": null,
                     "kind": "ScalarField",
                     "name": "awayScore",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "serving",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "PointScore",
+                    "kind": "LinkedField",
+                    "name": "pointScore",
+                    "plural": false,
+                    "selections": [
+                      (v8/*:: as any*/),
+                      (v9/*:: as any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "PeriodScore",
+                    "kind": "LinkedField",
+                    "name": "periodScores",
+                    "plural": true,
+                    "selections": [
+                      (v7/*:: as any*/),
+                      (v8/*:: as any*/),
+                      (v9/*:: as any*/)
+                    ],
                     "storageKey": null
                   },
                   {
@@ -403,12 +452,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b4f55a4c8938c3f86560067f2825ce9f",
+    "cacheID": "6a9e78deb89a6b506f1bd7198697b6bc",
     "id": null,
     "metadata": {},
     "name": "LiveEventSidebarPaginationQuery",
     "operationKind": "query",
-    "text": "query LiveEventSidebarPaginationQuery(\n  $after: String\n  $first: Int = 50\n  $orderBy: LiveEventOrder = TOURNAMENT\n  $sport: String\n) {\n  ...LiveEventSidebar_2dsFoV\n}\n\nfragment LiveEventSidebar_2dsFoV on Query {\n  liveEvents(first: $first, after: $after, orderBy: $orderBy, sport: $sport) {\n    edges {\n      node {\n        ...LiveOrder\n        ...LiveEventStrip\n        tournament {\n          ...LiveStripTournament\n          id\n        }\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment LiveEventStrip on Event {\n  id\n  tradingStatus\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...LiveStripOdds\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  status\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  status\n  sport {\n    key\n    id\n  }\n  homeScore\n  awayScore\n}\n\nfragment LiveStripMarket on Market {\n  outcomes {\n    id\n    index\n    ...LiveStripOdd\n  }\n}\n\nfragment LiveStripOdd on Outcome {\n  id\n  name\n  price\n  status\n}\n\nfragment LiveStripOdds on Event {\n  tradingStatus\n  mainMarkets: markets(groups: [MAIN]) {\n    id\n    kind\n    ...LiveStripMarket\n  }\n}\n\nfragment LiveStripTournament on Tournament {\n  name\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    id\n  }\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n"
+    "text": "query LiveEventSidebarPaginationQuery(\n  $after: String\n  $first: Int = 50\n  $orderBy: LiveEventOrder = TOURNAMENT\n  $sport: String\n) {\n  ...LiveEventSidebar_2dsFoV\n}\n\nfragment LiveEventSidebar_2dsFoV on Query {\n  liveEvents(first: $first, after: $after, orderBy: $orderBy, sport: $sport) {\n    edges {\n      node {\n        ...LiveOrder\n        ...LiveEventStrip\n        tournament {\n          ...LiveStripTournament\n          id\n        }\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment LiveEventStrip on Event {\n  id\n  tradingStatus\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...LiveStripOdds\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  status\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  status\n  sport {\n    key\n    id\n  }\n  homeScore\n  awayScore\n  serving\n  pointScore {\n    home\n    away\n  }\n  periodScores {\n    period\n    home\n    away\n  }\n}\n\nfragment LiveStripMarket on Market {\n  outcomes {\n    id\n    index\n    ...LiveStripOdd\n  }\n}\n\nfragment LiveStripOdd on Outcome {\n  id\n  name\n  price\n  status\n}\n\nfragment LiveStripOdds on Event {\n  tradingStatus\n  mainMarkets: markets(groups: [MAIN]) {\n    id\n    kind\n    ...LiveStripMarket\n  }\n}\n\nfragment LiveStripTournament on Tournament {\n  name\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    id\n  }\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n"
   }
 };
 })();

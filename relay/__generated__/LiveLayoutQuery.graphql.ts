@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<04eea446817c422c9b5d425108c0519a>>
+ * @generated SignedSource<<857c9f270c4cafbca4b2243b8519ef03>>
  * @lightSyntaxTransform
  */
 
@@ -206,24 +206,72 @@ v27 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "kind",
+  "name": "serving",
   "storageKey": null
 },
 v28 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "index",
+  "name": "home",
   "storageKey": null
 },
 v29 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "price",
+  "name": "away",
   "storageKey": null
 },
 v30 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "PointScore",
+  "kind": "LinkedField",
+  "name": "pointScore",
+  "plural": false,
+  "selections": [
+    (v28/*:: as any*/),
+    (v29/*:: as any*/)
+  ],
+  "storageKey": null
+},
+v31 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "PeriodScore",
+  "kind": "LinkedField",
+  "name": "periodScores",
+  "plural": true,
+  "selections": [
+    (v15/*:: as any*/),
+    (v28/*:: as any*/),
+    (v29/*:: as any*/)
+  ],
+  "storageKey": null
+},
+v32 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "kind",
+  "storageKey": null
+},
+v33 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "index",
+  "storageKey": null
+},
+v34 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "price",
+  "storageKey": null
+},
+v35 = {
   "alias": "mainMarkets",
   "args": [
     {
@@ -240,7 +288,7 @@ v30 = {
   "plural": true,
   "selections": [
     (v5/*:: as any*/),
-    (v27/*:: as any*/),
+    (v32/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -250,9 +298,9 @@ v30 = {
       "plural": true,
       "selections": [
         (v5/*:: as any*/),
-        (v28/*:: as any*/),
+        (v33/*:: as any*/),
         (v7/*:: as any*/),
-        (v29/*:: as any*/),
+        (v34/*:: as any*/),
         (v11/*:: as any*/)
       ],
       "storageKey": null
@@ -260,21 +308,21 @@ v30 = {
   ],
   "storageKey": "markets(groups:[\"MAIN\"])"
 },
-v31 = {
+v36 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v32 = {
+v37 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "cursor",
   "storageKey": null
 },
-v33 = {
+v38 = {
   "alias": null,
   "args": null,
   "concreteType": "PageInfo",
@@ -299,7 +347,7 @@ v33 = {
   ],
   "storageKey": null
 },
-v34 = [
+v39 = [
   {
     "kind": "Literal",
     "name": "favourites",
@@ -518,16 +566,19 @@ return {
                   (v24/*:: as any*/),
                   (v25/*:: as any*/),
                   (v26/*:: as any*/),
+                  (v27/*:: as any*/),
                   (v30/*:: as any*/),
-                  (v31/*:: as any*/)
+                  (v31/*:: as any*/),
+                  (v35/*:: as any*/),
+                  (v36/*:: as any*/)
                 ],
                 "storageKey": null
               },
-              (v32/*:: as any*/)
+              (v37/*:: as any*/)
             ],
             "storageKey": null
           },
-          (v33/*:: as any*/)
+          (v38/*:: as any*/)
         ],
         "storageKey": null
       },
@@ -550,7 +601,7 @@ return {
         "selections": [
           {
             "alias": "favouriteLiveEvents",
-            "args": (v34/*:: as any*/),
+            "args": (v39/*:: as any*/),
             "concreteType": "EventConnection",
             "kind": "LinkedField",
             "name": "liveEvents",
@@ -606,6 +657,9 @@ return {
                       (v20/*:: as any*/),
                       (v22/*:: as any*/),
                       (v24/*:: as any*/),
+                      (v27/*:: as any*/),
+                      (v30/*:: as any*/),
+                      (v31/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -615,7 +669,7 @@ return {
                         "plural": true,
                         "selections": [
                           (v5/*:: as any*/),
-                          (v27/*:: as any*/),
+                          (v32/*:: as any*/),
                           (v15/*:: as any*/),
                           {
                             "alias": null,
@@ -632,9 +686,9 @@ return {
                             "name": "outcomes",
                             "plural": true,
                             "selections": [
-                              (v29/*:: as any*/),
+                              (v34/*:: as any*/),
                               (v5/*:: as any*/),
-                              (v28/*:: as any*/),
+                              (v33/*:: as any*/),
                               (v6/*:: as any*/),
                               (v11/*:: as any*/)
                             ],
@@ -664,22 +718,22 @@ return {
                         "name": "sportradarMatchId",
                         "storageKey": null
                       },
-                      (v30/*:: as any*/),
-                      (v31/*:: as any*/)
+                      (v35/*:: as any*/),
+                      (v36/*:: as any*/)
                     ],
                     "storageKey": null
                   },
-                  (v32/*:: as any*/)
+                  (v37/*:: as any*/)
                 ],
                 "storageKey": null
               },
-              (v33/*:: as any*/)
+              (v38/*:: as any*/)
             ],
             "storageKey": "liveEvents(favourites:true,first:50)"
           },
           {
             "alias": "favouriteLiveEvents",
-            "args": (v34/*:: as any*/),
+            "args": (v39/*:: as any*/),
             "filters": [
               "favourites"
             ],
@@ -693,12 +747,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "a52eaa3db88a9732b474f70b2dd99600",
+    "cacheID": "23e1acb521bcbcf068490eb45eba144f",
     "id": null,
     "metadata": {},
     "name": "LiveLayoutQuery",
     "operationKind": "query",
-    "text": "query LiveLayoutQuery(\n  $orderBy: LiveEventOrder!\n  $sport: String\n  $hasUser: Boolean!\n) {\n  ...LiveHeader\n  ...LiveEventSidebar_2NLrvA\n  ...FavouriteLiveEvents @include(if: $hasUser)\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment FavouriteLiveEvents on Query {\n  favouriteLiveEvents: liveEvents(first: 50, favourites: true) {\n    edges {\n      node {\n        id\n        ...LiveOrder\n        ...LiveEvent\n        ...LiveEventStrip\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ListViewMarket on Market {\n  kind\n  line\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n  }\n}\n\nfragment ListViewMarkets on Event {\n  sport {\n    key\n    id\n  }\n  markets {\n    id\n    kind\n    period\n    line\n    outcomes {\n      price\n      id\n    }\n    ...ListViewMarket\n  }\n}\n\nfragment LiveEvent on Event {\n  id\n  homeCompetitor\n  awayCompetitor\n  homeScore\n  awayScore\n  tradingStatus\n  oddCount\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...ListViewMarkets\n  ...FavouriteButton\n  ...TrackerButton\n}\n\nfragment LiveEventSidebar_2NLrvA on Query {\n  liveEvents(first: 50, orderBy: $orderBy, sport: $sport) {\n    edges {\n      node {\n        ...LiveOrder\n        ...LiveEventStrip\n        tournament {\n          ...LiveStripTournament\n          id\n        }\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment LiveEventStrip on Event {\n  id\n  tradingStatus\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...LiveStripOdds\n}\n\nfragment LiveHeader on Query {\n  firstLive: liveEvents(first: 1, orderBy: $orderBy, sport: $sport) {\n    edges {\n      node {\n        id\n      }\n    }\n  }\n  ...LiveSportTabs\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  status\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  status\n  sport {\n    key\n    id\n  }\n  homeScore\n  awayScore\n}\n\nfragment LiveSportTabs on Query {\n  allLive: liveEvents {\n    totalCount\n  }\n  sports {\n    key\n    name\n    liveEventCount\n    id\n  }\n}\n\nfragment LiveStripMarket on Market {\n  outcomes {\n    id\n    index\n    ...LiveStripOdd\n  }\n}\n\nfragment LiveStripOdd on Outcome {\n  id\n  name\n  price\n  status\n}\n\nfragment LiveStripOdds on Event {\n  tradingStatus\n  mainMarkets: markets(groups: [MAIN]) {\n    id\n    kind\n    ...LiveStripMarket\n  }\n}\n\nfragment LiveStripTournament on Tournament {\n  name\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    id\n  }\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n\nfragment TrackerButton on Event {\n  id\n  sportradarMatchId\n}\n"
+    "text": "query LiveLayoutQuery(\n  $orderBy: LiveEventOrder!\n  $sport: String\n  $hasUser: Boolean!\n) {\n  ...LiveHeader\n  ...LiveEventSidebar_2NLrvA\n  ...FavouriteLiveEvents @include(if: $hasUser)\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment FavouriteLiveEvents on Query {\n  favouriteLiveEvents: liveEvents(first: 50, favourites: true) {\n    edges {\n      node {\n        id\n        ...LiveOrder\n        ...LiveEvent\n        ...LiveEventStrip\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ListViewMarket on Market {\n  kind\n  line\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n  }\n}\n\nfragment ListViewMarkets on Event {\n  sport {\n    key\n    id\n  }\n  markets {\n    id\n    kind\n    period\n    line\n    outcomes {\n      price\n      id\n    }\n    ...ListViewMarket\n  }\n}\n\nfragment LiveEvent on Event {\n  id\n  homeCompetitor\n  awayCompetitor\n  homeScore\n  awayScore\n  tradingStatus\n  oddCount\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...ListViewMarkets\n  ...FavouriteButton\n  ...TrackerButton\n}\n\nfragment LiveEventSidebar_2NLrvA on Query {\n  liveEvents(first: 50, orderBy: $orderBy, sport: $sport) {\n    edges {\n      node {\n        ...LiveOrder\n        ...LiveEventStrip\n        tournament {\n          ...LiveStripTournament\n          id\n        }\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment LiveEventStrip on Event {\n  id\n  tradingStatus\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...LiveStripOdds\n}\n\nfragment LiveHeader on Query {\n  firstLive: liveEvents(first: 1, orderBy: $orderBy, sport: $sport) {\n    edges {\n      node {\n        id\n      }\n    }\n  }\n  ...LiveSportTabs\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  status\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  status\n  sport {\n    key\n    id\n  }\n  homeScore\n  awayScore\n  serving\n  pointScore {\n    home\n    away\n  }\n  periodScores {\n    period\n    home\n    away\n  }\n}\n\nfragment LiveSportTabs on Query {\n  allLive: liveEvents {\n    totalCount\n  }\n  sports {\n    key\n    name\n    liveEventCount\n    id\n  }\n}\n\nfragment LiveStripMarket on Market {\n  outcomes {\n    id\n    index\n    ...LiveStripOdd\n  }\n}\n\nfragment LiveStripOdd on Outcome {\n  id\n  name\n  price\n  status\n}\n\nfragment LiveStripOdds on Event {\n  tradingStatus\n  mainMarkets: markets(groups: [MAIN]) {\n    id\n    kind\n    ...LiveStripMarket\n  }\n}\n\nfragment LiveStripTournament on Tournament {\n  name\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    id\n  }\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n\nfragment TrackerButton on Event {\n  id\n  sportradarMatchId\n}\n"
   }
 };
 })();

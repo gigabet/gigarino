@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<42f3ab4d7fe93e4afd581ac318dc0030>>
+ * @generated SignedSource<<bfeb3e06fe28fc588466b37a7483d26f>>
  * @lightSyntaxTransform
  */
 
@@ -157,6 +157,27 @@ v10 = {
   "kind": "ScalarField",
   "name": "awayScore",
   "storageKey": null
+},
+v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "home",
+  "storageKey": null
+},
+v12 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "away",
+  "storageKey": null
+},
+v13 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "period",
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -264,9 +285,37 @@ return {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "period",
+                "name": "serving",
                 "storageKey": null
               },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PointScore",
+                "kind": "LinkedField",
+                "name": "pointScore",
+                "plural": false,
+                "selections": [
+                  (v11/*:: as any*/),
+                  (v12/*:: as any*/)
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "PeriodScore",
+                "kind": "LinkedField",
+                "name": "periodScores",
+                "plural": true,
+                "selections": [
+                  (v13/*:: as any*/),
+                  (v11/*:: as any*/),
+                  (v12/*:: as any*/)
+                ],
+                "storageKey": null
+              },
+              (v13/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -311,12 +360,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "344659378aad191e4fe75f1115187495",
+    "cacheID": "238feaa8583a6ce1cab698afce740fea",
     "id": null,
     "metadata": {},
     "name": "LiveStateSubscription",
     "operationKind": "subscription",
-    "text": "subscription LiveStateSubscription(\n  $eventIds: [ID!]!\n) {\n  eventStateUpdated(eventIds: $eventIds) {\n    updatedAt\n    timings {\n      backendEmittedAt\n      backendPushedAt\n      backendReceivedAt\n      feedReceivedAt\n      scraperPublishedAt\n    }\n    event {\n      id\n      status\n      tradingStatus\n      homeCompetitor\n      awayCompetitor\n      homeScore\n      awayScore\n      ...LiveScore\n      ...LiveTime\n    }\n  }\n}\n\nfragment LiveScore on Event {\n  status\n  sport {\n    key\n    id\n  }\n  homeScore\n  awayScore\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n"
+    "text": "subscription LiveStateSubscription(\n  $eventIds: [ID!]!\n) {\n  eventStateUpdated(eventIds: $eventIds) {\n    updatedAt\n    timings {\n      backendEmittedAt\n      backendPushedAt\n      backendReceivedAt\n      feedReceivedAt\n      scraperPublishedAt\n    }\n    event {\n      id\n      status\n      tradingStatus\n      homeCompetitor\n      awayCompetitor\n      homeScore\n      awayScore\n      ...LiveScore\n      ...LiveTime\n    }\n  }\n}\n\nfragment LiveScore on Event {\n  status\n  sport {\n    key\n    id\n  }\n  homeScore\n  awayScore\n  serving\n  pointScore {\n    home\n    away\n  }\n  periodScores {\n    period\n    home\n    away\n  }\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n"
   }
 };
 })();

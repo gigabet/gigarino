@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f3e3fb193fb95a9714b71d6480968673>>
+ * @generated SignedSource<<9cecf75004d741ff71b8d0dd697cc8a6>>
  * @lightSyntaxTransform
  */
 
@@ -9,10 +9,21 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type EventStatus = "ABANDONED" | "CANCELLED" | "ENDED" | "LIVE" | "POSTPONED" | "SCHEDULED" | "%future added value";
+export type Side = "AWAY" | "HOME" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type LiveScore$data = {
   readonly awayScore: number | null | undefined;
   readonly homeScore: number | null | undefined;
+  readonly periodScores: ReadonlyArray<{
+    readonly away: string;
+    readonly home: string;
+    readonly period: number;
+  }>;
+  readonly pointScore: {
+    readonly away: string;
+    readonly home: string;
+  } | null | undefined;
+  readonly serving: Side | null | undefined;
   readonly sport: {
     readonly key: string;
   };
@@ -24,7 +35,22 @@ export type LiveScore$key = {
   readonly " $fragmentSpreads": FragmentRefs<"LiveScore">;
 };
 
-const node: ReaderFragment = {
+const node: ReaderFragment = (function(){
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "home",
+  "storageKey": null
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "away",
+  "storageKey": null
+};
+return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
@@ -68,12 +94,53 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "awayScore",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "serving",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "PointScore",
+      "kind": "LinkedField",
+      "name": "pointScore",
+      "plural": false,
+      "selections": [
+        (v0/*:: as any*/),
+        (v1/*:: as any*/)
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "PeriodScore",
+      "kind": "LinkedField",
+      "name": "periodScores",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "period",
+          "storageKey": null
+        },
+        (v0/*:: as any*/),
+        (v1/*:: as any*/)
+      ],
+      "storageKey": null
     }
   ],
   "type": "Event",
   "abstractKey": null
 };
+})();
 
-(node as any).hash = "0992d2d2e4097a4fb96ffe52766a2175";
+(node as any).hash = "dcc69a1c42b64f81bf252af10d8c86a4";
 
 export default node;

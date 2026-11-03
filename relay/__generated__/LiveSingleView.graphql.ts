@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ff114f63c7d4d12a2522c3a2f3d869fe>>
+ * @generated SignedSource<<54c5076a38f583a5db4477267c7dada9>>
  * @lightSyntaxTransform
  */
 
@@ -15,7 +15,7 @@ export type LiveSingleView$data = {
   readonly homeCompetitor: string;
   readonly homeImageUrl: string | null | undefined;
   readonly startTime: string;
-  readonly " $fragmentSpreads": FragmentRefs<"EventState" | "LiveSingleHeader" | "MarketGroups" | "MatchTracker" | "StatisticsWidget">;
+  readonly " $fragmentSpreads": FragmentRefs<"EventState" | "LiveScoreboard" | "LiveSingleHeader" | "MarketGroups" | "MatchTracker" | "ServingIndicator" | "StatisticsWidget">;
   readonly " $fragmentType": "LiveSingleView";
 };
 export type LiveSingleView$key = {
@@ -77,6 +77,16 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
+      "name": "LiveScoreboard"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ServingIndicator"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
       "name": "MatchTracker"
     },
     {
@@ -104,6 +114,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "bb8d1e01234bfcc279e2a3748da995e2";
+(node as any).hash = "9795d4dd13b3fdef17a2de701bca701b";
 
 export default node;

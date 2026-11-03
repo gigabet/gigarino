@@ -5,12 +5,13 @@ import Link from 'next/link'
 import { useEffect } from 'react'
 import { MdSignalWifiStatusbarConnectedNoInternet1 } from 'react-icons/md'
 import { graphql, useFragment } from 'react-relay'
+import { GoalBadge, hasGoals } from '@/app/live/goal-badge'
 import { getPeriod, useNow, useNowSelector } from '@/app/live/helpers'
 import { FINISHED } from '@/app/live/live-state'
 import { useLiveRowRegistration } from '@/app/live/live-subscriptions'
 import { useRefetchBatcher, useRefetchRegistration } from '@/app/live/refetch-context'
+import { ServeDot } from '@/app/live/serve-dot'
 import { FavouriteButton } from '@/components/favourite-button'
-import { GoalBadge, hasGoals } from '@/components/goal-badge'
 import { ListViewMarkets, ROW_LEAD } from '@/components/list-view-markets'
 import { TeamBadge } from '@/components/team-badge'
 import { TrackerButton } from '@/components/tracker-button'
@@ -274,6 +275,20 @@ export function LiveTeams(props: { event: LiveTeams$key }) {
   )
 }
 
+const CELL = 'flex h-6 min-w-4 items-center justify-center'
+
+// two h-6 cells with gap-y-2, so every column lines up with the rows in LiveTeams
+function Column(props: { home: React.ReactNode; away: React.ReactNode; className?: string }) {
+  return (
+    <div className={cn('grid grid-cols-1 gap-y-2', props.className)}>
+      <span className={CELL}>{props.home}</span>
+      <span className={CELL}>{props.away}</span>
+    </div>
+  )
+}
+
+// scored in sets: the period columns already show them, and the feed's total is unreliable
+const SET_SPORTS = new Set(['tennis', 'etennis', 'volleyball', 'table-tennis'])
 export function LiveScore(props: { event: LiveScore$key }) {
   const data = useFragment(
     graphql`
@@ -284,17 +299,62 @@ export function LiveScore(props: { event: LiveScore$key }) {
         }
         homeScore
         awayScore
+        serving
+        pointScore {
+          home
+          away
+        }
+        periodScores {
+          period
+          home
+          away
+        }
       }
     `,
     props.event
   )
 
-  const enabled = data.status === 'LIVE' && hasGoals(data.sport.key)
+  const live = data.status === 'LIVE'
+  const enabled = live && hasGoals(data.sport.key)
+  const current = data.periodScores.length - 1
+  const showTotal = !SET_SPORTS.has(data.sport.key) || data.periodScores.length === 0
 
   return (
-    <div className='text-foreground ml-auto grid grid-cols-1 gap-y-2 font-mono font-semibold'>
-      <ScoreCell value={data.homeScore} enabled={enabled} />
-      <ScoreCell value={data.awayScore} enabled={enabled} />
+    <div className='ml-auto flex shrink-0 items-start gap-3 pl-3 font-mono font-semibold'>
+      {live && data.serving && (
+        <Column
+          home={<ServeDot active={data.serving === 'HOME'} />}
+          away={<ServeDot active={data.serving === 'AWAY'} />}
+        />
+      )}
+
+      {data.periodScores.length > 0 && (
+        <div className='text-secondary flex gap-2 text-xs font-normal'>
+          {data.periodScores.map((p, i) => (
+            <Column
+              key={p.period}
+              home={p.home}
+              away={p.away}
+              className={cn(live && i === current && 'text-foreground font-semibold')}
+            />
+          ))}
+        </div>
+      )}
+
+      {live && data.pointScore && (
+        <Column
+          home={data.pointScore.home}
+          away={data.pointScore.away}
+          className='text-primary border-l border-white/10 pl-3 text-xs'
+        />
+      )}
+
+      {showTotal && (
+        <div className='grid grid-cols-1 gap-y-2'>
+          <ScoreCell value={data.homeScore} enabled={enabled} />
+          <ScoreCell value={data.awayScore} enabled={enabled} />
+        </div>
+      )}
     </div>
   )
 }
