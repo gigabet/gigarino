@@ -113,7 +113,7 @@ function PrematchSingleHeader(props: { event: PrematchSingleHeader$key }) {
           <SportIcon sport={data.sport.key} className='size-3.5 shrink-0' />
           <Link
             href={{
-              pathname: '/sport',
+              pathname: '/',
               query: {
                 tournaments: `${data.sport.key}:${data.tournament.key}`,
               },

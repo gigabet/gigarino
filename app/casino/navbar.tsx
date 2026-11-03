@@ -77,8 +77,7 @@ export default function Navbar(props: { token: string | undefined }) {
                       className={cx(
                         'group/nav relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300',
                         pathname === link.href ||
-                          (pathname.startsWith('/live') && link.href.startsWith('/live')) ||
-                          (pathname.startsWith('/sport') && link.href.startsWith('/sport'))
+                          (pathname.startsWith('/live') && link.href.startsWith('/live'))
                           ? 'text-primary'
                           : 'text-gray-400 hover:text-white'
                       )}
@@ -88,8 +87,7 @@ export default function Navbar(props: { token: string | undefined }) {
                         className={cx(
                           'bg-primary absolute bottom-0 left-1/2 h-0.5 w-0 -translate-x-1/2 transition-all duration-300',
                           pathname === link.href ||
-                            (pathname.startsWith('/live') && link.href.startsWith('/live')) ||
-                            (pathname.startsWith('/sport') && link.href.startsWith('/sport'))
+                            (pathname.startsWith('/live') && link.href.startsWith('/live'))
                             ? 'w-3/4'
                             : 'group-hover/nav:w-3/4'
                         )}

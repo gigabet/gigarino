@@ -1,6 +1,6 @@
-import { ShortcutRowSkeleton } from '@/app/sport/[[...slug]]/shortcut-row'
-import { TournamentListSkeleton } from '@/app/sport/[[...slug]]/tournament-list'
-import { CarouselSkeleton } from '@/app/sport/carousel'
+import { CarouselSkeleton } from '@/app/(sport)/carousel'
+import { ShortcutRowSkeleton } from '@/app/(sport)/shortcut-row'
+import { TournamentListSkeleton } from '@/app/(sport)/tournament-list'
 
 export default function SportPageSkeleton() {
   return (

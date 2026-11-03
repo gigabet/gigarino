@@ -533,7 +533,7 @@ function FeaturedGameCard(props: { bet: FeaturedGameCard$key }) {
           )}
 
           <Link
-            href={`/sport/event/${event.id}`}
+            href={`/event/${event.id}`}
             className='text-secondary relative flex items-center justify-end gap-1 text-[0.65rem] font-semibold uppercase transition-colors hover:text-sky-400'
           >
             {t('Full match odds')}

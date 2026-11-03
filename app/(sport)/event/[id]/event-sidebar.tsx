@@ -219,7 +219,7 @@ function EventStripCard(props: {
       )}
 
       <Link
-        href={`/sport/event/${event.id}`}
+        href={`/event/${event.id}`}
         replace
         onClick={props.onNavigate}
         aria-current={props.active || undefined}

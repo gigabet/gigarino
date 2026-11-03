@@ -2,6 +2,7 @@
 
 import { Loader2Icon, LockKeyholeIcon } from 'lucide-react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Suspense, useEffect } from 'react'
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary'
 import { PiTicket } from 'react-icons/pi'
@@ -189,6 +190,8 @@ function FakeTicketRow(props: { status: 'Open' | 'Won' | 'Lost'; combi?: boolean
 
 function LoggedOutTickets() {
   const t = useT()
+  const pathname = usePathname()
+
   return (
     <div className='relative min-h-96.25'>
       <div aria-hidden className='pointer-events-none space-y-6 px-5 py-4 blur-sm select-none'>
@@ -222,7 +225,7 @@ function LoggedOutTickets() {
             {t("Track your open bets and betting history once you're logged in.")}
           </p>
         </div>
-        <Link href={{ pathname: '/login', query: { from: '/sport' } }} className={buttonVariants()}>
+        <Link href={{ pathname: '/login', query: { from: pathname } }} className={buttonVariants()}>
           {t('Log in')}
         </Link>
       </div>

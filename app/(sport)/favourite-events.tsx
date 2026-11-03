@@ -11,7 +11,7 @@ import {
   usePreloadedQuery,
   useRelayEnvironment,
 } from 'react-relay'
-import PrematchEvent from '@/app/sport/[[...slug]]/prematch-event'
+import PrematchEvent from '@/app/(sport)/prematch-event'
 import { HEADER_LEAD, ListViewMarketDropdowns } from '@/components/list-view-markets'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { useT, useUser } from '@/context/providers'

@@ -16,7 +16,7 @@ import {
   useRefetchableFragment,
   useRelayEnvironment,
 } from 'react-relay'
-import SidebarSearch from '@/app/sport/sidebar-search'
+import SidebarSearch from '@/app/(sport)/sidebar-search'
 import { SportIcon, SportIconBadge } from '@/components/sport-icon'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Field, FieldGroup } from '@/components/ui/field'
@@ -89,7 +89,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
       <div className='bg-dark sticky top-20 z-20 -mx-4 -mt-8 border-b border-white/5 px-4 py-2 sm:-mx-6 sm:px-6 lg:hidden'>
         <div className='flex scrollbar-none items-center gap-2 overflow-x-auto'>
           <Link
-            href='/sport'
+            href='/'
             prefetch
             className='bg-dark-300 sport-texture flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-xs whitespace-nowrap transition-colors hover:bg-white/5'
           >
@@ -134,7 +134,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
           </button>
           <hr className='w-8 border-white/7' />
           <Link
-            href='/sport'
+            href='/'
             className='text-secondary hover:bg-dark-300 hover:text-foreground flex size-9 items-center justify-center rounded-full transition-all hover:scale-110'
           >
             <SportIcon sport='highlights' colored className='size-5' />
@@ -286,7 +286,7 @@ function FullSidebarContent(props: {
       >
         <div className='bg-dark-200 sport-texture overflow-hidden rounded-xl'>
           <Link
-            href='/sport'
+            href='/'
             className='group flex w-full items-center gap-2 px-4 py-3 transition-colors hover:bg-white/4 data-[state=open]:bg-white/4'
             prefetch={true}
           >

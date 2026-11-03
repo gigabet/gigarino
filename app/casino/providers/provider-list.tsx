@@ -3,8 +3,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { cx } from 'class-variance-authority'
 import { useEffect, useRef, useState } from 'react'
+import { ProviderCard } from '@/app/casino/provider-section'
 import { providersQuery } from '@/app/context'
-import { ProviderCard } from '@/app/provider-section'
 import { useT } from '@/context/providers'
 
 export default function GameList() {

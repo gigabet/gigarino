@@ -11,8 +11,8 @@ import {
   useRefetchableFragment,
   useRelayEnvironment,
 } from 'react-relay'
-import SearchResults from '@/app/sport/[[...slug]]/search-results'
-import Tournament, { TournamentSkeleton } from '@/app/sport/[[...slug]]/tournament'
+import SearchResults from '@/app/(sport)/search-results'
+import Tournament, { TournamentSkeleton } from '@/app/(sport)/tournament'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { useSidebarSearch } from '@/context/hooks'
 import { cn } from '@/lib/utils'

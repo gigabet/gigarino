@@ -55,7 +55,7 @@ export default function PrematchEvent(props: { node: PrematchEvent$key; scope?: 
             ROW_LEAD,
             'flex flex-col gap-1 text-xs sm:gap-2 sm:text-sm lg:order-3 lg:ml-1'
           )}
-          href={`/sport/event/${data.id}`}
+          href={`/event/${data.id}`}
           onMouseEnter={prefetch}
           onMouseDown={prefetch}
           onFocus={prefetch}
@@ -90,7 +90,7 @@ export default function PrematchEvent(props: { node: PrematchEvent$key; scope?: 
           <TrackerButton event={data} className='mb-0.5' />
           {data.oddCount > 0 && (
             <Link
-              href={`/sport/event/${data.id}`}
+              href={`/event/${data.id}`}
               className={buttonVariants({ variant: 'ghost', size: 'sm' })}
               onMouseEnter={prefetch}
               onMouseDown={prefetch}

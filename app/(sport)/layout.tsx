@@ -4,8 +4,8 @@ import { usePathname } from 'next/navigation'
 import { Suspense, startTransition, useEffect, useMemo } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { fetchQuery, graphql, useQueryLoader, useRelayEnvironment } from 'react-relay'
-import EventSidebar, { EventSidebarSkeleton } from '@/app/sport/event/[id]/event-sidebar'
-import Sidebar, { SidebarSkeleton } from '@/app/sport/sidebar'
+import EventSidebar, { EventSidebarSkeleton } from '@/app/(sport)/event/[id]/event-sidebar'
+import Sidebar, { SidebarSkeleton } from '@/app/(sport)/sidebar'
 import Betslip, { BetslipDrawer, BetslipMobileBar } from '@/components/betslip'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { useBetslipQuote } from '@/context/providers'
@@ -17,7 +17,7 @@ import PrematchLayoutQueryNode from '@/relay/__generated__/PrematchLayoutQuery.g
 export default function SportLayout({ children }: React.PropsWithChildren) {
   const pathname = usePathname()
   const eventId = useMemo(() => {
-    const match = pathname.match(/^\/sport\/event\/([^/]+)/)
+    const match = pathname.match(/^\/event\/([^/]+)/)
     return match ? decodeURIComponent(match[1]) : null
   }, [pathname])
 
