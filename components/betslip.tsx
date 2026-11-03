@@ -36,6 +36,7 @@ import {
   betCodeCopy,
   betslipInputAtom,
   betslipOpenAtom,
+  betslipTabAtom,
   boostAtom,
   oddsPolicyAtom,
   useActiveBoost,
@@ -45,7 +46,7 @@ import {
   withoutItems,
 } from '@/context/betslip'
 import { useMediaQuery } from '@/context/hooks'
-import { useCurrency, useT, useUser } from '@/context/providers'
+import { useBetslipQuote, useCurrency, useT, useUser } from '@/context/providers'
 import { MARKET_NAME, OUTCOME_NAME, splitMarketName } from '@/lib/sport-markets'
 import { cn, formatBalance, nCk } from '@/lib/utils'
 import type { Betslip$data, Betslip$key } from '@/relay/__generated__/Betslip.graphql'
@@ -65,6 +66,7 @@ type Placed = { id: string; stake: string; potentialPayout: string | null }
 export default function Betslip(props: {
   query: Betslip$key | null
   variant?: 'panel' | 'drawer'
+  initialTab?: MainTab
 }) {
   const data =
     useFragment(
@@ -90,7 +92,7 @@ export default function Betslip(props: {
     ) ?? null
 
   const input = useAtomValue(betslipInputAtom)
-  const [mainTab, setMainTab] = useState<MainTab>('betslip')
+  const [mainTab, setMainTab] = useState<MainTab>(props.initialTab ?? 'betslip')
   const [ticketsKey, setTicketsKey] = useState(0)
 
   const clearAll = useClearBetslip()
@@ -1125,6 +1127,7 @@ export function BetslipMobileBar(props: { query: BetslipMobileBar$key | null }) 
     props.query
   )
   const setOpen = useSetAtom(betslipOpenAtom)
+  const setTab = useSetAtom(betslipTabAtom)
   const t = useT()
 
   if (!data || data.items.length === 0) return null
@@ -1132,7 +1135,10 @@ export function BetslipMobileBar(props: { query: BetslipMobileBar$key | null }) 
   return (
     <button
       type='button'
-      onClick={() => setOpen(true)}
+      onClick={() => {
+        setTab('betslip')
+        setOpen(true)
+      }}
       className='bg-primary text-primary-foreground fixed inset-x-4 bottom-24 z-40 flex items-center justify-between rounded-full px-5 py-3.5 shadow-lg lg:bottom-4 xl:hidden'
     >
       <span className='flex items-center gap-2 text-sm font-bold'>
@@ -1150,14 +1156,27 @@ export function BetslipMobileBar(props: { query: BetslipMobileBar$key | null }) 
   )
 }
 
+export function BetslipDrawerHost() {
+  const betslip = useBetslipQuote()
+  return <BetslipDrawer query={betslip} />
+}
+
 export function BetslipDrawer(props: { query: Betslip$key | null }) {
   const [open, setOpen] = useAtom(betslipOpenAtom)
+  const [tab, setTab] = useAtom(betslipTabAtom)
   const isWiderThanMobile = useMediaQuery('(min-width: 640px)')
   const direction = isWiderThanMobile ? 'right' : 'bottom'
   const t = useT()
 
   return (
-    <Drawer.Root open={open} onOpenChange={setOpen} direction={direction}>
+    <Drawer.Root
+      open={open}
+      onOpenChange={o => {
+        setOpen(o)
+        if (!o) setTab('betslip') // next open (e.g. from the selections bar) starts on the slip
+      }}
+      direction={direction}
+    >
       <Drawer.Portal>
         <Drawer.Overlay className='fixed inset-0 z-50 bg-black/50' />
         <Drawer.Content
@@ -1174,7 +1193,7 @@ export function BetslipDrawer(props: { query: Betslip$key | null }) {
           {direction === 'bottom' && (
             <div className='mx-auto mt-3 h-1.5 w-10 shrink-0 rounded-full bg-white/20' />
           )}
-          <Betslip query={props.query} variant='drawer' />
+          <Betslip query={props.query} variant='drawer' initialTab={tab} />
         </Drawer.Content>
       </Drawer.Portal>
     </Drawer.Root>

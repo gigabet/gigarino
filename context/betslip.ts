@@ -196,3 +196,7 @@ export function withoutItems(prev: BetslipInput, ids: ReadonlySet<string>): Bets
 
   return { ...prev, items, betType, systemSize }
 }
+
+/** Which tab the drawer opens on. Only read when the drawer mounts. */
+export type BetslipTab = 'betslip' | 'tickets'
+export const betslipTabAtom = atom<BetslipTab>('betslip')

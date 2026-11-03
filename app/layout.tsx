@@ -2,15 +2,16 @@ import type { Metadata } from 'next'
 import { JetBrains_Mono, Poppins, Rajdhani } from 'next/font/google'
 import Footer from '@/app/footer'
 import Navbar from '@/app/navbar'
+import { BetslipDrawerHost } from '@/components/betslip'
 import ParticleBackground from '@/components/particle-background'
-import Providers, { LocaleProvider } from '@/context/providers'
-import { getToken, getUser, getUserWallet } from '@/lib/auth'
-import './globals.css'
 import SiteChrome from '@/components/site-chrome'
+import Providers, { LocaleProvider } from '@/context/providers'
 import { RailSlot } from '@/context/rail'
 import TicketUpdates from '@/context/ticket-updates'
 import { resolveLocale } from '@/i18n/t'
 import dict from '@/i18n/translations.json'
+import { getToken, getUser, getUserWallet } from '@/lib/auth'
+import './globals.css'
 
 const poppins = Poppins({
   variable: '--font-poppins',
@@ -93,6 +94,7 @@ export default async function RootLayout({
             <TicketUpdates />
             <SiteChrome>
               <Navbar token={token} />
+              <BetslipDrawerHost />
             </SiteChrome>
             <div className='relative z-1 mx-auto flex w-full max-w-480 flex-1 items-stretch'>
               <div className='flex min-w-0 flex-1 flex-col'>

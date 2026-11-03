@@ -100,7 +100,6 @@ export default function SportLayout({ children }: React.PropsWithChildren) {
       </RailPortal>
       <div className='xl:hidden'>
         <BetslipMobileBar query={betslip} />
-        <BetslipDrawer query={betslip} />
       </div>
     </div>
   )

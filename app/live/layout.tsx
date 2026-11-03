@@ -95,7 +95,6 @@ export default function LiveLayout({ children }: React.PropsWithChildren) {
             </RailPortal>
             <div className='xl:hidden'>
               <BetslipMobileBar query={betslip} />
-              <BetslipDrawer query={betslip} />
             </div>
           </div>
         </div>
