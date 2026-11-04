@@ -158,9 +158,9 @@ export function pairToHues(a: string, b: string): [number, number] {
   hash ^= hash >>> 16
 
   const base = hash % 360
-  // Guarantee a large gap: pick offset from [80, 280]
-  // so the two hues are always at least 80° apart.
-  const offset = 80 + ((hash >>> 8) % 201)
+  // minimum guaranteed gap in degrees
+  const MIN_GAP = 90
+  const offset = MIN_GAP + ((hash >>> 8) % (360 - 2 * MIN_GAP + 1))
   return [base, (base + offset) % 360]
 }
 
