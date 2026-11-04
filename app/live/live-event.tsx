@@ -325,6 +325,9 @@ export function LiveScore(props: { event: LiveScore$key }) {
   const current = data.periodScores.length - 1
   const showTotal = !inSets || data.periodScores.length === 0
 
+  const tiebreak =
+    live && !!data.pointScore && isTiebreak(data.pointScore.home, data.pointScore.away)
+
   return (
     <div className='ml-auto flex shrink-0 items-start gap-3 pl-3 font-mono font-semibold'>
       {live && data.serving && (
@@ -358,11 +361,21 @@ export function LiveScore(props: { event: LiveScore$key }) {
       )}
 
       {live && data.pointScore && (
-        <Column
-          home={data.pointScore.home}
-          away={data.pointScore.away}
-          className='text-primary border-l border-white/10 pl-3 text-xs'
-        />
+        <div className='relative'>
+          {tiebreak && (
+            <span
+              title={t('Tiebreak')}
+              className='bg-primary/15 text-primary absolute -top-3.5 left-3 rounded px-1 text-[0.55rem] leading-4 font-bold tracking-wide uppercase'
+            >
+              {t('TB')}
+            </span>
+          )}
+          <Column
+            home={data.pointScore.home}
+            away={data.pointScore.away}
+            className='text-primary border-l border-white/10 pl-3 text-xs'
+          />
+        </div>
       )}
 
       {showTotal && (
