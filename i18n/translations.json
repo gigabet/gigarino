@@ -579,6 +579,10 @@
     "de": "Spiele von {name}",
     "tr": "{name} oyunları"
   },
+  "Goal": {
+    "de": "Tor",
+    "tr": "Gol"
+  },
   "Goal attempts": {
     "de": "Torschüsse",
     "tr": "Şut denemesi"
@@ -935,6 +939,10 @@
     "de": "Anbieter",
     "tr": "Sağlayıcılar"
   },
+  "Pts": {
+    "de": "Pkt.",
+    "tr": "Puan"
+  },
   "Recent": {
     "de": "Zuletzt",
     "tr": "Son"
@@ -1059,6 +1067,10 @@
     "de": "Link senden",
     "tr": "Bağlantı Gönder"
   },
+  "Serving": {
+    "de": "Aufschlag",
+    "tr": "Servis"
+  },
   "Settled": {
     "de": "Abgerechnet",
     "tr": "Sonuçlandı"
@@ -1179,6 +1191,14 @@
     "de": "Tippen Sie auf eine Quote, um eine Auswahl hinzuzufügen und Ihre Wette zu erstellen.",
     "tr": "Bahsinizi oluşturmak için bir orana dokunup seçim ekleyin."
   },
+  "TB": {
+    "de": "TB",
+    "tr": "TB"
+  },
+  "Team": {
+    "de": "Team",
+    "tr": "Takım"
+  },
   "Tennis": {
     "de": "Tennis",
     "tr": "Tenis"
@@ -1195,6 +1215,10 @@
     "de": "Event evtl. beendet, entfernt oder vorübergehend nicht verfügbar.",
     "tr": "Etkinlik bitmiş, kaldırılmış veya geçici olarak kullanılamıyor olabilir."
   },
+  "Tiebreak": {
+    "de": "Tiebreak",
+    "tr": "Tiebreak"
+  },
   "Too many singles.": {
     "de": "Zu viele Einzelwetten.",
     "tr": "Çok fazla tek bahis."
@@ -1206,6 +1230,10 @@
   "Top Pick": {
     "de": "Top-Tipp",
     "tr": "Öne Çıkan"
+  },
+  "Total": {
+    "de": "Gesamt",
+    "tr": "Toplam"
   },
   "Total stake": {
     "de": "Gesamteinsatz",
@@ -1314,25 +1342,5 @@
   "Your betslip is empty": {
     "de": "Ihr Wettschein ist leer",
     "tr": "Kuponunuz boş"
-  },
-  "Goal": {
-    "de": "",
-    "tr": ""
-  },
-  "Pts": {
-    "de": "",
-    "tr": ""
-  },
-  "Serving": {
-    "de": "",
-    "tr": ""
-  },
-  "Team": {
-    "de": "",
-    "tr": ""
-  },
-  "Total": {
-    "de": "",
-    "tr": ""
   }
 }

@@ -107,3 +107,13 @@ export function getPeriodAt(sport: string, n: number) {
   const period = PERIODS_BY_SPORT[sport]?.[n - 1]
   return period ? getPeriod(period) : null
 }
+
+const GAME_POINTS = new Set(['0', '15', '30', '40', 'A', 'AD'])
+
+/**
+ * In a tiebreak the feed switches from 0/15/30/40 to plain counts (1, 2, 3...),
+ * so any other value means we are in one.
+ */
+export function isTiebreak(home: string, away: string) {
+  return !GAME_POINTS.has(home) || !GAME_POINTS.has(away)
+}

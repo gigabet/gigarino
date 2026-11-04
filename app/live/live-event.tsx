@@ -6,7 +6,7 @@ import { useEffect } from 'react'
 import { MdSignalWifiStatusbarConnectedNoInternet1 } from 'react-icons/md'
 import { graphql, useFragment } from 'react-relay'
 import { GoalBadge, hasGoals } from '@/app/live/goal-badge'
-import { getPeriod, useNow, useNowSelector } from '@/app/live/helpers'
+import { getPeriod, isTiebreak, useNow, useNowSelector } from '@/app/live/helpers'
 import { FINISHED } from '@/app/live/live-state'
 import { useLiveRowRegistration } from '@/app/live/live-subscriptions'
 import { useRefetchBatcher, useRefetchRegistration } from '@/app/live/refetch-context'
@@ -290,6 +290,7 @@ function Column(props: { home: React.ReactNode; away: React.ReactNode; className
 // scored in sets: the period columns already show them, and the feed's total is unreliable
 export const SET_SPORTS = new Set(['tennis', 'etennis', 'volleyball', 'table-tennis'])
 export function LiveScore(props: { event: LiveScore$key }) {
+  const t = useT()
   const data = useFragment(
     graphql`
       fragment LiveScore on Event {
@@ -321,6 +322,9 @@ export function LiveScore(props: { event: LiveScore$key }) {
   const current = data.periodScores.length - 1
   const showTotal = !SET_SPORTS.has(data.sport.key) || data.periodScores.length === 0
 
+  const tiebreak =
+    live && !!data.pointScore && isTiebreak(data.pointScore.home, data.pointScore.away)
+
   return (
     <div className='ml-auto flex shrink-0 items-start gap-3 pl-3 font-mono font-semibold'>
       {live && data.serving && (
@@ -344,11 +348,21 @@ export function LiveScore(props: { event: LiveScore$key }) {
       )}
 
       {live && data.pointScore && (
-        <Column
-          home={data.pointScore.home}
-          away={data.pointScore.away}
-          className='text-primary border-l border-white/10 pl-3 text-xs'
-        />
+        <div className='relative'>
+          {tiebreak && (
+            <span
+              title={t('Tiebreak')}
+              className='bg-primary/15 text-primary absolute -top-3.5 left-3 rounded px-1 text-[0.55rem] leading-4 font-bold tracking-wide uppercase'
+            >
+              {t('TB')}
+            </span>
+          )}
+          <Column
+            home={data.pointScore.home}
+            away={data.pointScore.away}
+            className='text-primary border-l border-white/10 pl-3 text-xs'
+          />
+        </div>
       )}
 
       {showTotal && (
