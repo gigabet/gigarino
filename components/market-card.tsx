@@ -43,7 +43,7 @@ export default function MarketCard(props: {
 
   const suspended = market.status !== 'OPEN'
 
-  const line = market.line == null ? '' : String(Number(market.line))
+  const line = market.line == null ? '' : String(Math.abs(Number(market.line)))
   const outcomeLabel = (name: string) => (line && !name.includes(line) ? `${name} ${line}` : name)
 
   return (
