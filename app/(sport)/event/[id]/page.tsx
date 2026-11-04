@@ -14,7 +14,7 @@ export default function EventPage() {
   const [queryRef, loadQuery, disposeQuery] = useQueryLoader<PrematchSingleViewQuery>(graphql`
     query PrematchSingleViewQuery($id: ID!) {
       event(id: $id) {
-        ...PrematchSingleView @dangerously_unaliased_fixme
+        ...PrematchSingleView @alias
       }
     }
   `)

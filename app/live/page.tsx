@@ -29,7 +29,7 @@ export default function LivePage() {
     return () => {
       history.scrollRestoration = 'auto'
     }
-  })
+  }, [])
 
   return (
     <main className='flex min-w-0 flex-col gap-4'>

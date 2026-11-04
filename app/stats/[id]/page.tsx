@@ -19,7 +19,7 @@ import type { PageStatsView$key } from '@/relay/__generated__/PageStatsView.grap
 const statsQuery = graphql`
   query PageStatsQuery($id: ID!) {
     event(id: $id) {
-      ...PageStatsView @dangerously_unaliased_fixme
+      ...PageStatsView @alias
     }
   }
 `
@@ -46,7 +46,7 @@ export default function StatsPage() {
 
 function StatsView(props: { queryRef: PreloadedQuery<PageStatsQuery> }) {
   const preloaded = usePreloadedQuery<PageStatsQuery>(statsQuery, props.queryRef)
-  const data = useFragment(
+  const data = useFragment<PageStatsView$key>(
     graphql`
       fragment PageStatsView on Event {
         homeCompetitor
@@ -54,7 +54,7 @@ function StatsView(props: { queryRef: PreloadedQuery<PageStatsQuery> }) {
         ...StatisticsWidget
       }
     `,
-    preloaded.event as PageStatsView$key | null
+    preloaded.event?.PageStatsView
   )
   const t = useT()
 

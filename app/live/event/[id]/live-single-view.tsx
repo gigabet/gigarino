@@ -29,7 +29,7 @@ import type { ServingIndicator$key } from '@/relay/__generated__/ServingIndicato
 export default function LiveSingleView(props: { queryRef: PreloadedQuery<LiveSingleViewQuery> }) {
   const preloaded = usePreloadedQuery<LiveSingleViewQuery>(LiveSingleViewQueryNode, props.queryRef)
 
-  const data = useFragment(
+  const data = useFragment<LiveSingleView$key>(
     graphql`
       fragment LiveSingleView on Event {
         homeCompetitor
@@ -46,7 +46,7 @@ export default function LiveSingleView(props: { queryRef: PreloadedQuery<LiveSin
         ...MarketGroups @defer
       }
     `,
-    preloaded.event as LiveSingleView$key | null
+    preloaded.event?.LiveSingleView
   )
 
   useEffect(() => {

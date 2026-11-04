@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a83bc312904acd028dc15bf41bb233a0>>
+ * @generated SignedSource<<84797814256b192bfd71ec85ede036a2>>
  * @lightSyntaxTransform
  */
 
@@ -14,7 +14,9 @@ export type PrematchSingleViewQuery$variables = {
 };
 export type PrematchSingleViewQuery$data = {
   readonly event: {
-    readonly " $fragmentSpreads": FragmentRefs<"PrematchSingleView">;
+    readonly PrematchSingleView: {
+      readonly " $fragmentSpreads": FragmentRefs<"PrematchSingleView">;
+    };
   } | null | undefined;
 };
 export type PrematchSingleViewQuery = {
@@ -160,8 +162,19 @@ return {
         "plural": false,
         "selections": [
           {
-            "args": null,
-            "kind": "FragmentSpread",
+            "fragment": {
+              "kind": "InlineFragment",
+              "selections": [
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "PrematchSingleView"
+                }
+              ],
+              "type": "Event",
+              "abstractKey": null
+            },
+            "kind": "AliasedInlineFragmentSpread",
             "name": "PrematchSingleView"
           }
         ],
@@ -469,6 +482,6 @@ return {
 };
 })();
 
-(node as any).hash = "51ec2d36bc032ead1523aea548f94673";
+(node as any).hash = "014df77676c1b3b445c2900187988f6d";
 
 export default node;

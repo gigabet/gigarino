@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d266b6e4babd54c7b06e76bda579a4ce>>
+ * @generated SignedSource<<12ecd1fa2040f8ddfa36c966cc218093>>
  * @lightSyntaxTransform
  */
 
@@ -14,7 +14,9 @@ export type MatchTrackerPanelQuery$variables = {
 };
 export type MatchTrackerPanelQuery$data = {
   readonly event: {
-    readonly " $fragmentSpreads": FragmentRefs<"MatchTrackerPanel">;
+    readonly MatchTrackerPanel: {
+      readonly " $fragmentSpreads": FragmentRefs<"MatchTrackerPanel">;
+    };
   } | null | undefined;
 };
 export type MatchTrackerPanelQuery = {
@@ -53,8 +55,19 @@ return {
         "plural": false,
         "selections": [
           {
-            "args": null,
-            "kind": "FragmentSpread",
+            "fragment": {
+              "kind": "InlineFragment",
+              "selections": [
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "MatchTrackerPanel"
+                }
+              ],
+              "type": "Event",
+              "abstractKey": null
+            },
+            "kind": "AliasedInlineFragmentSpread",
             "name": "MatchTrackerPanel"
           }
         ],
@@ -122,6 +135,6 @@ return {
 };
 })();
 
-(node as any).hash = "e41b0e23b39bcb86c59ddfa745233cce";
+(node as any).hash = "97820eb9f3617a1c66f151bcec541372";
 
 export default node;

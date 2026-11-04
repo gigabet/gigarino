@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6b5bc1b9de8f7feb9b6b1b771783dcc3>>
+ * @generated SignedSource<<387a9ed2d0e083025f569bab7d4f3dce>>
  * @lightSyntaxTransform
  */
 
@@ -14,7 +14,9 @@ export type LiveSingleViewQuery$variables = {
 };
 export type LiveSingleViewQuery$data = {
   readonly event: {
-    readonly " $fragmentSpreads": FragmentRefs<"LiveSingleView">;
+    readonly LiveSingleView: {
+      readonly " $fragmentSpreads": FragmentRefs<"LiveSingleView">;
+    };
   } | null | undefined;
 };
 export type LiveSingleViewQuery = {
@@ -181,8 +183,19 @@ return {
         "plural": false,
         "selections": [
           {
-            "args": null,
-            "kind": "FragmentSpread",
+            "fragment": {
+              "kind": "InlineFragment",
+              "selections": [
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "LiveSingleView"
+                }
+              ],
+              "type": "Event",
+              "abstractKey": null
+            },
+            "kind": "AliasedInlineFragmentSpread",
             "name": "LiveSingleView"
           }
         ],
@@ -555,6 +568,6 @@ return {
 };
 })();
 
-(node as any).hash = "cc451ada2ebe33a7a30cd088a457f082";
+(node as any).hash = "8590f794baa1e214d0ad843c8b630f9a";
 
 export default node;

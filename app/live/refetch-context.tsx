@@ -109,13 +109,15 @@ export function useRefetchBatcher() {
   return batcher
 }
 
+/**
+ * the idRef.current = id ref was a workaround that hid id from the deps
+ * it also wrote to a ref during render, and a changed id never re-registered
+ */
 export function useRefetchRegistration(id: string) {
   const batcher = useRefetchBatcher()
-  const idRef = useRef(id)
-  idRef.current = id
 
   useEffect(() => {
-    batcher.register(idRef.current)
-    return () => batcher.unregister(idRef.current)
-  }, [batcher])
+    batcher.register(id)
+    return () => batcher.unregister(id)
+  }, [batcher, id])
 }

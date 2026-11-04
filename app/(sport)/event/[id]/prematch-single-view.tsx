@@ -27,7 +27,7 @@ export default function PrematchSingleView(props: {
     props.queryRef
   )
 
-  const data = useFragment(
+  const data = useFragment<PrematchSingleView$key>(
     graphql`
       fragment PrematchSingleView on Event {
         homeCompetitor
@@ -41,7 +41,7 @@ export default function PrematchSingleView(props: {
         ...MarketGroups @defer
       }
     `,
-    preloaded.event as PrematchSingleView$key | null
+    preloaded.event?.PrematchSingleView
   )
 
   useEffect(() => {

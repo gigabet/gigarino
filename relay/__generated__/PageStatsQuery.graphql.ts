@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<16981103a05e88d243b315d6b4aeb68a>>
+ * @generated SignedSource<<56d43ea3a164765cea308bff2cf458c6>>
  * @lightSyntaxTransform
  */
 
@@ -14,7 +14,9 @@ export type PageStatsQuery$variables = {
 };
 export type PageStatsQuery$data = {
   readonly event: {
-    readonly " $fragmentSpreads": FragmentRefs<"PageStatsView">;
+    readonly PageStatsView: {
+      readonly " $fragmentSpreads": FragmentRefs<"PageStatsView">;
+    };
   } | null | undefined;
 };
 export type PageStatsQuery = {
@@ -111,8 +113,19 @@ return {
         "plural": false,
         "selections": [
           {
-            "args": null,
-            "kind": "FragmentSpread",
+            "fragment": {
+              "kind": "InlineFragment",
+              "selections": [
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "PageStatsView"
+                }
+              ],
+              "type": "Event",
+              "abstractKey": null
+            },
+            "kind": "AliasedInlineFragmentSpread",
             "name": "PageStatsView"
           }
         ],
@@ -296,6 +309,6 @@ return {
 };
 })();
 
-(node as any).hash = "f4f6361b24540e32826c5fa60211fe74";
+(node as any).hash = "b1950557d8f4970f9ed20c2aa4bcd881";
 
 export default node;

@@ -69,18 +69,17 @@ export function useUser() {
   return useContext(UserContext)
 }
 
-function UserProvider({
-  children,
-  ...incoming
-}: {
-  children: React.ReactNode
-} & UserContext) {
+function UserProvider({ children, ...incoming }: { children: React.ReactNode } & UserContext) {
   const [state, setState] = useState<UserContext>(incoming)
+  const incomingId = incoming.user?.id
+  const [syncedId, setSyncedId] = useState(incomingId)
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: id keeps this a no-op on unrelated re-renders
-  useEffect(() => {
-    setState(prev => (prev.user?.id === incoming.user?.id ? prev : incoming))
-  }, [incoming.user?.id])
+  // re-sync only when the server hands us a different user (login/logout),
+  // not on unrelated re-renders or after a local clearUser()
+  if (syncedId !== incomingId) {
+    setSyncedId(incomingId)
+    setState(incoming)
+  }
 
   const clearUser = useCallback(() => {
     setState(prev =>

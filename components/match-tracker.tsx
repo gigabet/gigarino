@@ -101,7 +101,7 @@ export function MatchTrackerSkeleton() {
 const trackerPanelQuery = graphql`
   query MatchTrackerPanelQuery($id: ID!) {
     event(id: $id) {
-      ...MatchTrackerPanel @dangerously_unaliased_fixme
+      ...MatchTrackerPanel @alias
     }
   }
 `
@@ -156,7 +156,7 @@ function TrackerPanel(props: {
 }) {
   const preloaded = usePreloadedQuery<MatchTrackerPanelQuery>(trackerPanelQuery, props.queryRef)
 
-  const data = useFragment(
+  const data = useFragment<MatchTrackerPanel$key>(
     graphql`
       fragment MatchTrackerPanel on Event {
         homeCompetitor
@@ -164,7 +164,7 @@ function TrackerPanel(props: {
         ...MatchTracker
       }
     `,
-    preloaded.event as MatchTrackerPanel$key | null
+    preloaded.event?.MatchTrackerPanel
   )
   const t = useT()
 

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<88b969d690276568b5757d422a55fef9>>
+ * @generated SignedSource<<5ccb913464d7575543ae180611a4063d>>
  * @lightSyntaxTransform
  */
 
@@ -9,7 +9,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type PrematchList$data = {
+export type TournamentList$data = {
   readonly searchResults?: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -28,14 +28,12 @@ export type PrematchList$data = {
     readonly id: string;
     readonly " $fragmentSpreads": FragmentRefs<"Tournament">;
   }>;
-  readonly " $fragmentType": "PrematchList";
+  readonly " $fragmentType": "TournamentList";
 };
-export type PrematchList$key = {
-  readonly " $data"?: PrematchList$data;
-  readonly " $fragmentSpreads": FragmentRefs<"PrematchList">;
+export type TournamentList$key = {
+  readonly " $data"?: TournamentList$data;
+  readonly " $fragmentSpreads": FragmentRefs<"TournamentList">;
 };
-
-import PrematchListRefetch_graphql from './PrematchListRefetch.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = {
@@ -57,43 +55,28 @@ return {
   "argumentDefinitions": [
     {
       "kind": "RootArgument",
-      "name": "eventCount"
-    },
-    {
-      "defaultValue": null,
-      "kind": "LocalArgument",
       "name": "filterActive"
     },
     {
-      "defaultValue": null,
-      "kind": "LocalArgument",
+      "kind": "RootArgument",
       "name": "hasAny"
     },
     {
-      "defaultValue": null,
-      "kind": "LocalArgument",
+      "kind": "RootArgument",
       "name": "hasSearch"
     },
     {
-      "defaultValue": null,
-      "kind": "LocalArgument",
+      "kind": "RootArgument",
       "name": "search"
     },
     {
-      "defaultValue": null,
-      "kind": "LocalArgument",
+      "kind": "RootArgument",
       "name": "tournamentKeys"
     }
   ],
   "kind": "Fragment",
-  "metadata": {
-    "refetch": {
-      "connection": null,
-      "fragmentPathInResult": [],
-      "operation": PrematchListRefetch_graphql
-    }
-  },
-  "name": "PrematchList",
+  "metadata": null,
+  "name": "TournamentList",
   "selections": [
     {
       "condition": "hasAny",
@@ -235,6 +218,6 @@ return {
 };
 })();
 
-(node as any).hash = "6accf748dc22df42189c33e5a5856f26";
+(node as any).hash = "fa506b046f50b98d421e96eedf0db0f0";
 
 export default node;

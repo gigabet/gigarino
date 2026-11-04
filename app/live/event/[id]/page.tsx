@@ -16,7 +16,7 @@ export default function LiveEventPage() {
   const [queryRef, loadQuery, disposeQuery] = useQueryLoader<LiveSingleViewQuery>(graphql`
     query LiveSingleViewQuery($id: ID!) {
       event(id: $id) {
-        ...LiveSingleView @dangerously_unaliased_fixme
+        ...LiveSingleView @alias
       }
     }
   `)
