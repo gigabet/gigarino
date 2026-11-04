@@ -138,7 +138,30 @@ export function stringToHue(input: string): number {
   for (let i = 0; i < input.length; i++) {
     hash = input.charCodeAt(i) + ((hash << 5) - hash)
   }
+  // avalanche: mix high bits into low bits
+  hash ^= hash >>> 16
+  hash = Math.imul(hash, 0x45d9f3b)
+  hash ^= hash >>> 16
   return Math.abs(hash) % 360
+}
+
+export function pairToHues(a: string, b: string): [number, number] {
+  const key = [a, b].sort().join('\u0000')
+
+  let hash = 0
+  for (let i = 0; i < key.length; i++) {
+    hash = (hash * 31 + key.charCodeAt(i)) >>> 0
+  }
+  // avalanche
+  hash ^= hash >>> 16
+  hash = Math.imul(hash, 0x45d9f3b) >>> 0
+  hash ^= hash >>> 16
+
+  const base = hash % 360
+  // Guarantee a large gap: pick offset from [80, 280]
+  // so the two hues are always at least 80° apart.
+  const offset = 80 + ((hash >>> 8) % 201)
+  return [base, (base + offset) % 360]
 }
 
 export function initials(name: string): string {

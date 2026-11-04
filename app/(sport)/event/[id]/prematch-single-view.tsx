@@ -12,7 +12,7 @@ import { SportIcon } from '@/components/sport-icon'
 import StatisticsWidget, { StatisticsWidgetSkeleton } from '@/components/statistics-widget'
 import { TeamBadge } from '@/components/team-badge'
 import { useT } from '@/context/providers'
-import { getRelativeDayLabel } from '@/lib/utils'
+import { getRelativeDayLabel, pairToHues } from '@/lib/utils'
 import type { EventLiveState$key } from '@/relay/__generated__/EventLiveState.graphql'
 import type { PrematchSingleHeader$key } from '@/relay/__generated__/PrematchSingleHeader.graphql'
 import type { PrematchSingleView$key } from '@/relay/__generated__/PrematchSingleView.graphql'
@@ -50,18 +50,25 @@ export default function PrematchSingleView(props: {
 
   if (!data) return <EventNotFound />
 
+  const [homeHue, awayHue] = pairToHues(data.homeCompetitor, data.awayCompetitor)
+
   return (
     <main className='mx-auto flex w-full max-w-7xl min-w-0 flex-col gap-4 sm:gap-6'>
       <section className='flex flex-col gap-3 rounded-2xl border border-white/5 bg-black/20 p-4 sm:gap-4 sm:p-6'>
         <PrematchSingleHeader event={data} />
         <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-4'>
-          <Competitor name={data.homeCompetitor} imageUrl={data.homeImageUrl} />
+          <Competitor name={data.homeCompetitor} imageUrl={data.homeImageUrl} hue={homeHue} />
 
           <Suspense fallback={<EventLiveStateFallback startTime={data.startTime} />}>
             <EventLiveState event={data} startTime={data.startTime} />
           </Suspense>
 
-          <Competitor name={data.awayCompetitor} imageUrl={data.awayImageUrl} reverse />
+          <Competitor
+            name={data.awayCompetitor}
+            imageUrl={data.awayImageUrl}
+            hue={awayHue}
+            reverse
+          />
         </div>
       </section>
 
@@ -133,7 +140,12 @@ function PrematchSingleHeader(props: { event: PrematchSingleHeader$key }) {
   )
 }
 
-function Competitor(props: { name: string; imageUrl?: string | null; reverse?: boolean }) {
+function Competitor(props: {
+  name: string
+  imageUrl?: string | null
+  reverse?: boolean
+  hue?: number
+}) {
   return (
     <div
       className={`flex min-w-0 items-center gap-2 sm:gap-3 ${props.reverse ? 'flex-row-reverse text-right' : ''}`}
@@ -142,6 +154,7 @@ function Competitor(props: { name: string; imageUrl?: string | null; reverse?: b
         name={props.name}
         imageUrl={props.imageUrl}
         className='size-8 min-w-8 text-xs sm:size-10 sm:min-w-10 sm:text-sm'
+        hue={props.hue}
       />
       <span className='truncate text-xs font-semibold text-white sm:text-sm lg:text-base'>
         {props.name}

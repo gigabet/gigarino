@@ -20,7 +20,7 @@ import { Separator } from '@/components/ui/separator'
 import { useGoalFlash } from '@/context/hooks'
 import { useT } from '@/context/providers'
 import { tKey } from '@/i18n/tKey'
-import { cn } from '@/lib/utils'
+import { cn, pairToHues } from '@/lib/utils'
 import type { LiveEvent$key } from '@/relay/__generated__/LiveEvent.graphql'
 import type { LiveScore$key } from '@/relay/__generated__/LiveScore.graphql'
 import type { LiveTeams$key } from '@/relay/__generated__/LiveTeams.graphql'
@@ -64,7 +64,7 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key; scope?: stri
   return (
     <div
       className={cn(
-        'sport-texture group relative flex h-32 flex-col gap-2 overflow-hidden border-b py-3 last:border-b-0 sm:gap-3 sm:rounded-2xl sm:border-b-0 sm:border-white/5 sm:bg-black/20 sm:px-4 lg:h-27 lg:flex-row lg:flex-nowrap lg:items-center lg:gap-4 lg:px-5',
+        'sport-texture group relative flex h-32 flex-col gap-2 overflow-hidden border-b py-3 last:border-b-0 max-sm:overflow-visible sm:gap-3 sm:rounded-2xl sm:border-b-0 sm:border-white/5 sm:bg-black/20 sm:px-4 lg:h-27 lg:flex-row lg:flex-nowrap lg:items-center lg:gap-4 lg:px-5',
         suspended && 'opacity-60'
       )}
     >
@@ -259,16 +259,19 @@ export function LiveTeams(props: { event: LiveTeams$key }) {
     props.event
   )
 
+  const [homeHue, awayHue] = pairToHues(data.homeCompetitor, data.awayCompetitor)
+
+  // LiveTeams
   return (
-    <div className='flex flex-col gap-2 truncate'>
+    <div className='flex min-w-0 flex-col justify-center gap-2'>
       {/* home */}
-      <div className='flex items-center gap-2'>
-        <TeamBadge name={data.homeCompetitor} imageUrl={data.homeImageUrl} />
+      <div className='flex h-6 items-center gap-2'>
+        <TeamBadge name={data.homeCompetitor} imageUrl={data.homeImageUrl} hue={homeHue} />
         <span className='truncate'>{data.homeCompetitor}</span>
       </div>
       {/* away */}
-      <div className='flex items-center gap-2'>
-        <TeamBadge name={data.awayCompetitor} imageUrl={data.awayImageUrl} />
+      <div className='flex h-6 items-center gap-2'>
+        <TeamBadge name={data.awayCompetitor} imageUrl={data.awayImageUrl} hue={awayHue} />
         <span className='truncate'>{data.awayCompetitor}</span>
       </div>
     </div>
@@ -316,14 +319,11 @@ export function LiveScore(props: { event: LiveScore$key }) {
   )
 
   const live = data.status === 'LIVE'
+  const inSets = SET_SPORTS.has(data.sport.key)
   const enabled = live && hasGoals(data.sport.key)
-  // in set sports the last entry is the set in play; elsewhere every entry is a finished period
-  const emphasiseLast = live && SET_SPORTS.has(data.sport.key)
+  const emphasiseLast = live && inSets
   const current = data.periodScores.length - 1
-  const showTotal = !SET_SPORTS.has(data.sport.key) || data.periodScores.length === 0
-
-  const tiebreak =
-    live && !!data.pointScore && isTiebreak(data.pointScore.home, data.pointScore.away)
+  const showTotal = !inSets || data.periodScores.length === 0
 
   return (
     <div className='ml-auto flex shrink-0 items-start gap-3 pl-3 font-mono font-semibold'>
@@ -335,34 +335,34 @@ export function LiveScore(props: { event: LiveScore$key }) {
       )}
 
       {data.periodScores.length > 0 && (
-        <div className='text-secondary flex gap-2 text-xs font-normal'>
+        <div
+          className={cn(
+            'text-secondary flex gap-2 text-xs font-normal',
+            // no room for quarters/periods next to the names on phones; the total remains
+            !inSets && 'max-sm:hidden'
+          )}
+        >
           {data.periodScores.map((p, i) => (
             <Column
               key={p.period}
               home={p.home}
               away={p.away}
-              className={cn(emphasiseLast && i === current && 'text-foreground font-semibold')}
+              className={cn(
+                emphasiseLast && i === current && 'text-foreground font-semibold',
+                // sets: on phones only the set in play stays
+                inSets && i !== current && 'max-sm:hidden'
+              )}
             />
           ))}
         </div>
       )}
 
       {live && data.pointScore && (
-        <div className='relative'>
-          {tiebreak && (
-            <span
-              title={t('Tiebreak')}
-              className='bg-primary/15 text-primary absolute -top-3.5 left-3 rounded px-1 text-[0.55rem] leading-4 font-bold tracking-wide uppercase'
-            >
-              {t('TB')}
-            </span>
-          )}
-          <Column
-            home={data.pointScore.home}
-            away={data.pointScore.away}
-            className='text-primary border-l border-white/10 pl-3 text-xs'
-          />
-        </div>
+        <Column
+          home={data.pointScore.home}
+          away={data.pointScore.away}
+          className='text-primary border-l border-white/10 pl-3 text-xs'
+        />
       )}
 
       {showTotal && (

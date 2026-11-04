@@ -10,7 +10,7 @@ import { TrackerButton } from '@/components/tracker-button'
 import { buttonVariants } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
-import { cn, getRelativeDayLabel } from '@/lib/utils'
+import { cn, getRelativeDayLabel, pairToHues } from '@/lib/utils'
 import type { PrematchEvent$key } from '@/relay/__generated__/PrematchEvent.graphql'
 import PrematchSingleViewQueryNode from '@/relay/__generated__/PrematchSingleViewQuery.graphql'
 
@@ -43,6 +43,8 @@ export default function PrematchEvent(props: { node: PrematchEvent$key; scope?: 
     ).subscribe({})
   }
 
+  const [homeHue, awayHue] = pairToHues(data.homeCompetitor, data.awayCompetitor)
+
   return (
     <div className='sport-texture group relative flex flex-col gap-2 overflow-hidden border-b py-3 last:border-b-0 sm:gap-3 sm:rounded-2xl sm:border-b-0 sm:border-white/5 sm:bg-black/20 sm:px-4 lg:h-27 lg:flex-row lg:flex-nowrap lg:items-center lg:gap-4 lg:px-5'>
       {/* hover shimmer sweep */}
@@ -61,11 +63,11 @@ export default function PrematchEvent(props: { node: PrematchEvent$key; scope?: 
           onFocus={prefetch}
         >
           <div className='flex items-center gap-2'>
-            <TeamBadge name={data.homeCompetitor} imageUrl={data.homeImageUrl} />
+            <TeamBadge name={data.homeCompetitor} imageUrl={data.homeImageUrl} hue={homeHue} />
             <span className='truncate'>{data.homeCompetitor}</span>
           </div>
           <div className='flex items-center gap-2'>
-            <TeamBadge name={data.awayCompetitor} imageUrl={data.awayImageUrl} />
+            <TeamBadge name={data.awayCompetitor} imageUrl={data.awayImageUrl} hue={awayHue} />
             <span className='truncate'>{data.awayCompetitor}</span>
           </div>
         </Link>

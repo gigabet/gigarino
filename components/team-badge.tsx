@@ -3,9 +3,14 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { cn, initials, stringToHue } from '@/lib/utils'
 
-export function TeamBadge(props: { name: string; imageUrl?: string | null; className?: string }) {
+export function TeamBadge(props: {
+  name: string
+  imageUrl?: string | null
+  className?: string
+  hue?: number
+}) {
   const [failed, setFailed] = useState(false)
-  const hue = stringToHue(props.name)
+  const hue = props?.hue ?? stringToHue(initials(props.name))
 
   if (props.imageUrl && !failed)
     return (

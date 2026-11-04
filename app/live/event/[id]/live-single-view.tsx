@@ -17,7 +17,7 @@ import StatisticsWidget, { StatisticsWidgetSkeleton } from '@/components/statist
 import { TeamBadge } from '@/components/team-badge'
 import { useGoalFlash } from '@/context/hooks'
 import { useT } from '@/context/providers'
-import { cn, getRelativeDayLabel } from '@/lib/utils'
+import { cn, getRelativeDayLabel, pairToHues } from '@/lib/utils'
 import type { EventState$key } from '@/relay/__generated__/EventState.graphql'
 import type { LiveScoreboard$key } from '@/relay/__generated__/LiveScoreboard.graphql'
 import type { LiveSingleHeader$key } from '@/relay/__generated__/LiveSingleHeader.graphql'
@@ -55,6 +55,8 @@ export default function LiveSingleView(props: { queryRef: PreloadedQuery<LiveSin
 
   if (!data) return <EventNotFound />
 
+  const [homeHue, awayHue] = pairToHues(data.homeCompetitor, data.awayCompetitor)
+
   return (
     <main className='flex min-w-0 flex-col gap-4 sm:gap-6'>
       <section className='flex flex-col gap-3 rounded-2xl border border-white/5 bg-black/20 p-4 sm:gap-4 sm:p-6'>
@@ -64,6 +66,7 @@ export default function LiveSingleView(props: { queryRef: PreloadedQuery<LiveSin
             name={data.homeCompetitor}
             imageUrl={data.homeImageUrl}
             badge={<ServingIndicator event={data} side='HOME' />}
+            hue={homeHue}
           />
           <Suspense fallback={<EventLiveStateFallback startTime={data.startTime} />}>
             <EventState event={data} startTime={data.startTime} />
@@ -71,8 +74,9 @@ export default function LiveSingleView(props: { queryRef: PreloadedQuery<LiveSin
           <Competitor
             name={data.awayCompetitor}
             imageUrl={data.awayImageUrl}
-            reverse
             badge={<ServingIndicator event={data} side='AWAY' />}
+            hue={awayHue}
+            reverse
           />
         </div>
         <LiveScoreboard event={data} />
@@ -149,6 +153,7 @@ function Competitor(props: {
   imageUrl?: string | null
   reverse?: boolean
   badge?: React.ReactNode
+  hue?: number
 }) {
   return (
     <div
@@ -158,6 +163,7 @@ function Competitor(props: {
         name={props.name}
         imageUrl={props.imageUrl}
         className='size-8 min-w-8 text-xs sm:size-10 sm:min-w-10 sm:text-sm'
+        hue={props.hue}
       />
       <span className='truncate text-xs font-semibold text-white sm:text-sm lg:text-base'>
         {props.name}
