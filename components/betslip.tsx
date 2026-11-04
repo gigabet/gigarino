@@ -523,6 +523,18 @@ function BetslipBody(props: {
   )
 }
 
+export function BetslipRailSkeleton() {
+  return (
+    <div className='sticky top-20 flex h-[calc(100dvh-5rem)] flex-col overflow-hidden'>
+      <div className='flex items-center gap-1 border-b border-white/5 px-5 py-4'>
+        <Skeleton className='h-9 w-28 rounded-lg' />
+        <Skeleton className='h-9 w-32 rounded-lg' />
+      </div>
+      <BetslipBodySkeleton count={2} />
+    </div>
+  )
+}
+
 function BetslipBodySkeleton(props: { count: number }) {
   return (
     <div className='flex flex-1 flex-col gap-3 px-5 py-4'>

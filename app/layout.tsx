@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { JetBrains_Mono, Poppins, Rajdhani } from 'next/font/google'
 import Footer from '@/app/footer'
 import Navbar from '@/app/navbar'
-import { BetslipDrawerHost } from '@/components/betslip'
+import { BetslipDrawerHost, BetslipRailSkeleton } from '@/components/betslip'
 import ParticleBackground from '@/components/particle-background'
 import SiteChrome from '@/components/site-chrome'
 import Providers, { LocaleProvider } from '@/context/providers'
@@ -103,7 +103,7 @@ export default async function RootLayout({
                   <Footer />
                 </SiteChrome>
               </div>
-              <RailSlot />
+              <RailSlot skeleton={<BetslipRailSkeleton />} />
             </div>
           </LocaleProvider>
         </Providers>
