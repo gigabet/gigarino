@@ -31,6 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Skeleton } from '@/components/ui/skeleton'
 import * as Tabs from '@/components/ui/tabs'
 import {
   betCodeCopy,
@@ -123,8 +124,10 @@ export default function Betslip(props: {
           onNewBet={bet.startNewBet}
           onViewTickets={() => setMainTab('tickets')}
         />
-      ) : !data || input.items.length === 0 ? (
+      ) : input.items.length === 0 ? (
         <EmptyState />
+      ) : !data ? (
+        <BetslipBodySkeleton count={input.items.length} />
       ) : (
         <BetslipBody data={data} totals={totals} changes={changes} bet={bet} />
       )}
@@ -516,6 +519,20 @@ function BetslipBody(props: {
           />
         </BetslipSummary>
       </div>
+    </div>
+  )
+}
+
+function BetslipBodySkeleton(props: { count: number }) {
+  return (
+    <div className='flex flex-1 flex-col gap-3 px-5 py-4'>
+      <Skeleton className='h-10 w-full rounded-lg' />
+      {Array.from({ length: Math.min(props.count, 4) }).map((_, i) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: identical
+        <Skeleton key={i} className='h-14 w-full rounded-xl' />
+      ))}
+      <Skeleton className='mt-auto h-16 w-full rounded-xl' />
+      <Skeleton className='h-11 w-full rounded-full' />
     </div>
   )
 }

@@ -97,12 +97,14 @@ function Tab(props: {
       onClick={props.onClick}
       style={props.style}
       className={cn(
-        'bg-dark-200 sport-texture relative shrink-0 border border-white/5 text-xs whitespace-nowrap transition-colors',
+        'sport-texture bg-dark-300 lg:bg-dark-200 relative shrink-0 border border-white/10 text-xs whitespace-nowrap transition-colors lg:border-white/8',
         // <lg: vertical squircle
-        'flex min-w-18 flex-col items-center justify-center gap-1.5 rounded-[1.375rem] px-3 py-3 [corner-shape:squircle]',
+        'flex min-w-18 flex-col items-center justify-center gap-1.5 rounded-[1.375rem] px-3 py-3 [corner-shape:squircle] lg:[corner-shape:round]',
         // lg+: original horizontal pill
         'lg:min-w-0 lg:flex-row lg:gap-2 lg:rounded-2xl lg:px-3.5 lg:py-2',
-        props.active ? 'text-white' : 'text-white/60 hover:bg-white/5 hover:text-white'
+        props.active
+          ? 'text-white'
+          : 'lg:hover:bg-dark-300 hover:bg-dark-400 text-white/60 hover:text-white'
       )}
     >
       <span className='[&>svg]:size-5 lg:[&>svg]:size-4'>{props.icon}</span>

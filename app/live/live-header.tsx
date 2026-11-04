@@ -58,8 +58,21 @@ export default function LiveHeaderContent(props: {
 export function LiveHeaderSkeleton() {
   return (
     <div className='flex flex-col gap-4'>
-      <Skeleton className='h-9 w-full max-w-md rounded-full' />
-      <Skeleton className='h-9 w-full rounded-full' />
+      {/* sport tabs: vertical squircles below lg, horizontal pills from lg */}
+      <div className='flex items-stretch gap-2 overflow-hidden py-1 lg:items-center lg:py-0'>
+        {Array.from({ length: 6 }).map((_, i) => (
+          <Skeleton
+            // biome-ignore lint/suspicious/noArrayIndexKey: identical
+            key={i}
+            className='h-17 w-18 shrink-0 rounded-[1.375rem] [corner-shape:squircle] lg:h-8.5 lg:w-28 lg:rounded-2xl'
+          />
+        ))}
+      </div>
+      {/* toolbar: sort dropdown left, view toggle right */}
+      <div className='flex items-center justify-between gap-3'>
+        <Skeleton className='h-8.5 w-40 rounded-full' />
+        <Skeleton className='h-9.5 w-44 rounded-full' />
+      </div>
     </div>
   )
 }
