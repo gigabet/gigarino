@@ -1347,6 +1347,14 @@
     "de": "",
     "tr": ""
   },
+  "Find games and providers by name.": {
+    "de": "",
+    "tr": ""
+  },
+  "Find matches by team, league or tournament.": {
+    "de": "",
+    "tr": ""
+  },
   "No events are live right now.": {
     "de": "",
     "tr": ""
@@ -1359,6 +1367,14 @@
     "de": "",
     "tr": ""
   },
+  "Search casino": {
+    "de": "",
+    "tr": ""
+  },
+  "Search events": {
+    "de": "",
+    "tr": ""
+  },
   "Search events, games, providers...": {
     "de": "",
     "tr": ""
@@ -1367,7 +1383,15 @@
     "de": "",
     "tr": ""
   },
+  "Search teams, leagues...": {
+    "de": "",
+    "tr": ""
+  },
   "Type at least {n} characters to search.": {
+    "de": "",
+    "tr": ""
+  },
+  "Upcoming": {
     "de": "",
     "tr": ""
   }

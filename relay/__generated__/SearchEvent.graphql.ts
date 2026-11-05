@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<252ee91762203060241e6f8cdf22e2d0>>
+ * @generated SignedSource<<a1b1e05e26089b1defdda18719568bf3>>
  * @lightSyntaxTransform
  */
 
@@ -8,6 +8,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type EventStatus = "ABANDONED" | "CANCELLED" | "ENDED" | "LIVE" | "POSTPONED" | "SCHEDULED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type SearchEvent$data = {
   readonly awayCompetitor: string;
@@ -19,6 +20,7 @@ export type SearchEvent$data = {
   readonly id: string;
   readonly isLive: boolean;
   readonly startTime: string;
+  readonly status: EventStatus;
   readonly tournament: {
     readonly name: string;
   };
@@ -81,6 +83,13 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
+      "name": "status",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
       "name": "isLive",
       "storageKey": null
     },
@@ -121,6 +130,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "1e5c15c8f6efa4be0a633a96d8962a51";
+(node as any).hash = "58882382553ac482742fe70b67ae1ca8";
 
 export default node;

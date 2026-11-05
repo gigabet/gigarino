@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<78c2c13731dc98a4c2d1a122c994a7ca>>
+ * @generated SignedSource<<25d4cb3eecba75bb52be4a07280018b2>>
  * @lightSyntaxTransform
  */
 
@@ -14,7 +14,7 @@ export type SearchEventsQuery$variables = {
   search: string;
 };
 export type SearchEventsQuery$data = {
-  readonly events: {
+  readonly live: {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
@@ -22,10 +22,11 @@ export type SearchEventsQuery$data = {
       };
     }>;
   };
-  readonly liveEvents: {
+  readonly upcoming: {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
+        readonly isLive: boolean;
         readonly " $fragmentSpreads": FragmentRefs<"SearchEvent">;
       };
     }>;
@@ -66,136 +67,93 @@ v3 = {
   "name": "id",
   "storageKey": null
 },
-v4 = [
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "EventEdge",
-    "kind": "LinkedField",
-    "name": "edges",
-    "plural": true,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "Event",
-        "kind": "LinkedField",
-        "name": "node",
-        "plural": false,
-        "selections": [
-          (v3/*:: as any*/),
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "SearchEvent"
-          }
-        ],
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  }
-],
-v5 = [
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "EventEdge",
-    "kind": "LinkedField",
-    "name": "edges",
-    "plural": true,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "Event",
-        "kind": "LinkedField",
-        "name": "node",
-        "plural": false,
-        "selections": [
-          (v3/*:: as any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "homeCompetitor",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "homeImageUrl",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "awayCompetitor",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "awayImageUrl",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "startTime",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "isLive",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "homeScore",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "awayScore",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Tournament",
-            "kind": "LinkedField",
-            "name": "tournament",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "name",
-                "storageKey": null
-              },
-              (v3/*:: as any*/)
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  }
-];
+v4 = {
+  "args": null,
+  "kind": "FragmentSpread",
+  "name": "SearchEvent"
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isLive",
+  "storageKey": null
+},
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "homeCompetitor",
+  "storageKey": null
+},
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "homeImageUrl",
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "awayCompetitor",
+  "storageKey": null
+},
+v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "awayImageUrl",
+  "storageKey": null
+},
+v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "startTime",
+  "storageKey": null
+},
+v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "status",
+  "storageKey": null
+},
+v12 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "homeScore",
+  "storageKey": null
+},
+v13 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "awayScore",
+  "storageKey": null
+},
+v14 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "Tournament",
+  "kind": "LinkedField",
+  "name": "tournament",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "name",
+      "storageKey": null
+    },
+    (v3/*:: as any*/)
+  ],
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": [
@@ -207,23 +165,74 @@ return {
     "name": "SearchEventsQuery",
     "selections": [
       {
-        "alias": null,
+        "alias": "live",
         "args": (v2/*:: as any*/),
         "concreteType": "EventConnection",
         "kind": "LinkedField",
         "name": "liveEvents",
         "plural": false,
-        "selections": (v4/*:: as any*/),
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "EventEdge",
+            "kind": "LinkedField",
+            "name": "edges",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Event",
+                "kind": "LinkedField",
+                "name": "node",
+                "plural": false,
+                "selections": [
+                  (v3/*:: as any*/),
+                  (v4/*:: as any*/)
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       },
       {
-        "alias": null,
+        "alias": "upcoming",
         "args": (v2/*:: as any*/),
         "concreteType": "EventConnection",
         "kind": "LinkedField",
         "name": "events",
         "plural": false,
-        "selections": (v4/*:: as any*/),
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "EventEdge",
+            "kind": "LinkedField",
+            "name": "edges",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Event",
+                "kind": "LinkedField",
+                "name": "node",
+                "plural": false,
+                "selections": [
+                  (v3/*:: as any*/),
+                  (v5/*:: as any*/),
+                  (v4/*:: as any*/)
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       }
     ],
@@ -240,38 +249,106 @@ return {
     "name": "SearchEventsQuery",
     "selections": [
       {
-        "alias": null,
+        "alias": "live",
         "args": (v2/*:: as any*/),
         "concreteType": "EventConnection",
         "kind": "LinkedField",
         "name": "liveEvents",
         "plural": false,
-        "selections": (v5/*:: as any*/),
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "EventEdge",
+            "kind": "LinkedField",
+            "name": "edges",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Event",
+                "kind": "LinkedField",
+                "name": "node",
+                "plural": false,
+                "selections": [
+                  (v3/*:: as any*/),
+                  (v6/*:: as any*/),
+                  (v7/*:: as any*/),
+                  (v8/*:: as any*/),
+                  (v9/*:: as any*/),
+                  (v10/*:: as any*/),
+                  (v11/*:: as any*/),
+                  (v5/*:: as any*/),
+                  (v12/*:: as any*/),
+                  (v13/*:: as any*/),
+                  (v14/*:: as any*/)
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       },
       {
-        "alias": null,
+        "alias": "upcoming",
         "args": (v2/*:: as any*/),
         "concreteType": "EventConnection",
         "kind": "LinkedField",
         "name": "events",
         "plural": false,
-        "selections": (v5/*:: as any*/),
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "EventEdge",
+            "kind": "LinkedField",
+            "name": "edges",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Event",
+                "kind": "LinkedField",
+                "name": "node",
+                "plural": false,
+                "selections": [
+                  (v3/*:: as any*/),
+                  (v5/*:: as any*/),
+                  (v6/*:: as any*/),
+                  (v7/*:: as any*/),
+                  (v8/*:: as any*/),
+                  (v9/*:: as any*/),
+                  (v10/*:: as any*/),
+                  (v11/*:: as any*/),
+                  (v12/*:: as any*/),
+                  (v13/*:: as any*/),
+                  (v14/*:: as any*/)
+                ],
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "f40ff67522c8bef8b0144e112dd0d86b",
+    "cacheID": "dfc1bb2bd92c61029b32c49917abcdeb",
     "id": null,
     "metadata": {},
     "name": "SearchEventsQuery",
     "operationKind": "query",
-    "text": "query SearchEventsQuery(\n  $search: String!\n  $first: Int!\n) {\n  liveEvents(search: $search, first: $first) {\n    edges {\n      node {\n        id\n        ...SearchEvent\n      }\n    }\n  }\n  events(search: $search, first: $first) {\n    edges {\n      node {\n        id\n        ...SearchEvent\n      }\n    }\n  }\n}\n\nfragment SearchEvent on Event {\n  id\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  isLive\n  homeScore\n  awayScore\n  tournament {\n    name\n    id\n  }\n}\n"
+    "text": "query SearchEventsQuery(\n  $search: String!\n  $first: Int!\n) {\n  live: liveEvents(search: $search, first: $first) {\n    edges {\n      node {\n        id\n        ...SearchEvent\n      }\n    }\n  }\n  upcoming: events(search: $search, first: $first) {\n    edges {\n      node {\n        id\n        isLive\n        ...SearchEvent\n      }\n    }\n  }\n}\n\nfragment SearchEvent on Event {\n  id\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  status\n  isLive\n  homeScore\n  awayScore\n  tournament {\n    name\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "533a1b36f00c87405ed3fac2836492ed";
+(node as any).hash = "2f3480cc479dea85eacd820da522b4aa";
 
 export default node;
