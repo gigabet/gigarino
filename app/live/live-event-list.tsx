@@ -14,6 +14,7 @@ import LiveEvent, { LiveEventSkeleton } from '@/app/live/live-event'
 import { useOrderedLiveEvents } from '@/app/live/live-state'
 import type { LiveSort } from '@/app/live/live-toolbar'
 import LiveTournament, { LiveMarketsHeader } from '@/app/live/live-tournament'
+import { useT } from '@/context/providers'
 import { MIXED_SCOPE } from '@/lib/sport-markets'
 import type { LiveEventList$key } from '@/relay/__generated__/LiveEventList.graphql'
 import type { LiveEventListPaginationQuery } from '@/relay/__generated__/LiveEventListPaginationQuery.graphql'
@@ -57,8 +58,9 @@ export default function LiveEventList(props: {
         after: { type: "String" }
         orderBy: { type: "LiveEventOrder", defaultValue: TOURNAMENT }
         sport: { type: "String" }
+        search: { type: "String" }
       ) {
-        liveEvents(first: $first, after: $after, orderBy: $orderBy, sport: $sport)
+        liveEvents(first: $first, after: $after, orderBy: $orderBy, sport: $sport, search: $search)
           @connection(key: "LiveEventList_liveEvents") {
           edges {
             node {
@@ -117,7 +119,8 @@ export default function LiveEventList(props: {
     [rows]
   )
 
-  const snapshotKey = `${props.sort}:${props.queryRef.variables.sport ?? 'all'}`
+  const { sport, search } = props.queryRef.variables
+  const snapshotKey = `${props.sort}:${sport ?? 'all'}:${search ?? ''}`
 
   const groupedRef = useRef<VirtuosoHandle>(null)
   const chronoRef = useRef<GroupedVirtuosoHandle>(null)
@@ -135,7 +138,7 @@ export default function LiveEventList(props: {
 
   const restoreStateFrom = snapshots.get(snapshotKey)
 
-  if (events.length === 0) return <EmptyLive />
+  if (events.length === 0) return <EmptyLive searching={!!search} />
 
   if (!groups)
     return (
@@ -175,10 +178,14 @@ export default function LiveEventList(props: {
   )
 }
 
-function EmptyLive() {
+function EmptyLive(props: { searching: boolean }) {
+  const t = useT()
+
   return (
     <div className='text-secondary flex flex-col items-center justify-center gap-3 rounded-2xl border border-white/5 bg-black/20 px-6 py-16 text-center text-sm'>
-      No events are live right now.
+      {props.searching
+        ? t('No live events match your search.')
+        : t('No events are live right now.')}
     </div>
   )
 }

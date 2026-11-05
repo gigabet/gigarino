@@ -10,7 +10,7 @@ import LiveEventSidebar, {
 } from '@/app/live/event/[id]/live-event-sidebar'
 import FavouriteLiveSection from '@/app/live/favourite-live-events'
 import LiveHeader, { LiveHeaderSkeleton } from '@/app/live/live-header'
-import { liveSortState, liveSportFilterState, ORDER } from '@/app/live/live-state'
+import { liveSearchState, liveSortState, liveSportFilterState, ORDER } from '@/app/live/live-state'
 import { LiveSubscriptionsProvider } from '@/app/live/live-subscriptions'
 import { RefetchBatcherProvider } from '@/app/live/refetch-context'
 import Betslip, { BetslipDrawer, BetslipMobileBar } from '@/components/betslip'
@@ -29,11 +29,17 @@ export default function LiveLayout({ children }: React.PropsWithChildren) {
 
   const sort = useAtomValue(liveSortState)
   const sportFilter = useAtomValue(liveSportFilterState)
+  const search = useAtomValue(liveSearchState)
 
   const [queryRef, loadQuery, disposeQuery] = useQueryLoader<LiveLayoutQuery>(graphql`
-    query LiveLayoutQuery($orderBy: LiveEventOrder!, $sport: String, $hasUser: Boolean!) {
+    query LiveLayoutQuery(
+      $orderBy: LiveEventOrder!
+      $sport: String
+      $search: String
+      $hasUser: Boolean!
+    ) {
       ...LiveHeader
-      ...LiveEventSidebar @arguments(orderBy: $orderBy, sport: $sport)
+      ...LiveEventSidebar @arguments(orderBy: $orderBy, sport: $sport, search: $search)
       ...FavouriteLiveEvents @include(if: $hasUser) @alias(as: "favouriteLive")
     }
   `)
@@ -44,11 +50,11 @@ export default function LiveLayout({ children }: React.PropsWithChildren) {
   useEffect(() => {
     startTransition(() => {
       loadQuery(
-        { orderBy: ORDER[sort], sport: sportFilter, hasUser },
+        { orderBy: ORDER[sort], sport: sportFilter, search: search || null, hasUser },
         { fetchPolicy: 'store-and-network' }
       )
     })
-  }, [loadQuery, sort, sportFilter, hasUser])
+  }, [loadQuery, sort, sportFilter, search, hasUser])
 
   const betslip = useBetslipQuote()
 
@@ -84,7 +90,8 @@ export default function LiveLayout({ children }: React.PropsWithChildren) {
                   )}
                 </Suspense>
               </ErrorBoundary>
-              {!eventId && <FavouriteLiveSection queryRef={queryRef} />}
+              {/* favourites keep a fixed { favourites: true } connection, so they aren't searchable */}
+              {!eventId && !search && <FavouriteLiveSection queryRef={queryRef} />}
               {children}
             </div>
 

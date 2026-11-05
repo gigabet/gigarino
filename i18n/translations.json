@@ -1342,5 +1342,33 @@
   "Your betslip is empty": {
     "de": "Ihr Wettschein ist leer",
     "tr": "Kuponunuz boş"
+  },
+  "Events": {
+    "de": "",
+    "tr": ""
+  },
+  "No events are live right now.": {
+    "de": "",
+    "tr": ""
+  },
+  "No events found": {
+    "de": "",
+    "tr": ""
+  },
+  "No live events match your search.": {
+    "de": "",
+    "tr": ""
+  },
+  "Search events, games, providers...": {
+    "de": "",
+    "tr": ""
+  },
+  "Search live events": {
+    "de": "",
+    "tr": ""
+  },
+  "Type at least {n} characters to search.": {
+    "de": "",
+    "tr": ""
   }
 }

@@ -7,6 +7,8 @@ import type { LiveOrder$key } from '@/relay/__generated__/LiveOrder.graphql'
 
 export const liveSortState = atom<LiveSort>('tournament')
 export const liveSportFilterState = atom<string | null>(null)
+/** Committed (debounced, trimmed) search term; '' means no search. */
+export const liveSearchState = atom('')
 export const ORDER = {
   tournament: 'TOURNAMENT',
   chronological: 'START_TIME',

@@ -1,20 +1,37 @@
 'use client'
 
 import { cx } from 'class-variance-authority'
-import { LayoutListIcon, Rows3Icon, SlidersHorizontalIcon } from 'lucide-react'
+import { LayoutListIcon, Rows3Icon, SearchIcon, SlidersHorizontalIcon, XIcon } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import * as DropdownMenu from '@/components/ui/dropdown-menu'
+import { useDebounce } from '@/context/hooks'
+import { useT } from '@/context/providers'
 
 export type LiveSort = 'tournament' | 'chronological'
 export type LiveView = 'list' | 'single'
+
+const SEARCH_DEBOUNCE_MS = 300
 
 export default function LiveToolbar(props: {
   sort: LiveSort
   onSortChangeAction: (sort: LiveSort) => void
   view: LiveView
   onViewChangeAction: (view: LiveView) => void
+  search: string
+  onSearchChangeAction: (search: string) => void
 }) {
+  const t = useT()
+
+  // typing stays local; only the settled value reaches the queries
+  const [text, setText] = useState(props.search)
+  const debounced = useDebounce(text, SEARCH_DEBOUNCE_MS)
+  const { onSearchChangeAction } = props
+  useEffect(() => {
+    onSearchChangeAction(debounced.trim())
+  }, [debounced, onSearchChangeAction])
+
   return (
-    <div className='flex items-center justify-between gap-3'>
+    <div className='flex flex-wrap items-center justify-between gap-3'>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
           <button
@@ -40,6 +57,32 @@ export default function LiveToolbar(props: {
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Root>
+
+      {/* lg: between sort and view; below lg: its own full-width row underneath them */}
+      <div className='relative order-last w-full lg:order-0 lg:mx-auto lg:w-auto lg:max-w-md lg:flex-1'>
+        <SearchIcon className='pointer-events-none absolute top-1/2 left-3.5 size-3.5 -translate-y-1/2 text-white/50' />
+        <input
+          type='text'
+          inputMode='search'
+          enterKeyHint='search'
+          autoComplete='off'
+          value={text}
+          onChange={e => setText(e.target.value)}
+          placeholder={t('Search live events')}
+          aria-label={t('Search live events')}
+          className='bg-dark-300 lg:bg-dark-200 focus:border-primary w-full rounded-full border border-white/10 py-2 pr-9 pl-9 text-xs text-white transition-colors outline-none placeholder:text-white/40 lg:border-white/8'
+        />
+        {text && (
+          <button
+            type='button'
+            onClick={() => setText('')}
+            aria-label={t('Clear search')}
+            className='absolute top-1/2 right-2.5 flex size-5 -translate-y-1/2 items-center justify-center rounded-full text-white/50 transition-colors hover:text-white'
+          >
+            <XIcon className='size-3.5' />
+          </button>
+        )}
+      </div>
 
       <div className='bg-dark-300 lg:bg-dark-200 flex items-center gap-1 rounded-full border border-white/10 p-1 lg:border-white/8'>
         <ViewButton

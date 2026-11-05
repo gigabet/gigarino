@@ -4,7 +4,7 @@ import { useAtom } from 'jotai'
 import { useRouter } from 'next/navigation'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
 import LiveSportTabs from '@/app/live/live-sport-tabs'
-import { liveSortState, liveSportFilterState } from '@/app/live/live-state'
+import { liveSearchState, liveSortState, liveSportFilterState } from '@/app/live/live-state'
 import LiveToolbar, { type LiveView } from '@/app/live/live-toolbar'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { LiveHeader$key } from '@/relay/__generated__/LiveHeader.graphql'
@@ -19,7 +19,7 @@ export default function LiveHeaderContent(props: {
   const data = useFragment<LiveHeader$key>(
     graphql`
       fragment LiveHeader on Query {
-        firstLive: liveEvents(first: 1, orderBy: $orderBy, sport: $sport) {
+        firstLive: liveEvents(first: 1, orderBy: $orderBy, sport: $sport, search: $search) {
           edges {
             node {
               id
@@ -35,6 +35,7 @@ export default function LiveHeaderContent(props: {
   const router = useRouter()
   const [sort, setSort] = useAtom(liveSortState)
   const [sportFilter, setSportFilter] = useAtom(liveSportFilterState)
+  const [search, setSearch] = useAtom(liveSearchState)
 
   const handleView = (view: LiveView) => {
     if (view === 'list') return router.push('/live')
@@ -50,6 +51,8 @@ export default function LiveHeaderContent(props: {
         onSortChangeAction={setSort}
         view={props.eventId ? 'single' : 'list'}
         onViewChangeAction={handleView}
+        search={search}
+        onSearchChangeAction={setSearch}
       />
     </div>
   )
@@ -68,10 +71,11 @@ export function LiveHeaderSkeleton() {
           />
         ))}
       </div>
-      {/* toolbar: sort dropdown left, view toggle right */}
-      <div className='flex items-center justify-between gap-3'>
-        <Skeleton className='h-8.5 w-40 rounded-full' />
-        <Skeleton className='h-9.5 w-44 rounded-full' />
+      {/* toolbar: sort dropdown left, search between (own row below lg), view toggle right */}
+      <div className='flex flex-wrap items-center justify-between gap-3'>
+        <Skeleton className='h-8.5 w-36 rounded-full' />
+        <Skeleton className='order-last h-8.5 w-full rounded-full lg:order-0 lg:mx-auto lg:w-auto lg:max-w-md lg:flex-1' />
+        <Skeleton className='h-9.5 w-40 rounded-full' />
       </div>
     </div>
   )

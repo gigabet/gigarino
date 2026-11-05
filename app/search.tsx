@@ -5,6 +5,7 @@ import { Command } from 'cmdk'
 import { format } from 'date-fns'
 import fuzzysort from 'fuzzysort'
 import { atom, useAtom, useSetAtom } from 'jotai'
+import { uniqBy } from 'lodash'
 import { FlameIcon, SearchIcon, SparklesIcon, XIcon } from 'lucide-react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
@@ -170,6 +171,14 @@ function EventResults(props: { term: string; onNavigateAction: (href: string) =>
   const data = useLazyLoadQuery<SearchEventsQuery>(
     graphql`
       query SearchEventsQuery($search: String!, $first: Int!) {
+        liveEvents(search: $search, first: $first) {
+          edges {
+            node {
+              id
+              ...SearchEvent
+            }
+          }
+        }
         events(search: $search, first: $first) {
           edges {
             node {
@@ -185,7 +194,11 @@ function EventResults(props: { term: string; onNavigateAction: (href: string) =>
   )
   const t = useT()
 
-  const events = data.events.edges.map(e => e.node)
+  // live first; an event present in both lists (e.g. "starting soon") is shown once
+  const events = uniqBy(
+    [...data.liveEvents.edges, ...data.events.edges].map(e => e.node),
+    node => node.id
+  ).slice(0, MAX_EVENTS)
 
   return (
     <Command.Group heading={t('Events')} className={GROUP}>

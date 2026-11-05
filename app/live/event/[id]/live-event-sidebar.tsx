@@ -10,6 +10,7 @@ import LiveStripTournament from '@/app/live/event/[id]/live-strip-tournament'
 import { FavouriteLiveStrips } from '@/app/live/favourite-live-events'
 import { liveSortState, liveSportFilterState, useOrderedLiveEvents } from '@/app/live/live-state'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useT } from '@/context/providers'
 import type { LiveEventSidebar$key } from '@/relay/__generated__/LiveEventSidebar.graphql'
 import type { LiveEventSidebarPaginationQuery } from '@/relay/__generated__/LiveEventSidebarPaginationQuery.graphql'
 import type { LiveLayoutQuery } from '@/relay/__generated__/LiveLayoutQuery.graphql'
@@ -35,8 +36,9 @@ export default function LiveEventSidebar(props: {
         after: { type: "String" }
         orderBy: { type: "LiveEventOrder", defaultValue: TOURNAMENT }
         sport: { type: "String" }
+        search: { type: "String" }
       ) {
-        liveEvents(first: $first, after: $after, orderBy: $orderBy, sport: $sport)
+        liveEvents(first: $first, after: $after, orderBy: $orderBy, sport: $sport, search: $search)
           @connection(key: "LiveEventSidebar_liveEvents") {
           edges {
             node {
@@ -54,6 +56,7 @@ export default function LiveEventSidebar(props: {
   )
 
   const router = useRouter()
+  const t = useT()
   const sort = useAtomValue(liveSortState)
   const sportFilter = useAtomValue(liveSportFilterState)
 
@@ -91,14 +94,20 @@ export default function LiveEventSidebar(props: {
     </div>
   )
 
+  // favourites aren't searchable (fixed connection filters), so they step aside while searching
+  const searching = !!props.queryRef.variables.search
   const headerContext = useMemo(
-    () => ({ queryRef: props.queryRef, activeId: props.eventId }),
-    [props.queryRef, props.eventId]
+    () => ({ queryRef: props.queryRef, activeId: props.eventId, searching }),
+    [props.queryRef, props.eventId, searching]
   )
 
   return (
     <aside className={ASIDE}>
-      {groups ? (
+      {searching && events.length === 0 ? (
+        <p className='text-secondary px-1 py-6 text-center text-xs'>
+          {t('No live events match your search.')}
+        </p>
+      ) : groups ? (
         <GroupedVirtuoso
           key='grouped'
           className='scrollbar-hide fade-bottom'
@@ -136,9 +145,11 @@ export default function LiveEventSidebar(props: {
 type HeaderContext = {
   queryRef: PreloadedQuery<LiveLayoutQuery>
   activeId: string
+  searching: boolean
 }
 
 function FavouritesHeader({ context }: { context: HeaderContext }) {
+  if (context.searching) return null
   return <FavouriteLiveStrips queryRef={context.queryRef} activeId={context.activeId} />
 }
 

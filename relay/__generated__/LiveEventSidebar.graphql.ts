@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f3580a426b4f57b22aea83ddd22b7be0>>
+ * @generated SignedSource<<e676903c2b3d8b20a210a98e3e453957>>
  * @lightSyntaxTransform
  */
 
@@ -53,6 +53,11 @@ return {
     {
       "defaultValue": null,
       "kind": "LocalArgument",
+      "name": "search"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
       "name": "sport"
     }
   ],
@@ -88,6 +93,11 @@ return {
           "kind": "Variable",
           "name": "orderBy",
           "variableName": "orderBy"
+        },
+        {
+          "kind": "Variable",
+          "name": "search",
+          "variableName": "search"
         },
         {
           "kind": "Variable",
@@ -196,6 +206,6 @@ return {
 };
 })();
 
-(node as any).hash = "2819c2a3972fbef51e204dd63dca1a93";
+(node as any).hash = "d109e52f1ec6ba9b2418de9859eef86a";
 
 export default node;

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<115b3ed80af9308e4722ab60dcdac4e4>>
+ * @generated SignedSource<<e6a0de704585a49c9dc196ef3fa137d6>>
  * @lightSyntaxTransform
  */
 
@@ -14,6 +14,7 @@ export type LiveEventSidebarPaginationQuery$variables = {
   after?: string | null | undefined;
   first?: number | null | undefined;
   orderBy?: LiveEventOrder | null | undefined;
+  search?: string | null | undefined;
   sport?: string | null | undefined;
 };
 export type LiveEventSidebarPaginationQuery$data = {
@@ -44,6 +45,11 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
+    "name": "search"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
     "name": "sport"
   }
 ],
@@ -62,6 +68,11 @@ v1 = [
     "kind": "Variable",
     "name": "orderBy",
     "variableName": "orderBy"
+  },
+  {
+    "kind": "Variable",
+    "name": "search",
+    "variableName": "search"
   },
   {
     "kind": "Variable",
@@ -442,7 +453,8 @@ return {
         "args": (v1/*:: as any*/),
         "filters": [
           "orderBy",
-          "sport"
+          "sport",
+          "search"
         ],
         "handle": "connection",
         "key": "LiveEventSidebar_liveEvents",
@@ -452,16 +464,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "6a9e78deb89a6b506f1bd7198697b6bc",
+    "cacheID": "97ea9618a2a82abe12449b9331a13191",
     "id": null,
     "metadata": {},
     "name": "LiveEventSidebarPaginationQuery",
     "operationKind": "query",
-    "text": "query LiveEventSidebarPaginationQuery(\n  $after: String\n  $first: Int = 50\n  $orderBy: LiveEventOrder = TOURNAMENT\n  $sport: String\n) {\n  ...LiveEventSidebar_2dsFoV\n}\n\nfragment LiveEventSidebar_2dsFoV on Query {\n  liveEvents(first: $first, after: $after, orderBy: $orderBy, sport: $sport) {\n    edges {\n      node {\n        ...LiveOrder\n        ...LiveEventStrip\n        tournament {\n          ...LiveStripTournament\n          id\n        }\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment LiveEventStrip on Event {\n  id\n  tradingStatus\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...LiveStripOdds\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  status\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  status\n  sport {\n    key\n    id\n  }\n  homeScore\n  awayScore\n  serving\n  pointScore {\n    home\n    away\n  }\n  periodScores {\n    period\n    home\n    away\n  }\n}\n\nfragment LiveStripMarket on Market {\n  outcomes {\n    id\n    index\n    ...LiveStripOdd\n  }\n}\n\nfragment LiveStripOdd on Outcome {\n  id\n  name\n  price\n  status\n}\n\nfragment LiveStripOdds on Event {\n  tradingStatus\n  mainMarkets: markets(groups: [MAIN]) {\n    id\n    kind\n    ...LiveStripMarket\n  }\n}\n\nfragment LiveStripTournament on Tournament {\n  name\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    id\n  }\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n"
+    "text": "query LiveEventSidebarPaginationQuery(\n  $after: String\n  $first: Int = 50\n  $orderBy: LiveEventOrder = TOURNAMENT\n  $search: String\n  $sport: String\n) {\n  ...LiveEventSidebar_3B7fGr\n}\n\nfragment LiveEventSidebar_3B7fGr on Query {\n  liveEvents(first: $first, after: $after, orderBy: $orderBy, sport: $sport, search: $search) {\n    edges {\n      node {\n        ...LiveOrder\n        ...LiveEventStrip\n        tournament {\n          ...LiveStripTournament\n          id\n        }\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment LiveEventStrip on Event {\n  id\n  tradingStatus\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...LiveStripOdds\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  status\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  status\n  sport {\n    key\n    id\n  }\n  homeScore\n  awayScore\n  serving\n  pointScore {\n    home\n    away\n  }\n  periodScores {\n    period\n    home\n    away\n  }\n}\n\nfragment LiveStripMarket on Market {\n  outcomes {\n    id\n    index\n    ...LiveStripOdd\n  }\n}\n\nfragment LiveStripOdd on Outcome {\n  id\n  name\n  price\n  status\n}\n\nfragment LiveStripOdds on Event {\n  tradingStatus\n  mainMarkets: markets(groups: [MAIN]) {\n    id\n    kind\n    ...LiveStripMarket\n  }\n}\n\nfragment LiveStripTournament on Tournament {\n  name\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    id\n  }\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n"
   }
 };
 })();
 
-(node as any).hash = "2819c2a3972fbef51e204dd63dca1a93";
+(node as any).hash = "d109e52f1ec6ba9b2418de9859eef86a";
 
 export default node;
