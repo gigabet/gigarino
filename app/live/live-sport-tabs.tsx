@@ -1,10 +1,10 @@
 'use client'
 
-import { cx } from 'class-variance-authority'
 import { useEffect } from 'react'
 import { fetchQuery, graphql, useRefetchableFragment, useRelayEnvironment } from 'react-relay'
 import { SportIcon } from '@/components/sport-icon'
 import { useT } from '@/context/providers'
+import { sortBySportOrder } from '@/lib/sport-order'
 import { getSportTheme } from '@/lib/sport-theme'
 import { cn } from '@/lib/utils'
 import type { LiveSportTabs$key } from '@/relay/__generated__/LiveSportTabs.graphql'
@@ -55,7 +55,7 @@ export default function LiveSportTabs(props: {
         label={t('All')}
         count={total}
       />
-      {data.sports
+      {sortBySportOrder(data.sports)
         .filter(s => s.liveEventCount > 0)
         .map(sport => {
           const theme = getSportTheme(sport.key)

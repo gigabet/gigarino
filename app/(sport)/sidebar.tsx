@@ -1,9 +1,8 @@
 'use client'
 
-import { sortBy } from 'lodash'
 import { ChevronLeftIcon, ChevronRightIcon, SearchIcon } from 'lucide-react'
 import Link from 'next/link'
-import { Accordion, Popover, Tabs } from 'radix-ui'
+import { Accordion, Popover } from 'radix-ui'
 import { Suspense, useEffect, useRef, useState } from 'react'
 import ReactCountryFlag from 'react-country-flag'
 import {
@@ -25,6 +24,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useSelectedTournaments } from '@/context/hooks'
 import { useLocale, useT } from '@/context/providers'
 import { getCountryName } from '@/i18n/countryNames'
+import { sortBySportOrder } from '@/lib/sport-order'
 import type { PrematchLayoutQuery } from '@/relay/__generated__/PrematchLayoutQuery.graphql'
 import PrematchLayoutQueryNode from '@/relay/__generated__/PrematchLayoutQuery.graphql'
 import type { Sidebar$data, Sidebar$key } from '@/relay/__generated__/Sidebar.graphql'
@@ -38,17 +38,6 @@ import type { SidebarTournaments$key } from '@/relay/__generated__/SidebarTourna
 import SidebarTournamentsLoadNode, {
   type SidebarTournamentsLoad,
 } from '@/relay/__generated__/SidebarTournamentsLoad.graphql'
-
-const sportOrder = [
-  'football',
-  'tennis',
-  'basketball',
-  'ice-hockey',
-  'esoccer',
-  'etennis',
-  'ebasketball',
-  'e-ice-hockey',
-]
 
 export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayoutQuery> }) {
   const preloaded = usePreloadedQuery<PrematchLayoutQuery>(PrematchLayoutQueryNode, props.queryRef)
@@ -70,10 +59,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
     preloaded
   )
 
-  const filteredSports = sortBy(data.sports, sport => {
-    const index = sportOrder.indexOf(sport.key)
-    return index === -1 ? Infinity : index
-  }).filter(s => s.eventCount > 0)
+  const filteredSports = sortBySportOrder(data.sports).filter(s => s.eventCount > 0)
 
   const [expanded, setExpanded] = useState(false)
   const t = useT()
