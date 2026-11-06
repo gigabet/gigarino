@@ -28,9 +28,12 @@ export function RailSlot(props: { skeleton: React.ReactNode }) {
           : 'hidden'
       }
     >
-      {/* portal target is its own node, so React never mixes portal and regular children */}
-      <div ref={setEl} />
-      <div className='group-has-data-rail-content:hidden'>{reserved && props.skeleton}</div>
+      {/* portal target is its own node, so React never mixes portal and regular children.
+          `contents` keeps it out of layout, so the sticky rail content is sized by the aside. */}
+      <div ref={setEl} className='contents' />
+      <div className='contents group-has-data-rail-content:hidden'>
+        {reserved && props.skeleton}
+      </div>
     </aside>
   )
 }
