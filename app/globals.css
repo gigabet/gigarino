@@ -20,7 +20,7 @@ layer(base);
     --popover-foreground: var(--color-white);
     --primary: var(--color-lime);
     --primary-foreground: var(--color-black);
-    --secondary: oklch(78% 0.022 261.5);
+    --secondary: oklch(78% 0.022 261.5); /* was 70.5%, secondary text */
     --secondary-foreground: var(--color-white);
     --muted: var(--color-neutral-800);
     --muted-foreground: oklch(47.4% 0 0);
@@ -29,7 +29,7 @@ layer(base);
     --destructive: var(--color-red-500);
     --destructive-foreground: var(--color-neutral-50);
     --border: var(--color-neutral-800);
-    --input: var(--color-neutral-600);
+    --input: var(--color-neutral-600); /* was neutral-800 */
     --ring: var(--primary);
     --radius: 0.625rem;
     --sidebar-background: var(--card);
