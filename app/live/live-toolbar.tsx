@@ -36,7 +36,7 @@ export default function LiveToolbar(props: {
         <DropdownMenu.Trigger asChild>
           <button
             type='button'
-            className='bg-dark-300 lg:bg-dark-200 hover:bg-dark-400 lg:hover:bg-dark-300 flex items-center gap-2 rounded-full border border-white/10 px-3.5 py-2 text-xs text-white/70 transition-colors hover:text-white lg:border-white/8'
+            className='bg-control hover:bg-white/12 flex items-center gap-2 rounded-full border border-control-border px-3.5 py-2 text-xs text-white/80 transition-colors hover:text-white'
           >
             <SlidersHorizontalIcon className='size-3.5' />
             {props.sort === 'tournament' ? 'By competition' : 'By start time'}
@@ -70,7 +70,7 @@ export default function LiveToolbar(props: {
           onChange={e => setText(e.target.value)}
           placeholder={t('Search live events')}
           aria-label={t('Search live events')}
-          className='bg-dark-300 lg:bg-dark-200 focus:border-primary w-full rounded-full border border-white/10 py-2 pr-9 pl-9 text-xs text-white transition-colors outline-none placeholder:text-white/40 lg:border-white/8'
+          className='bg-control focus:border-primary w-full rounded-full border border-control-border py-2 pr-9 pl-9 text-xs text-white transition-colors outline-none placeholder:text-white/40'
         />
         {text && (
           <button
@@ -84,7 +84,7 @@ export default function LiveToolbar(props: {
         )}
       </div>
 
-      <div className='bg-dark-300 lg:bg-dark-200 flex items-center gap-1 rounded-full border border-white/10 p-1 lg:border-white/8'>
+      <div className='bg-control flex items-center gap-1 rounded-full border border-control-border p-1'>
         <ViewButton
           active={props.view === 'single'}
           onClick={() => props.onViewChangeAction('single')}

@@ -96,7 +96,7 @@ export default function MarketGroups(props: { event: MarketGroups$key }) {
           <Tabs.Trigger
             key={group}
             value={group}
-            className='data-[state=active]:bg-primary group shrink-0 rounded-full bg-white/8 px-4 py-2 text-xs font-medium whitespace-nowrap text-white shadow-none data-[state=active]:text-black'
+            className='data-[state=active]:bg-primary group shrink-0 rounded-full border border-control-border bg-white/10 px-4 py-2 text-xs font-medium whitespace-nowrap text-white shadow-none data-[state=active]:text-black'
           >
             {GROUP_LABEL[group]}
             <span className='ml-1.5 opacity-60'>{byGroup[group].length}</span>

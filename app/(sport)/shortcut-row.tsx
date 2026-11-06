@@ -70,7 +70,7 @@ export default function ShortcutRow(props: { queryRef: PreloadedQuery<PrematchQu
                 type='button'
                 data-active={isActive || null}
                 onClick={event => handleClick(event, e.key)}
-                className='group/link bg-dark inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-white/5 px-3.5 whitespace-nowrap text-white/60 transition-colors text-shadow-current hover:text-white data-active:text-white data-active:text-shadow-[0_0_8px]'
+                className='group/link bg-dark inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-control-border px-3.5 whitespace-nowrap text-white/60 transition-colors text-shadow-current hover:text-white data-active:text-white data-active:text-shadow-[0_0_8px]'
                 style={
                   isActive && theme
                     ? ({

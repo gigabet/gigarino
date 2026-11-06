@@ -20,7 +20,7 @@ layer(base);
     --popover-foreground: var(--color-white);
     --primary: var(--color-lime);
     --primary-foreground: var(--color-black);
-    --secondary: oklch(70.5% 0.022 261.5);
+    --secondary: oklch(78% 0.022 261.5);
     --secondary-foreground: var(--color-white);
     --muted: var(--color-neutral-800);
     --muted-foreground: oklch(47.4% 0 0);
@@ -29,7 +29,7 @@ layer(base);
     --destructive: var(--color-red-500);
     --destructive-foreground: var(--color-neutral-50);
     --border: var(--color-neutral-800);
-    --input: var(--color-neutral-800);
+    --input: var(--color-neutral-600);
     --ring: var(--primary);
     --radius: 0.625rem;
     --sidebar-background: var(--card);
@@ -121,6 +121,10 @@ layer(base);
   --color-dark-200: oklch(21.8% 0 0);
   --color-dark-300: oklch(28.5% 0 0);
   --color-dark-400: oklch(34.8% 0 0);
+
+  /* interactive control surfaces; tuned to stay visible in daylight on cheap panels */
+  --color-control: oklch(100% 0 0 / 0.07);
+  --color-control-border: oklch(100% 0 0 / 0.32);
 
   /* Tailwind's default --shadow-xs is identical to the one that used to be redefined here */
   --shadow-glow: 0 0 20px --alpha(var(--color-lime) / 50%);

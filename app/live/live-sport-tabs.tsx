@@ -97,7 +97,7 @@ function Tab(props: {
       onClick={props.onClick}
       style={props.style}
       className={cn(
-        'sport-texture bg-dark-300 lg:bg-dark-200 relative shrink-0 border border-white/10 text-xs whitespace-nowrap transition-colors lg:border-white/8',
+        'sport-texture bg-control relative shrink-0 border border-control-border text-xs whitespace-nowrap transition-colors',
         // <lg: vertical squircle
         'flex min-w-18 flex-col items-center justify-center gap-1.5 rounded-[1.375rem] px-3 py-3 [corner-shape:squircle] lg:[corner-shape:round]',
         // lg+: original horizontal pill

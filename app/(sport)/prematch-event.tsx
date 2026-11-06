@@ -46,7 +46,7 @@ export default function PrematchEvent(props: { node: PrematchEvent$key; scope?: 
   const [homeHue, awayHue] = pairToHues(data.homeCompetitor, data.awayCompetitor)
 
   return (
-    <div className='sport-texture group relative flex flex-col gap-2 overflow-hidden border-b py-3 last:border-b-0 sm:gap-3 sm:rounded-2xl sm:border-b-0 sm:border-white/5 sm:bg-black/20 sm:px-4 lg:h-27 lg:flex-row lg:flex-nowrap lg:items-center lg:gap-4 lg:px-5'>
+    <div className='sport-texture group relative flex flex-col gap-2 overflow-hidden border-b border-white/15 py-3 last:border-b-0 sm:gap-3 sm:rounded-2xl sm:border-b-0 sm:border-white/10 sm:bg-black/20 sm:px-4 lg:h-27 lg:flex-row lg:flex-nowrap lg:items-center lg:gap-4 lg:px-5'>
       {/* hover shimmer sweep */}
       <div className='pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100' />
 

@@ -72,7 +72,7 @@ export default function Tournament(props: { queryRef: Tournament$key }) {
             type='button'
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className='hover:bg-primary/10 hover:border-primary/30 hover:text-primary group inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-medium text-white uppercase transition-all disabled:opacity-60'
+            className='hover:bg-primary/10 hover:border-primary/30 hover:text-primary group inline-flex items-center gap-2 rounded-full border border-control-border bg-control px-4 py-2 text-xs font-medium text-white uppercase transition-all disabled:opacity-60'
           >
             <RotateCwIcon className={isRefreshing ? 'size-3.5 animate-spin' : 'size-3.5'} />
             {t('Refresh')}

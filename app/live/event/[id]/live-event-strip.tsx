@@ -43,7 +43,7 @@ export default function LiveEventStrip(props: { event: LiveEventStrip$key; activ
         'relative flex flex-col gap-2 rounded-xl border p-3 transition-colors',
         props.active
           ? 'border-primary bg-primary/10 shadow-primary/30 shadow-[0_0_12px]'
-          : 'border-white/5 bg-black/20 hover:border-white/20',
+          : 'border-white/15 bg-white/4 hover:border-white/30',
         data.tradingStatus === 'SUSPENDED' && 'opacity-60'
       )}
     >
@@ -139,7 +139,7 @@ function LiveStripOdd(props: { outcome: LiveStripOdd$key; suspended: boolean }) 
       disabled={props.suspended || outcome.status !== 'OPEN'}
       suppressHydrationWarning
       className={cn(
-        'group/odd hover:bg-primary/5 hover:border-primary/20 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-1 flex-col items-center gap-0.5 rounded-lg border border-white/15 bg-black/20 py-1.5 transition disabled:pointer-events-none disabled:opacity-40',
+        'group/odd hover:bg-primary/5 hover:border-primary/20 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-1 flex-col items-center gap-0.5 rounded-lg border border-control-border bg-control py-1.5 transition disabled:pointer-events-none disabled:opacity-40',
         upDown === 'up' && 'animate-odds-flash-up',
         upDown === 'down' && 'animate-odds-flash-down'
       )}

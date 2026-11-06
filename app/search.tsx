@@ -118,7 +118,7 @@ export default function Search() {
                         ? t('Search teams, leagues...')
                         : t('Search games, providers...')
                     }
-                    className='bg-dark focus:border-primary focus:ring-primary/20 w-full rounded-full border border-white/10 px-10 py-2.5 text-sm text-neutral-200 placeholder-neutral-500 transition-all focus:ring-4 focus:outline-none'
+                    className='bg-dark focus:border-primary focus:ring-primary/20 w-full rounded-full border border-control-border px-10 py-2.5 text-sm text-neutral-200 placeholder-neutral-500 transition-all focus:ring-4 focus:outline-none'
                   />
                   <SearchIcon className='pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-neutral-400' />
                   {value && (

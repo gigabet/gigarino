@@ -253,7 +253,7 @@ function OddToggle(props: {
     <Toggle.Root
       suppressHydrationWarning
       className={cn(
-        'group hover:bg-primary/5 hover:border-primary/20 shadow-primary/60 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-1 flex-col items-center justify-center gap-1 rounded-lg border border-white/10 bg-black/20 transition-all disabled:pointer-events-none disabled:opacity-40',
+        'group hover:bg-primary/5 hover:border-primary/20 shadow-primary/60 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-1 flex-col items-center justify-center gap-1 rounded-lg border border-control-border bg-control transition-all disabled:pointer-events-none disabled:opacity-40',
         'data-[state=on]:shadow-[0_0_12px]',
         upDown === 'up' && 'animate-odds-flash-up',
         upDown === 'down' && 'animate-odds-flash-down'

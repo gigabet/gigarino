@@ -64,7 +64,7 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key; scope?: stri
   return (
     <div
       className={cn(
-        'sport-texture group relative flex h-32 flex-col gap-2 overflow-hidden border-b py-3 last:border-b-0 max-sm:overflow-visible sm:gap-3 sm:rounded-2xl sm:border-b-0 sm:border-white/5 sm:bg-black/20 sm:px-4 lg:h-27 lg:flex-row lg:flex-nowrap lg:items-center lg:gap-4 lg:px-5',
+        'sport-texture group relative flex h-32 flex-col gap-2 overflow-hidden border-b border-white/15 py-3 last:border-b-0 max-sm:overflow-visible sm:gap-3 sm:rounded-2xl sm:border-b-0 sm:border-white/5 sm:bg-black/20 sm:px-4 lg:h-27 lg:flex-row lg:flex-nowrap lg:items-center lg:gap-4 lg:px-5',
         suspended && 'opacity-60'
       )}
     >
