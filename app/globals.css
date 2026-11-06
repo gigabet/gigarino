@@ -29,7 +29,9 @@ layer(base);
     --destructive: var(--color-red-500);
     --destructive-foreground: var(--color-neutral-50);
     --border: var(--color-neutral-800);
-    --input: var(--color-neutral-600); /* was neutral-800 */
+    --input: var(--color-neutral-700); /* was neutral-800 */
+    --control: oklch(100% 0 0 / 0.11);
+    --control-border: oklch(100% 0 0 / 0.14);
     --ring: var(--primary);
     --radius: 0.625rem;
     --sidebar-background: var(--card);
@@ -40,6 +42,15 @@ layer(base);
     --sidebar-accent-foreground: var(--color-white);
     --sidebar-border: var(--border);
     --sidebar-ring: var(--primary);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    :root {
+      --input: var(--color-neutral-700);
+      --control: oklch(100% 0 0 / 0.04);
+      --control-border: oklch(100% 0 0 / 0.14);
+      --secondary: oklch(74% 0.022 261.5);
+    }
   }
 
   * {
@@ -53,6 +64,8 @@ layer(base);
 /* Maps the runtime variables above to utilities (bg-primary, text-secondary, ...) */
 @theme inline {
   --color-border: var(--border);
+  --color-control: var(--control);
+  --color-control-border: var(--control-border);
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-background: var(--background);
@@ -121,10 +134,6 @@ layer(base);
   --color-dark-200: oklch(21.8% 0 0);
   --color-dark-300: oklch(28.5% 0 0);
   --color-dark-400: oklch(34.8% 0 0);
-
-  /* interactive control surfaces; tuned to stay visible in daylight on cheap panels */
-  --color-control: oklch(100% 0 0 / 0.07);
-  --color-control-border: oklch(100% 0 0 / 0.32);
 
   /* Tailwind's default --shadow-xs is identical to the one that used to be redefined here */
   --shadow-glow: 0 0 20px --alpha(var(--color-lime) / 50%);

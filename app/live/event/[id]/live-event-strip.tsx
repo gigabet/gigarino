@@ -43,7 +43,7 @@ export default function LiveEventStrip(props: { event: LiveEventStrip$key; activ
         'relative flex flex-col gap-2 rounded-xl border p-3 transition-colors',
         props.active
           ? 'border-primary bg-primary/10 shadow-primary/30 shadow-[0_0_12px]'
-          : 'border-white/15 bg-white/4 hover:border-white/20',
+          : 'border-control-border bg-control hover:border-white/20',
         data.tradingStatus === 'SUSPENDED' && 'opacity-60'
       )}
     >
