@@ -105,6 +105,9 @@ layer(base);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-xs: calc(var(--radius) - 6px);
+
+  --font-sans: var(--font-poppins);
+  --font-display: var(--font-rajdhani);
 }
 
 /* Static design tokens */
@@ -118,9 +121,6 @@ layer(base);
   --color-dark-200: oklch(21.8% 0 0);
   --color-dark-300: oklch(28.5% 0 0);
   --color-dark-400: oklch(34.8% 0 0);
-
-  --font-sans: var(--font-poppins);
-  --font-display: var(--font-rajdhani);
 
   /* Tailwind's default --shadow-xs is identical to the one that used to be redefined here */
   --shadow-glow: 0 0 20px --alpha(var(--color-lime) / 50%);
