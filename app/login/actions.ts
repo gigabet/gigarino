@@ -75,6 +75,7 @@ export async function login(
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
+      domain: process.env.COOKIE_DOMAIN, // '.gigarino.com', unset on localhost
       maxAge: data.rememberMe ? 60 * 60 * 24 * 30 : undefined, // 30 days if rememberMe, otherwise session cookie
     })
     redirect((formData.get('from') as string) || '/')
