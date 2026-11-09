@@ -61,6 +61,7 @@ export default function PrematchEvent(props: { node: PrematchEvent$key; scope?: 
           onMouseEnter={prefetch}
           onMouseDown={prefetch}
           onFocus={prefetch}
+          prefetch={false}
         >
           <div className='flex items-center gap-2'>
             <TeamBadge name={data.homeCompetitor} imageUrl={data.homeImageUrl} hue={homeHue} />
@@ -97,6 +98,7 @@ export default function PrematchEvent(props: { node: PrematchEvent$key; scope?: 
               onMouseEnter={prefetch}
               onMouseDown={prefetch}
               onFocus={prefetch}
+              prefetch={false}
             >
               +{data.oddCount}
             </Link>
