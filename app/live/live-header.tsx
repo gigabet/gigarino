@@ -74,7 +74,7 @@ export function LiveHeaderSkeleton() {
       {/* toolbar: sort dropdown left, search between (own row below lg), view toggle right */}
       <div className='flex flex-wrap items-center justify-between gap-3'>
         <Skeleton className='h-8.5 w-36 rounded-full' />
-        <Skeleton className='order-last h-8.5 w-full rounded-full lg:order-0 lg:mx-auto lg:w-auto lg:max-w-md lg:flex-1' />
+        {/* <Skeleton className='order-last h-8.5 w-full rounded-full lg:order-0 lg:mx-auto lg:w-auto lg:max-w-md lg:flex-1' /> */}
         <Skeleton className='h-9.5 w-40 rounded-full' />
       </div>
     </div>

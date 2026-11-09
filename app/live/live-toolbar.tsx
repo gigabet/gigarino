@@ -1,11 +1,8 @@
 'use client'
 
 import { cx } from 'class-variance-authority'
-import { LayoutListIcon, Rows3Icon, SearchIcon, SlidersHorizontalIcon, XIcon } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { LayoutListIcon, Rows3Icon, SlidersHorizontalIcon } from 'lucide-react'
 import * as DropdownMenu from '@/components/ui/dropdown-menu'
-import { useDebounce } from '@/context/hooks'
-import { useT } from '@/context/providers'
 
 export type LiveSort = 'tournament' | 'chronological'
 export type LiveView = 'list' | 'single'
@@ -20,15 +17,15 @@ export default function LiveToolbar(props: {
   search: string
   onSearchChangeAction: (search: string) => void
 }) {
-  const t = useT()
+  // const t = useT()
 
-  // typing stays local; only the settled value reaches the queries
-  const [text, setText] = useState(props.search)
-  const debounced = useDebounce(text, SEARCH_DEBOUNCE_MS)
-  const { onSearchChangeAction } = props
-  useEffect(() => {
-    onSearchChangeAction(debounced.trim())
-  }, [debounced, onSearchChangeAction])
+  // // typing stays local; only the settled value reaches the queries
+  // const [text, setText] = useState(props.search)
+  // const debounced = useDebounce(text, SEARCH_DEBOUNCE_MS)
+  // const { onSearchChangeAction } = props
+  // useEffect(() => {
+  //   onSearchChangeAction(debounced.trim())
+  // }, [debounced, onSearchChangeAction])
 
   return (
     <div className='flex flex-wrap items-center justify-between gap-3'>
@@ -36,7 +33,7 @@ export default function LiveToolbar(props: {
         <DropdownMenu.Trigger asChild>
           <button
             type='button'
-            className='bg-control hover:bg-white/12 flex items-center gap-2 rounded-full border border-control-border px-3.5 py-2 text-xs text-white/80 transition-colors hover:text-white'
+            className='bg-control border-control-border flex items-center gap-2 rounded-full border px-3.5 py-2 text-xs text-white/80 transition-colors hover:bg-white/12 hover:text-white'
           >
             <SlidersHorizontalIcon className='size-3.5' />
             {props.sort === 'tournament' ? 'By competition' : 'By start time'}
@@ -59,7 +56,7 @@ export default function LiveToolbar(props: {
       </DropdownMenu.Root>
 
       {/* lg: between sort and view; below lg: its own full-width row underneath them */}
-      <div className='relative order-last w-full lg:order-0 lg:mx-auto lg:w-auto lg:max-w-md lg:flex-1'>
+      {/* <div className='relative order-last w-full lg:order-0 lg:mx-auto lg:w-auto lg:max-w-md lg:flex-1'>
         <SearchIcon className='pointer-events-none absolute top-1/2 left-3.5 size-3.5 -translate-y-1/2 text-white/50' />
         <input
           type='text'
@@ -82,9 +79,9 @@ export default function LiveToolbar(props: {
             <XIcon className='size-3.5' />
           </button>
         )}
-      </div>
+      </div> */}
 
-      <div className='bg-control flex items-center gap-1 rounded-full border border-control-border p-1'>
+      <div className='bg-control border-control-border flex items-center gap-1 rounded-full border p-1'>
         <ViewButton
           active={props.view === 'single'}
           onClick={() => props.onViewChangeAction('single')}
