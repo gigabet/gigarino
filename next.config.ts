@@ -24,10 +24,10 @@ const nextConfig: NextConfig = {
         source: '/uploads/:path*',
         destination: `${BACKEND_URL}/uploads/:path*`,
       },
-      {
-        source: '/graphql/:path*',
-        destination: `${GRAPHQL_URL}/graphql/:path*`,
-      },
+      // {
+      //   source: '/graphql/:path*',
+      //   destination: `${GRAPHQL_URL}/graphql/:path*`,
+      // },
     ]
   },
 }

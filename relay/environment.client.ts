@@ -11,10 +11,9 @@ import {
   Store,
   type Variables,
 } from 'relay-runtime'
-import { getToken } from '@/lib/auth'
 
 const subscriptionsClient = createClient({
-  url: '/graphql/stream',
+  url: `${process.env.NEXT_PUBLIC_GRAPHQL_URL}/graphql/stream`,
   singleConnection: true,
 })
 
