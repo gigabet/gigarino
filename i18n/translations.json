@@ -395,6 +395,10 @@
     "de": "Favoriten nicht aktualisiert.",
     "tr": "Favoriler güncellenemedi."
   },
+  "Country": {
+    "de": "Land",
+    "tr": "Ülke"
+  },
   "Create a password": {
     "de": "Passwort erstellen",
     "tr": "Bir şifre oluşturun"
@@ -503,6 +507,10 @@
     "de": "Event gestartet.",
     "tr": "Etkinlik başladı."
   },
+  "Events": {
+    "de": "Events",
+    "tr": "Etkinlikler"
+  },
   "Expand sidebar": {
     "de": "Seitenleiste ausklappen",
     "tr": "Kenar çubuğunu genişlet"
@@ -530,6 +538,14 @@
   "Featured Bets": {
     "de": "Top-Wetten",
     "tr": "Öne Çıkan Bahisler"
+  },
+  "Find games and providers by name.": {
+    "de": "Spiele und Anbieter nach Namen finden.",
+    "tr": "Oyunları ve sağlayıcıları ada göre bulun."
+  },
+  "Find matches by team, league or tournament.": {
+    "de": "Spiele nach Team, Liga oder Turnier finden.",
+    "tr": "Maçları takım, lig veya turnuvaya göre bulun."
   },
   "Football": {
     "de": "Fußball",
@@ -755,9 +771,25 @@
     "de": "Nein",
     "tr": "Hayır"
   },
+  "No countries found.": {
+    "de": "Keine Länder gefunden.",
+    "tr": "Ülke bulunamadı."
+  },
+  "No events are live right now.": {
+    "de": "Derzeit keine Live-Events.",
+    "tr": "Şu anda canlı etkinlik yok."
+  },
+  "No events found": {
+    "de": "Keine Events gefunden",
+    "tr": "Etkinlik bulunamadı"
+  },
   "No games": {
     "de": "Keine Spiele",
     "tr": "Oyun yok"
+  },
+  "No live events match your search.": {
+    "de": "Keine Live-Events entsprechen Ihrer Suche.",
+    "tr": "Aramanızla eşleşen canlı etkinlik yok."
   },
   "No matches for \"{query}\"": {
     "de": "Keine Treffer für „{query}“",
@@ -1027,6 +1059,22 @@
     "de": "Suche",
     "tr": "Ara"
   },
+  "Search casino": {
+    "de": "Casino suchen",
+    "tr": "Casino ara"
+  },
+  "Search countries...": {
+    "de": "Länder suchen...",
+    "tr": "Ülke ara..."
+  },
+  "Search events": {
+    "de": "Events suchen",
+    "tr": "Etkinlik ara"
+  },
+  "Search events, games, providers...": {
+    "de": "Events, Spiele, Anbieter suchen...",
+    "tr": "Etkinlik, oyun, sağlayıcı ara..."
+  },
   "Search games, providers...": {
     "de": "Spiele, Anbieter suchen...",
     "tr": "Oyun, sağlayıcı ara..."
@@ -1035,6 +1083,10 @@
     "de": "Spiele suchen...",
     "tr": "oyun ara..."
   },
+  "Search live events": {
+    "de": "Live-Events suchen",
+    "tr": "Canlı etkinlik ara"
+  },
   "Search sports": {
     "de": "Sport suchen",
     "tr": "Spor ara"
@@ -1042,6 +1094,10 @@
   "search teams, leagues...": {
     "de": "Teams, Ligen suchen...",
     "tr": "takım, lig ara..."
+  },
+  "Search teams, leagues...": {
+    "de": "Teams, Ligen suchen...",
+    "tr": "Takım, lig ara..."
   },
   "Secure": {
     "de": "Sicher",
@@ -1255,9 +1311,17 @@
     "de": "Versuchen Sie ein anderes Team, eine andere Liga oder Schreibweise.",
     "tr": "Farklı bir takım, lig veya yazım deneyin."
   },
+  "Type at least {n} characters to search.": {
+    "de": "Mindestens {n} Zeichen eingeben.",
+    "tr": "Aramak için en az {n} karakter girin."
+  },
   "Under": {
     "de": "Unter",
     "tr": "Alt"
+  },
+  "Upcoming": {
+    "de": "Bevorstehend",
+    "tr": "Yaklaşan"
   },
   "Username": {
     "de": "Benutzername",
@@ -1342,69 +1406,5 @@
   "Your betslip is empty": {
     "de": "Ihr Wettschein ist leer",
     "tr": "Kuponunuz boş"
-  },
-  "Country": {
-    "de": "Land",
-    "tr": "Ülke"
-  },
-  "Events": {
-    "de": "Events",
-    "tr": "Etkinlikler"
-  },
-  "Find games and providers by name.": {
-    "de": "Spiele und Anbieter nach Namen finden.",
-    "tr": "Oyunları ve sağlayıcıları ada göre bulun."
-  },
-  "Find matches by team, league or tournament.": {
-    "de": "Spiele nach Team, Liga oder Turnier finden.",
-    "tr": "Maçları takım, lig veya turnuvaya göre bulun."
-  },
-  "No countries found.": {
-    "de": "Keine Länder gefunden.",
-    "tr": "Ülke bulunamadı."
-  },
-  "No events are live right now.": {
-    "de": "Derzeit keine Live-Events.",
-    "tr": "Şu anda canlı etkinlik yok."
-  },
-  "No events found": {
-    "de": "Keine Events gefunden",
-    "tr": "Etkinlik bulunamadı"
-  },
-  "No live events match your search.": {
-    "de": "Keine Live-Events entsprechen Ihrer Suche.",
-    "tr": "Aramanızla eşleşen canlı etkinlik yok."
-  },
-  "Search casino": {
-    "de": "Casino suchen",
-    "tr": "Casino ara"
-  },
-  "Search countries...": {
-    "de": "Länder suchen...",
-    "tr": "Ülke ara..."
-  },
-  "Search events": {
-    "de": "Events suchen",
-    "tr": "Etkinlik ara"
-  },
-  "Search events, games, providers...": {
-    "de": "Events, Spiele, Anbieter suchen...",
-    "tr": "Etkinlik, oyun, sağlayıcı ara..."
-  },
-  "Search live events": {
-    "de": "Live-Events suchen",
-    "tr": "Canlı etkinlik ara"
-  },
-  "Search teams, leagues...": {
-    "de": "Teams, Ligen suchen...",
-    "tr": "Takım, lig ara..."
-  },
-  "Type at least {n} characters to search.": {
-    "de": "Mindestens {n} Zeichen eingeben.",
-    "tr": "Aramak için en az {n} karakter girin."
-  },
-  "Upcoming": {
-    "de": "Bevorstehend",
-    "tr": "Yaklaşan"
   }
 }
