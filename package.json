@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"next dev\" \"pnpm:watch:i18n\"",
+    "dev": "concurrently \"next dev\" \"pnpm:watch:i18n\" \"pnpm:proxy\"",
+    "proxy": "caddy run --config Caddyfile --adapter caddyfile",
     "watch:i18n": "chokidar \"app/**/*.{ts,tsx}\" \"components/**/*.{ts,tsx}\" -c \"pnpm run i18n:extract\"",
     "i18n:extract": "tsx scripts/i18n/extract.ts",
     "i18n:translate": "tsx --env-file=.env.development scripts/i18n/translate.ts",

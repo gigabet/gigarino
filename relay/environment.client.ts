@@ -14,7 +14,7 @@ import {
 
 const subscriptionsClient = createClient({
   url: `${process.env.NEXT_PUBLIC_GRAPHQL_URL}/graphql/stream`,
-  singleConnection: true,
+  singleConnection: false,
   fetchFn: (input: RequestInfo | URL, init?: RequestInit) =>
     fetch(input, { ...init, credentials: 'include' }),
 })
