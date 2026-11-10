@@ -92,10 +92,10 @@ export function LiveHeaderSkeleton() {
         ))}
       </div>
       {/* country tabs */}
-      <div className='flex gap-2 overflow-hidden py-1'>
+      <div className='flex gap-1 overflow-hidden py-0.5'>
         {Array.from({ length: 6 }).map((_, i) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: identical
-          <Skeleton key={i} className='h-8 w-24 shrink-0 rounded-full' />
+          <Skeleton key={i} className='h-6 w-20 shrink-0 rounded-full' />
         ))}
       </div>
       {/* toolbar: sort dropdown left, search between (own row below lg), view toggle right */}

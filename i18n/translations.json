@@ -1343,56 +1343,68 @@
     "de": "Ihr Wettschein ist leer",
     "tr": "Kuponunuz boş"
   },
+  "Country": {
+    "de": "Land",
+    "tr": "Ülke"
+  },
   "Events": {
-    "de": "",
-    "tr": ""
+    "de": "Events",
+    "tr": "Etkinlikler"
   },
   "Find games and providers by name.": {
-    "de": "",
-    "tr": ""
+    "de": "Spiele und Anbieter nach Namen finden.",
+    "tr": "Oyunları ve sağlayıcıları ada göre bulun."
   },
   "Find matches by team, league or tournament.": {
-    "de": "",
-    "tr": ""
+    "de": "Spiele nach Team, Liga oder Turnier finden.",
+    "tr": "Maçları takım, lig veya turnuvaya göre bulun."
+  },
+  "No countries found.": {
+    "de": "Keine Länder gefunden.",
+    "tr": "Ülke bulunamadı."
   },
   "No events are live right now.": {
-    "de": "",
-    "tr": ""
+    "de": "Derzeit keine Live-Events.",
+    "tr": "Şu anda canlı etkinlik yok."
   },
   "No events found": {
-    "de": "",
-    "tr": ""
+    "de": "Keine Events gefunden",
+    "tr": "Etkinlik bulunamadı"
   },
   "No live events match your search.": {
-    "de": "",
-    "tr": ""
+    "de": "Keine Live-Events entsprechen Ihrer Suche.",
+    "tr": "Aramanızla eşleşen canlı etkinlik yok."
   },
   "Search casino": {
-    "de": "",
-    "tr": ""
+    "de": "Casino suchen",
+    "tr": "Casino ara"
+  },
+  "Search countries...": {
+    "de": "Länder suchen...",
+    "tr": "Ülke ara..."
   },
   "Search events": {
-    "de": "",
-    "tr": ""
+    "de": "Events suchen",
+    "tr": "Etkinlik ara"
   },
   "Search events, games, providers...": {
-    "de": "",
-    "tr": ""
+    "de": "Events, Spiele, Anbieter suchen...",
+    "tr": "Etkinlik, oyun, sağlayıcı ara..."
   },
   "Search live events": {
-    "de": "",
-    "tr": ""
+    "de": "Live-Events suchen",
+    "tr": "Canlı etkinlik ara"
   },
   "Search teams, leagues...": {
-    "de": "",
-    "tr": ""
+    "de": "Teams, Ligen suchen...",
+    "tr": "Takım, lig ara..."
   },
   "Type at least {n} characters to search.": {
-    "de": "",
-    "tr": ""
+    "de": "Mindestens {n} Zeichen eingeben.",
+    "tr": "Aramak için en az {n} karakter girin."
   },
   "Upcoming": {
-    "de": "",
-    "tr": ""
+    "de": "Bevorstehend",
+    "tr": "Yaklaşan"
   }
 }

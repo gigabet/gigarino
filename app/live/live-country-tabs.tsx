@@ -25,18 +25,10 @@ export default function LiveCountryTabs(props: {
 }) {
   const t = useT()
   const data = useFragment(
+    // HACK: liveEvents has no country argument or country list, so we count countries the
+    // hard way. Limit 100. This is just proof of concept. Replace with better query ASAP.
     graphql`
       fragment LiveCountryTabs on Query {
-        # liveEvents has no country argument or country list, so the tabs come from the
-        # categories of the first page of live events (max page size) and the lists filter
-        # client-side. Swap for a dedicated field once the backend has one.
-        # BACKEND (pending): replace countryEvents with a country list that has live counts,
-        # then drop the counting in the useMemo below and show liveEventCount on the tabs.
-        # liveCategories(sport: $sport, search: $search) {
-        #   name
-        #   countryCode
-        #   liveEventCount
-        # }
         countryEvents: liveEvents(first: 100, sport: $sport, search: $search) {
           edges {
             node {
@@ -76,7 +68,7 @@ export default function LiveCountryTabs(props: {
     if (!row || !measure) return
 
     const compute = () => {
-      // children: All, every country in order, then a sample "+99" tab
+      // children: All, every country in order, then a dummy "+99" tab
       const widths = Array.from(measure.children, c => (c as HTMLElement).offsetWidth)
       const moreWidth = widths[widths.length - 1] ?? 0
       const available = row.clientWidth
@@ -116,7 +108,7 @@ export default function LiveCountryTabs(props: {
 
   return (
     <div className='relative overflow-hidden'>
-      <div ref={rowRef} className='flex items-center gap-2 py-1'>
+      <div ref={rowRef} className='flex items-center gap-1 px-0.5'>
         <Chip active={props.active === null} onClick={() => props.onChangeAction(null)}>
           {t('All')}
         </Chip>
@@ -140,12 +132,12 @@ export default function LiveCountryTabs(props: {
         )}
       </div>
 
-      {/* invisible copy of the row, only read for widths (see the layout effect) */}
+      {/* invisible copy of the row to determine when the +N button appears */}
       <div
         ref={measureRef}
         aria-hidden
         inert
-        className='pointer-events-none invisible absolute top-0 left-0 flex w-max gap-2'
+        className='pointer-events-none invisible absolute top-0 left-0 flex w-max gap-1'
       >
         <Chip>{t('All')}</Chip>
         {countries.map(c => (
@@ -170,10 +162,8 @@ function Chip({
       type='button'
       aria-pressed={active}
       className={cn(
-        'bg-control border-control-border flex shrink-0 items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs whitespace-nowrap transition-colors',
-        active
-          ? 'border-primary bg-primary/10 text-white'
-          : 'text-white/60 hover:bg-white/12 hover:text-white',
+        'flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.7rem] whitespace-nowrap transition-colors',
+        active ? 'text-foreground bg-dark-400' : 'text-secondary hover:text-foreground',
         className
       )}
       {...props}
@@ -186,7 +176,7 @@ function Flag(props: { code: string | null }) {
     <ReactCountryFlag
       svg
       countryCode={props.code ?? 'UN'}
-      className='w-4 shrink-0 rounded-xs shadow-xs'
+      className='w-3.5 shrink-0 rounded-xs opacity-80'
       style={{ width: undefined, height: undefined }}
     />
   )
