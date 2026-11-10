@@ -9,6 +9,9 @@ import { liveSearchState, liveSortState, liveSportFilterState, ORDER } from '@/a
 import type { LiveEventsQuery } from '@/relay/__generated__/LiveEventsQuery.graphql'
 
 export default function LivePage() {
+  // BACKEND (pending): add `$country: String` to the query, pass `country: countryFilter` to
+  // loadQuery (read it with useAtomValue(liveCountryFilterState)) and add it to the effect deps
+  // and to `@arguments` below.
   const [queryRef, loadQuery, disposeQuery] = useQueryLoader<LiveEventsQuery>(graphql`
     query LiveEventsQuery($orderBy: LiveEventOrder!, $sport: String, $search: String) {
       ...LiveEventList @arguments(orderBy: $orderBy, sport: $sport, search: $search)

@@ -31,6 +31,10 @@ export default function LiveLayout({ children }: React.PropsWithChildren) {
   const sportFilter = useAtomValue(liveSportFilterState)
   const search = useAtomValue(liveSearchState)
 
+  // BACKEND (pending): server-side country filter. Add `$country: String` to the query, pass
+  // it to `@arguments` of LiveEventSidebar (same argument as in live-event-list.tsx), and pass
+  // `country` to loadQuery (from liveCountryFilterState) and its effect deps. The favourites
+  // connection keeps filtering client-side: its filters must stay { favourites: true }.
   const [queryRef, loadQuery, disposeQuery] = useQueryLoader<LiveLayoutQuery>(graphql`
     query LiveLayoutQuery(
       $orderBy: LiveEventOrder!

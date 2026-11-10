@@ -7,6 +7,8 @@ import type { LiveOrder$key } from '@/relay/__generated__/LiveOrder.graphql'
 
 export const liveSortState = atom<LiveSort>('tournament')
 export const liveSportFilterState = atom<string | null>(null)
+/** Category name of the selected country tab; null means all countries. */
+export const liveCountryFilterState = atom<string | null>(null)
 /** Committed (debounced, trimmed) search term; '' means no search. */
 export const liveSearchState = atom('')
 export const ORDER = {
@@ -25,6 +27,9 @@ const orderFragment = graphql`
     tournament {
       key
     }
+    category {
+      name
+    }
   }
 `
 
@@ -36,7 +41,8 @@ type LiveOrderRef = LiveOrder$key[number]
 export function useOrderedLiveEvents<T extends LiveOrderRef>(
   events: ReadonlyArray<T>,
   sort: LiveSort,
-  sportFilter: string | null
+  sportFilter: string | null,
+  countryFilter: string | null
 ): { events: OrderedLiveEvent<T>[]; groups: OrderedLiveEvent<T>[][] | null } {
   const order = useFragment(orderFragment, events as unknown as LiveOrder$key)
 
@@ -47,11 +53,13 @@ export function useOrderedLiveEvents<T extends LiveOrderRef>(
         event: events[i],
         status: o.status,
         sport: o.sport.key,
+        country: o.category.name,
         group: `${o.sport.key}:${o.tournament.key}`,
         start: Date.parse(o.startTime),
       }))
       .filter(r => !FINISHED.has(r.status))
       .filter(r => !sportFilter || r.sport === sportFilter)
+      .filter(r => !countryFilter || r.country === countryFilter)
 
     const toOut = (r: (typeof rows)[number]): OrderedLiveEvent<T> => ({
       id: r.id,
@@ -64,5 +72,5 @@ export function useOrderedLiveEvents<T extends LiveOrderRef>(
 
     const groups = Object.values(groupBy(rows, r => r.group)).map(g => g.map(toOut))
     return { events: groups.flat(), groups }
-  }, [order, events, sort, sportFilter])
+  }, [order, events, sort, sportFilter, countryFilter])
 }

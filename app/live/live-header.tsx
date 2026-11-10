@@ -3,8 +3,14 @@
 import { useAtom } from 'jotai'
 import { useRouter } from 'next/navigation'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
+import LiveCountryTabs from '@/app/live/live-country-tabs'
 import LiveSportTabs from '@/app/live/live-sport-tabs'
-import { liveSearchState, liveSortState, liveSportFilterState } from '@/app/live/live-state'
+import {
+  liveCountryFilterState,
+  liveSearchState,
+  liveSortState,
+  liveSportFilterState,
+} from '@/app/live/live-state'
 import LiveToolbar, { type LiveView } from '@/app/live/live-toolbar'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { LiveHeader$key } from '@/relay/__generated__/LiveHeader.graphql'
@@ -27,6 +33,7 @@ export default function LiveHeaderContent(props: {
           }
         }
         ...LiveSportTabs
+        ...LiveCountryTabs
       }
     `,
     preloaded
@@ -36,6 +43,7 @@ export default function LiveHeaderContent(props: {
   const [sort, setSort] = useAtom(liveSortState)
   const [sportFilter, setSportFilter] = useAtom(liveSportFilterState)
   const [search, setSearch] = useAtom(liveSearchState)
+  const [country, setCountry] = useAtom(liveCountryFilterState)
 
   const handleView = (view: LiveView) => {
     if (view === 'list') return router.push('/live')
@@ -45,14 +53,26 @@ export default function LiveHeaderContent(props: {
 
   return (
     <div className='flex flex-col gap-4'>
-      <LiveSportTabs query={data} active={sportFilter} onChangeAction={setSportFilter} />
+      <LiveSportTabs
+        query={data}
+        active={sportFilter}
+        onChangeAction={sport => {
+          setSportFilter(sport)
+          // the country list is per sport, so the old pick may not exist any more
+          setCountry(null)
+        }}
+      />
+      <LiveCountryTabs query={data} active={country} onChangeAction={setCountry} />
       <LiveToolbar
         sort={sort}
         onSortChangeAction={setSort}
         view={props.eventId ? 'single' : 'list'}
         onViewChangeAction={handleView}
         search={search}
-        onSearchChangeAction={setSearch}
+        onSearchChangeAction={value => {
+          setSearch(value)
+          setCountry(null)
+        }}
       />
     </div>
   )
@@ -69,6 +89,13 @@ export function LiveHeaderSkeleton() {
             key={i}
             className='h-17 w-18 shrink-0 rounded-[1.375rem] [corner-shape:squircle] lg:h-8.5 lg:w-28 lg:rounded-2xl'
           />
+        ))}
+      </div>
+      {/* country tabs */}
+      <div className='flex gap-2 overflow-hidden py-1'>
+        {Array.from({ length: 6 }).map((_, i) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: identical
+          <Skeleton key={i} className='h-8 w-24 shrink-0 rounded-full' />
         ))}
       </div>
       {/* toolbar: sort dropdown left, search between (own row below lg), view toggle right */}

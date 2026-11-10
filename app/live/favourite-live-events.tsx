@@ -7,7 +7,11 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
 import LiveEventStrip from '@/app/live/event/[id]/live-event-strip'
 import LiveEvent from '@/app/live/live-event'
-import { liveSportFilterState, useOrderedLiveEvents } from '@/app/live/live-state'
+import {
+  liveCountryFilterState,
+  liveSportFilterState,
+  useOrderedLiveEvents,
+} from '@/app/live/live-state'
 import { HeaderRow } from '@/app/live/live-tournament'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { useT, useUser } from '@/context/providers'
@@ -40,12 +44,13 @@ function useFavouriteLiveEvents(queryRef: LayoutRef) {
     preloaded.favouriteLive ?? null
   )
   const sportFilter = useAtomValue(liveSportFilterState)
+  const countryFilter = useAtomValue(liveCountryFilterState)
 
   // The connection has no sport argument on purpose: its filters stay
   // { favourites: true }, which is what the optimistic updater looks up.
-  // The sport tabs are applied here instead.
+  // The sport and country tabs are applied here instead.
   const nodes = useMemo(() => data?.favouriteLiveEvents.edges.map(e => e.node) ?? [], [data])
-  return useOrderedLiveEvents(nodes, 'chronological', sportFilter).events
+  return useOrderedLiveEvents(nodes, 'chronological', sportFilter, countryFilter).events
 }
 
 // The ref can lag a render behind the session: until it was loaded with

@@ -8,7 +8,12 @@ import { GroupedVirtuoso, Virtuoso } from 'react-virtuoso'
 import LiveEventStrip from '@/app/live/event/[id]/live-event-strip'
 import LiveStripTournament from '@/app/live/event/[id]/live-strip-tournament'
 import { FavouriteLiveStrips } from '@/app/live/favourite-live-events'
-import { liveSortState, liveSportFilterState, useOrderedLiveEvents } from '@/app/live/live-state'
+import {
+  liveCountryFilterState,
+  liveSortState,
+  liveSportFilterState,
+  useOrderedLiveEvents,
+} from '@/app/live/live-state'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useT } from '@/context/providers'
 import type { LiveEventSidebar$key } from '@/relay/__generated__/LiveEventSidebar.graphql'
@@ -59,28 +64,41 @@ export default function LiveEventSidebar(props: {
   const t = useT()
   const sort = useAtomValue(liveSortState)
   const sportFilter = useAtomValue(liveSportFilterState)
+  const countryFilter = useAtomValue(liveCountryFilterState)
 
-  // the server already filtered by sport and ordered; this only derives groups
+  // the server already filtered by sport and ordered; the country tab is applied here
+  // (liveEvents has no country argument)
   const nodes = useMemo(() => data.liveEvents.edges.map(e => e.node), [data.liveEvents.edges])
-  const { events, groups } = useOrderedLiveEvents(nodes, sort, null)
+  const { events, groups } = useOrderedLiveEvents(nodes, sort, null, countryFilter)
 
   const loadMore = () => {
     if (hasNext && !isLoadingNext) loadNext(PAGE_SIZE)
   }
 
-  // Sport filter changed while viewing an event: if that event isn't in the
-  // new sport, page until it's found, then fall back to the first event
-  // (or the list when the sport has none).
+  // Sport or country filter changed while viewing an event: if that event isn't
+  // in the new selection, page until it's found, then fall back to the first event
+  // (or the list when the selection has none).
   const dataSport = props.queryRef.variables.sport ?? null
   const hasCurrent = events.some(e => e.id === props.eventId)
   useEffect(() => {
-    if (sportFilter === null || dataSport !== sportFilter || hasCurrent) return
+    if ((sportFilter === null && countryFilter === null) || dataSport !== sportFilter || hasCurrent)
+      return
     if (hasNext) {
       if (!isLoadingNext) loadNext(PAGE_SIZE)
       return
     }
     router.replace(events[0] ? `/live/event/${events[0].id}` : '/live')
-  }, [sportFilter, dataSport, hasCurrent, hasNext, isLoadingNext, loadNext, events, router])
+  }, [
+    sportFilter,
+    countryFilter,
+    dataSport,
+    hasCurrent,
+    hasNext,
+    isLoadingNext,
+    loadNext,
+    events,
+    router,
+  ])
 
   const initialIndex = Math.max(
     events.findIndex(e => e.id === props.eventId),

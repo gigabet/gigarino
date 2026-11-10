@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cb1bd68c13bf96bef4aaece967a659b0>>
+ * @generated SignedSource<<af259f6118117d2f0274fedd52611cfc>>
  * @lightSyntaxTransform
  */
 
@@ -17,7 +17,7 @@ export type LiveHeader$data = {
       };
     }>;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"LiveSportTabs">;
+  readonly " $fragmentSpreads": FragmentRefs<"LiveCountryTabs" | "LiveSportTabs">;
   readonly " $fragmentType": "LiveHeader";
 };
 export type LiveHeader$key = {
@@ -109,12 +109,17 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "LiveSportTabs"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "LiveCountryTabs"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 
-(node as any).hash = "c072516485f1aed47058083a0adbcdc2";
+(node as any).hash = "c103cf36dffd7bccc0884dd30379caae";
 
 export default node;
