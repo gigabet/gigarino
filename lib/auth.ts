@@ -60,7 +60,13 @@ export async function getUserWallet(currency?: string) {
 
 export async function deleteToken() {
   const cookieStore = await cookies()
-  cookieStore.delete('token')
+  cookieStore.delete({
+    name: 'token',
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    domain: process.env.COOKIE_DOMAIN, // '.gigarino.com', unset on localhost
+  })
 }
 
 export async function logout() {
