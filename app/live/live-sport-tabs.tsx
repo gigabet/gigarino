@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { fetchQuery, graphql, useRefetchableFragment, useRelayEnvironment } from 'react-relay'
 import { SportIcon } from '@/components/sport-icon'
+import { useScrollFade } from '@/context/hooks'
 import { useT } from '@/context/providers'
 import { sortBySportOrder } from '@/lib/sport-order'
 import { getSportTheme } from '@/lib/sport-theme'
@@ -33,6 +34,7 @@ export default function LiveSportTabs(props: {
   )
 
   const total = data.allLive.totalCount
+  const fade = useScrollFade()
 
   const env = useRelayEnvironment()
   useEffect(() => {
@@ -47,7 +49,11 @@ export default function LiveSportTabs(props: {
   }, [env])
 
   return (
-    <div className='flex scrollbar-none items-stretch gap-2 overflow-x-auto py-1 lg:items-center lg:py-0'>
+    <div
+      ref={fade.ref}
+      style={fade.style}
+      className='flex scrollbar-none items-stretch gap-2 overflow-x-auto py-1 lg:items-center lg:py-0'
+    >
       <Tab
         active={props.active === null}
         onClick={() => props.onChangeAction(null)}
@@ -97,7 +103,7 @@ function Tab(props: {
       onClick={props.onClick}
       style={props.style}
       className={cn(
-        'sport-texture bg-control relative shrink-0 border border-control-border text-xs whitespace-nowrap transition-colors',
+        'sport-texture bg-control border-control-border relative shrink-0 border text-xs whitespace-nowrap transition-colors',
         // <lg: vertical squircle
         'flex min-w-18 flex-col items-center justify-center gap-1.5 rounded-[1.375rem] px-3 py-3 [corner-shape:squircle] lg:[corner-shape:round]',
         // lg+: original horizontal pill

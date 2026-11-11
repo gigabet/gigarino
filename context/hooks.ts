@@ -163,3 +163,54 @@ export function useGoalFlash(score: number | null | undefined, enabled = true, t
 
   return goalId
 }
+
+/** Width of the fade that hints at more content beyond a scroll edge. */
+const FADE = '1.5rem'
+
+/**
+ * Fades the edges of a horizontally scrolling strip that have more content behind them,
+ * in lieu of a scrollbar. Spread the result on the scroll container:
+ * `<div ref={fade.ref} style={fade.style} className='overflow-x-auto'>`.
+ *
+ * `ref` is a callback ref kept in state, so a container that mounts late
+ * (e.g. after an early return) is picked up without fake effect dependencies.
+ */
+export function useScrollFade() {
+  const [el, setEl] = useState<HTMLElement | null>(null)
+  const [edges, setEdges] = useState({ start: false, end: false })
+
+  useEffect(() => {
+    if (!el) return
+
+    const update = () => {
+      const start = el.scrollLeft > 1
+      const end = el.scrollLeft + el.clientWidth < el.scrollWidth - 1
+      setEdges(prev => (prev.start === start && prev.end === end ? prev : { start, end }))
+    }
+
+    // content width changes when children resize (labels, counts) or come and go
+    const resize = new ResizeObserver(update)
+    const watch = () => {
+      resize.disconnect()
+      resize.observe(el)
+      for (const child of el.children) resize.observe(child)
+    }
+    const mutation = new MutationObserver(watch)
+
+    watch()
+    mutation.observe(el, { childList: true })
+    el.addEventListener('scroll', update, { passive: true })
+
+    return () => {
+      el.removeEventListener('scroll', update)
+      mutation.disconnect()
+      resize.disconnect()
+    }
+  }, [el])
+
+  const mask = `linear-gradient(to right, ${edges.start ? 'transparent' : 'black'}, black ${
+    edges.start ? FADE : '0px'
+  }, black calc(100% - ${edges.end ? FADE : '0px'}), ${edges.end ? 'transparent' : 'black'})`
+
+  return { ref: setEl, style: { maskImage: mask, WebkitMaskImage: mask } }
+}

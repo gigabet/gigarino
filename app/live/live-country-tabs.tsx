@@ -3,12 +3,11 @@
 import { Command } from 'cmdk'
 import { sortBy } from 'lodash'
 import { CheckIcon } from 'lucide-react'
-import { Popover, VisuallyHidden } from 'radix-ui'
+import { Popover } from 'radix-ui'
 import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import ReactCountryFlag from 'react-country-flag'
 import { graphql, useFragment } from 'react-relay'
-import { Drawer } from 'vaul'
-import { useMediaQuery } from '@/context/hooks'
+import { useScrollFade } from '@/context/hooks'
 import { useT } from '@/context/providers'
 import { cn } from '@/lib/utils'
 import type {
@@ -56,7 +55,12 @@ export default function LiveCountryTabs(props: {
         const known = byKey.get(c.key)
         byKey.set(
           c.key,
-          known ? { ...known, liveEventCount: known.liveEventCount + c.liveEventCount } : c
+          known
+            ? {
+                ...known,
+                liveEventCount: known.liveEventCount + c.liveEventCount,
+              }
+            : c
         )
       }
     }
@@ -70,8 +74,10 @@ export default function LiveCountryTabs(props: {
   const measureRef = useRef<HTMLDivElement>(null)
   const [fit, setFit] = useState(countries.length)
 
-  // How many country tabs fit next to "All" and the "+N" tab. Widths come from an invisible
-  // copy of every tab, so the real row never has to render overflowing tabs to be measured.
+  const fade = useScrollFade()
+
+  // How many country tabs fit next to "All" and the "+N" tab (desktop). Widths come from an
+  // invisible copy of every tab, so the real row never has to render overflowing tabs to be measured.
   useLayoutEffect(() => {
     const row = rowRef.current
     const measure = measureRef.current
@@ -98,43 +104,65 @@ export default function LiveCountryTabs(props: {
     compute()
     const observer = new ResizeObserver(compute)
     observer.observe(row)
-    return () => observer.disconnect()
+    // the measuring row's width follows the label mode (code vs name) and the chip set
+    observer.observe(measure)
+    return () => {
+      observer.disconnect()
+    }
   }, [countries])
 
-  const visible = useMemo(() => {
-    const head = countries.slice(0, fit)
-    if (!props.active || head.some(c => c.key === props.active)) return head
-    // keep the selection on screen even when it sits past the cut
-    const selected: Country = countries.find(c => c.key === props.active) ?? {
+  // the selection stays in the row even when it is not in the live list any more
+  const items = useMemo(() => {
+    if (!props.active || countries.some(c => c.key === props.active)) return countries
+    const selected: Country = {
       key: props.active,
       name: props.active,
       countryCode: null,
       liveEventCount: 0,
     }
-    return [...head.slice(0, Math.max(fit - 1, 0)), selected]
+    return [...countries, selected]
+  }, [countries, props.active])
+
+  // Desktop only: chips outside this set are hidden and live behind "+N".
+  // On mobile every chip is shown and the strip scrolls instead.
+  const visibleKeys = useMemo(() => {
+    const head = countries.slice(0, fit)
+    if (!props.active || head.some(c => c.key === props.active)) {
+      return new Set(head.map(c => c.key))
+    }
+    // keep the selection on screen even when it sits past the cut
+    return new Set([...head.slice(0, Math.max(fit - 1, 0)).map(c => c.key), props.active])
   }, [countries, fit, props.active])
 
-  const hiddenCount = countries.filter(c => !visible.some(v => v.key === c.key)).length
+  const hiddenCount = countries.filter(c => !visibleKeys.has(c.key)).length
 
   if (countries.length === 0 && !props.active) return null
 
   return (
     <div className='relative overflow-hidden'>
       <div ref={rowRef} className='flex items-center gap-1 px-0.5'>
+        {/* outside the scroller, so it stays put while the countries scroll */}
         <Chip active={props.active === null} onClick={() => props.onChangeAction(null)}>
           {t('All')}
         </Chip>
-        {visible.map(c => (
-          <Chip
-            key={c.key}
-            active={props.active === c.key}
-            onClick={() => props.onChangeAction(c.key)}
-          >
-            <Flag code={c.countryCode} />
-            {c.name}
-            <span className='text-secondary'>{c.liveEventCount}</span>
-          </Chip>
-        ))}
+        <div
+          ref={fade.ref}
+          style={fade.style}
+          className='flex min-w-0 flex-1 scrollbar-none items-center gap-1 overflow-x-auto lg:flex-none lg:overflow-visible'
+        >
+          {items.map(c => (
+            <Chip
+              key={c.key}
+              active={props.active === c.key}
+              onClick={() => props.onChangeAction(c.key)}
+              className={cn(!visibleKeys.has(c.key) && 'lg:hidden')}
+            >
+              <Flag code={c.countryCode} />
+              <CountryLabel code={c.countryCode} name={c.name} />
+              <span className='text-secondary'>{c.liveEventCount}</span>
+            </Chip>
+          ))}
+        </div>
         {hiddenCount > 0 && (
           <MoreCountries
             hiddenCount={hiddenCount}
@@ -156,7 +184,7 @@ export default function LiveCountryTabs(props: {
         {countries.map(c => (
           <Chip key={c.key}>
             <Flag code={c.countryCode} />
-            {c.name}
+            <CountryLabel code={c.countryCode} name={c.name} />
             <span>{c.liveEventCount}</span>
           </Chip>
         ))}
@@ -185,20 +213,32 @@ function Chip({
   )
 }
 
+/** Short code on mobile, full name from sm up. Falls back to the name when there is no code. */
+function CountryLabel(props: { code: string | null | undefined; name: string }) {
+  return (
+    <>
+      <span className='lg:hidden'>
+        {props.code?.substring(0, 3) ?? props.name?.substring(0, 3)}
+      </span>
+      <span className='hidden lg:inline'>{props.name}</span>
+    </>
+  )
+}
+
 function Flag(props: { code: string | null | undefined }) {
   return (
     <ReactCountryFlag
       svg
       countryCode={props.code ?? 'UN'}
-      className='w-3.5 shrink-0 rounded-xs opacity-80'
+      className='w-5 shrink-0 rounded-xs opacity-80'
       style={{ width: undefined, height: undefined }}
     />
   )
 }
 
 /**
- * The "+N" tab. Desktop opens a searchable dropdown anchored to the tab, mobile a bottom
- * sheet with the same list, so a long country list scrolls instead of stretching the page.
+ * The "+N" tab, desktop only (mobile scrolls the chip strip instead). Opens a searchable
+ * dropdown anchored to the tab, so a long country list scrolls instead of stretching the page.
  */
 function MoreCountries(props: {
   hiddenCount: number
@@ -206,61 +246,31 @@ function MoreCountries(props: {
   active: string | null
   onChangeAction: (country: string | null) => void
 }) {
-  const t = useT()
   const [open, setOpen] = useState(false)
-  const isDesktop = useMediaQuery('(min-width: 640px)')
-
-  const list = (listClassName: string) => (
-    <CountryList
-      countries={props.countries}
-      active={props.active}
-      listClassName={listClassName}
-      onSelectAction={country => {
-        props.onChangeAction(country)
-        setOpen(false)
-      }}
-    />
-  )
-  const label = `+${props.hiddenCount}`
-
-  if (isDesktop) {
-    return (
-      <Popover.Root open={open} onOpenChange={setOpen}>
-        <Popover.Trigger asChild>
-          <Chip>{label}</Chip>
-        </Popover.Trigger>
-        <Popover.Portal>
-          <Popover.Content
-            align='end'
-            sideOffset={8}
-            className='bg-dark-200 z-50 w-72 rounded-2xl border border-white/5 p-2 shadow-2xl'
-          >
-            {list('max-h-80')}
-          </Popover.Content>
-        </Popover.Portal>
-      </Popover.Root>
-    )
-  }
 
   return (
-    <Drawer.Root open={open} onOpenChange={setOpen}>
-      <Drawer.Trigger asChild>
-        <Chip>{label}</Chip>
-      </Drawer.Trigger>
-      <Drawer.Portal>
-        <Drawer.Overlay className='fixed inset-0 z-50 bg-black/50' />
-        <Drawer.Content
-          className='bg-dark-200 fixed inset-x-0 bottom-0 z-50 flex max-h-[85dvh] flex-col outline-none'
-          aria-describedby={undefined}
+    <Popover.Root open={open} onOpenChange={setOpen}>
+      <Popover.Trigger asChild>
+        <Chip className='max-lg:hidden'>+{props.hiddenCount}</Chip>
+      </Popover.Trigger>
+      <Popover.Portal>
+        <Popover.Content
+          align='end'
+          sideOffset={8}
+          className='bg-dark-200 z-50 w-72 rounded-2xl border border-white/5 p-2 shadow-2xl'
         >
-          <div className='mx-auto mt-3 h-1.5 w-10 shrink-0 rounded-full bg-white/20' />
-          <VisuallyHidden.Root>
-            <Drawer.Title>{t('Country')}</Drawer.Title>
-          </VisuallyHidden.Root>
-          <div className='flex min-h-0 flex-col p-3'>{list('max-h-[65dvh]')}</div>
-        </Drawer.Content>
-      </Drawer.Portal>
-    </Drawer.Root>
+          <CountryList
+            countries={props.countries}
+            active={props.active}
+            listClassName='max-h-80'
+            onSelectAction={country => {
+              props.onChangeAction(country)
+              setOpen(false)
+            }}
+          />
+        </Popover.Content>
+      </Popover.Portal>
+    </Popover.Root>
   )
 }
 

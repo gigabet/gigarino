@@ -68,12 +68,6 @@ export default function LiveHeaderContent(props: {
           setCountry(null)
         }}
       />
-      <LiveCountryTabs
-        query={data}
-        sport={sportFilter}
-        active={country}
-        onChangeAction={setCountry}
-      />
       <LiveToolbar
         sort={sort}
         onSortChangeAction={setSort}
@@ -84,6 +78,12 @@ export default function LiveHeaderContent(props: {
           setSearch(value)
           setCountry(null)
         }}
+      />
+      <LiveCountryTabs
+        query={data}
+        sport={sportFilter}
+        active={country}
+        onChangeAction={setCountry}
       />
     </div>
   )
@@ -102,18 +102,18 @@ export function LiveHeaderSkeleton() {
           />
         ))}
       </div>
+      {/* toolbar: sort dropdown left, search between (own row below lg), view toggle right */}
+      <div className='flex flex-wrap items-center justify-between gap-3'>
+        <Skeleton className='h-8.5 w-36 rounded-full' />
+        {/* <Skeleton className='order-last h-8.5 w-full rounded-full lg:order-0 lg:mx-auto lg:w-auto lg:max-w-md lg:flex-1' /> */}
+        <Skeleton className='h-9.5 w-40 rounded-full' />
+      </div>
       {/* country tabs: same height as Chip (py-1 + leading-4 = h-6), no extra vertical padding */}
       <div className='flex gap-1 overflow-hidden px-0.5'>
         {Array.from({ length: 6 }).map((_, i) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: identical
           <Skeleton key={i} className='h-6 w-20 shrink-0 rounded-full' />
         ))}
-      </div>
-      {/* toolbar: sort dropdown left, search between (own row below lg), view toggle right */}
-      <div className='flex flex-wrap items-center justify-between gap-3'>
-        <Skeleton className='h-8.5 w-36 rounded-full' />
-        {/* <Skeleton className='order-last h-8.5 w-full rounded-full lg:order-0 lg:mx-auto lg:w-auto lg:max-w-md lg:flex-1' /> */}
-        <Skeleton className='h-9.5 w-40 rounded-full' />
       </div>
     </div>
   )
