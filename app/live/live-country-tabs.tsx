@@ -176,7 +176,7 @@ function Chip({
       type='button'
       aria-pressed={active}
       className={cn(
-        'flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.7rem] whitespace-nowrap transition-colors',
+        'flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.7rem] leading-4 whitespace-nowrap transition-colors',
         active ? 'text-foreground bg-dark-400' : 'text-secondary hover:text-foreground',
         className
       )}

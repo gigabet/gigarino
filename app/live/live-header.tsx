@@ -102,8 +102,8 @@ export function LiveHeaderSkeleton() {
           />
         ))}
       </div>
-      {/* country tabs */}
-      <div className='flex gap-1 overflow-hidden py-0.5'>
+      {/* country tabs: same height as Chip (py-1 + leading-4 = h-6), no extra vertical padding */}
+      <div className='flex gap-1 overflow-hidden px-0.5'>
         {Array.from({ length: 6 }).map((_, i) => (
           // biome-ignore lint/suspicious/noArrayIndexKey: identical
           <Skeleton key={i} className='h-6 w-20 shrink-0 rounded-full' />
