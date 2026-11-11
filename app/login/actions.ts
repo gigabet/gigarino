@@ -73,8 +73,8 @@ export async function login(
       name: 'token',
       value: (await res.json()).data.token,
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: true,
+      sameSite: process.env.NODE_ENV === 'production' ? 'lax' : 'none',
       domain: process.env.COOKIE_DOMAIN, // '.gigarino.com', unset on localhost
       maxAge: data.rememberMe ? 60 * 60 * 24 * 30 : undefined, // 30 days if rememberMe, otherwise session cookie
     })

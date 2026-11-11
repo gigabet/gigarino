@@ -6,6 +6,7 @@ import { fetchQuery, graphql, requestSubscription, useRelayEnvironment } from 'r
 import { toast } from 'sonner'
 import { useT, useUser } from '@/context/providers'
 import { unseenResettlementsAtom } from '@/context/tickets'
+import { isAuthError } from '@/lib/utils'
 import type { TicketUpdatesCountQuery } from '@/relay/__generated__/TicketUpdatesCountQuery.graphql'
 import type { TicketUpdatesSubscription } from '@/relay/__generated__/TicketUpdatesSubscription.graphql'
 
@@ -27,7 +28,7 @@ const subscription = graphql`
 `
 
 export default function TicketUpdates() {
-  const { user } = useUser()
+  const { user, clearUser } = useUser()
   const env = useRelayEnvironment()
   const setUnseen = useSetAtom(unseenResettlementsAtom)
   const t = useT()
@@ -38,15 +39,14 @@ export default function TicketUpdates() {
         env,
         countQuery,
         {},
-        {
-          fetchPolicy: 'network-only',
-        }
+        { fetchPolicy: 'network-only' }
       ).toPromise()
       setUnseen(d?.unseenResettlementCount ?? 0)
     } catch (e) {
       console.error('[ticket-updates] count failed', e)
+      if (isAuthError(e)) clearUser()
     }
-  }, [env, setUnseen])
+  }, [env, setUnseen, clearUser])
 
   const userId = user?.id
   useEffect(() => {
@@ -67,10 +67,14 @@ export default function TicketUpdates() {
           toast(t('One of your tickets was settled.'))
         }
       },
-      onError: (err: Error) => console.error('[ticket-updates] subscription failed', err),
+      onError: (err: Error) => {
+        console.error('[ticket-updates] subscription failed', err)
+        // session is gone: dropping the user re-runs this effect, whose cleanup disposes us
+        if (isAuthError(err)) clearUser()
+      },
     })
     return dispose
-  }, [userId, env, refreshCount, setUnseen, t])
+  }, [userId, env, refreshCount, setUnseen, clearUser, t])
 
   return null
 }
