@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<821e57653014005247c52064bb7b8d87>>
+ * @generated SignedSource<<0f4c5710104718889fac4da310d40419>>
  * @lightSyntaxTransform
  */
 
@@ -12,6 +12,7 @@ import { FragmentRefs } from "relay-runtime";
 export type LiveEventOrder = "START_TIME" | "TOURNAMENT" | "%future added value";
 export type LiveEventSidebarPaginationQuery$variables = {
   after?: string | null | undefined;
+  category?: string | null | undefined;
   first?: number | null | undefined;
   orderBy?: LiveEventOrder | null | undefined;
   search?: string | null | undefined;
@@ -31,6 +32,11 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "after"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "category"
   },
   {
     "defaultValue": 50,
@@ -58,6 +64,11 @@ v1 = [
     "kind": "Variable",
     "name": "after",
     "variableName": "after"
+  },
+  {
+    "kind": "Variable",
+    "name": "category",
+    "variableName": "category"
   },
   {
     "kind": "Variable",
@@ -101,37 +112,25 @@ v4 = {
   "name": "key",
   "storageKey": null
 },
-v5 = {
+v5 = [
+  (v4/*:: as any*/),
+  (v2/*:: as any*/)
+],
+v6 = {
   "alias": null,
   "args": null,
   "concreteType": "Sport",
   "kind": "LinkedField",
   "name": "sport",
   "plural": false,
-  "selections": [
-    (v4/*:: as any*/),
-    (v2/*:: as any*/)
-  ],
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
+  "selections": (v5/*:: as any*/),
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
-  "concreteType": "Category",
-  "kind": "LinkedField",
-  "name": "category",
-  "plural": false,
-  "selections": [
-    (v6/*:: as any*/),
-    (v2/*:: as any*/)
-  ],
+  "kind": "ScalarField",
+  "name": "name",
   "storageKey": null
 },
 v8 = {
@@ -210,7 +209,7 @@ return {
                     "storageKey": null
                   },
                   (v3/*:: as any*/),
-                  (v5/*:: as any*/),
+                  (v6/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -221,13 +220,34 @@ return {
                     "selections": [
                       (v4/*:: as any*/),
                       (v2/*:: as any*/),
+                      (v7/*:: as any*/),
                       (v6/*:: as any*/),
-                      (v5/*:: as any*/),
-                      (v7/*:: as any*/)
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Category",
+                        "kind": "LinkedField",
+                        "name": "category",
+                        "plural": false,
+                        "selections": [
+                          (v7/*:: as any*/),
+                          (v2/*:: as any*/)
+                        ],
+                        "storageKey": null
+                      }
                     ],
                     "storageKey": null
                   },
-                  (v7/*:: as any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Category",
+                    "kind": "LinkedField",
+                    "name": "category",
+                    "plural": false,
+                    "selections": (v5/*:: as any*/),
+                    "storageKey": null
+                  },
                   {
                     "alias": null,
                     "args": null,
@@ -387,7 +407,7 @@ return {
                             "name": "index",
                             "storageKey": null
                           },
-                          (v6/*:: as any*/),
+                          (v7/*:: as any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -456,7 +476,8 @@ return {
         "filters": [
           "orderBy",
           "sport",
-          "search"
+          "search",
+          "category"
         ],
         "handle": "connection",
         "key": "LiveEventSidebar_liveEvents",
@@ -466,16 +487,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ea224de9a96f72192278f5fa5910bd6b",
+    "cacheID": "038510ab5f10a82e8252bd6382a4a087",
     "id": null,
     "metadata": {},
     "name": "LiveEventSidebarPaginationQuery",
     "operationKind": "query",
-    "text": "query LiveEventSidebarPaginationQuery(\n  $after: String\n  $first: Int = 50\n  $orderBy: LiveEventOrder = TOURNAMENT\n  $search: String\n  $sport: String\n) {\n  ...LiveEventSidebar_3B7fGr\n}\n\nfragment LiveEventSidebar_3B7fGr on Query {\n  liveEvents(first: $first, after: $after, orderBy: $orderBy, sport: $sport, search: $search) {\n    edges {\n      node {\n        ...LiveOrder\n        ...LiveEventStrip\n        tournament {\n          ...LiveStripTournament\n          id\n        }\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment LiveEventStrip on Event {\n  id\n  tradingStatus\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...LiveStripOdds\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  status\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n  category {\n    name\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  status\n  sport {\n    key\n    id\n  }\n  homeScore\n  awayScore\n  serving\n  pointScore {\n    home\n    away\n  }\n  periodScores {\n    period\n    home\n    away\n  }\n}\n\nfragment LiveStripMarket on Market {\n  outcomes {\n    id\n    index\n    ...LiveStripOdd\n  }\n}\n\nfragment LiveStripOdd on Outcome {\n  id\n  name\n  price\n  status\n}\n\nfragment LiveStripOdds on Event {\n  tradingStatus\n  mainMarkets: markets(groups: [MAIN]) {\n    id\n    kind\n    ...LiveStripMarket\n  }\n}\n\nfragment LiveStripTournament on Tournament {\n  name\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    id\n  }\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n"
+    "text": "query LiveEventSidebarPaginationQuery(\n  $after: String\n  $category: String\n  $first: Int = 50\n  $orderBy: LiveEventOrder = TOURNAMENT\n  $search: String\n  $sport: String\n) {\n  ...LiveEventSidebar_G9wso\n}\n\nfragment LiveEventSidebar_G9wso on Query {\n  liveEvents(first: $first, after: $after, orderBy: $orderBy, sport: $sport, search: $search, category: $category) {\n    edges {\n      node {\n        ...LiveOrder\n        ...LiveEventStrip\n        tournament {\n          ...LiveStripTournament\n          id\n        }\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment LiveEventStrip on Event {\n  id\n  tradingStatus\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...LiveStripOdds\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  status\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n  category {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  status\n  sport {\n    key\n    id\n  }\n  homeScore\n  awayScore\n  serving\n  pointScore {\n    home\n    away\n  }\n  periodScores {\n    period\n    home\n    away\n  }\n}\n\nfragment LiveStripMarket on Market {\n  outcomes {\n    id\n    index\n    ...LiveStripOdd\n  }\n}\n\nfragment LiveStripOdd on Outcome {\n  id\n  name\n  price\n  status\n}\n\nfragment LiveStripOdds on Event {\n  tradingStatus\n  mainMarkets: markets(groups: [MAIN]) {\n    id\n    kind\n    ...LiveStripMarket\n  }\n}\n\nfragment LiveStripTournament on Tournament {\n  name\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    id\n  }\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n"
   }
 };
 })();
 
-(node as any).hash = "d109e52f1ec6ba9b2418de9859eef86a";
+(node as any).hash = "bca7c099d76bbfb2f32e355917e10e77";
 
 export default node;

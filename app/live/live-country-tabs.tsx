@@ -11,32 +11,35 @@ import { Drawer } from 'vaul'
 import { useMediaQuery } from '@/context/hooks'
 import { useT } from '@/context/providers'
 import { cn } from '@/lib/utils'
-import type { LiveCountryTabs$key } from '@/relay/__generated__/LiveCountryTabs.graphql'
+import type {
+  LiveCountryTabs$data,
+  LiveCountryTabs$key,
+} from '@/relay/__generated__/LiveCountryTabs.graphql'
 
 /** Matches the `gap-2` of the tab row; the overflow maths needs it as a number. */
 const GAP_PX = 8
 
-type Country = { name: string; code: string | null }
+type Country = LiveCountryTabs$data['sports'][number]['liveCategories'][number]
 
 export default function LiveCountryTabs(props: {
   query: LiveCountryTabs$key
+  /** Selected sport tab; null means all sports. */
+  sport: string | null
+  /** `key` of the selected country; null means all countries. */
   active: string | null
   onChangeAction: (country: string | null) => void
 }) {
   const t = useT()
   const data = useFragment(
-    // HACK: liveEvents has no country argument or country list, so we count countries the
-    // hard way. Limit 100. This is just proof of concept. Replace with better query ASAP.
     graphql`
       fragment LiveCountryTabs on Query {
-        countryEvents: liveEvents(first: 100, sport: $sport, search: $search) {
-          edges {
-            node {
-              category {
-                name
-                countryCode
-              }
-            }
+        sports {
+          key
+          liveCategories {
+            key
+            name
+            countryCode
+            liveEventCount
           }
         }
       }
@@ -46,15 +49,22 @@ export default function LiveCountryTabs(props: {
 
   // most live events first, so the row shows the busiest countries
   const countries = useMemo(() => {
-    const byName = new Map<string, Country & { count: number }>()
-    for (const { node } of data.countryEvents.edges) {
-      const { name, countryCode } = node.category
-      const known = byName.get(name)
-      if (known) known.count++
-      else byName.set(name, { name, code: countryCode ?? null, count: 1 })
+    const byKey = new Map<string, Country>()
+    for (const sport of data.sports) {
+      if (props.sport && sport.key !== props.sport) continue
+      for (const c of sport.liveCategories) {
+        const known = byKey.get(c.key)
+        byKey.set(
+          c.key,
+          known ? { ...known, liveEventCount: known.liveEventCount + c.liveEventCount } : c
+        )
+      }
     }
-    return sortBy([...byName.values()], [c => -c.count, c => c.name]) as Country[]
-  }, [data.countryEvents.edges])
+    return sortBy(
+      [...byKey.values()].filter(c => c.liveEventCount > 0),
+      [c => -c.liveEventCount, c => c.name]
+    )
+  }, [data.sports, props.sport])
 
   const rowRef = useRef<HTMLDivElement>(null)
   const measureRef = useRef<HTMLDivElement>(null)
@@ -93,16 +103,18 @@ export default function LiveCountryTabs(props: {
 
   const visible = useMemo(() => {
     const head = countries.slice(0, fit)
-    if (!props.active || head.some(c => c.name === props.active)) return head
+    if (!props.active || head.some(c => c.key === props.active)) return head
     // keep the selection on screen even when it sits past the cut
-    const selected = countries.find(c => c.name === props.active) ?? {
+    const selected: Country = countries.find(c => c.key === props.active) ?? {
+      key: props.active,
       name: props.active,
-      code: null,
+      countryCode: null,
+      liveEventCount: 0,
     }
     return [...head.slice(0, Math.max(fit - 1, 0)), selected]
   }, [countries, fit, props.active])
 
-  const hiddenCount = countries.filter(c => !visible.some(v => v.name === c.name)).length
+  const hiddenCount = countries.filter(c => !visible.some(v => v.key === c.key)).length
 
   if (countries.length === 0 && !props.active) return null
 
@@ -114,12 +126,13 @@ export default function LiveCountryTabs(props: {
         </Chip>
         {visible.map(c => (
           <Chip
-            key={c.name}
-            active={props.active === c.name}
-            onClick={() => props.onChangeAction(c.name)}
+            key={c.key}
+            active={props.active === c.key}
+            onClick={() => props.onChangeAction(c.key)}
           >
-            <Flag code={c.code} />
+            <Flag code={c.countryCode} />
             {c.name}
+            <span className='text-secondary'>{c.liveEventCount}</span>
           </Chip>
         ))}
         {hiddenCount > 0 && (
@@ -141,9 +154,10 @@ export default function LiveCountryTabs(props: {
       >
         <Chip>{t('All')}</Chip>
         {countries.map(c => (
-          <Chip key={c.name}>
-            <Flag code={c.code} />
+          <Chip key={c.key}>
+            <Flag code={c.countryCode} />
             {c.name}
+            <span>{c.liveEventCount}</span>
           </Chip>
         ))}
         <Chip>+99</Chip>
@@ -171,7 +185,7 @@ function Chip({
   )
 }
 
-function Flag(props: { code: string | null }) {
+function Flag(props: { code: string | null | undefined }) {
   return (
     <ReactCountryFlag
       svg
@@ -278,14 +292,15 @@ function CountryList(props: {
         </Command.Item>
         {alphabetical.map(c => (
           <Command.Item
-            key={c.name}
+            key={c.key}
             value={c.name}
-            onSelect={() => props.onSelectAction(c.name)}
+            onSelect={() => props.onSelectAction(c.key)}
             className={item}
           >
-            <Flag code={c.code} />
+            <Flag code={c.countryCode} />
             <span className='min-w-0 flex-1 truncate'>{c.name}</span>
-            {props.active === c.name && <CheckIcon className='text-primary size-4 shrink-0' />}
+            <span className='text-secondary text-xs'>{c.liveEventCount}</span>
+            {props.active === c.key && <CheckIcon className='text-primary size-4 shrink-0' />}
           </Command.Item>
         ))}
       </Command.List>

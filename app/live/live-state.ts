@@ -7,7 +7,7 @@ import type { LiveOrder$key } from '@/relay/__generated__/LiveOrder.graphql'
 
 export const liveSortState = atom<LiveSort>('tournament')
 export const liveSportFilterState = atom<string | null>(null)
-/** Category name of the selected country tab; null means all countries. */
+/** `key` of the selected country (category) tab; null means all countries. */
 export const liveCountryFilterState = atom<string | null>(null)
 /** Committed (debounced, trimmed) search term; '' means no search. */
 export const liveSearchState = atom('')
@@ -28,7 +28,7 @@ const orderFragment = graphql`
       key
     }
     category {
-      name
+      key
     }
   }
 `
@@ -38,6 +38,10 @@ export const FINISHED = new Set(['ENDED', 'CANCELLED', 'ABANDONED', 'POSTPONED']
 export type OrderedLiveEvent<T> = { id: string; group: string; event: T }
 type LiveOrderRef = LiveOrder$key[number]
 
+/**
+ * CLIENT SIDE: `sportFilter` / `countryFilter` filter. Pass null for any filter the server already
+ * applied (`sport` / `category` arguments of `liveEvents`); only the favourites connection needs them.
+ */
 export function useOrderedLiveEvents<T extends LiveOrderRef>(
   events: ReadonlyArray<T>,
   sort: LiveSort,
@@ -53,7 +57,7 @@ export function useOrderedLiveEvents<T extends LiveOrderRef>(
         event: events[i],
         status: o.status,
         sport: o.sport.key,
-        country: o.category.name,
+        country: o.category.key,
         group: `${o.sport.key}:${o.tournament.key}`,
         start: Date.parse(o.startTime),
       }))

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6a0c20519dbb1680aa14d478fef6192c>>
+ * @generated SignedSource<<95af17331bf82ba21f1c263da5000142>>
  * @lightSyntaxTransform
  */
 
@@ -39,6 +39,11 @@ return {
       "defaultValue": null,
       "kind": "LocalArgument",
       "name": "after"
+    },
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "category"
     },
     {
       "defaultValue": 20,
@@ -89,6 +94,11 @@ return {
     {
       "alias": "liveEvents",
       "args": [
+        {
+          "kind": "Variable",
+          "name": "category",
+          "variableName": "category"
+        },
         {
           "kind": "Variable",
           "name": "orderBy",
@@ -206,6 +216,6 @@ return {
 };
 })();
 
-(node as any).hash = "1384b93fc213d42905242c981759f996";
+(node as any).hash = "a2dc8baa6248c34416f35476bfb2a15c";
 
 export default node;

@@ -10,7 +10,13 @@ import LiveEventSidebar, {
 } from '@/app/live/event/[id]/live-event-sidebar'
 import FavouriteLiveSection from '@/app/live/favourite-live-events'
 import LiveHeader, { LiveHeaderSkeleton } from '@/app/live/live-header'
-import { liveSearchState, liveSortState, liveSportFilterState, ORDER } from '@/app/live/live-state'
+import {
+  liveCountryFilterState,
+  liveSearchState,
+  liveSortState,
+  liveSportFilterState,
+  ORDER,
+} from '@/app/live/live-state'
 import { LiveSubscriptionsProvider } from '@/app/live/live-subscriptions'
 import { RefetchBatcherProvider } from '@/app/live/refetch-context'
 import Betslip, { BetslipDrawer, BetslipMobileBar } from '@/components/betslip'
@@ -30,20 +36,20 @@ export default function LiveLayout({ children }: React.PropsWithChildren) {
   const sort = useAtomValue(liveSortState)
   const sportFilter = useAtomValue(liveSportFilterState)
   const search = useAtomValue(liveSearchState)
+  const country = useAtomValue(liveCountryFilterState)
 
-  // BACKEND (pending): server-side country filter. Add `$country: String` to the query, pass
-  // it to `@arguments` of LiveEventSidebar (same argument as in live-event-list.tsx), and pass
-  // `country` to loadQuery (from liveCountryFilterState) and its effect deps. The favourites
-  // connection keeps filtering client-side: its filters must stay { favourites: true }.
+  // The favourites connection keeps filtering client-side: its filters must stay { favourites: true }.
   const [queryRef, loadQuery, disposeQuery] = useQueryLoader<LiveLayoutQuery>(graphql`
     query LiveLayoutQuery(
       $orderBy: LiveEventOrder!
       $sport: String
       $search: String
+      $category: String
       $hasUser: Boolean!
     ) {
       ...LiveHeader
-      ...LiveEventSidebar @arguments(orderBy: $orderBy, sport: $sport, search: $search)
+      ...LiveEventSidebar
+        @arguments(orderBy: $orderBy, sport: $sport, search: $search, category: $category)
       ...FavouriteLiveEvents @include(if: $hasUser) @alias(as: "favouriteLive")
     }
   `)
@@ -54,11 +60,17 @@ export default function LiveLayout({ children }: React.PropsWithChildren) {
   useEffect(() => {
     startTransition(() => {
       loadQuery(
-        { orderBy: ORDER[sort], sport: sportFilter, search: search || null, hasUser },
+        {
+          orderBy: ORDER[sort],
+          sport: sportFilter,
+          search: search || null,
+          category: country,
+          hasUser,
+        },
         { fetchPolicy: 'store-and-network' }
       )
     })
-  }, [loadQuery, sort, sportFilter, search, hasUser])
+  }, [loadQuery, sort, sportFilter, search, country, hasUser])
 
   const betslip = useBetslipQuote()
 

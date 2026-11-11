@@ -42,9 +42,16 @@ export default function LiveEventSidebar(props: {
         orderBy: { type: "LiveEventOrder", defaultValue: TOURNAMENT }
         sport: { type: "String" }
         search: { type: "String" }
+        category: { type: "String" }
       ) {
-        liveEvents(first: $first, after: $after, orderBy: $orderBy, sport: $sport, search: $search)
-          @connection(key: "LiveEventSidebar_liveEvents") {
+        liveEvents(
+          first: $first
+          after: $after
+          orderBy: $orderBy
+          sport: $sport
+          search: $search
+          category: $category
+        ) @connection(key: "LiveEventSidebar_liveEvents") {
           edges {
             node {
               ...LiveOrder
@@ -66,10 +73,9 @@ export default function LiveEventSidebar(props: {
   const sportFilter = useAtomValue(liveSportFilterState)
   const countryFilter = useAtomValue(liveCountryFilterState)
 
-  // the server already filtered by sport and ordered; the country tab is applied here
-  // (liveEvents has no country argument)
+  // the server already filtered by sport and country and ordered the list
   const nodes = useMemo(() => data.liveEvents.edges.map(e => e.node), [data.liveEvents.edges])
-  const { events, groups } = useOrderedLiveEvents(nodes, sort, null, countryFilter)
+  const { events, groups } = useOrderedLiveEvents(nodes, sort, null, null)
 
   const loadMore = () => {
     if (hasNext && !isLoadingNext) loadNext(PAGE_SIZE)
@@ -79,9 +85,15 @@ export default function LiveEventSidebar(props: {
   // in the new selection, page until it's found, then fall back to the first event
   // (or the list when the selection has none).
   const dataSport = props.queryRef.variables.sport ?? null
+  const dataCountry = props.queryRef.variables.category ?? null
   const hasCurrent = events.some(e => e.id === props.eventId)
   useEffect(() => {
-    if ((sportFilter === null && countryFilter === null) || dataSport !== sportFilter || hasCurrent)
+    if (
+      (sportFilter === null && countryFilter === null) ||
+      dataSport !== sportFilter ||
+      dataCountry !== countryFilter ||
+      hasCurrent
+    )
       return
     if (hasNext) {
       if (!isLoadingNext) loadNext(PAGE_SIZE)
@@ -92,6 +104,7 @@ export default function LiveEventSidebar(props: {
     sportFilter,
     countryFilter,
     dataSport,
+    dataCountry,
     hasCurrent,
     hasNext,
     isLoadingNext,

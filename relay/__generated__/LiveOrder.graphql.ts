@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0195eaea961909d8f560d48639256f34>>
+ * @generated SignedSource<<d5a815b9981fe944f596ce8c2502e633>>
  * @lightSyntaxTransform
  */
 
@@ -12,7 +12,7 @@ export type EventStatus = "ABANDONED" | "CANCELLED" | "ENDED" | "LIVE" | "POSTPO
 import { FragmentRefs } from "relay-runtime";
 export type LiveOrder$data = ReadonlyArray<{
   readonly category: {
-    readonly name: string;
+    readonly key: string;
   };
   readonly id: string;
   readonly sport: {
@@ -96,15 +96,7 @@ return {
       "kind": "LinkedField",
       "name": "category",
       "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "name",
-          "storageKey": null
-        }
-      ],
+      "selections": (v0/*:: as any*/),
       "storageKey": null
     }
   ],
@@ -113,6 +105,6 @@ return {
 };
 })();
 
-(node as any).hash = "4a0958db206126261496995bf4fd19d3";
+(node as any).hash = "8bb60da4eb4c81d1817d4294e7141364";
 
 export default node;

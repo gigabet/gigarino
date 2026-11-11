@@ -25,7 +25,13 @@ export default function LiveHeaderContent(props: {
   const data = useFragment<LiveHeader$key>(
     graphql`
       fragment LiveHeader on Query {
-        firstLive: liveEvents(first: 1, orderBy: $orderBy, sport: $sport, search: $search) {
+        firstLive: liveEvents(
+          first: 1
+          orderBy: $orderBy
+          sport: $sport
+          search: $search
+          category: $category
+        ) {
           edges {
             node {
               id
@@ -62,7 +68,12 @@ export default function LiveHeaderContent(props: {
           setCountry(null)
         }}
       />
-      <LiveCountryTabs query={data} active={country} onChangeAction={setCountry} />
+      <LiveCountryTabs
+        query={data}
+        sport={sportFilter}
+        active={country}
+        onChangeAction={setCountry}
+      />
       <LiveToolbar
         sort={sort}
         onSortChangeAction={setSort}

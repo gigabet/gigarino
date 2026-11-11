@@ -1,7 +1,6 @@
 'use client'
 
-import { useAtomValue } from 'jotai'
-import { forwardRef, useCallback, useEffect, useMemo, useRef } from 'react'
+import { forwardRef, useCallback, useMemo, useRef } from 'react'
 import { graphql, type PreloadedQuery, usePaginationFragment, usePreloadedQuery } from 'react-relay'
 import {
   GroupedVirtuoso,
@@ -12,7 +11,7 @@ import {
   type VirtuosoHandle,
 } from 'react-virtuoso'
 import LiveEvent, { LiveEventSkeleton } from '@/app/live/live-event'
-import { liveCountryFilterState, useOrderedLiveEvents } from '@/app/live/live-state'
+import { useOrderedLiveEvents } from '@/app/live/live-state'
 import type { LiveSort } from '@/app/live/live-toolbar'
 import LiveTournament, { LiveMarketsHeader } from '@/app/live/live-tournament'
 import { useT } from '@/context/providers'
@@ -60,12 +59,16 @@ export default function LiveEventList(props: {
         orderBy: { type: "LiveEventOrder", defaultValue: TOURNAMENT }
         sport: { type: "String" }
         search: { type: "String" }
-        # BACKEND (pending): country: { type: "String" }
+        category: { type: "String" }
       ) {
-        # BACKEND (pending): add category: $country to the arguments below, then remove
-        # countryFilter from useOrderedLiveEvents and the paging effect above
-        liveEvents(first: $first, after: $after, orderBy: $orderBy, sport: $sport, search: $search)
-          @connection(key: "LiveEventList_liveEvents") {
+        liveEvents(
+          first: $first
+          after: $after
+          orderBy: $orderBy
+          sport: $sport
+          search: $search
+          category: $category
+        ) @connection(key: "LiveEventList_liveEvents") {
           edges {
             node {
               ...LiveOrder
@@ -82,15 +85,9 @@ export default function LiveEventList(props: {
   )
 
   const nodes = useMemo(() => data.liveEvents.edges.map(e => e.node), [data.liveEvents.edges])
-  const countryFilter = useAtomValue(liveCountryFilterState)
-  const { events, groups } = useOrderedLiveEvents(nodes, props.sort, null, countryFilter)
-
-  // The country filter is applied client-side, so the loaded pages can hold none of its events
-  // while later pages do. Keep paging until something matches or the list ends.
+  // sport, search and country are all filtered by the server
+  const { events, groups } = useOrderedLiveEvents(nodes, props.sort, null, null)
   const noMatches = events.length === 0
-  useEffect(() => {
-    if (noMatches && hasNext && !isLoadingNext) loadNext(PAGE_SIZE)
-  }, [noMatches, hasNext, isLoadingNext, loadNext])
 
   // tournament headers are plain rows, flattened in front of their events
   const rows = useMemo(
@@ -131,8 +128,8 @@ export default function LiveEventList(props: {
     [rows]
   )
 
-  const { sport, search } = props.queryRef.variables
-  const snapshotKey = `${props.sort}:${sport ?? 'all'}:${search ?? ''}:${countryFilter ?? 'all'}`
+  const { sport, search, category } = props.queryRef.variables
+  const snapshotKey = `${props.sort}:${sport ?? 'all'}:${search ?? ''}:${category ?? 'all'}`
 
   const groupedRef = useRef<VirtuosoHandle>(null)
   const chronoRef = useRef<GroupedVirtuosoHandle>(null)
@@ -150,7 +147,7 @@ export default function LiveEventList(props: {
 
   const restoreStateFrom = snapshots.get(snapshotKey)
 
-  if (noMatches) return hasNext ? <LiveListSkeleton /> : <EmptyLive searching={!!search} />
+  if (noMatches) return <EmptyLive searching={!!search} />
 
   if (!groups)
     return (

@@ -254,6 +254,11 @@ type Category implements Node {
   Stable slug within the sport: `england`, `spain`, `atp`, `nba`.
   """
   key: String!
+
+  """
+  Events in play now in this category: always equals `liveEvents(sport:, category:).totalCount`.
+  """
+  liveEventCount: Int!
   name: String!
   sport: Sport!
   tournaments: [Tournament!]!
@@ -1041,6 +1046,11 @@ type Query {
     after: String
 
     """
+    Only this category (country) `key`, e.g. `england`. `Sport.liveCategories` lists the ones in play.
+    """
+    category: String
+
+    """
     Only the signed-in player's bookmarked events. Requires a session.
     """
     favourites: Boolean
@@ -1126,6 +1136,11 @@ type Sport implements Node {
   Stable slug: `football`, `tennis`, `basketball`, `ice-hockey`.
   """
   key: String!
+
+  """
+  Categories (countries) with matches in play now, most matches first. Each `liveEventCount` equals `liveEvents(sport:, category:).totalCount`. For live country filters without loading the list.
+  """
+  liveCategories: [Category!]!
 
   """
   Events in play now for this sport: always equals `liveEvents(sport:).totalCount`. For live sport tabs without loading the list.
