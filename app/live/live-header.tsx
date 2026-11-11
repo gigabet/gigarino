@@ -98,7 +98,7 @@ export function LiveHeaderSkeleton() {
           <Skeleton
             // biome-ignore lint/suspicious/noArrayIndexKey: identical
             key={i}
-            className='h-17 w-18 shrink-0 rounded-[1.375rem] [corner-shape:squircle] lg:h-8.5 lg:w-28 lg:rounded-2xl'
+            className='h-17 w-20 shrink-0 rounded-2xl [corner-shape:squircle] supports-[corner-shape:squircle]:rounded-[1.375rem] lg:h-8.5 lg:w-28 lg:rounded-2xl'
           />
         ))}
       </div>

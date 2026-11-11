@@ -104,18 +104,24 @@ function Tab(props: {
       style={props.style}
       className={cn(
         'sport-texture bg-control border-control-border relative shrink-0 border text-xs whitespace-nowrap transition-colors',
-        // <lg: vertical squircle
-        'flex min-w-18 flex-col items-center justify-center gap-1.5 rounded-[1.375rem] px-3 py-3 [corner-shape:squircle] lg:[corner-shape:round]',
+        // <lg: vertical squircle (on supported browsers)
+        'flex min-w-20 flex-col items-center justify-center gap-1.5 rounded-2xl px-3 pt-4 pb-2.5 [corner-shape:squircle] supports-[corner-shape:squircle]:rounded-[1.375rem] lg:[corner-shape:round]',
         // lg+: original horizontal pill
         'lg:min-w-0 lg:flex-row lg:gap-2 lg:rounded-2xl lg:px-3.5 lg:py-2',
         props.active
           ? 'text-white'
-          : 'lg:hover:bg-dark-300 hover:bg-dark-400 text-white/60 hover:text-white'
+          : 'lg:hover:bg-dark-300 hover:bg-dark-400 text-white/60 hover:text-white max-lg:text-white/75'
       )}
     >
       <span className='[&>svg]:size-5 lg:[&>svg]:size-4'>{props.icon}</span>
       <span className='max-w-20 truncate'>{props.label}</span>
-      <span className='text-secondary absolute top-1 right-2 text-[0.65rem] lg:static lg:text-xs'>
+      {/* plain-radius browsers (iOS Safari) get an inset position so the count stays inside the curve */}
+      <span
+        className={cn(
+          'text-secondary absolute top-1.5 right-2.5 text-[0.65rem] lg:static lg:text-xs',
+          'supports-[corner-shape:squircle]:top-1 supports-[corner-shape:squircle]:right-2'
+        )}
+      >
         {props.count}
       </span>
     </button>
