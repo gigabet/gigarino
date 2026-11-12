@@ -1406,5 +1406,41 @@
   "Your betslip is empty": {
     "de": "Ihr Wettschein ist leer",
     "tr": "Kuponunuz boş"
+  },
+  "Bet": {
+    "de": "",
+    "tr": ""
+  },
+  "No tickets match this filter": {
+    "de": "",
+    "tr": ""
+  },
+  "Odds": {
+    "de": "",
+    "tr": ""
+  },
+  "Placed": {
+    "de": "",
+    "tr": ""
+  },
+  "Potential": {
+    "de": "",
+    "tr": ""
+  },
+  "Return": {
+    "de": "",
+    "tr": ""
+  },
+  "Searching older tickets...": {
+    "de": "",
+    "tr": ""
+  },
+  "Status": {
+    "de": "",
+    "tr": ""
+  },
+  "View all": {
+    "de": "",
+    "tr": ""
   }
 }

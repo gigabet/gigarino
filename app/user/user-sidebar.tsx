@@ -1,15 +1,19 @@
 'use client'
 
 import { cx } from 'class-variance-authority'
-import { CreditCardIcon, GiftIcon, UserIcon, WalletIcon } from 'lucide-react'
+import { useAtomValue } from 'jotai'
+import { CreditCardIcon, GiftIcon, TicketIcon, UserIcon, WalletIcon } from 'lucide-react'
 import { motion } from 'motion/react'
 import Link, { type LinkProps } from 'next/link'
 import { redirect, usePathname } from 'next/navigation'
 import { NAVBAR_HEIGHT } from '@/app/navbar'
+import { CountBadge } from '@/components/count-badge'
+import { unseenResettlementsAtom } from '@/context/tickets'
 import type { User } from '@/types'
 
 export default function UserSidebar(props: { user: User | null; pt: string }) {
   const pathname = usePathname()
+  const unseen = useAtomValue(unseenResettlementsAtom)
 
   if (!props.user) {
     redirect(`/login?error=You must be logged in&from=${pathname}`, 'replace')
@@ -44,6 +48,12 @@ export default function UserSidebar(props: { user: User | null; pt: string }) {
         <MenuLink href='/user/transactions' {...{ pathname }}>
           <CreditCardIcon className='size-4' />
           Transactions
+        </MenuLink>
+
+        <MenuLink href='/user/tickets' {...{ pathname }}>
+          <TicketIcon className='size-4' />
+          My Tickets
+          <CountBadge count={unseen} className='ml-auto' />
         </MenuLink>
 
         <MenuLink href='/user/bonuses' {...{ pathname }}>

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<08935bafee5399488f4b54c890fefef0>>
+ * @generated SignedSource<<b94fd6f1471cd8e05dd62fe22704004c>>
  * @lightSyntaxTransform
  */
 
@@ -113,6 +113,69 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
+                    "name": "currency",
+                    "storageKey": null
+                  },
+                  (v3/*:: as any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "resettled",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "resettlementSeen",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "TicketItem",
+                    "kind": "LinkedField",
+                    "name": "items",
+                    "plural": true,
+                    "selections": [
+                      (v1/*:: as any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "eventName",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "marketName",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "outcomeName",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "priceAtAcceptance",
+                        "storageKey": null
+                      },
+                      (v2/*:: as any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
                     "name": "effectiveOdds",
                     "storageKey": null
                   },
@@ -134,29 +197,7 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "currency",
-                    "storageKey": null
-                  },
-                  (v3/*:: as any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
                     "name": "settledAt",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "resettled",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "resettlementSeen",
                     "storageKey": null
                   },
                   {
@@ -224,47 +265,6 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "TicketItem",
-                    "kind": "LinkedField",
-                    "name": "items",
-                    "plural": true,
-                    "selections": [
-                      (v1/*:: as any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "eventName",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "marketName",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "outcomeName",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "priceAtAcceptance",
-                        "storageKey": null
-                      },
-                      (v2/*:: as any*/)
-                    ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
                     "kind": "ScalarField",
                     "name": "__typename",
                     "storageKey": null
@@ -322,12 +322,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "866111f27693510fd14419b01a845224",
+    "cacheID": "1cdedb50c3c038f0f86c00cddba2052c",
     "id": null,
     "metadata": {},
     "name": "MyTicketsQuery",
     "operationKind": "query",
-    "text": "query MyTicketsQuery {\n  ...MyTicketsList\n}\n\nfragment MyTicketsList on Query {\n  myTickets(first: 10) {\n    edges {\n      node {\n        id\n        status\n        ...TicketCard\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment TicketCard on Ticket {\n  id\n  betType\n  stake\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  createdAt\n  settledAt\n  resettled\n  resettlementSeen\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n  }\n}\n"
+    "text": "query MyTicketsQuery {\n  ...MyTicketsList\n}\n\nfragment MyTicketsList on Query {\n  myTickets(first: 10) {\n    edges {\n      node {\n        id\n        status\n        ...TicketCard\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment TicketCard on Ticket {\n  id\n  betType\n  stake\n  currency\n  status\n  createdAt\n  resettled\n  resettlementSeen\n  items {\n    id\n  }\n  ...TicketCardDetails\n}\n\nfragment TicketCardDetails on Ticket {\n  id\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  settledAt\n  resettled\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n  }\n}\n"
   }
 };
 })();

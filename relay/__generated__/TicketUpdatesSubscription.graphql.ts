@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<17a1033b0e77b5e42c2481fb82a11ef4>>
+ * @generated SignedSource<<5dc414194f1e8334ab20774f8abc7fb1>>
  * @lightSyntaxTransform
  */
 
@@ -136,6 +136,70 @@ return {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
+                "name": "currency",
+                "storageKey": null
+              },
+              (v2/*:: as any*/),
+              (v3/*:: as any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "resettled",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "resettlementSeen",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "TicketItem",
+                "kind": "LinkedField",
+                "name": "items",
+                "plural": true,
+                "selections": [
+                  (v1/*:: as any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "eventName",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "marketName",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "outcomeName",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "priceAtAcceptance",
+                    "storageKey": null
+                  },
+                  (v2/*:: as any*/)
+                ],
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
                 "name": "effectiveOdds",
                 "storageKey": null
               },
@@ -157,30 +221,7 @@ return {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
-                "name": "currency",
-                "storageKey": null
-              },
-              (v2/*:: as any*/),
-              (v3/*:: as any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
                 "name": "settledAt",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "resettled",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "resettlementSeen",
                 "storageKey": null
               },
               {
@@ -244,47 +285,6 @@ return {
                   (v3/*:: as any*/)
                 ],
                 "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "TicketItem",
-                "kind": "LinkedField",
-                "name": "items",
-                "plural": true,
-                "selections": [
-                  (v1/*:: as any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "eventName",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "marketName",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "outcomeName",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "priceAtAcceptance",
-                    "storageKey": null
-                  },
-                  (v2/*:: as any*/)
-                ],
-                "storageKey": null
               }
             ],
             "storageKey": null
@@ -295,12 +295,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4126aa82cdc91d0b6ec4cce2b8e7f701",
+    "cacheID": "35f8ddb0a8eefb9781af8f2a36f9ec2e",
     "id": null,
     "metadata": {},
     "name": "TicketUpdatesSubscription",
     "operationKind": "subscription",
-    "text": "subscription TicketUpdatesSubscription {\n  myTicketUpdated {\n    reason\n    ticket {\n      id\n      ...TicketCard\n    }\n  }\n}\n\nfragment TicketCard on Ticket {\n  id\n  betType\n  stake\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  createdAt\n  settledAt\n  resettled\n  resettlementSeen\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n  }\n}\n"
+    "text": "subscription TicketUpdatesSubscription {\n  myTicketUpdated {\n    reason\n    ticket {\n      id\n      ...TicketCard\n    }\n  }\n}\n\nfragment TicketCard on Ticket {\n  id\n  betType\n  stake\n  currency\n  status\n  createdAt\n  resettled\n  resettlementSeen\n  items {\n    id\n  }\n  ...TicketCardDetails\n}\n\nfragment TicketCardDetails on Ticket {\n  id\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  settledAt\n  resettled\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n  }\n}\n"
   }
 };
 })();

@@ -19,6 +19,7 @@ import { useEffect, useRef, useState } from 'react'
 import { PiTicket, PiTrash } from 'react-icons/pi'
 import { graphql, useFragment, useMutation } from 'react-relay'
 import { Drawer } from 'vaul'
+import { CountBadge } from '@/components/count-badge'
 import { loginDialogOpenAtom } from '@/components/login-dialog'
 import { BetslipTracker } from '@/components/match-tracker'
 import MyTickets from '@/components/my-tickets'
@@ -48,6 +49,7 @@ import {
 } from '@/context/betslip'
 import { useMediaQuery } from '@/context/hooks'
 import { useBetslipQuote, useCurrency, useT, useUser } from '@/context/providers'
+import { unseenResettlementsAtom } from '@/context/tickets'
 import { MARKET_NAME, OUTCOME_NAME, splitMarketName } from '@/lib/sport-markets'
 import { cn, formatBalance, nCk } from '@/lib/utils'
 import type { Betslip$data, Betslip$key } from '@/relay/__generated__/Betslip.graphql'
@@ -375,6 +377,7 @@ function BetslipHeader(props: {
   onClear: () => void
 }) {
   const t = useT()
+  const unseen = useAtomValue(unseenResettlementsAtom)
 
   return (
     <div className='flex items-center justify-between border-b border-white/5 px-5 py-4'>
@@ -390,6 +393,7 @@ function BetslipHeader(props: {
           onClick={() => props.onTabChange('tickets')}
           icon={<HistoryIcon className='size-4' />}
           label={t('My Tickets')}
+          count={unseen}
         />
       </div>
       <AnimatePresence initial={false}>
@@ -442,11 +446,7 @@ function MainTabButton(props: {
     >
       {props.icon}
       {props.label}
-      {!!props.count && (
-        <span className='bg-primary/15 text-primary rounded-full px-2 py-0.5 text-xs font-bold normal-case'>
-          {props.count}
-        </span>
-      )}
+      <CountBadge count={props.count ?? 0} />
     </button>
   )
 }

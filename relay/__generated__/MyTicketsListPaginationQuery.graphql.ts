@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8769bdb2a0114dd469632bee047ecd36>>
+ * @generated SignedSource<<deba90f12178827aaceb41b8f5a36575>>
  * @lightSyntaxTransform
  */
 
@@ -133,6 +133,69 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
+                    "name": "currency",
+                    "storageKey": null
+                  },
+                  (v4/*:: as any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "resettled",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "resettlementSeen",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "TicketItem",
+                    "kind": "LinkedField",
+                    "name": "items",
+                    "plural": true,
+                    "selections": [
+                      (v2/*:: as any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "eventName",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "marketName",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "outcomeName",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "priceAtAcceptance",
+                        "storageKey": null
+                      },
+                      (v3/*:: as any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
                     "name": "effectiveOdds",
                     "storageKey": null
                   },
@@ -154,29 +217,7 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "currency",
-                    "storageKey": null
-                  },
-                  (v4/*:: as any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
                     "name": "settledAt",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "resettled",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "resettlementSeen",
                     "storageKey": null
                   },
                   {
@@ -244,47 +285,6 @@ return {
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "TicketItem",
-                    "kind": "LinkedField",
-                    "name": "items",
-                    "plural": true,
-                    "selections": [
-                      (v2/*:: as any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "eventName",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "marketName",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "outcomeName",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "priceAtAcceptance",
-                        "storageKey": null
-                      },
-                      (v3/*:: as any*/)
-                    ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
                     "kind": "ScalarField",
                     "name": "__typename",
                     "storageKey": null
@@ -342,12 +342,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e20b04d4f665a351b9d3dfe2076515cf",
+    "cacheID": "c77845acc882622a3ac152db2d383c95",
     "id": null,
     "metadata": {},
     "name": "MyTicketsListPaginationQuery",
     "operationKind": "query",
-    "text": "query MyTicketsListPaginationQuery(\n  $after: String\n  $first: Int = 10\n) {\n  ...MyTicketsList_2HEEH6\n}\n\nfragment MyTicketsList_2HEEH6 on Query {\n  myTickets(first: $first, after: $after) {\n    edges {\n      node {\n        id\n        status\n        ...TicketCard\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment TicketCard on Ticket {\n  id\n  betType\n  stake\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  createdAt\n  settledAt\n  resettled\n  resettlementSeen\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n  }\n}\n"
+    "text": "query MyTicketsListPaginationQuery(\n  $after: String\n  $first: Int = 10\n) {\n  ...MyTicketsList_2HEEH6\n}\n\nfragment MyTicketsList_2HEEH6 on Query {\n  myTickets(first: $first, after: $after) {\n    edges {\n      node {\n        id\n        status\n        ...TicketCard\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment TicketCard on Ticket {\n  id\n  betType\n  stake\n  currency\n  status\n  createdAt\n  resettled\n  resettlementSeen\n  items {\n    id\n  }\n  ...TicketCardDetails\n}\n\nfragment TicketCardDetails on Ticket {\n  id\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  settledAt\n  resettled\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n  }\n}\n"
   }
 };
 })();

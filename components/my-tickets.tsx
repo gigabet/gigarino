@@ -1,5 +1,6 @@
 'use client'
 
+import { useSetAtom } from 'jotai'
 import { Loader2Icon, LockKeyholeIcon } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -11,6 +12,7 @@ import { graphql, useLazyLoadQuery, usePaginationFragment } from 'react-relay'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
 import TicketCard, { TicketCardSkeleton } from '@/components/ticket-card'
 import { buttonVariants } from '@/components/ui/button'
+import { betslipOpenAtom } from '@/context/betslip'
 import { useT, useUser } from '@/context/providers'
 import { isAuthError } from '@/lib/utils'
 import type { MyTicketsList$key } from '@/relay/__generated__/MyTicketsList.graphql'
@@ -106,6 +108,7 @@ function MyTicketsContent() {
   }, [inView, hasNext, isLoadingNext, loadNext])
 
   const t = useT()
+  const setBetslipOpen = useSetAtom(betslipOpenAtom)
 
   if (!data.myTickets) return <EmptyTickets />
 
@@ -119,6 +122,17 @@ function MyTicketsContent() {
 
   return (
     <div className='space-y-6 px-5 py-4'>
+      <div className='-mb-3 flex justify-end'>
+        <Link
+          href='/user/tickets'
+          // the drawer would otherwise stay open on top of the new page
+          onClick={() => setBetslipOpen(false)}
+          className='text-primary text-xs font-medium hover:underline'
+        >
+          {t('View all')}
+        </Link>
+      </div>
+
       {open.length > 0 && (
         <section>
           <h3 className='text-secondary mb-2 text-xs font-semibold tracking-wider uppercase'>

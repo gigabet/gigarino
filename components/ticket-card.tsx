@@ -20,6 +20,7 @@ import { unseenResettlementsAtom } from '@/context/tickets'
 import { tKey } from '@/i18n/tKey'
 import { cn, formatBalance } from '@/lib/utils'
 import type { TicketCard$key } from '@/relay/__generated__/TicketCard.graphql'
+import type { TicketCardDetails$key } from '@/relay/__generated__/TicketCardDetails.graphql'
 import type { TicketCardAcknowledgeMutation } from '@/relay/__generated__/TicketCardAcknowledgeMutation.graphql'
 import type { TicketCardCashoutMutation } from '@/relay/__generated__/TicketCardCashoutMutation.graphql'
 import type { TicketCardCashoutQuoteQuery } from '@/relay/__generated__/TicketCardCashoutQuoteQuery.graphql'
@@ -65,58 +66,37 @@ const ITEM_STATUS_META: Record<BetItemStatus, { label: string; className: string
   VOID: { label: tKey('V'), className: 'bg-white/20 text-secondary' },
 }
 
-export default function TicketCard(props: { ticket: TicketCard$key; action?: () => void }) {
-  const data = useFragment(
-    graphql`
-      fragment TicketCard on Ticket {
-        id
-        betType
-        stake
-        effectiveOdds
-        potentialPayout
-        payout
-        currency
-        status
-        createdAt
-        settledAt
-        resettled
-        resettlementSeen
-        corrections {
-          id
-          itemId
-          kind
-          amount
-          previousPrice
-          newPrice
-          previousStatus
-          newStatus
-          createdAt
-        }
-        items {
-          id
-          eventName
-          marketName
-          outcomeName
-          priceAtAcceptance
-          status
-        }
-      }
-    `,
-    props.ticket
-  )
+const CORRECTION_LABEL: Record<string, string> = {
+  PALPABLE_ERROR: tKey('Price error corrected'),
+  RESULT_CORRECTION: tKey('Result corrected'),
+}
 
-  const [expanded, setExpanded] = useState(false)
+/** Takes the raw status verbatim: it is pure formatting, so it has no fragment. */
+export function TicketStatusPill(props: { status: string }) {
   const t = useT()
-  const meta = STATUS_META[data.status as TicketStatus] ?? {
-    label: data.status,
+  const meta = STATUS_META[props.status as TicketStatus] ?? {
+    label: props.status,
     className: 'bg-white/10 text-secondary',
   }
 
-  const CORRECTION_LABEL: Record<string, string> = {
-    PALPABLE_ERROR: tKey('Price error corrected'),
-    RESULT_CORRECTION: tKey('Result corrected'),
-  }
+  return (
+    <span
+      className={cn('rounded-full px-2 py-0.5 text-[0.65rem] font-bold uppercase', meta.className)}
+    >
+      {t(meta.label)}
+    </span>
+  )
+}
 
+/**
+ * Marks a ticket's corrections as seen once `active` (the player opened it) and
+ * keeps the unseen counter in step. Shared by the betslip card and the tickets page.
+ * Both pass the fields from their own fragment.
+ */
+export function useAcknowledgeCorrections(
+  ticket: { id: string; resettled: boolean; resettlementSeen: boolean },
+  active: boolean
+) {
   const [ack] = useMutation<TicketCardAcknowledgeMutation>(graphql`
     mutation TicketCardAcknowledgeMutation($ticketIds: [ID!]) {
       acknowledgeResettlements(ticketIds: $ticketIds) {
@@ -126,14 +106,42 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
     }
   `)
   const setUnseen = useSetAtom(unseenResettlementsAtom)
+  const { id, resettled, resettlementSeen } = ticket
 
   useEffect(() => {
-    if (!expanded || !data.resettled || data.resettlementSeen) return
+    if (!active || !resettled || resettlementSeen) return
     ack({
-      variables: { ticketIds: [data.id] },
+      variables: { ticketIds: [id] },
       onCompleted: () => setUnseen(n => Math.max(0, n - 1)),
     })
-  }, [expanded, data.id, data.resettled, data.resettlementSeen, ack, setUnseen])
+  }, [active, id, resettled, resettlementSeen, ack, setUnseen])
+}
+
+export default function TicketCard(props: { ticket: TicketCard$key; action?: () => void }) {
+  const data = useFragment(
+    graphql`
+      fragment TicketCard on Ticket {
+        id
+        betType
+        stake
+        currency
+        status
+        createdAt
+        resettled
+        resettlementSeen
+        items {
+          # eslint-disable-next-line relay/unused-fields
+          id
+        }
+        ...TicketCardDetails
+      }
+    `,
+    props.ticket
+  )
+
+  const [expanded, setExpanded] = useState(false)
+  const t = useT()
+  useAcknowledgeCorrections(data, expanded)
 
   return (
     <div className='rounded-xl border border-white/5 bg-black/20 p-3'>
@@ -145,14 +153,7 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
         <div className='flex grow justify-between gap-3'>
           <div className='min-w-0'>
             <div className='flex items-center gap-2'>
-              <span
-                className={cn(
-                  'rounded-full px-2 py-0.5 text-[0.65rem] font-bold uppercase',
-                  meta.className
-                )}
-              >
-                {t(meta.label)}
-              </span>
+              <TicketStatusPill status={data.status} />
               {data.resettled && !data.resettlementSeen && (
                 <span className='rounded-full bg-amber-500/10 px-2 py-0.5 text-[0.65rem] font-bold text-amber-400 uppercase'>
                   {t('Corrected')}
@@ -191,105 +192,152 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
       </button>
 
       {expanded && (
-        <div className='mt-3 space-y-2 border-t border-white/5 pt-3'>
-          {data.items.map(item => {
-            const itemMeta = ITEM_STATUS_META[item.status as BetItemStatus]
+        <div className='mt-3 border-t border-white/5 pt-3'>
+          <TicketCardDetails ticket={data} onCashedOut={props.action} />
+        </div>
+      )}
+    </div>
+  )
+}
+
+/** Everything behind the summary line: selections, totals, corrections and cash out. */
+export function TicketCardDetails(props: {
+  ticket: TicketCardDetails$key
+  onCashedOut?: () => void
+}) {
+  const data = useFragment(
+    graphql`
+      fragment TicketCardDetails on Ticket {
+        id
+        effectiveOdds
+        potentialPayout
+        payout
+        currency
+        status
+        settledAt
+        resettled
+        corrections {
+          id
+          itemId
+          kind
+          amount
+          previousPrice
+          newPrice
+          previousStatus
+          newStatus
+          createdAt
+        }
+        items {
+          id
+          eventName
+          marketName
+          outcomeName
+          priceAtAcceptance
+          status
+        }
+      }
+    `,
+    props.ticket
+  )
+  const t = useT()
+
+  return (
+    <div className='space-y-2'>
+      {data.items.map(item => {
+        const itemMeta = ITEM_STATUS_META[item.status as BetItemStatus]
+        return (
+          <div key={item.id} className='flex items-center justify-between gap-2 text-xs'>
+            <div className='flex min-w-0 items-center gap-2'>
+              {item.status !== 'PENDING' && (
+                <span
+                  className={cn(
+                    'flex size-4 shrink-0 items-center justify-center rounded-full text-[0.6rem] font-bold',
+                    itemMeta.className
+                  )}
+                >
+                  {t(itemMeta.label)}
+                </span>
+              )}
+              <div className='min-w-0'>
+                <p className='truncate text-white/90'>{item.outcomeName}</p>
+                <p className='text-secondary truncate'>
+                  {item.marketName} · {item.eventName}
+                </p>
+              </div>
+            </div>
+            <span className='shrink-0 font-mono text-white/70'>
+              {Number(item.priceAtAcceptance).toFixed(2)}
+            </span>
+          </div>
+        )
+      })}
+
+      <div className='flex items-center justify-between border-t border-white/5 pt-2 text-xs'>
+        <span className='text-secondary'>{t('Combined odds')}</span>
+        <span className='font-mono text-white'>{Number(data.effectiveOdds).toFixed(2)}</span>
+      </div>
+      <div className='flex items-center justify-between text-xs'>
+        <span className='text-secondary'>{t('Potential payout')}</span>
+        <span className='text-primary font-mono font-semibold'>
+          {formatBalance(Number(data.potentialPayout), data.currency)}
+        </span>
+      </div>
+
+      {data.settledAt && (
+        <div className='flex items-center justify-between text-xs'>
+          <span className='text-secondary'>{t('Settled')}</span>
+          <span className='text-white/70'>
+            {formatDistanceToNowStrict(new Date(data.settledAt), {
+              addSuffix: true,
+            })}
+          </span>
+        </div>
+      )}
+
+      {data.payout != null && (
+        <div className='flex items-center justify-between text-xs'>
+          <span className='text-secondary'>{t('Payout')}</span>
+          <span className='font-mono font-semibold text-white'>
+            {formatBalance(Number(data.payout), data.currency)}
+          </span>
+        </div>
+      )}
+
+      {data.resettled && (
+        <div className='space-y-2 rounded-lg bg-amber-500/5 p-2 text-xs'>
+          <p className='font-semibold text-amber-400'>{t('Corrections')}</p>
+          {data.corrections.map(c => {
+            const item = data.items.find(i => i.id === c.itemId)
+            const amount = Number(c.amount)
             return (
-              <div key={item.id} className='flex items-center justify-between gap-2 text-xs'>
-                <div className='flex min-w-0 items-center gap-2'>
-                  {item.status !== 'PENDING' && (
-                    <span
-                      className={cn(
-                        'flex size-4 shrink-0 items-center justify-center rounded-full text-[0.6rem] font-bold',
-                        itemMeta.className
-                      )}
-                    >
-                      {t(itemMeta.label)}
+              <div key={c.id} className='space-y-0.5'>
+                <p className='text-white/90'>
+                  {t(CORRECTION_LABEL[c.kind] ?? c.kind)} · {item?.outcomeName}
+                </p>
+                <div className='text-secondary flex justify-between font-mono'>
+                  <span>
+                    {Number(c.previousPrice).toFixed(2)} → {Number(c.newPrice).toFixed(2)}
+                    {c.previousStatus !== c.newStatus && ` · ${c.previousStatus} → ${c.newStatus}`}
+                  </span>
+                  {amount !== 0 && (
+                    <span className={amount > 0 ? 'text-primary' : 'text-red-400'}>
+                      {amount > 0 && '+'}
+                      {formatBalance(amount, data.currency)}
                     </span>
                   )}
-                  <div className='min-w-0'>
-                    <p className='truncate text-white/90'>{item.outcomeName}</p>
-                    <p className='text-secondary truncate'>
-                      {item.marketName} · {item.eventName}
-                    </p>
-                  </div>
                 </div>
-                <span className='shrink-0 font-mono text-white/70'>
-                  {Number(item.priceAtAcceptance).toFixed(2)}
-                </span>
+                <p className='text-secondary text-[0.65rem]'>
+                  {format(new Date(c.createdAt), 'dd MMM, HH:mm')}
+                </p>
               </div>
             )
           })}
+        </div>
+      )}
 
-          <div className='flex items-center justify-between border-t border-white/5 pt-2 text-xs'>
-            <span className='text-secondary'>{t('Combined odds')}</span>
-            <span className='font-mono text-white'>{Number(data.effectiveOdds).toFixed(2)}</span>
-          </div>
-          <div className='flex items-center justify-between text-xs'>
-            <span className='text-secondary'>{t('Potential payout')}</span>
-            <span className='text-primary font-mono font-semibold'>
-              {formatBalance(Number(data.potentialPayout), data.currency)}
-            </span>
-          </div>
-
-          {data.settledAt && (
-            <div className='flex items-center justify-between text-xs'>
-              <span className='text-secondary'>{t('Settled')}</span>
-              <span className='text-white/70'>
-                {formatDistanceToNowStrict(new Date(data.settledAt), {
-                  addSuffix: true,
-                })}
-              </span>
-            </div>
-          )}
-
-          {data.payout != null && (
-            <div className='flex items-center justify-between text-xs'>
-              <span className='text-secondary'>{t('Payout')}</span>
-              <span className='font-mono font-semibold text-white'>
-                {formatBalance(Number(data.payout), data.currency)}
-              </span>
-            </div>
-          )}
-
-          {data.resettled && (
-            <div className='space-y-2 rounded-lg bg-amber-500/5 p-2 text-xs'>
-              <p className='font-semibold text-amber-400'>{t('Corrections')}</p>
-              {data.corrections.map(c => {
-                const item = data.items.find(i => i.id === c.itemId)
-                const amount = Number(c.amount)
-                return (
-                  <div key={c.id} className='space-y-0.5'>
-                    <p className='text-white/90'>
-                      {t(CORRECTION_LABEL[c.kind] ?? c.kind)} · {item?.outcomeName}
-                    </p>
-                    <div className='text-secondary flex justify-between font-mono'>
-                      <span>
-                        {Number(c.previousPrice).toFixed(2)} → {Number(c.newPrice).toFixed(2)}
-                        {c.previousStatus !== c.newStatus &&
-                          ` · ${c.previousStatus} → ${c.newStatus}`}
-                      </span>
-                      {amount !== 0 && (
-                        <span className={amount > 0 ? 'text-primary' : 'text-red-400'}>
-                          {amount > 0 && '+'}
-                          {formatBalance(amount, data.currency)}
-                        </span>
-                      )}
-                    </div>
-                    <p className='text-secondary text-[0.65rem]'>
-                      {format(new Date(c.createdAt), 'dd MMM, HH:mm')}
-                    </p>
-                  </div>
-                )
-              })}
-            </div>
-          )}
-
-          {CASHOUT_ELIGIBLE.has(data.status as TicketStatus) && (
-            <div className='pt-1'>
-              <CashoutButton ticketId={data.id} onCashedOut={props.action} />
-            </div>
-          )}
+      {CASHOUT_ELIGIBLE.has(data.status as TicketStatus) && (
+        <div className='pt-1'>
+          <CashoutButton ticketId={data.id} onCashedOut={props.onCashedOut} />
         </div>
       )}
     </div>

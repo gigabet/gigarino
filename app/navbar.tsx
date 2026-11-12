@@ -1,7 +1,7 @@
 'use client'
 
 import { cx } from 'class-variance-authority'
-import { atom, useAtom } from 'jotai'
+import { atom, useAtom, useAtomValue } from 'jotai'
 import { last } from 'lodash'
 import {
   ChevronDownIcon,
@@ -10,6 +10,7 @@ import {
   GiftIcon,
   LogOutIcon,
   RadioIcon,
+  TicketIcon,
   TvMinimalPlayIcon,
   UserIcon,
   VolleyballIcon,
@@ -20,11 +21,13 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import BottomBar from '@/app/bottom-bar'
 import Search from '@/app/search'
+import { CountBadge } from '@/components/count-badge'
 import LoginDialog from '@/components/login-dialog'
 import Logo from '@/components/logo'
 import * as DropdownMenu from '@/components/ui/dropdown-menu'
 import { useBalanceUpdates } from '@/context/hooks'
 import { useT, useUser } from '@/context/providers'
+import { unseenResettlementsAtom } from '@/context/tickets'
 import { tKey } from '@/i18n/tKey'
 import { logout } from '@/lib/auth'
 import { formatBalance } from '@/lib/utils'
@@ -43,6 +46,7 @@ export default function Navbar(props: { token: string | undefined }) {
   const router = useRouter()
   const pathname = usePathname()
   const { user, wallet, clearUser } = useUser()
+  const unseen = useAtomValue(unseenResettlementsAtom)
 
   const handleLogout = async () => {
     await logout()
@@ -112,8 +116,9 @@ export default function Navbar(props: { token: string | undefined }) {
                         type='button'
                         className='-mr-2 flex items-center gap-2 rounded-full p-1.5 transition-colors hover:bg-white/5'
                       >
-                        <div className='from-primary-200 to-primary-400 flex size-6 items-center justify-center rounded-full bg-linear-to-br sm:size-8'>
+                        <div className='from-primary-200 to-primary-400 relative flex size-6 items-center justify-center rounded-full bg-linear-to-br sm:size-8'>
                           <UserIcon className='size-3 text-black sm:size-4' />
+                          <CountBadge count={unseen} className='absolute -top-1.5 -right-1.5' />
                         </div>
                         <span className='hidden text-sm font-medium text-white md:block'>
                           {user.displayName}
@@ -146,6 +151,14 @@ export default function Navbar(props: { token: string | undefined }) {
                       >
                         <CreditCardIcon className='mr-2 size-4' />
                         {t('Transactions')}
+                      </DropdownMenu.Item>
+                      <DropdownMenu.Item
+                        onClick={() => router.push('/user/tickets')}
+                        className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'
+                      >
+                        <TicketIcon className='mr-2 size-4' />
+                        {t('My Tickets')}
+                        <CountBadge count={unseen} className='ml-auto' />
                       </DropdownMenu.Item>
                       <DropdownMenu.Item
                         onClick={() => router.push('/user/bonuses')}
