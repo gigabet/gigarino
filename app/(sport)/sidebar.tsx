@@ -24,7 +24,6 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useSelectedTournaments } from '@/context/hooks'
 import { useLocale, useT } from '@/context/providers'
 import { getCountryName } from '@/i18n/countryNames'
-import { sortBySportOrder } from '@/lib/sport-order'
 import type { PrematchLayoutQuery } from '@/relay/__generated__/PrematchLayoutQuery.graphql'
 import PrematchLayoutQueryNode from '@/relay/__generated__/PrematchLayoutQuery.graphql'
 import type { Sidebar$data, Sidebar$key } from '@/relay/__generated__/Sidebar.graphql'
@@ -59,7 +58,8 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
     preloaded
   )
 
-  const filteredSports = sortBySportOrder(data.sports).filter(s => s.eventCount > 0)
+  // `sports` arrives in display order from the server (Sport.displayOrder)
+  const filteredSports = data.sports.filter(s => s.eventCount > 0)
 
   const [expanded, setExpanded] = useState(false)
   const t = useT()

@@ -5,7 +5,6 @@ import { fetchQuery, graphql, useRefetchableFragment, useRelayEnvironment } from
 import { SportIcon } from '@/components/sport-icon'
 import { useScrollFade } from '@/context/hooks'
 import { useT } from '@/context/providers'
-import { sortBySportOrder } from '@/lib/sport-order'
 import { getSportTheme } from '@/lib/sport-theme'
 import { cn } from '@/lib/utils'
 import type { LiveSportTabs$key } from '@/relay/__generated__/LiveSportTabs.graphql'
@@ -61,7 +60,7 @@ export default function LiveSportTabs(props: {
         label={t('All')}
         count={total}
       />
-      {sortBySportOrder(data.sports)
+      {data.sports
         .filter(s => s.liveEventCount > 0)
         .map(sport => {
           const theme = getSportTheme(sport.key)
