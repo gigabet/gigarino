@@ -550,7 +550,7 @@ enum LiveEventOrder {
   START_TIME
 
   """
-  Tournament weight (highest first), each tournament kept together, then kick-off.
+  Sport display order (football first, as `Sport.displayOrder`), then tournament weight (highest first), each tournament kept together, then kick-off.
   """
   TOURNAMENT
 }
@@ -1084,7 +1084,7 @@ type Query {
   sport(id: ID, key: String): Sport
 
   """
-  Every sport the current data provider covers.
+  Every sport the current data provider covers, in display order (football first; see `Sport.displayOrder`).
   """
   sports: [Sport!]!
 
@@ -1125,6 +1125,11 @@ type Sport implements Node {
   Categories (countries / regions) under this sport.
   """
   categories: [Category!]!
+
+  """
+  Position in the display order (0 = first; football leads). `sports` is already sorted by it; use it to order sport tabs and groups.
+  """
+  displayOrder: Int!
 
   """
   Bettable prematch events beneath this node. Lets the sidebar hide empty branches without walking the whole tree client-side.
