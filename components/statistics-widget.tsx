@@ -13,6 +13,7 @@ import {
 import { SportIcon } from '@/components/sport-icon'
 import { Skeleton } from '@/components/ui/skeleton'
 import * as Tabs from '@/components/ui/tabs'
+import { useScrollFade } from '@/context/hooks'
 import { useT } from '@/context/providers'
 import { tKey } from '@/i18n/tKey'
 import { cn } from '@/lib/utils'
@@ -109,6 +110,8 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key; b
     return () => clearInterval(id)
   }, [env, live, data.id])
 
+  const fade = useScrollFade()
+
   const t = useT()
   const insights = data.insights
   if (!insights) return null
@@ -169,7 +172,11 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key; b
 
       {tabs.length > 0 && (
         <Tabs.Root defaultValue={defaultTab} className='w-full gap-4'>
-          <Tabs.List className='h-auto w-fit scrollbar-none justify-start gap-2 overflow-x-auto bg-transparent p-0'>
+          <Tabs.List
+            className='h-auto w-full scrollbar-none justify-start gap-2 overflow-x-auto bg-transparent p-0'
+            ref={fade.ref}
+            style={fade.style}
+          >
             {tabs.map(tab => (
               <Tabs.Trigger
                 key={tab}
