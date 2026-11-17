@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<353fbe37d87917e49b1ee00727e13af6>>
+ * @generated SignedSource<<d4ea8d962aa27266828b5e20a00d2617>>
  * @lightSyntaxTransform
  */
 
@@ -38,6 +38,10 @@ export type StatisticsWidget$data = {
     readonly venue: string | null | undefined;
   } | null | undefined;
   readonly status: EventStatus;
+  readonly timeline: ReadonlyArray<{
+    readonly id: string;
+  }>;
+  readonly " $fragmentSpreads": FragmentRefs<"StatisticsWidgetTimeline">;
   readonly " $fragmentType": "StatisticsWidget";
 };
 export type StatisticsWidget$key = {
@@ -49,12 +53,19 @@ import StatisticsWidgetRefetch_graphql from './StatisticsWidgetRefetch.graphql';
 
 const node: ReaderFragment = (function(){
 var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v1 = {
   "args": null,
   "kind": "FragmentSpread",
   "name": "StatisticsWidgetPastMatch"
 },
-v1 = [
-  (v0/*:: as any*/)
+v2 = [
+  (v1/*:: as any*/)
 ];
 return {
   "argumentDefinitions": [],
@@ -74,13 +85,7 @@ return {
   },
   "name": "StatisticsWidget",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
+    (v0/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -101,6 +106,23 @@ return {
       "kind": "ScalarField",
       "name": "awayCompetitor",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "MatchIncident",
+      "kind": "LinkedField",
+      "name": "timeline",
+      "plural": true,
+      "selections": [
+        (v0/*:: as any*/)
+      ],
+      "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "StatisticsWidgetTimeline"
     },
     {
       "alias": null,
@@ -184,7 +206,7 @@ return {
           "kind": "LinkedField",
           "name": "homeRecent",
           "plural": true,
-          "selections": (v1/*:: as any*/),
+          "selections": (v2/*:: as any*/),
           "storageKey": null
         },
         {
@@ -194,7 +216,7 @@ return {
           "kind": "LinkedField",
           "name": "awayRecent",
           "plural": true,
-          "selections": (v1/*:: as any*/),
+          "selections": (v2/*:: as any*/),
           "storageKey": null
         },
         {
@@ -212,7 +234,7 @@ return {
               "name": "outcome",
               "storageKey": null
             },
-            (v0/*:: as any*/)
+            (v1/*:: as any*/)
           ],
           "storageKey": null
         }
@@ -225,6 +247,6 @@ return {
 };
 })();
 
-(node as any).hash = "0ac2c4ceab42994396616327e5c313c9";
+(node as any).hash = "5ce6bc3cdceacccf13de4102e0ebc66e";
 
 export default node;

@@ -1,7 +1,7 @@
 'use client'
 
 import { format } from 'date-fns'
-import { ChevronDownIcon } from 'lucide-react'
+import { ChevronDownIcon, TargetIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import {
   fetchQuery,
@@ -10,14 +10,17 @@ import {
   useRefetchableFragment,
   useRelayEnvironment,
 } from 'react-relay'
+import { SportIcon } from '@/components/sport-icon'
 import { Skeleton } from '@/components/ui/skeleton'
 import * as Tabs from '@/components/ui/tabs'
 import { useT } from '@/context/providers'
 import { tKey } from '@/i18n/tKey'
 import { cn } from '@/lib/utils'
 import type { StatisticsWidget$key } from '@/relay/__generated__/StatisticsWidget.graphql'
+import type { StatisticsWidgetIncident$key } from '@/relay/__generated__/StatisticsWidgetIncident.graphql'
 import type { StatisticsWidgetPastMatch$key } from '@/relay/__generated__/StatisticsWidgetPastMatch.graphql'
 import StatisticsWidgetRefetchNode from '@/relay/__generated__/StatisticsWidgetRefetch.graphql'
+import type { StatisticsWidgetTimeline$key } from '@/relay/__generated__/StatisticsWidgetTimeline.graphql'
 
 const POLL_MS = 30_000
 
@@ -57,6 +60,10 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key; b
         status
         homeCompetitor
         awayCompetitor
+        timeline {
+          id
+        }
+        ...StatisticsWidgetTimeline @defer
         insights {
           homePosition
           awayPosition
@@ -69,14 +76,14 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key; b
             away
           }
           homeRecent {
-            ...StatisticsWidgetPastMatch
+            ...StatisticsWidgetPastMatch @defer
           }
           awayRecent {
-            ...StatisticsWidgetPastMatch
+            ...StatisticsWidgetPastMatch @defer
           }
           headToHead {
             outcome
-            ...StatisticsWidgetPastMatch
+            ...StatisticsWidgetPastMatch @defer
           }
         }
       }
@@ -113,10 +120,19 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key; b
   })
   const hasForm = insights.homeRecent.length > 0 || insights.awayRecent.length > 0
   const hasH2H = insights.headToHead.length > 0
+  const hasTimeline = data.timeline.length > 0
 
-  const tabs = [stats.length > 0 && 'stats', hasForm && 'form', hasH2H && 'h2h'].filter(
-    Boolean
-  ) as ('stats' | 'form' | 'h2h')[]
+  const tabs = [
+    hasTimeline && 'timeline',
+    stats.length > 0 && 'stats',
+    hasForm && 'form',
+    hasH2H && 'h2h',
+  ].filter(Boolean) as ('timeline' | 'stats' | 'form' | 'h2h')[]
+
+  // The API only fills `timeline` for football/esoccer, so "has a timeline" doubles as the
+  // sport check. Only live games open on it; otherwise the first non-timeline tab stays default.
+  const defaultTab =
+    live && hasTimeline ? 'timeline' : (tabs.find(tab => tab !== 'timeline') ?? tabs[0])
 
   const meta = [
     insights.round && `${t('Round')} ${insights.round}`,
@@ -129,6 +145,7 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key; b
   if (tabs.length === 0 && !meta) return null
 
   const TAB_LABEL = {
+    timeline: t('Timeline'),
     stats: t('Stats'),
     form: t('Form'),
     h2h: t('Head to head'),
@@ -151,18 +168,22 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key; b
       {meta && <p className='text-secondary truncate text-xs'>{meta}</p>}
 
       {tabs.length > 0 && (
-        <Tabs.Root defaultValue={tabs[0]} className='w-full gap-4'>
+        <Tabs.Root defaultValue={defaultTab} className='w-full gap-4'>
           <Tabs.List className='h-auto w-fit scrollbar-none justify-start gap-2 overflow-x-auto bg-transparent p-0'>
             {tabs.map(tab => (
               <Tabs.Trigger
                 key={tab}
                 value={tab}
-                className='data-[state=active]:bg-primary shrink-0 rounded-full border border-control-border bg-white/10 px-4 py-2 text-xs font-medium whitespace-nowrap text-gray-300 shadow-none data-[state=active]:text-black'
+                className='data-[state=active]:bg-primary border-control-border shrink-0 rounded-full border bg-white/10 px-4 py-2 text-xs font-medium whitespace-nowrap text-gray-300 shadow-none data-[state=active]:text-black'
               >
                 {TAB_LABEL[tab]}
               </Tabs.Trigger>
             ))}
           </Tabs.List>
+
+          <Tabs.Content value='timeline'>
+            <TimelineTab event={data} />
+          </Tabs.Content>
 
           <Tabs.Content value='stats'>
             <StatsTab home={data.homeCompetitor} away={data.awayCompetitor} stats={stats} />
@@ -446,6 +467,130 @@ function StatRow(props: { stat: { home: string; away: string }; label: string })
           />
         </div>
       </div>
+    </div>
+  )
+}
+
+/* ------------------------------- Timeline --------------------------------- */
+
+const INCIDENT_LABEL: Record<string, string> = {
+  GOAL: tKey('Goal'),
+  PENALTY: tKey('Penalty'),
+  RED_CARD: tKey('Red card'),
+}
+
+const PENALTY_OUTCOME_LABEL: Record<string, string> = {
+  SCORED: tKey('Penalty scored'),
+  MISSED: tKey('Penalty missed'),
+}
+
+function TimelineTab(props: { event: StatisticsWidgetTimeline$key }) {
+  const data = useFragment(
+    graphql`
+      fragment StatisticsWidgetTimeline on Event {
+        homeCompetitor
+        awayCompetitor
+        timeline {
+          id
+          ...StatisticsWidgetIncident
+        }
+      }
+    `,
+    props.event
+  )
+
+  // the feed is oldest-first (undated entries leading); a live list reads best newest-first
+  const incidents = [...data.timeline].reverse()
+
+  return (
+    <Panel
+      header={
+        <div className='grid grid-cols-[1fr_3rem_1fr] items-center gap-x-3'>
+          <TeamLabel name={data.homeCompetitor} side='home' reverse />
+          <span />
+          <TeamLabel name={data.awayCompetitor} side='away' />
+        </div>
+      }
+    >
+      {incidents.map(incident => (
+        <IncidentRow key={incident.id} incident={incident} />
+      ))}
+    </Panel>
+  )
+}
+
+function IncidentRow(props: { incident: StatisticsWidgetIncident$key }) {
+  const i = useFragment(
+    graphql`
+      fragment StatisticsWidgetIncident on MatchIncident {
+        type
+        side
+        minute
+        addedTime
+        scorer
+        detail
+        penalty
+        outcome
+        cancelled
+        homeScore
+        awayScore
+      }
+    `,
+    props.incident
+  )
+  const t = useT()
+
+  const home = i.side === 'HOME'
+  const minute = i.minute == null ? '–' : `${i.minute}${i.addedTime ? `+${i.addedTime}` : ''}'`
+  const label =
+    (i.type === 'PENALTY' && i.outcome ? PENALTY_OUTCOME_LABEL[i.outcome] : undefined) ??
+    INCIDENT_LABEL[i.type] ??
+    INCIDENT_LABEL.GOAL
+  const title = (i.type === 'GOAL' && i.scorer) || t(label)
+  const subtitle = [i.penalty && t('Penalty'), i.detail, i.cancelled && t('Cancelled')]
+    .filter(Boolean)
+    .join(' · ')
+  const showScore = i.type === 'GOAL' && i.homeScore != null && i.awayScore != null
+
+  const body = (
+    <div
+      className={cn(
+        'flex min-w-0 items-center gap-2',
+        home && 'flex-row-reverse text-right',
+        i.cancelled && 'line-through opacity-50'
+      )}
+    >
+      {i.type === 'RED_CARD' ? (
+        <span className='h-3.5 w-2.5 shrink-0 rounded-xs bg-red-500' />
+      ) : i.type === 'PENALTY' ? (
+        <TargetIcon
+          className={cn(
+            'size-4 shrink-0',
+            i.outcome === 'MISSED' ? 'text-red-400' : 'text-primary'
+          )}
+        />
+      ) : (
+        <SportIcon sport='football' className='size-4 shrink-0' />
+      )}
+      <div className='min-w-0'>
+        <p className='truncate text-sm text-white/90'>{title}</p>
+        {subtitle && <p className='text-secondary truncate text-[0.7rem]'>{subtitle}</p>}
+      </div>
+    </div>
+  )
+
+  return (
+    <div className='grid grid-cols-[1fr_3rem_1fr] items-center gap-x-3 py-2.5'>
+      {home ? body : <span />}
+      <div className='flex flex-col items-center gap-0.5'>
+        <span className='text-secondary font-mono text-xs'>{minute}</span>
+        {showScore && (
+          <span className='font-mono text-xs font-semibold text-white'>
+            {i.homeScore}-{i.awayScore}
+          </span>
+        )}
+      </div>
+      {home ? <span /> : body}
     </div>
   )
 }

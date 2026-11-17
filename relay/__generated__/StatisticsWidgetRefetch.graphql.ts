@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<75da98468fecbef4a40703894e29989a>>
+ * @generated SignedSource<<1a6e6322ab4e75a9ce1746691ad6951d>>
  * @lightSyntaxTransform
  */
 
@@ -41,14 +41,14 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "homeName",
+  "name": "id",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "awayName",
+  "name": "outcome",
   "storageKey": null
 },
 v4 = {
@@ -69,31 +69,38 @@ v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "competition",
+  "name": "homeName",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "startTime",
+  "name": "awayName",
   "storageKey": null
 },
 v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "outcome",
+  "name": "competition",
   "storageKey": null
 },
-v9 = [
-  (v2/*:: as any*/),
-  (v3/*:: as any*/),
-  (v4/*:: as any*/),
-  (v5/*:: as any*/),
+v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "startTime",
+  "storageKey": null
+},
+v10 = [
   (v6/*:: as any*/),
   (v7/*:: as any*/),
-  (v8/*:: as any*/)
+  (v4/*:: as any*/),
+  (v5/*:: as any*/),
+  (v8/*:: as any*/),
+  (v9/*:: as any*/),
+  (v3/*:: as any*/)
 ];
 return {
   "fragment": {
@@ -143,13 +150,7 @@ return {
             "name": "__typename",
             "storageKey": null
           },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
+          (v2/*:: as any*/),
           {
             "kind": "InlineFragment",
             "selections": [
@@ -172,6 +173,77 @@ return {
                 "args": null,
                 "kind": "ScalarField",
                 "name": "awayCompetitor",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "MatchIncident",
+                "kind": "LinkedField",
+                "name": "timeline",
+                "plural": true,
+                "selections": [
+                  (v2/*:: as any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "type",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "side",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "minute",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "addedTime",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "scorer",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "detail",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "penalty",
+                    "storageKey": null
+                  },
+                  (v3/*:: as any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "cancelled",
+                    "storageKey": null
+                  },
+                  (v4/*:: as any*/),
+                  (v5/*:: as any*/)
+                ],
                 "storageKey": null
               },
               {
@@ -256,7 +328,7 @@ return {
                     "kind": "LinkedField",
                     "name": "homeRecent",
                     "plural": true,
-                    "selections": (v9/*:: as any*/),
+                    "selections": (v10/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -266,7 +338,7 @@ return {
                     "kind": "LinkedField",
                     "name": "awayRecent",
                     "plural": true,
-                    "selections": (v9/*:: as any*/),
+                    "selections": (v10/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -277,13 +349,13 @@ return {
                     "name": "headToHead",
                     "plural": true,
                     "selections": [
-                      (v8/*:: as any*/),
-                      (v2/*:: as any*/),
                       (v3/*:: as any*/),
+                      (v6/*:: as any*/),
+                      (v7/*:: as any*/),
                       (v4/*:: as any*/),
                       (v5/*:: as any*/),
-                      (v6/*:: as any*/),
-                      (v7/*:: as any*/)
+                      (v8/*:: as any*/),
+                      (v9/*:: as any*/)
                     ],
                     "storageKey": null
                   }
@@ -300,16 +372,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "411e210005d3ce76868cd533f3462311",
+    "cacheID": "206fad0cbd8b8c0249725d54e64c5463",
     "id": null,
     "metadata": {},
     "name": "StatisticsWidgetRefetch",
     "operationKind": "query",
-    "text": "query StatisticsWidgetRefetch(\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...StatisticsWidget\n    id\n  }\n}\n\nfragment StatisticsWidget on Event {\n  id\n  status\n  homeCompetitor\n  awayCompetitor\n  insights {\n    homePosition\n    awayPosition\n    venue\n    referee\n    round\n    stats {\n      key\n      home\n      away\n    }\n    homeRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    awayRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    headToHead {\n      outcome\n      ...StatisticsWidgetPastMatch\n    }\n  }\n}\n\nfragment StatisticsWidgetPastMatch on PastMatch {\n  homeName\n  awayName\n  homeScore\n  awayScore\n  competition\n  startTime\n  outcome\n}\n"
+    "text": "query StatisticsWidgetRefetch(\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...StatisticsWidget\n    id\n  }\n}\n\nfragment StatisticsWidget on Event {\n  id\n  status\n  homeCompetitor\n  awayCompetitor\n  timeline {\n    id\n  }\n  ...StatisticsWidgetTimeline\n  insights {\n    homePosition\n    awayPosition\n    venue\n    referee\n    round\n    stats {\n      key\n      home\n      away\n    }\n    homeRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    awayRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    headToHead {\n      outcome\n      ...StatisticsWidgetPastMatch\n    }\n  }\n}\n\nfragment StatisticsWidgetIncident on MatchIncident {\n  type\n  side\n  minute\n  addedTime\n  scorer\n  detail\n  penalty\n  outcome\n  cancelled\n  homeScore\n  awayScore\n}\n\nfragment StatisticsWidgetPastMatch on PastMatch {\n  homeName\n  awayName\n  homeScore\n  awayScore\n  competition\n  startTime\n  outcome\n}\n\nfragment StatisticsWidgetTimeline on Event {\n  homeCompetitor\n  awayCompetitor\n  timeline {\n    id\n    ...StatisticsWidgetIncident\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "0ac2c4ceab42994396616327e5c313c9";
+(node as any).hash = "5ce6bc3cdceacccf13de4102e0ebc66e";
 
 export default node;

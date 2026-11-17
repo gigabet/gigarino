@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<56d43ea3a164765cea308bff2cf458c6>>
+ * @generated SignedSource<<eda4df6bc1589139cb3731e9e808ade3>>
  * @lightSyntaxTransform
  */
 
@@ -43,14 +43,14 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "homeName",
+  "name": "id",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "awayName",
+  "name": "outcome",
   "storageKey": null
 },
 v4 = {
@@ -71,31 +71,38 @@ v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "competition",
+  "name": "homeName",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "startTime",
+  "name": "awayName",
   "storageKey": null
 },
 v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "outcome",
+  "name": "competition",
   "storageKey": null
 },
-v9 = [
-  (v2/*:: as any*/),
-  (v3/*:: as any*/),
-  (v4/*:: as any*/),
-  (v5/*:: as any*/),
+v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "startTime",
+  "storageKey": null
+},
+v10 = [
   (v6/*:: as any*/),
   (v7/*:: as any*/),
-  (v8/*:: as any*/)
+  (v4/*:: as any*/),
+  (v5/*:: as any*/),
+  (v8/*:: as any*/),
+  (v9/*:: as any*/),
+  (v3/*:: as any*/)
 ];
 return {
   "fragment": {
@@ -163,18 +170,83 @@ return {
             "name": "awayCompetitor",
             "storageKey": null
           },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "id",
-            "storageKey": null
-          },
+          (v2/*:: as any*/),
           {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
             "name": "status",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "MatchIncident",
+            "kind": "LinkedField",
+            "name": "timeline",
+            "plural": true,
+            "selections": [
+              (v2/*:: as any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "type",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "side",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "minute",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "addedTime",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "scorer",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "detail",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "penalty",
+                "storageKey": null
+              },
+              (v3/*:: as any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "cancelled",
+                "storageKey": null
+              },
+              (v4/*:: as any*/),
+              (v5/*:: as any*/)
+            ],
             "storageKey": null
           },
           {
@@ -259,7 +331,7 @@ return {
                 "kind": "LinkedField",
                 "name": "homeRecent",
                 "plural": true,
-                "selections": (v9/*:: as any*/),
+                "selections": (v10/*:: as any*/),
                 "storageKey": null
               },
               {
@@ -269,7 +341,7 @@ return {
                 "kind": "LinkedField",
                 "name": "awayRecent",
                 "plural": true,
-                "selections": (v9/*:: as any*/),
+                "selections": (v10/*:: as any*/),
                 "storageKey": null
               },
               {
@@ -280,13 +352,13 @@ return {
                 "name": "headToHead",
                 "plural": true,
                 "selections": [
-                  (v8/*:: as any*/),
-                  (v2/*:: as any*/),
                   (v3/*:: as any*/),
+                  (v6/*:: as any*/),
+                  (v7/*:: as any*/),
                   (v4/*:: as any*/),
                   (v5/*:: as any*/),
-                  (v6/*:: as any*/),
-                  (v7/*:: as any*/)
+                  (v8/*:: as any*/),
+                  (v9/*:: as any*/)
                 ],
                 "storageKey": null
               }
@@ -299,12 +371,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "386a4f4a5aad0a4ba3564980812b276d",
+    "cacheID": "60ffe72e4164739c80e5437cf23b385a",
     "id": null,
     "metadata": {},
     "name": "PageStatsQuery",
     "operationKind": "query",
-    "text": "query PageStatsQuery(\n  $id: ID!\n) {\n  event(id: $id) {\n    ...PageStatsView\n    id\n  }\n}\n\nfragment PageStatsView on Event {\n  homeCompetitor\n  awayCompetitor\n  ...StatisticsWidget\n}\n\nfragment StatisticsWidget on Event {\n  id\n  status\n  homeCompetitor\n  awayCompetitor\n  insights {\n    homePosition\n    awayPosition\n    venue\n    referee\n    round\n    stats {\n      key\n      home\n      away\n    }\n    homeRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    awayRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    headToHead {\n      outcome\n      ...StatisticsWidgetPastMatch\n    }\n  }\n}\n\nfragment StatisticsWidgetPastMatch on PastMatch {\n  homeName\n  awayName\n  homeScore\n  awayScore\n  competition\n  startTime\n  outcome\n}\n"
+    "text": "query PageStatsQuery(\n  $id: ID!\n) {\n  event(id: $id) {\n    ...PageStatsView\n    id\n  }\n}\n\nfragment PageStatsView on Event {\n  homeCompetitor\n  awayCompetitor\n  ...StatisticsWidget\n}\n\nfragment StatisticsWidget on Event {\n  id\n  status\n  homeCompetitor\n  awayCompetitor\n  timeline {\n    id\n  }\n  ...StatisticsWidgetTimeline\n  insights {\n    homePosition\n    awayPosition\n    venue\n    referee\n    round\n    stats {\n      key\n      home\n      away\n    }\n    homeRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    awayRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    headToHead {\n      outcome\n      ...StatisticsWidgetPastMatch\n    }\n  }\n}\n\nfragment StatisticsWidgetIncident on MatchIncident {\n  type\n  side\n  minute\n  addedTime\n  scorer\n  detail\n  penalty\n  outcome\n  cancelled\n  homeScore\n  awayScore\n}\n\nfragment StatisticsWidgetPastMatch on PastMatch {\n  homeName\n  awayName\n  homeScore\n  awayScore\n  competition\n  startTime\n  outcome\n}\n\nfragment StatisticsWidgetTimeline on Event {\n  homeCompetitor\n  awayCompetitor\n  timeline {\n    id\n    ...StatisticsWidgetIncident\n  }\n}\n"
   }
 };
 })();
