@@ -391,6 +391,11 @@ type Event implements Node {
   pointScore: PointScore
 
   """
+  Football: red cards so far, from the live feed (pushed with the score). Null when not live, for other sports, or when the feed does not say.
+  """
+  redCards: RedCards
+
+  """
   Who is serving (tennis). Null when not live or for other sports.
   """
   serving: Side
@@ -410,6 +415,11 @@ type Event implements Node {
   Lifecycle state. SCHEDULED together with isLive = true means the match is on the in-play list but has not kicked off yet: show "Starting soon", not a running clock.
   """
   status: EventStatus!
+
+  """
+  Goals, red cards and penalties so far, in match order (undated entries first). Football and e-soccer, from the live feed; empty for other sports and for matches it never covered.
+  """
+  timeline: [MatchIncident!]!
   tournament: Tournament!
   tradingStatus: TradingStatus!
 }
@@ -667,6 +677,70 @@ enum MarketStatus {
 }
 
 """
+One timeline entry, from the live feed. Football and e-soccer; pushed with the score on `eventStateUpdated`.
+"""
+type MatchIncident {
+  """
+  Stoppage minutes: 45+2 = minute 45, addedTime 2.
+  """
+  addedTime: Int
+  awayScore: Int
+
+  """
+  Disallowed goal (VAR, correction) or rescinded card. Kept so the change is visible; show it struck through or hide it.
+  """
+  cancelled: Boolean!
+
+  """
+  GOAL: how, as the provider writes it, e.g. "Header (Assist: Gomes)".
+  """
+  detail: String
+
+  """
+  GOAL: score after it. Null when the goal is undated.
+  """
+  homeScore: Int
+  id: ID!
+
+  """
+  Match minute, as shown: 23 = 23'. Null when it happened while the feed was not watching (matched mid-game, reconnect) - show the entry without a time.
+  """
+  minute: Int
+
+  """
+  When the feed reported it.
+  """
+  occurredAt: DateTimeISO!
+
+  """
+  PENALTY: null while being taken or unknown.
+  """
+  outcome: PenaltyOutcome
+
+  """
+  GOAL: scored from a penalty.
+  """
+  penalty: Boolean!
+  period: MatchPeriod
+
+  """
+  GOAL: who scored, from the official timeline (BetsAPI). Null until matched, or when the provider names nobody.
+  """
+  scorer: String
+  side: Side!
+  type: MatchIncidentType!
+}
+
+"""
+Kind of timeline entry.
+"""
+enum MatchIncidentType {
+  GOAL
+  PENALTY
+  RED_CARD
+}
+
+"""
 Statistics-widget data for an event: form, head-to-head, positions and match stats.
 """
 type MatchInsights {
@@ -759,9 +833,9 @@ type Mutation {
   acknowledgeResettlements(ticketIds: [ID!]): [Ticket!]!
 
   """
-  Sell an open ticket back to the book at the current quote.
+  Sell an open ticket back to the book at the current quote. With `expectedAmount` (the quote shown) it pays that amount, or refuses with PRICE_CHANGED when the value has dropped below it. A ticket with an in-play leg waits a few seconds and is refused (LIVE_STATE_CHANGED) if a score changes meanwhile.
   """
-  cashout(ticketId: ID!): CashoutPayload!
+  cashout(expectedAmount: Decimal, ticketId: ID!): CashoutPayload!
 
   """
   Place a bet. Business rejections (price change, limits, insufficient funds) come back typed on `rejection`; only transport/auth failures surface as GraphQL errors.
@@ -896,6 +970,11 @@ type PastMatch {
   """
   outcome: MatchOutcome
   startTime: DateTimeISO!
+}
+
+enum PenaltyOutcome {
+  MISSED
+  SCORED
 }
 
 """
@@ -1079,6 +1158,11 @@ type Query {
   node(id: ID!): Node
 
   """
+  The server's clock now. Correct the device clock with offset = serverTime + roundTrip / 2 - Date.now() (take the fastest of a few calls; refresh on wake).
+  """
+  serverTime: DateTimeISO!
+
+  """
   Fetch one sport by stable `key` (`football`) or by global `id`. Provide one.
   """
   sport(id: ID, key: String): Sport
@@ -1107,6 +1191,14 @@ type Query {
   How many of the caller's tickets were corrected since last acknowledged - the resettlement notification badge. Null with an UNAUTHENTICATED error when the session is missing or expired.
   """
   unseenResettlementCount: Int
+}
+
+"""
+Red cards shown to each side so far.
+"""
+type RedCards {
+  away: Int!
+  home: Int!
 }
 
 """
@@ -1201,7 +1293,7 @@ type Subscription {
   eventStateUpdated(eventIds: [ID!]!): EventStateUpdate!
 
   """
-  Pushes one of the caller's tickets when it settles or an operator corrects it (reason RESETTLED), so bet history updates in place and the client can notify the player.
+  Pushes one of the caller's tickets when it settles or an operator corrects it (reason RESETTLED), so bet history updates in place and the client can notify the player. Ends with an UNAUTHENTICATED error (then complete) once the session ends - logout, inactivity expiry or a blocked account - checked before each push and every minute.
   """
   myTicketUpdated: TicketUpdate!
 
