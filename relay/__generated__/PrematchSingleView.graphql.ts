@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c85cbdef4c287a3e36a282f18c676454>>
+ * @generated SignedSource<<1367b627060e78fdd511c94c7a336437>>
  * @lightSyntaxTransform
  */
 
@@ -15,7 +15,7 @@ export type PrematchSingleView$data = {
   readonly homeCompetitor: string;
   readonly homeImageUrl: string | null | undefined;
   readonly startTime: string;
-  readonly " $fragmentSpreads": FragmentRefs<"EventLiveState" | "MarketGroups" | "PrematchSingleHeader" | "StatisticsWidget">;
+  readonly " $fragmentSpreads": FragmentRefs<"EventLiveState" | "MarketGroups" | "MatchTracker" | "PrematchSingleHeader" | "StatisticsWidget">;
   readonly " $fragmentType": "PrematchSingleView";
 };
 export type PrematchSingleView$key = {
@@ -75,6 +75,11 @@ const node: ReaderFragment = {
       "name": "EventLiveState"
     },
     {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "MatchTracker"
+    },
+    {
       "kind": "Defer",
       "selections": [
         {
@@ -99,6 +104,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "269f49c9697ef0945d0aa05d68c70c02";
+(node as any).hash = "e09a67f7a1fe19ecf9ae7a116f2a2742";
 
 export default node;

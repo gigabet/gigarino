@@ -85,6 +85,7 @@ function TrackerFrame(props: { matchId: string; className?: string }) {
         style={{ height }}
         className='block w-full overflow-hidden border-0 transition-[height] duration-200'
         loading='lazy'
+        scrolling='no'
       />
     </div>
   )

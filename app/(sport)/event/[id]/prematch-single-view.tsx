@@ -8,6 +8,7 @@ import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 're
 import { EventHeaderRow } from '@/components/event-header-row'
 import { FavouriteButton } from '@/components/favourite-button'
 import MarketGroups, { MarketGroupsSkeleton } from '@/components/market-groups'
+import { MatchTracker } from '@/components/match-tracker'
 import { SportIcon } from '@/components/sport-icon'
 import StatisticsWidget, { StatisticsWidgetSkeleton } from '@/components/statistics-widget'
 import { TeamBadge } from '@/components/team-badge'
@@ -37,6 +38,7 @@ export default function PrematchSingleView(props: {
         startTime
         ...PrematchSingleHeader
         ...EventLiveState
+        ...MatchTracker
         ...StatisticsWidget @defer
         ...MarketGroups @defer
       }
@@ -71,6 +73,11 @@ export default function PrematchSingleView(props: {
           />
         </div>
       </section>
+
+      <MatchTracker
+        event={data}
+        className='overflow-hidden rounded-2xl border border-white/5 bg-black/20'
+      />
 
       <Suspense fallback={<StatisticsWidgetSkeleton />}>
         <StatisticsWidget event={data} />
