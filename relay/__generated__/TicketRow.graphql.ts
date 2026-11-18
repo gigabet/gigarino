@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e8d40b2f7e0807ba708e04f4f8e429b0>>
+ * @generated SignedSource<<00587c004c8c3fda477488a900f1b8a8>>
  * @lightSyntaxTransform
  */
 
@@ -16,7 +16,6 @@ export type TicketRow$data = {
   readonly createdAt: string;
   readonly currency: string;
   readonly effectiveOdds: any;
-  readonly id: string;
   readonly items: ReadonlyArray<{
     readonly eventName: string;
     readonly marketName: string;
@@ -41,13 +40,6 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "TicketRow",
   "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
     {
       "alias": null,
       "args": null,
@@ -155,6 +147,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "5962a37cb438846ad10346fab95d6be5";
+(node as any).hash = "fa8283800308eca0fb5b9401ea4145e5";
 
 export default node;

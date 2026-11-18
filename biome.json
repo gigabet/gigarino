@@ -14,7 +14,8 @@
       "!dist",
       "!build",
       "!**/__generated__",
-      "!**/*.graphql.ts"
+      "!**/*.graphql.ts",
+      "!**/generated"
     ]
   },
   "formatter": {

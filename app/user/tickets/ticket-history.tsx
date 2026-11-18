@@ -220,7 +220,7 @@ function TicketHistoryContent(props: {
               key={ticket.id}
               ticket={ticket}
               selected={ticket.id === selectedId}
-              onSelect={() => select(ticket.id)}
+              onSelectAction={() => select(ticket.id)}
             />
           ))}
         </div>
@@ -324,7 +324,10 @@ function TicketDetailsPanel(props: {
 
   const t = useT()
   // the panel only exists while the player is looking at this ticket
-  useAcknowledgeCorrections(data, true)
+  useAcknowledgeCorrections(
+    { id: data.id, resettled: data.resettled, resettlementSeen: data.resettlementSeen },
+    true
+  )
 
   return (
     <div className='flex h-full min-h-0 flex-1 flex-col'>

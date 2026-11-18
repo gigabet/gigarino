@@ -75,9 +75,9 @@ const CORRECTION_LABEL: Record<string, string> = {
  * Items are frozen at placement and only carry the generic outcome name ("Home", "Away",
  * "Home or Draw", "Home +1.5"), so the team names come from the "Home vs Away" event name.
  */
-export function selectionLabel(item: { outcomeName: string; eventName: string }) {
-  const [home, away] = item.eventName.split(' vs ')
-  return item.outcomeName.replace(/\b(home|away)\b/gi, (match, side: string) => {
+export function selectionLabel(outcomeName: string, eventName: string) {
+  const [home, away] = eventName.split(' vs ')
+  return outcomeName.replace(/\b(home|away)\b/gi, (match, side: string) => {
     const team = side.toLowerCase() === 'home' ? home : away
     return team || match
   })
@@ -168,7 +168,10 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
 
   const [expanded, setExpanded] = useState(false)
   const t = useT()
-  useAcknowledgeCorrections(data, expanded)
+  useAcknowledgeCorrections(
+    { id: data.id, resettled: data.resettled, resettlementSeen: data.resettlementSeen },
+    expanded
+  )
   const first = data.items[0]
 
   return (
@@ -192,7 +195,8 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
               </span>
             </div>
             <p className='text-secondary mt-1 truncate text-xs'>
-              {first && `${selectionLabel(first)} · ${first.eventName}`}
+              {first &&
+                `${selectionLabel(first.outcomeName, first.eventName)} · ${first.eventName}`}
               {data.items.length > 1 && ` ${t('+{n} more', { n: data.items.length - 1 })}`}
             </p>
           </div>
@@ -291,7 +295,7 @@ export function TicketCardDetails(props: {
                 )}
                 <div className='min-w-0 space-y-0.5'>
                   <p className='truncate text-sm font-medium text-white/90'>
-                    {selectionLabel(item)}
+                    {selectionLabel(item.outcomeName, item.eventName)}
                   </p>
                   <p className='text-secondary'>
                     {item.marketName} · {item.eventName}

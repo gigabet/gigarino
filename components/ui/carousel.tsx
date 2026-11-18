@@ -112,7 +112,6 @@ function Carousel({
         canScrollNext,
       }}
     >
-      {/** biome-ignore lint/a11y/useSemanticElements: already changed */}
       <section
         onKeyDownCapture={handleKeyDown}
         className={cn('relative', className)}
@@ -219,4 +218,4 @@ function CarouselNext({
   )
 }
 
-export { type CarouselApi, Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext }
+export { Carousel, type CarouselApi, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious }

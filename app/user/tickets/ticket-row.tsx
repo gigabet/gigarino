@@ -21,12 +21,11 @@ export const TICKET_GRID =
 export default function TicketRow(props: {
   ticket: TicketRow$key
   selected: boolean
-  onSelect: () => void
+  onSelectAction: () => void
 }) {
   const data = useFragment(
     graphql`
       fragment TicketRow on Ticket {
-        id
         betType
         stake
         effectiveOdds
@@ -61,7 +60,7 @@ export default function TicketRow(props: {
   return (
     <button
       type='button'
-      onClick={props.onSelect}
+      onClick={props.onSelectAction}
       aria-pressed={props.selected}
       className={cn(
         TICKET_GRID,
@@ -93,7 +92,7 @@ export default function TicketRow(props: {
         {first && (
           <>
             <span className='block truncate text-base font-semibold text-white @4xl:text-sm @4xl:font-medium'>
-              {selectionLabel(first)}
+              {selectionLabel(first.outcomeName, first.eventName)}
               {more > 0 && (
                 <span className='text-secondary ml-1.5 text-xs font-normal'>
                   {t('+{n} more', { n: more })}
