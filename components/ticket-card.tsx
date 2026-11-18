@@ -19,12 +19,12 @@ import { useT } from '@/context/providers'
 import { unseenResettlementsAtom } from '@/context/tickets'
 import { tKey } from '@/i18n/tKey'
 import { cn, formatBalance } from '@/lib/utils'
-import type { TicketCard$key } from '@/relay/__generated__/TicketCard.graphql'
-import type { TicketCardDetails$key } from '@/relay/__generated__/TicketCardDetails.graphql'
+import type { TicketCard$data, TicketCard$key } from '@/relay/__generated__/TicketCard.graphql'
 import type { TicketCardAcknowledgeMutation } from '@/relay/__generated__/TicketCardAcknowledgeMutation.graphql'
 import type { TicketCardCashoutMutation } from '@/relay/__generated__/TicketCardCashoutMutation.graphql'
 import type { TicketCardCashoutQuoteQuery } from '@/relay/__generated__/TicketCardCashoutQuoteQuery.graphql'
 import TicketCardCashoutQuoteQueryNode from '@/relay/__generated__/TicketCardCashoutQuoteQuery.graphql'
+import type { TicketCardDetails$key } from '@/relay/__generated__/TicketCardDetails.graphql'
 import type { BetItemStatus, TicketStatus } from '@/types'
 
 const CASHOUT_ELIGIBLE = new Set<TicketStatus>(['ACCEPTED', 'PARTIALLY_CASHED_OUT'])
@@ -71,6 +71,28 @@ const CORRECTION_LABEL: Record<string, string> = {
   RESULT_CORRECTION: tKey('Result corrected'),
 }
 
+/**
+ * Items are frozen at placement and only carry the generic outcome name ("Home", "Away",
+ * "Home or Draw", "Home +1.5"), so the team names come from the "Home vs Away" event name.
+ */
+export function selectionLabel(item: { outcomeName: string; eventName: string }) {
+  const [home, away] = item.eventName.split(' vs ')
+  return item.outcomeName.replace(/\b(home|away)\b/gi, (match, side: string) => {
+    const team = side.toLowerCase() === 'home' ? home : away
+    return team || match
+  })
+}
+
+export function betTypeLabel(
+  t: ReturnType<typeof useT>,
+  betType: TicketCard$data['betType'],
+  itemCount: number
+) {
+  if (betType === 'SINGLE') return t('Single')
+  if (betType === 'SYSTEM') return t('System')
+  return t('{n}-fold Combi', { n: itemCount })
+}
+
 /** Takes the raw status verbatim: it is pure formatting, so it has no fragment. */
 export function TicketStatusPill(props: { status: string }) {
   const t = useT()
@@ -81,7 +103,10 @@ export function TicketStatusPill(props: { status: string }) {
 
   return (
     <span
-      className={cn('rounded-full px-2 py-0.5 text-[0.65rem] font-bold uppercase', meta.className)}
+      className={cn(
+        'truncate rounded-full px-2 py-0.5 text-[0.65rem] font-bold uppercase',
+        meta.className
+      )}
     >
       {t(meta.label)}
     </span>
@@ -132,6 +157,8 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
         items {
           # eslint-disable-next-line relay/unused-fields
           id
+          eventName
+          outcomeName
         }
         ...TicketCardDetails
       }
@@ -142,6 +169,7 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
   const [expanded, setExpanded] = useState(false)
   const t = useT()
   useAcknowledgeCorrections(data, expanded)
+  const first = data.items[0]
 
   return (
     <div className='rounded-xl border border-white/5 bg-black/20 p-3'>
@@ -160,17 +188,12 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
                 </span>
               )}
               <span className='text-secondary text-xs'>
-                {data.betType === 'SINGLE'
-                  ? t('Single')
-                  : data.betType === 'SYSTEM'
-                    ? t('System')
-                    : t('{n}-fold Combi', { n: data.items.length })}
+                {betTypeLabel(t, data.betType, data.items.length)}
               </span>
             </div>
             <p className='text-secondary mt-1 truncate text-xs'>
-              {data.items.length === 1
-                ? t('1 selection')
-                : t('{n} selections', { n: data.items.length })}
+              {first && `${selectionLabel(first)} · ${first.eventName}`}
+              {data.items.length > 1 && ` ${t('+{n} more', { n: data.items.length - 1 })}`}
             </p>
           </div>
           <div className='flex shrink-0 flex-col items-end'>
@@ -193,7 +216,7 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
 
       {expanded && (
         <div className='mt-3 border-t border-white/5 pt-3'>
-          <TicketCardDetails ticket={data} onCashedOut={props.action} />
+          <TicketCardDetails ticket={data} onCashedOutAction={props.action} />
         </div>
       )}
     </div>
@@ -203,7 +226,7 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
 /** Everything behind the summary line: selections, totals, corrections and cash out. */
 export function TicketCardDetails(props: {
   ticket: TicketCardDetails$key
-  onCashedOut?: () => void
+  onCashedOutAction?: () => void
 }) {
   const data = useFragment(
     graphql`
@@ -234,6 +257,12 @@ export function TicketCardDetails(props: {
           outcomeName
           priceAtAcceptance
           status
+          eventStartTime
+          inPlay
+          scoreAtBet {
+            home
+            away
+          }
         }
       }
     `,
@@ -242,37 +271,57 @@ export function TicketCardDetails(props: {
   const t = useT()
 
   return (
-    <div className='space-y-2'>
-      {data.items.map(item => {
-        const itemMeta = ITEM_STATUS_META[item.status as BetItemStatus]
-        return (
-          <div key={item.id} className='flex items-center justify-between gap-2 text-xs'>
-            <div className='flex min-w-0 items-center gap-2'>
-              {item.status !== 'PENDING' && (
-                <span
-                  className={cn(
-                    'flex size-4 shrink-0 items-center justify-center rounded-full text-[0.6rem] font-bold',
-                    itemMeta.className
-                  )}
-                >
-                  {t(itemMeta.label)}
-                </span>
-              )}
-              <div className='min-w-0'>
-                <p className='truncate text-white/90'>{item.outcomeName}</p>
-                <p className='text-secondary truncate'>
-                  {item.marketName} · {item.eventName}
-                </p>
+    <div className='space-y-3'>
+      <div className='divide-y divide-white/5'>
+        {data.items.map(item => {
+          const itemMeta = ITEM_STATUS_META[item.status as BetItemStatus]
+          return (
+            <div key={item.id} className='flex items-start justify-between gap-3 py-2.5 text-xs'>
+              <div className='flex min-w-0 items-start gap-2'>
+                {item.status !== 'PENDING' && (
+                  <span
+                    className={cn(
+                      'mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full text-[0.6rem] font-bold',
+                      itemMeta.className
+                    )}
+                  >
+                    {t(itemMeta.label)}
+                  </span>
+                )}
+                <div className='min-w-0 space-y-0.5'>
+                  <p className='truncate text-sm font-medium text-white/90'>
+                    {selectionLabel(item)}
+                  </p>
+                  <p className='text-secondary'>
+                    {item.marketName} · {item.eventName}
+                  </p>
+                  <p className='text-secondary/80 flex flex-wrap items-center gap-x-2 text-[0.7rem]'>
+                    <span>{format(new Date(item.eventStartTime), 'dd MMM, HH:mm')}</span>
+                    {item.inPlay && (
+                      <span className='rounded bg-red-500/10 px-1 font-semibold text-red-400 uppercase'>
+                        {t('Live bet')}
+                      </span>
+                    )}
+                    {item.scoreAtBet && (
+                      <span>
+                        {t('Score at bet')}{' '}
+                        <span className='font-mono text-white/70'>
+                          {item.scoreAtBet.home}–{item.scoreAtBet.away}
+                        </span>
+                      </span>
+                    )}
+                  </p>
+                </div>
               </div>
+              <span className='shrink-0 font-mono text-white/70'>
+                {Number(item.priceAtAcceptance).toFixed(2)}
+              </span>
             </div>
-            <span className='shrink-0 font-mono text-white/70'>
-              {Number(item.priceAtAcceptance).toFixed(2)}
-            </span>
-          </div>
-        )
-      })}
+          )
+        })}
+      </div>
 
-      <div className='flex items-center justify-between border-t border-white/5 pt-2 text-xs'>
+      <div className='flex items-center justify-between border-t border-white/10 pt-3 text-xs'>
         <span className='text-secondary'>{t('Combined odds')}</span>
         <span className='font-mono text-white'>{Number(data.effectiveOdds).toFixed(2)}</span>
       </div>
@@ -337,7 +386,7 @@ export function TicketCardDetails(props: {
 
       {CASHOUT_ELIGIBLE.has(data.status as TicketStatus) && (
         <div className='pt-1'>
-          <CashoutButton ticketId={data.id} onCashedOut={props.onCashedOut} />
+          <CashoutButton ticketId={data.id} onCashedOut={props.onCashedOutAction} />
         </div>
       )}
     </div>

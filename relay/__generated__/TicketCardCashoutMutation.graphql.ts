@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1c91984ee7d7ee37e028ec8db8c0632b>>
+ * @generated SignedSource<<4da4fa1bc745350f91d6a38ea1bf9bb3>>
  * @lightSyntaxTransform
  */
 
@@ -214,14 +214,14 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "marketName",
+                    "name": "outcomeName",
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "outcomeName",
+                    "name": "marketName",
                     "storageKey": null
                   },
                   {
@@ -231,7 +231,46 @@ return {
                     "name": "priceAtAcceptance",
                     "storageKey": null
                   },
-                  (v6/*:: as any*/)
+                  (v6/*:: as any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "eventStartTime",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "inPlay",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "TicketItemScore",
+                    "kind": "LinkedField",
+                    "name": "scoreAtBet",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "home",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "away",
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  }
                 ],
                 "storageKey": null
               },
@@ -328,12 +367,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "0b47f41f479495772b44cd436545df0b",
+    "cacheID": "601fb15a99db42e98f0747181c6a1bad",
     "id": null,
     "metadata": {},
     "name": "TicketCardCashoutMutation",
     "operationKind": "mutation",
-    "text": "mutation TicketCardCashoutMutation(\n  $ticketId: ID!\n) {\n  cashout(ticketId: $ticketId) {\n    amount\n    rejectionCode\n    rejectionMessage\n    ticket {\n      id\n      status\n      ...TicketCard\n    }\n  }\n}\n\nfragment TicketCard on Ticket {\n  id\n  betType\n  stake\n  currency\n  status\n  createdAt\n  resettled\n  resettlementSeen\n  items {\n    id\n  }\n  ...TicketCardDetails\n}\n\nfragment TicketCardDetails on Ticket {\n  id\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  settledAt\n  resettled\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n  }\n}\n"
+    "text": "mutation TicketCardCashoutMutation(\n  $ticketId: ID!\n) {\n  cashout(ticketId: $ticketId) {\n    amount\n    rejectionCode\n    rejectionMessage\n    ticket {\n      id\n      status\n      ...TicketCard\n    }\n  }\n}\n\nfragment TicketCard on Ticket {\n  id\n  betType\n  stake\n  currency\n  status\n  createdAt\n  resettled\n  resettlementSeen\n  items {\n    id\n    eventName\n    outcomeName\n  }\n  ...TicketCardDetails\n}\n\nfragment TicketCardDetails on Ticket {\n  id\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  settledAt\n  resettled\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n    eventStartTime\n    inPlay\n    scoreAtBet {\n      home\n      away\n    }\n  }\n}\n"
   }
 };
 })();

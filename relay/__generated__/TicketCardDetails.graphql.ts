@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<367a112817cc80a7bca81baaa4b25569>>
+ * @generated SignedSource<<5580c805a2d4e9224a7b2e96f0c9590f>>
  * @lightSyntaxTransform
  */
 
@@ -29,10 +29,16 @@ export type TicketCardDetails$data = {
   readonly id: string;
   readonly items: ReadonlyArray<{
     readonly eventName: string;
+    readonly eventStartTime: string;
     readonly id: string;
+    readonly inPlay: boolean;
     readonly marketName: string;
     readonly outcomeName: string;
     readonly priceAtAcceptance: any;
+    readonly scoreAtBet: {
+      readonly away: number;
+      readonly home: number;
+    } | null | undefined;
     readonly status: BetItemStatus;
   }>;
   readonly payout: any | null | undefined;
@@ -217,7 +223,46 @@ return {
           "name": "priceAtAcceptance",
           "storageKey": null
         },
-        (v1/*:: as any*/)
+        (v1/*:: as any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "eventStartTime",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "inPlay",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "TicketItemScore",
+          "kind": "LinkedField",
+          "name": "scoreAtBet",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "home",
+              "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "away",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
       ],
       "storageKey": null
     }
@@ -227,6 +272,6 @@ return {
 };
 })();
 
-(node as any).hash = "90593af3d037eaa4b583e8d4bf019d10";
+(node as any).hash = "cc06132b0d6d2589b9928c27f0fb88d3";
 
 export default node;

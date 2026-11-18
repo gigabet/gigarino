@@ -1407,7 +1407,23 @@
     "de": "Ihr Wettschein ist leer",
     "tr": "Kuponunuz boş"
   },
+  "+{n} more": {
+    "de": "",
+    "tr": ""
+  },
   "Bet": {
+    "de": "",
+    "tr": ""
+  },
+  "Close": {
+    "de": "",
+    "tr": ""
+  },
+  "Its selections, score and payout show up here.": {
+    "de": "",
+    "tr": ""
+  },
+  "Live bet": {
     "de": "",
     "tr": ""
   },
@@ -1447,11 +1463,23 @@
     "de": "",
     "tr": ""
   },
+  "Score at bet": {
+    "de": "",
+    "tr": ""
+  },
   "Searching older tickets...": {
     "de": "",
     "tr": ""
   },
+  "Select a ticket": {
+    "de": "",
+    "tr": ""
+  },
   "Status": {
+    "de": "",
+    "tr": ""
+  },
+  "Ticket details": {
     "de": "",
     "tr": ""
   },

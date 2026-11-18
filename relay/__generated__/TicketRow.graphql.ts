@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3cefb328a54f8fc1c5433529f4cc81de>>
+ * @generated SignedSource<<e8d40b2f7e0807ba708e04f4f8e429b0>>
  * @lightSyntaxTransform
  */
 
@@ -28,7 +28,6 @@ export type TicketRow$data = {
   readonly resettlementSeen: boolean;
   readonly stake: any;
   readonly status: TicketStatus;
-  readonly " $fragmentSpreads": FragmentRefs<"TicketCardDetails">;
   readonly " $fragmentType": "TicketRow";
 };
 export type TicketRow$key = {
@@ -150,17 +149,12 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "TicketCardDetails"
     }
   ],
   "type": "Ticket",
   "abstractKey": null
 };
 
-(node as any).hash = "4c7caabbb7bbdd12c1462644efaf55ca";
+(node as any).hash = "5962a37cb438846ad10346fab95d6be5";
 
 export default node;

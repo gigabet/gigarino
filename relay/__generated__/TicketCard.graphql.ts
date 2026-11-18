@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fa144fe14a61e4b2e8fa5bdd7a615f5f>>
+ * @generated SignedSource<<813e94d406ed22393e8714b7721cce8d>>
  * @lightSyntaxTransform
  */
 
@@ -17,7 +17,9 @@ export type TicketCard$data = {
   readonly currency: string;
   readonly id: string;
   readonly items: ReadonlyArray<{
+    readonly eventName: string;
     readonly id: string;
+    readonly outcomeName: string;
   }>;
   readonly resettled: boolean;
   readonly resettlementSeen: boolean;
@@ -103,7 +105,21 @@ return {
       "name": "items",
       "plural": true,
       "selections": [
-        (v0/*:: as any*/)
+        (v0/*:: as any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "eventName",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "outcomeName",
+          "storageKey": null
+        }
       ],
       "storageKey": null
     },
@@ -118,6 +134,6 @@ return {
 };
 })();
 
-(node as any).hash = "4056be6aed6c6b0fea3c30dbf1137f93";
+(node as any).hash = "4a6f811822bd171b61289a9c179dbce2";
 
 export default node;

@@ -1,28 +1,41 @@
 'use client'
 
+import { format } from 'date-fns'
 import { useAtomValue } from 'jotai'
-import { Loader2Icon } from 'lucide-react'
+import { Loader2Icon, XIcon } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { Suspense, useEffect } from 'react'
+import { VisuallyHidden } from 'radix-ui'
+import { Suspense, useEffect, useState } from 'react'
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary'
 import { PiTicket } from 'react-icons/pi'
 import { useInView } from 'react-intersection-observer'
 import {
   graphql,
   type PreloadedQuery,
+  useFragment,
   usePaginationFragment,
   usePreloadedQuery,
   useQueryLoader,
 } from 'react-relay'
+import { Drawer } from 'vaul'
 import TicketRow, { TICKET_GRID } from '@/app/user/tickets/ticket-row'
 import { CountBadge } from '@/components/count-badge'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
+import {
+  betTypeLabel,
+  TicketCardDetails,
+  TicketStatusPill,
+  useAcknowledgeCorrections,
+} from '@/components/ticket-card'
+import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useScrollFade } from '@/context/hooks'
+import { useMediaQuery, useScrollFade } from '@/context/hooks'
 import { useT, useUser } from '@/context/providers'
+import { RailPortal } from '@/context/rail'
 import { unseenResettlementsAtom } from '@/context/tickets'
 import { tKey } from '@/i18n/tKey'
-import { cn, isAuthError } from '@/lib/utils'
+import { cn, formatBalance, isAuthError } from '@/lib/utils'
+import type { TicketHistoryDetails$key } from '@/relay/__generated__/TicketHistoryDetails.graphql'
 import type { TicketHistoryList$key } from '@/relay/__generated__/TicketHistoryList.graphql'
 import type { TicketHistoryListPaginationQuery } from '@/relay/__generated__/TicketHistoryListPaginationQuery.graphql'
 import type { TicketHistoryQuery } from '@/relay/__generated__/TicketHistoryQuery.graphql'
@@ -62,8 +75,7 @@ const FILTERS = {
 type Filter = keyof typeof FILTERS
 
 const FILTER_KEYS = Object.keys(FILTERS) as Filter[]
-const isFilter = (value: string | null): value is Filter =>
-  FILTER_KEYS.some(key => key === value)
+const isFilter = (value: string | null): value is Filter => FILTER_KEYS.some(key => key === value)
 
 export default function TicketHistory() {
   const searchParams = useSearchParams()
@@ -149,6 +161,7 @@ function TicketHistoryContent(props: {
               status
               resettled
               ...TicketRow
+              ...TicketHistoryDetails
             }
           }
         }
@@ -167,18 +180,31 @@ function TicketHistoryContent(props: {
 
   const t = useT()
 
+  // `open` is separate from `id` so the drawer can slide out while still showing its ticket
+  const [selection, setSelection] = useState<{ id: string; open: boolean } | null>(null)
+  const isXl = useMediaQuery('(min-width: 1280px)')
+  const isWiderThanMobile = useMediaQuery('(min-width: 640px)')
+
   const tickets = data.myTickets?.edges.map(e => e.node) ?? []
   const visible = tickets.filter(FILTERS[props.filter].match)
   const refreshAll = () => refetch({}, { fetchPolicy: 'network-only' })
 
+  const select = (id: string) =>
+    setSelection(cur => (cur?.id === id && cur.open ? { id, open: false } : { id, open: true }))
+  const close = () => setSelection(cur => cur && { ...cur, open: false })
+
+  // a ticket the current filter hides is no longer selected
+  const shown = visible.find(ticket => ticket.id === selection?.id) ?? null
+  const selectedId = selection?.open ? (shown?.id ?? null) : null
+
   return (
     <>
       {visible.length > 0 && (
-        <div className='overflow-hidden rounded-2xl border border-white/5 bg-black/20'>
+        <div className='@container flex flex-col gap-2'>
           <div
             className={cn(
               TICKET_GRID,
-              'text-secondary hidden border-b border-white/5 px-4 py-2.5 text-[0.65rem] font-semibold tracking-wider uppercase md:grid'
+              'text-secondary hidden px-4.25 pb-1 text-[0.65rem] font-semibold tracking-wider uppercase @4xl:grid'
             )}
           >
             <span>{t('Status')}</span>
@@ -189,11 +215,14 @@ function TicketHistoryContent(props: {
             <span className='text-right'>{t('Return')}</span>
             <span />
           </div>
-          <div className='divide-y divide-white/5'>
-            {visible.map(ticket => (
-              <TicketRow key={ticket.id} ticket={ticket} onCashedOut={refreshAll} />
-            ))}
-          </div>
+          {visible.map(ticket => (
+            <TicketRow
+              key={ticket.id}
+              ticket={ticket}
+              selected={ticket.id === selectedId}
+              onSelect={() => select(ticket.id)}
+            />
+          ))}
         </div>
       )}
 
@@ -208,7 +237,146 @@ function TicketHistoryContent(props: {
       )}
 
       {visible.length === 0 && !hasNext && <EmptyHistory filtered={props.filter !== 'all'} />}
+
+      {/* xl: a side rail that scrolls on its own. Below that the same panel slides in as a
+          drawer (bottom sheet on phones), so only one of the two is ever mounted. */}
+      {isXl ? (
+        <RailPortal>
+          {shown && selectedId ? (
+            <TicketDetailsPanel
+              key={shown.id}
+              ticket={shown}
+              onClose={close}
+              onCashedOut={refreshAll}
+            />
+          ) : (
+            <NoTicketSelected />
+          )}
+        </RailPortal>
+      ) : (
+        <Drawer.Root
+          open={selection?.open ?? false}
+          onOpenChange={open => {
+            if (!open) close()
+          }}
+          // unmount the ticket only once the exit animation is done, unless another was picked
+          onAnimationEnd={open => {
+            if (!open) setSelection(cur => (cur?.open ? cur : null))
+          }}
+          direction={isWiderThanMobile ? 'right' : 'bottom'}
+        >
+          <Drawer.Portal>
+            <Drawer.Overlay className='fixed inset-0 z-50 bg-black/50' />
+            <Drawer.Content
+              className={cn(
+                'bg-dark-200 fixed z-50 flex flex-col outline-none',
+                isWiderThanMobile
+                  ? 'inset-y-0 right-0 h-full w-full max-w-sm'
+                  : 'inset-x-0 bottom-0 max-h-[85dvh]'
+              )}
+              aria-describedby={undefined}
+            >
+              <VisuallyHidden.Root>
+                <Drawer.Title>{t('Ticket details')}</Drawer.Title>
+              </VisuallyHidden.Root>
+              {!isWiderThanMobile && (
+                <div className='mx-auto mt-3 h-1.5 w-10 shrink-0 rounded-full bg-white/20' />
+              )}
+              {shown && (
+                <TicketDetailsPanel
+                  key={shown.id}
+                  ticket={shown}
+                  onClose={close}
+                  onCashedOut={refreshAll}
+                />
+              )}
+            </Drawer.Content>
+          </Drawer.Portal>
+        </Drawer.Root>
+      )}
     </>
+  )
+}
+
+/** Header, then the details in their own scroll area, so long tickets never push the header away. */
+function TicketDetailsPanel(props: {
+  ticket: TicketHistoryDetails$key
+  onClose: () => void
+  onCashedOut: () => void
+}) {
+  const data = useFragment(
+    graphql`
+      fragment TicketHistoryDetails on Ticket {
+        id
+        betType
+        status
+        stake
+        currency
+        createdAt
+        resettled
+        resettlementSeen
+        items {
+          # eslint-disable-next-line relay/unused-fields
+          id
+        }
+        ...TicketCardDetails
+      }
+    `,
+    props.ticket
+  )
+
+  const t = useT()
+  // the panel only exists while the player is looking at this ticket
+  useAcknowledgeCorrections(data, true)
+
+  return (
+    <div className='flex h-full min-h-0 flex-1 flex-col'>
+      <div className='flex shrink-0 items-start justify-between gap-3 border-b border-white/5 px-4 py-3'>
+        <div className='min-w-0 space-y-1'>
+          <div className='flex items-center gap-2'>
+            <TicketStatusPill status={data.status} />
+            <span className='text-secondary text-xs'>
+              {betTypeLabel(t, data.betType, data.items.length)}
+            </span>
+          </div>
+          <p className='text-secondary text-[0.7rem]'>
+            {t('Placed')} {format(new Date(data.createdAt), 'dd MMM, HH:mm')} · {t('Stake')}{' '}
+            <span className='font-mono text-white/80'>
+              {formatBalance(Number(data.stake), data.currency)}
+            </span>
+          </p>
+        </div>
+        <Button
+          type='button'
+          variant='ghost'
+          size='icon-sm'
+          className='rounded-full'
+          aria-label={t('Close')}
+          onClick={props.onClose}
+        >
+          <XIcon className='size-4' />
+        </Button>
+      </div>
+      <div className='min-h-0 flex-1 overflow-y-auto px-4 py-2'>
+        <TicketCardDetails ticket={data} onCashedOutAction={props.onCashedOut} />
+      </div>
+    </div>
+  )
+}
+
+function NoTicketSelected() {
+  const t = useT()
+
+  return (
+    <div className='text-secondary flex h-full flex-col items-center justify-center gap-3 px-6 text-center'>
+      <div className='bg-dark flex size-14 items-center justify-center rounded-full border border-white/5'>
+        <PiTicket className='size-6 opacity-40' />
+      </div>
+      <p className='text-sm'>{t('Select a ticket')}</p>
+      <p className='max-w-50 text-xs opacity-60'>
+        {t('Its selections, score and payout show up here.')}
+      </p>
+    </div>
   )
 }
 
@@ -251,10 +419,10 @@ function EmptyHistory(props: { filtered: boolean }) {
 
 function TicketHistorySkeleton() {
   return (
-    <div className='divide-y divide-white/5 overflow-hidden rounded-2xl border border-white/5 bg-black/20'>
+    <div className='flex flex-col gap-2'>
       {Array.from({ length: 6 }).map((_, i) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: identical
-        <div key={i} className='p-4'>
+        <div key={i} className='rounded-xl border border-white/5 bg-black/20 p-4'>
           <Skeleton className='h-9 w-full' />
         </div>
       ))}

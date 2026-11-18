@@ -7,7 +7,7 @@ import { createPortal } from 'react-dom'
 const railElAtom = atom<HTMLElement | null>(null)
 
 // routes (and their subroutes) that show the rail; the (sport) group is assumed to be "/" and "/sport/*"
-const RAIL_PREFIXES = ['/event', '/live']
+const RAIL_PREFIXES = ['/event', '/live', '/user/tickets']
 const wantsRail = (pathname: string) =>
   pathname === '/' || RAIL_PREFIXES.some(p => pathname === p || pathname.startsWith(`${p}/`))
 
@@ -18,7 +18,10 @@ const wantsRail = (pathname: string) =>
  */
 export function RailSlot(props: { skeleton: React.ReactNode }) {
   const setEl = useSetAtom(railElAtom)
-  const reserved = wantsRail(usePathname())
+  const pathname = usePathname()
+  const reserved = wantsRail(pathname)
+  // the skeleton is the betslip's; the tickets page fills the rail with its own content
+  const skeleton = pathname.startsWith('/user') ? null : props.skeleton
 
   return (
     <aside
@@ -31,9 +34,7 @@ export function RailSlot(props: { skeleton: React.ReactNode }) {
       {/* portal target is its own node, so React never mixes portal and regular children.
           `contents` keeps it out of layout, so the sticky rail content is sized by the aside. */}
       <div ref={setEl} className='contents' />
-      <div className='contents group-has-data-rail-content:hidden'>
-        {reserved && props.skeleton}
-      </div>
+      <div className='contents group-has-data-rail-content:hidden'>{reserved && skeleton}</div>
     </aside>
   )
 }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<92a340dcc53ee177bb147171f9179b8d>>
+ * @generated SignedSource<<7aeeec5febcc54dd8399fe0a30684624>>
  * @lightSyntaxTransform
  */
 
@@ -17,7 +17,7 @@ export type TicketHistoryList$data = {
         readonly id: string;
         readonly resettled: boolean;
         readonly status: TicketStatus;
-        readonly " $fragmentSpreads": FragmentRefs<"TicketRow">;
+        readonly " $fragmentSpreads": FragmentRefs<"TicketHistoryDetails" | "TicketRow">;
       };
     }>;
   } | null | undefined;
@@ -123,6 +123,11 @@ return {
                   "name": "TicketRow"
                 },
                 {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "TicketHistoryDetails"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
@@ -176,6 +181,6 @@ return {
 };
 })();
 
-(node as any).hash = "3515c11b601212fc61dd96d0f1ce6ef1";
+(node as any).hash = "139e1048f14dcb09682fe4ae7be5682e";
 
 export default node;

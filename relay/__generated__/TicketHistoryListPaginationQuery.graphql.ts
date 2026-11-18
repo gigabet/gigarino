@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b01613adcda1778cf310222616040582>>
+ * @generated SignedSource<<caa3606290d2e99d2cf350ec6a7e499e>>
  * @lightSyntaxTransform
  */
 
@@ -209,7 +209,46 @@ return {
                         "name": "priceAtAcceptance",
                         "storageKey": null
                       },
-                      (v3/*:: as any*/)
+                      (v3/*:: as any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "eventStartTime",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "inPlay",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "TicketItemScore",
+                        "kind": "LinkedField",
+                        "name": "scoreAtBet",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "home",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "away",
+                            "storageKey": null
+                          }
+                        ],
+                        "storageKey": null
+                      }
                     ],
                     "storageKey": null
                   },
@@ -342,16 +381,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "b9b19af5e16ab9ec1dadb3f4431e5a8f",
+    "cacheID": "ebc4ea70686aaa128d8dccf84f6af500",
     "id": null,
     "metadata": {},
     "name": "TicketHistoryListPaginationQuery",
     "operationKind": "query",
-    "text": "query TicketHistoryListPaginationQuery(\n  $after: String\n  $first: Int = 20\n) {\n  ...TicketHistoryList_2HEEH6\n}\n\nfragment TicketCardDetails on Ticket {\n  id\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  settledAt\n  resettled\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n  }\n}\n\nfragment TicketHistoryList_2HEEH6 on Query {\n  myTickets(first: $first, after: $after) {\n    edges {\n      node {\n        id\n        status\n        resettled\n        ...TicketRow\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment TicketRow on Ticket {\n  id\n  betType\n  stake\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  createdAt\n  resettled\n  resettlementSeen\n  items {\n    eventName\n    marketName\n    outcomeName\n    id\n  }\n  ...TicketCardDetails\n}\n"
+    "text": "query TicketHistoryListPaginationQuery(\n  $after: String\n  $first: Int = 20\n) {\n  ...TicketHistoryList_2HEEH6\n}\n\nfragment TicketCardDetails on Ticket {\n  id\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  settledAt\n  resettled\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n    eventStartTime\n    inPlay\n    scoreAtBet {\n      home\n      away\n    }\n  }\n}\n\nfragment TicketHistoryDetails on Ticket {\n  id\n  betType\n  status\n  stake\n  currency\n  createdAt\n  resettled\n  resettlementSeen\n  items {\n    id\n  }\n  ...TicketCardDetails\n}\n\nfragment TicketHistoryList_2HEEH6 on Query {\n  myTickets(first: $first, after: $after) {\n    edges {\n      node {\n        id\n        status\n        resettled\n        ...TicketRow\n        ...TicketHistoryDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment TicketRow on Ticket {\n  id\n  betType\n  stake\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  createdAt\n  resettled\n  resettlementSeen\n  items {\n    eventName\n    marketName\n    outcomeName\n    id\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "3515c11b601212fc61dd96d0f1ce6ef1";
+(node as any).hash = "139e1048f14dcb09682fe4ae7be5682e";
 
 export default node;
