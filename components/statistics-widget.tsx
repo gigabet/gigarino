@@ -64,7 +64,7 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key; b
         timeline {
           id
         }
-        ...StatisticsWidgetTimeline @defer
+        ...StatisticsWidgetTimeline
         insights {
           homePosition
           awayPosition
@@ -77,14 +77,14 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key; b
             away
           }
           homeRecent {
-            ...StatisticsWidgetPastMatch @defer
+            ...StatisticsWidgetPastMatch
           }
           awayRecent {
-            ...StatisticsWidgetPastMatch @defer
+            ...StatisticsWidgetPastMatch
           }
           headToHead {
             outcome
-            ...StatisticsWidgetPastMatch @defer
+            ...StatisticsWidgetPastMatch
           }
         }
       }
@@ -173,7 +173,7 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key; b
       {tabs.length > 0 && (
         <Tabs.Root defaultValue={defaultTab} className='w-full gap-4'>
           <Tabs.List
-            className='h-auto w-full scrollbar-none justify-start gap-2 overflow-x-auto bg-transparent p-0'
+            className='h-auto w-fit max-w-full scrollbar-none justify-start gap-2 overflow-x-auto bg-transparent p-0'
             ref={fade.ref}
             style={fade.style}
           >
