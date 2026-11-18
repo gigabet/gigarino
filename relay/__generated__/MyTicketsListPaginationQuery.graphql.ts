@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c9c86c2a88c7a666d24fd0d44fba03a9>>
+ * @generated SignedSource<<b7af65c7e50c3891727ce52cebc386b8>>
  * @lightSyntaxTransform
  */
 
@@ -381,12 +381,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "79ac4c7e886e0dc419e1963ba3a1bd73",
+    "cacheID": "e7878407883bb3bbc2b25de69ea18ad9",
     "id": null,
     "metadata": {},
     "name": "MyTicketsListPaginationQuery",
     "operationKind": "query",
-    "text": "query MyTicketsListPaginationQuery(\n  $after: String\n  $first: Int = 10\n) {\n  ...MyTicketsList_2HEEH6\n}\n\nfragment MyTicketsList_2HEEH6 on Query {\n  myTickets(first: $first, after: $after) {\n    edges {\n      node {\n        id\n        status\n        ...TicketCard\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment TicketCard on Ticket {\n  id\n  betType\n  stake\n  currency\n  status\n  createdAt\n  resettled\n  resettlementSeen\n  items {\n    id\n    eventName\n    outcomeName\n  }\n  ...TicketCardDetails\n}\n\nfragment TicketCardDetails on Ticket {\n  id\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  settledAt\n  resettled\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n    eventStartTime\n    inPlay\n    scoreAtBet {\n      home\n      away\n    }\n  }\n}\n"
+    "text": "query MyTicketsListPaginationQuery(\n  $after: String\n  $first: Int = 10\n) {\n  ...MyTicketsList_2HEEH6\n}\n\nfragment MyTicketsList_2HEEH6 on Query {\n  myTickets(first: $first, after: $after) {\n    edges {\n      node {\n        id\n        status\n        ...TicketCard\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment TicketCard on Ticket {\n  id\n  betType\n  stake\n  currency\n  status\n  createdAt\n  resettled\n  resettlementSeen\n  items {\n    id\n    eventName\n    outcomeName\n  }\n  ...TicketCardDetails\n}\n\nfragment TicketCardDetails on Ticket {\n  id\n  stake\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  settledAt\n  resettled\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n    eventStartTime\n    inPlay\n    scoreAtBet {\n      home\n      away\n    }\n  }\n}\n"
   }
 };
 })();

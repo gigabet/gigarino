@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<86be56eaf1bfb0fbb9ea948a3276ba11>>
+ * @generated SignedSource<<79d0dc26c58dc9c9b262040ad4917392>>
  * @lightSyntaxTransform
  */
 
@@ -14,14 +14,12 @@ import { FragmentRefs } from "relay-runtime";
 export type TicketHistoryDetails$data = {
   readonly betType: TicketType;
   readonly createdAt: string;
-  readonly currency: string;
   readonly id: string;
   readonly items: ReadonlyArray<{
     readonly id: string;
   }>;
   readonly resettled: boolean;
   readonly resettlementSeen: boolean;
-  readonly stake: any;
   readonly status: TicketStatus;
   readonly " $fragmentSpreads": FragmentRefs<"TicketCardDetails">;
   readonly " $fragmentType": "TicketHistoryDetails";
@@ -58,20 +56,6 @@ return {
       "args": null,
       "kind": "ScalarField",
       "name": "status",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "stake",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "currency",
       "storageKey": null
     },
     {
@@ -118,6 +102,6 @@ return {
 };
 })();
 
-(node as any).hash = "6880d7033e1137b50188c1736ee581c3";
+(node as any).hash = "7adbb22dc14776a0b4b6387af4811f0c";
 
 export default node;

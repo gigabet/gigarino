@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4da4fa1bc745350f91d6a38ea1bf9bb3>>
+ * @generated SignedSource<<bc4f1c81cf054b4b9c2021bb36a6f46d>>
  * @lightSyntaxTransform
  */
 
@@ -367,12 +367,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "601fb15a99db42e98f0747181c6a1bad",
+    "cacheID": "4b900036dc6ab017a9bb302cd90a382c",
     "id": null,
     "metadata": {},
     "name": "TicketCardCashoutMutation",
     "operationKind": "mutation",
-    "text": "mutation TicketCardCashoutMutation(\n  $ticketId: ID!\n) {\n  cashout(ticketId: $ticketId) {\n    amount\n    rejectionCode\n    rejectionMessage\n    ticket {\n      id\n      status\n      ...TicketCard\n    }\n  }\n}\n\nfragment TicketCard on Ticket {\n  id\n  betType\n  stake\n  currency\n  status\n  createdAt\n  resettled\n  resettlementSeen\n  items {\n    id\n    eventName\n    outcomeName\n  }\n  ...TicketCardDetails\n}\n\nfragment TicketCardDetails on Ticket {\n  id\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  settledAt\n  resettled\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n    eventStartTime\n    inPlay\n    scoreAtBet {\n      home\n      away\n    }\n  }\n}\n"
+    "text": "mutation TicketCardCashoutMutation(\n  $ticketId: ID!\n) {\n  cashout(ticketId: $ticketId) {\n    amount\n    rejectionCode\n    rejectionMessage\n    ticket {\n      id\n      status\n      ...TicketCard\n    }\n  }\n}\n\nfragment TicketCard on Ticket {\n  id\n  betType\n  stake\n  currency\n  status\n  createdAt\n  resettled\n  resettlementSeen\n  items {\n    id\n    eventName\n    outcomeName\n  }\n  ...TicketCardDetails\n}\n\nfragment TicketCardDetails on Ticket {\n  id\n  stake\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  settledAt\n  resettled\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n    eventStartTime\n    inPlay\n    scoreAtBet {\n      home\n      away\n    }\n  }\n}\n"
   }
 };
 })();

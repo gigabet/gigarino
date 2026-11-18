@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4760383543daa2a7157dffef8f8d5c33>>
+ * @generated SignedSource<<82652563993faed9bee613e65723d84e>>
  * @lightSyntaxTransform
  */
 
@@ -361,12 +361,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "7338792b564e46b58d0b0e251a705094",
+    "cacheID": "76d4ab9952d253f7c008c783e8da7221",
     "id": null,
     "metadata": {},
     "name": "MyTicketsQuery",
     "operationKind": "query",
-    "text": "query MyTicketsQuery {\n  ...MyTicketsList\n}\n\nfragment MyTicketsList on Query {\n  myTickets(first: 10) {\n    edges {\n      node {\n        id\n        status\n        ...TicketCard\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment TicketCard on Ticket {\n  id\n  betType\n  stake\n  currency\n  status\n  createdAt\n  resettled\n  resettlementSeen\n  items {\n    id\n    eventName\n    outcomeName\n  }\n  ...TicketCardDetails\n}\n\nfragment TicketCardDetails on Ticket {\n  id\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  settledAt\n  resettled\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n    eventStartTime\n    inPlay\n    scoreAtBet {\n      home\n      away\n    }\n  }\n}\n"
+    "text": "query MyTicketsQuery {\n  ...MyTicketsList\n}\n\nfragment MyTicketsList on Query {\n  myTickets(first: 10) {\n    edges {\n      node {\n        id\n        status\n        ...TicketCard\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment TicketCard on Ticket {\n  id\n  betType\n  stake\n  currency\n  status\n  createdAt\n  resettled\n  resettlementSeen\n  items {\n    id\n    eventName\n    outcomeName\n  }\n  ...TicketCardDetails\n}\n\nfragment TicketCardDetails on Ticket {\n  id\n  stake\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  settledAt\n  resettled\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n    eventStartTime\n    inPlay\n    scoreAtBet {\n      home\n      away\n    }\n  }\n}\n"
   }
 };
 })();

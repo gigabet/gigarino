@@ -34,7 +34,7 @@ import { useT, useUser } from '@/context/providers'
 import { RailPortal } from '@/context/rail'
 import { unseenResettlementsAtom } from '@/context/tickets'
 import { tKey } from '@/i18n/tKey'
-import { cn, formatBalance, isAuthError } from '@/lib/utils'
+import { cn, isAuthError } from '@/lib/utils'
 import type { TicketHistoryDetails$key } from '@/relay/__generated__/TicketHistoryDetails.graphql'
 import type { TicketHistoryList$key } from '@/relay/__generated__/TicketHistoryList.graphql'
 import type { TicketHistoryListPaginationQuery } from '@/relay/__generated__/TicketHistoryListPaginationQuery.graphql'
@@ -310,13 +310,10 @@ function TicketDetailsPanel(props: {
         id
         betType
         status
-        stake
-        currency
         createdAt
         resettled
         resettlementSeen
         items {
-          # eslint-disable-next-line relay/unused-fields
           id
         }
         ...TicketCardDetails
@@ -340,10 +337,7 @@ function TicketDetailsPanel(props: {
             </span>
           </div>
           <p className='text-secondary text-[0.7rem]'>
-            {t('Placed')} {format(new Date(data.createdAt), 'dd MMM, HH:mm')} · {t('Stake')}{' '}
-            <span className='font-mono text-white/80'>
-              {formatBalance(Number(data.stake), data.currency)}
-            </span>
+            {t('Placed')} {format(new Date(data.createdAt), 'dd MMM, HH:mm')}
           </p>
         </div>
         <Button

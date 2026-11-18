@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<04c9c8c8621ad92e4d4980420a4515a1>>
+ * @generated SignedSource<<f59d7159cce3cba6a8ffa2732eb8a568>>
  * @lightSyntaxTransform
  */
 
@@ -361,12 +361,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "cb627d4fbe86bb5722b50f29b06b346a",
+    "cacheID": "6e1cce60601f9e667274baa2137d0462",
     "id": null,
     "metadata": {},
     "name": "TicketHistoryQuery",
     "operationKind": "query",
-    "text": "query TicketHistoryQuery {\n  ...TicketHistoryList\n}\n\nfragment TicketCardDetails on Ticket {\n  id\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  settledAt\n  resettled\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n    eventStartTime\n    inPlay\n    scoreAtBet {\n      home\n      away\n    }\n  }\n}\n\nfragment TicketHistoryDetails on Ticket {\n  id\n  betType\n  status\n  stake\n  currency\n  createdAt\n  resettled\n  resettlementSeen\n  items {\n    id\n  }\n  ...TicketCardDetails\n}\n\nfragment TicketHistoryList on Query {\n  myTickets(first: 20) {\n    edges {\n      node {\n        id\n        status\n        resettled\n        ...TicketRow\n        ...TicketHistoryDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment TicketRow on Ticket {\n  id\n  betType\n  stake\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  createdAt\n  resettled\n  resettlementSeen\n  items {\n    eventName\n    marketName\n    outcomeName\n    id\n  }\n}\n"
+    "text": "query TicketHistoryQuery {\n  ...TicketHistoryList\n}\n\nfragment TicketCardDetails on Ticket {\n  id\n  stake\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  settledAt\n  resettled\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n    eventStartTime\n    inPlay\n    scoreAtBet {\n      home\n      away\n    }\n  }\n}\n\nfragment TicketHistoryDetails on Ticket {\n  id\n  betType\n  status\n  createdAt\n  resettled\n  resettlementSeen\n  items {\n    id\n  }\n  ...TicketCardDetails\n}\n\nfragment TicketHistoryList on Query {\n  myTickets(first: 20) {\n    edges {\n      node {\n        id\n        status\n        resettled\n        ...TicketRow\n        ...TicketHistoryDetails\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment TicketRow on Ticket {\n  id\n  betType\n  stake\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  createdAt\n  resettled\n  resettlementSeen\n  items {\n    eventName\n    marketName\n    outcomeName\n    id\n  }\n}\n"
   }
 };
 })();

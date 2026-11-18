@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<5580c805a2d4e9224a7b2e96f0c9590f>>
+ * @generated SignedSource<<9022e7d012e5b473ed21897dadb7c286>>
  * @lightSyntaxTransform
  */
 
@@ -45,6 +45,7 @@ export type TicketCardDetails$data = {
   readonly potentialPayout: any;
   readonly resettled: boolean;
   readonly settledAt: string | null | undefined;
+  readonly stake: any;
   readonly status: TicketStatus;
   readonly " $fragmentType": "TicketCardDetails";
 };
@@ -75,6 +76,13 @@ return {
   "name": "TicketCardDetails",
   "selections": [
     (v0/*:: as any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "stake",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -272,6 +280,6 @@ return {
 };
 })();
 
-(node as any).hash = "cc06132b0d6d2589b9928c27f0fb88d3";
+(node as any).hash = "b2a116e49da8415a4c7b048f2b498c6f";
 
 export default node;

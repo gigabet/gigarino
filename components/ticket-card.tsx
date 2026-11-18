@@ -232,6 +232,7 @@ export function TicketCardDetails(props: {
     graphql`
       fragment TicketCardDetails on Ticket {
         id
+        stake
         effectiveOdds
         potentialPayout
         payout
@@ -322,6 +323,12 @@ export function TicketCardDetails(props: {
       </div>
 
       <div className='flex items-center justify-between border-t border-white/10 pt-3 text-xs'>
+        <span className='text-secondary'>{t('Stake')}</span>
+        <span className='font-mono text-white'>
+          {formatBalance(Number(data.stake), data.currency)}
+        </span>
+      </div>
+      <div className='flex items-center justify-between text-xs'>
         <span className='text-secondary'>{t('Combined odds')}</span>
         <span className='font-mono text-white'>{Number(data.effectiveOdds).toFixed(2)}</span>
       </div>
