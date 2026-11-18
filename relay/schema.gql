@@ -276,6 +276,8 @@ enum ClockDirection {
 Why a ticket was corrected after acceptance.
 """
 enum CorrectionKind {
+  NOT_PLAYED
+  NO_RESULT
   PALPABLE_ERROR
   RESULT_CORRECTION
 }
@@ -1475,6 +1477,11 @@ type TicketItem {
   """
   eventStartTime: DateTimeISO!
   id: ID!
+
+  """
+  Placed while the match was in play.
+  """
+  inPlay: Boolean!
   marketName: String!
 
   """
@@ -1487,7 +1494,20 @@ type TicketItem {
   Odds this item settles at.
   """
   priceAtAcceptance: Decimal!
+
+  """
+  In play: the score when the bet was accepted ("Score at time of bet"). Tennis: sets. Null for prematch.
+  """
+  scoreAtBet: TicketItemScore
   status: BetItemStatus!
+}
+
+"""
+A home/away score.
+"""
+type TicketItemScore {
+  away: Int!
+  home: Int!
 }
 
 enum TicketStatus {
