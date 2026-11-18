@@ -13,7 +13,7 @@ import { FavouriteButton } from '@/components/favourite-button'
 import MarketGroups, { MarketGroupsSkeleton } from '@/components/market-groups'
 import { MatchTracker } from '@/components/match-tracker'
 import { SportIcon } from '@/components/sport-icon'
-import StatisticsWidget, { StatisticsWidgetSkeleton } from '@/components/statistics-widget'
+import { StatisticsSection } from '@/components/statistics-widget'
 import { TeamBadge } from '@/components/team-badge'
 import { useGoalFlash } from '@/context/hooks'
 import { useT } from '@/context/providers'
@@ -42,7 +42,7 @@ export default function LiveSingleView(props: { queryRef: PreloadedQuery<LiveSin
         ...LiveScoreboard
         ...ServingIndicator
         ...MatchTracker
-        ...StatisticsWidget @defer
+        ...StatisticsWidget @defer @include(if: $showStats) @alias
         ...MarketGroups @defer
       }
     `,
@@ -87,9 +87,10 @@ export default function LiveSingleView(props: { queryRef: PreloadedQuery<LiveSin
         className='overflow-hidden rounded-2xl border border-white/5 bg-black/20'
       />
 
-      <Suspense fallback={<StatisticsWidgetSkeleton />}>
-        <StatisticsWidget event={data} />
-      </Suspense>
+      <StatisticsSection
+        event={data?.StatisticsWidget}
+        loaded={props.queryRef.variables.showStats}
+      />
 
       <Suspense fallback={<MarketGroupsSkeleton />}>
         <MarketGroups event={data} />

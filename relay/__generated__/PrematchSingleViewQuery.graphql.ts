@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<45468b64c07d7c13dbd6020257f99125>>
+ * @generated SignedSource<<ea7c03531cfc2fc53283c8cba87792d8>>
  * @lightSyntaxTransform
  */
 
@@ -11,6 +11,7 @@ import { ConcreteRequest } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PrematchSingleViewQuery$variables = {
   id: string;
+  showStats: boolean;
 };
 export type PrematchSingleViewQuery$data = {
   readonly event: {
@@ -30,6 +31,11 @@ var v0 = [
     "defaultValue": null,
     "kind": "LocalArgument",
     "name": "id"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "showStats"
   }
 ],
 v1 = [
@@ -288,194 +294,201 @@ return {
             "storageKey": null
           },
           {
-            "if": null,
-            "kind": "Defer",
-            "label": "PrematchSingleView$defer$StatisticsWidget",
+            "condition": "showStats",
+            "kind": "Condition",
+            "passingValue": true,
             "selections": [
-              (v6/*:: as any*/),
-              (v8/*:: as any*/),
-              (v2/*:: as any*/),
-              (v3/*:: as any*/),
               {
-                "alias": null,
-                "args": null,
-                "concreteType": "MatchIncident",
-                "kind": "LinkedField",
-                "name": "timeline",
-                "plural": true,
+                "if": null,
+                "kind": "Defer",
+                "label": "PrematchSingleView$defer$StatisticsWidget",
                 "selections": [
                   (v6/*:: as any*/),
+                  (v8/*:: as any*/),
+                  (v2/*:: as any*/),
+                  (v3/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
-                    "kind": "ScalarField",
-                    "name": "type",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "side",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "minute",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "addedTime",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "scorer",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "detail",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "penalty",
-                    "storageKey": null
-                  },
-                  (v11/*:: as any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "cancelled",
-                    "storageKey": null
-                  },
-                  (v9/*:: as any*/),
-                  (v10/*:: as any*/)
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "MatchInsights",
-                "kind": "LinkedField",
-                "name": "insights",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "homePosition",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "awayPosition",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "venue",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "referee",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "round",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "MatchStat",
+                    "concreteType": "MatchIncident",
                     "kind": "LinkedField",
-                    "name": "stats",
+                    "name": "timeline",
                     "plural": true,
                     "selections": [
-                      (v5/*:: as any*/),
+                      (v6/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "home",
+                        "name": "type",
                         "storageKey": null
                       },
                       {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "away",
+                        "name": "side",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "minute",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "addedTime",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "scorer",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "detail",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "penalty",
+                        "storageKey": null
+                      },
+                      (v11/*:: as any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "cancelled",
+                        "storageKey": null
+                      },
+                      (v9/*:: as any*/),
+                      (v10/*:: as any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "MatchInsights",
+                    "kind": "LinkedField",
+                    "name": "insights",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "homePosition",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "awayPosition",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "venue",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "referee",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "round",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "MatchStat",
+                        "kind": "LinkedField",
+                        "name": "stats",
+                        "plural": true,
+                        "selections": [
+                          (v5/*:: as any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "home",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "away",
+                            "storageKey": null
+                          }
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "PastMatch",
+                        "kind": "LinkedField",
+                        "name": "homeRecent",
+                        "plural": true,
+                        "selections": (v15/*:: as any*/),
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "PastMatch",
+                        "kind": "LinkedField",
+                        "name": "awayRecent",
+                        "plural": true,
+                        "selections": (v15/*:: as any*/),
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "PastMatch",
+                        "kind": "LinkedField",
+                        "name": "headToHead",
+                        "plural": true,
+                        "selections": [
+                          (v11/*:: as any*/),
+                          (v12/*:: as any*/),
+                          (v13/*:: as any*/),
+                          (v9/*:: as any*/),
+                          (v10/*:: as any*/),
+                          (v14/*:: as any*/),
+                          (v4/*:: as any*/)
+                        ],
                         "storageKey": null
                       }
                     ],
                     "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "PastMatch",
-                    "kind": "LinkedField",
-                    "name": "homeRecent",
-                    "plural": true,
-                    "selections": (v15/*:: as any*/),
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "PastMatch",
-                    "kind": "LinkedField",
-                    "name": "awayRecent",
-                    "plural": true,
-                    "selections": (v15/*:: as any*/),
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "PastMatch",
-                    "kind": "LinkedField",
-                    "name": "headToHead",
-                    "plural": true,
-                    "selections": [
-                      (v11/*:: as any*/),
-                      (v12/*:: as any*/),
-                      (v13/*:: as any*/),
-                      (v9/*:: as any*/),
-                      (v10/*:: as any*/),
-                      (v14/*:: as any*/),
-                      (v4/*:: as any*/)
-                    ],
-                    "storageKey": null
                   }
-                ],
-                "storageKey": null
+                ]
               }
             ]
           },
@@ -550,16 +563,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "dd3a3479e24e72d874c261ff0094430f",
+    "cacheID": "e74098e20ea40b3aa1967fed7d707374",
     "id": null,
     "metadata": {},
     "name": "PrematchSingleViewQuery",
     "operationKind": "query",
-    "text": "query PrematchSingleViewQuery(\n  $id: ID!\n) {\n  event(id: $id) {\n    ...PrematchSingleView\n    id\n  }\n}\n\nfragment EventLiveState on Event {\n  status\n  tradingStatus\n  homeScore\n  awayScore\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  outcomes {\n    id\n    index\n    name\n    price\n    status\n  }\n}\n\nfragment MarketGroups on Event {\n  markets {\n    id\n    groups\n    kind\n    index\n    ...MarketCard\n  }\n}\n\nfragment MatchTracker on Event {\n  sportradarMatchId\n}\n\nfragment PrematchSingleHeader on Event {\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    name\n    id\n  }\n  category {\n    name\n    id\n  }\n  status\n  ...FavouriteButton\n}\n\nfragment PrematchSingleView on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  ...PrematchSingleHeader\n  ...EventLiveState\n  ...MatchTracker\n  ...StatisticsWidget @defer(label: \"PrematchSingleView$defer$StatisticsWidget\")\n  ...MarketGroups @defer(label: \"PrematchSingleView$defer$MarketGroups\")\n}\n\nfragment StatisticsWidget on Event {\n  id\n  status\n  homeCompetitor\n  awayCompetitor\n  timeline {\n    id\n  }\n  ...StatisticsWidgetTimeline\n  insights {\n    homePosition\n    awayPosition\n    venue\n    referee\n    round\n    stats {\n      key\n      home\n      away\n    }\n    homeRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    awayRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    headToHead {\n      outcome\n      ...StatisticsWidgetPastMatch\n    }\n  }\n}\n\nfragment StatisticsWidgetIncident on MatchIncident {\n  type\n  side\n  minute\n  addedTime\n  scorer\n  detail\n  penalty\n  outcome\n  cancelled\n  homeScore\n  awayScore\n}\n\nfragment StatisticsWidgetPastMatch on PastMatch {\n  homeName\n  awayName\n  homeScore\n  awayScore\n  competition\n  startTime\n  outcome\n}\n\nfragment StatisticsWidgetTimeline on Event {\n  homeCompetitor\n  awayCompetitor\n  timeline {\n    id\n    ...StatisticsWidgetIncident\n  }\n}\n"
+    "text": "query PrematchSingleViewQuery(\n  $id: ID!\n  $showStats: Boolean!\n) {\n  event(id: $id) {\n    ...PrematchSingleView\n    id\n  }\n}\n\nfragment EventLiveState on Event {\n  status\n  tradingStatus\n  homeScore\n  awayScore\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  outcomes {\n    id\n    index\n    name\n    price\n    status\n  }\n}\n\nfragment MarketGroups on Event {\n  markets {\n    id\n    groups\n    kind\n    index\n    ...MarketCard\n  }\n}\n\nfragment MatchTracker on Event {\n  sportradarMatchId\n}\n\nfragment PrematchSingleHeader on Event {\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    name\n    id\n  }\n  category {\n    name\n    id\n  }\n  status\n  ...FavouriteButton\n}\n\nfragment PrematchSingleView on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  ...PrematchSingleHeader\n  ...EventLiveState\n  ...MatchTracker\n  ...StatisticsWidget @include(if: $showStats) @defer(label: \"PrematchSingleView$defer$StatisticsWidget\")\n  ...MarketGroups @defer(label: \"PrematchSingleView$defer$MarketGroups\")\n}\n\nfragment StatisticsWidget on Event {\n  id\n  status\n  homeCompetitor\n  awayCompetitor\n  timeline {\n    id\n  }\n  ...StatisticsWidgetTimeline\n  insights {\n    homePosition\n    awayPosition\n    venue\n    referee\n    round\n    stats {\n      key\n      home\n      away\n    }\n    homeRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    awayRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    headToHead {\n      outcome\n      ...StatisticsWidgetPastMatch\n    }\n  }\n}\n\nfragment StatisticsWidgetIncident on MatchIncident {\n  type\n  side\n  minute\n  addedTime\n  scorer\n  detail\n  penalty\n  outcome\n  cancelled\n  homeScore\n  awayScore\n}\n\nfragment StatisticsWidgetPastMatch on PastMatch {\n  homeName\n  awayName\n  homeScore\n  awayScore\n  competition\n  startTime\n  outcome\n}\n\nfragment StatisticsWidgetTimeline on Event {\n  homeCompetitor\n  awayCompetitor\n  timeline {\n    id\n    ...StatisticsWidgetIncident\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "014df77676c1b3b445c2900187988f6d";
+(node as any).hash = "509dea1c210c0a1750905a288753cdb9";
 
 export default node;

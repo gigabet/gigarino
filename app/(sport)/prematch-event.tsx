@@ -1,5 +1,6 @@
 'use client'
 import { format } from 'date-fns'
+import { useAtomValue } from 'jotai'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { fetchQuery, graphql, useFragment, useRelayEnvironment } from 'react-relay'
@@ -10,6 +11,7 @@ import { TrackerButton } from '@/components/tracker-button'
 import { buttonVariants } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
+import { statisticsEnabledAtom } from '@/context/statistics'
 import { cn, getRelativeDayLabel, pairToHues } from '@/lib/utils'
 import type { PrematchEvent$key } from '@/relay/__generated__/PrematchEvent.graphql'
 import PrematchSingleViewQueryNode from '@/relay/__generated__/PrematchSingleViewQuery.graphql'
@@ -34,11 +36,12 @@ export default function PrematchEvent(props: { node: PrematchEvent$key; scope?: 
   )
 
   const env = useRelayEnvironment()
+  const showStats = useAtomValue(statisticsEnabledAtom)
   const prefetch = () => {
     fetchQuery(
       env,
       PrematchSingleViewQueryNode,
-      { id: data.id },
+      { id: data.id, showStats },
       { fetchPolicy: 'store-or-network' }
     ).subscribe({})
   }

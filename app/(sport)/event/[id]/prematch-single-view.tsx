@@ -10,7 +10,7 @@ import { FavouriteButton } from '@/components/favourite-button'
 import MarketGroups, { MarketGroupsSkeleton } from '@/components/market-groups'
 import { MatchTracker } from '@/components/match-tracker'
 import { SportIcon } from '@/components/sport-icon'
-import StatisticsWidget, { StatisticsWidgetSkeleton } from '@/components/statistics-widget'
+import { StatisticsSection } from '@/components/statistics-widget'
 import { TeamBadge } from '@/components/team-badge'
 import { useT } from '@/context/providers'
 import { getRelativeDayLabel, pairToHues } from '@/lib/utils'
@@ -39,7 +39,7 @@ export default function PrematchSingleView(props: {
         ...PrematchSingleHeader
         ...EventLiveState
         ...MatchTracker
-        ...StatisticsWidget @defer
+        ...StatisticsWidget @defer @include(if: $showStats) @alias
         ...MarketGroups @defer
       }
     `,
@@ -79,9 +79,10 @@ export default function PrematchSingleView(props: {
         className='overflow-hidden rounded-2xl border border-white/5 bg-black/20'
       />
 
-      <Suspense fallback={<StatisticsWidgetSkeleton />}>
-        <StatisticsWidget event={data} />
-      </Suspense>
+      <StatisticsSection
+        event={data?.StatisticsWidget}
+        loaded={props.queryRef.variables.showStats}
+      />
 
       <Suspense fallback={<MarketGroupsSkeleton />}>
         <MarketGroups event={data} />

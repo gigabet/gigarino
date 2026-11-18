@@ -1,8 +1,10 @@
 'use client'
 
 import { format } from 'date-fns'
+import { useAtom } from 'jotai'
 import { ChevronDownIcon, TargetIcon } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { Switch } from 'radix-ui'
+import { Suspense, useEffect, useId, useState } from 'react'
 import {
   fetchQuery,
   graphql,
@@ -15,12 +17,18 @@ import { Skeleton } from '@/components/ui/skeleton'
 import * as Tabs from '@/components/ui/tabs'
 import { useScrollFade } from '@/context/hooks'
 import { useT } from '@/context/providers'
+import { statisticsEnabledAtom } from '@/context/statistics'
 import { tKey } from '@/i18n/tKey'
 import { cn } from '@/lib/utils'
-import type { StatisticsWidget$key } from '@/relay/__generated__/StatisticsWidget.graphql'
+import type {
+  StatisticsWidget$data,
+  StatisticsWidget$key,
+} from '@/relay/__generated__/StatisticsWidget.graphql'
 import type { StatisticsWidgetIncident$key } from '@/relay/__generated__/StatisticsWidgetIncident.graphql'
 import type { StatisticsWidgetPastMatch$key } from '@/relay/__generated__/StatisticsWidgetPastMatch.graphql'
-import StatisticsWidgetRefetchNode from '@/relay/__generated__/StatisticsWidgetRefetch.graphql'
+import StatisticsWidgetRefetchNode, {
+  type StatisticsWidgetRefetch,
+} from '@/relay/__generated__/StatisticsWidgetRefetch.graphql'
 import type { StatisticsWidgetTimeline$key } from '@/relay/__generated__/StatisticsWidgetTimeline.graphql'
 
 const POLL_MS = 30_000
@@ -236,6 +244,45 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key; b
         </Tabs.Root>
       )}
     </section>
+  )
+}
+
+/**
+ * On/off switch for the widget, plus the widget itself while it is on.
+ * `loaded` says whether the page's query was fetched with the widget's fields (`$showStats`);
+ * until then the switch is already on and a skeleton stands in.
+ */
+export function StatisticsSection(props: { event?: StatisticsWidget$key | null; loaded: boolean }) {
+  const [enabled, setEnabled] = useAtom(statisticsEnabledAtom)
+  const switchId = useId()
+  const t = useT()
+
+  return (
+    <>
+      <div className='flex items-center gap-2'>
+        <label htmlFor={switchId} className='text-secondary cursor-pointer text-xs'>
+          {t('Statistics')}
+        </label>
+        <Switch.Root
+          id={switchId}
+          checked={enabled}
+          onCheckedChange={setEnabled}
+          className='data-[state=checked]:bg-primary focus-visible:ring-ring relative h-5 w-9 shrink-0 cursor-pointer rounded-full bg-white/15 transition-colors outline-none focus-visible:ring-2'
+        >
+          <Switch.Thumb className='data-[state=checked]:bg-primary-foreground block size-4 translate-x-0.5 rounded-full bg-white shadow transition-transform data-[state=checked]:translate-x-4.5' />
+        </Switch.Root>
+      </div>
+
+      {enabled &&
+        props.event &&
+        (props.loaded ? (
+          <Suspense fallback={<StatisticsWidgetSkeleton />}>
+            <StatisticsWidget event={props.event} />
+          </Suspense>
+        ) : (
+          <StatisticsWidgetSkeleton />
+        ))}
+    </>
   )
 }
 

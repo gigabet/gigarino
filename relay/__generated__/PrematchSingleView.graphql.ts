@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1367b627060e78fdd511c94c7a336437>>
+ * @generated SignedSource<<c5c7167a414f5090036ded9446c3973a>>
  * @lightSyntaxTransform
  */
 
@@ -10,12 +10,15 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PrematchSingleView$data = {
+  readonly StatisticsWidget?: {
+    readonly " $fragmentSpreads": FragmentRefs<"StatisticsWidget">;
+  } | null | undefined;
   readonly awayCompetitor: string;
   readonly awayImageUrl: string | null | undefined;
   readonly homeCompetitor: string;
   readonly homeImageUrl: string | null | undefined;
   readonly startTime: string;
-  readonly " $fragmentSpreads": FragmentRefs<"EventLiveState" | "MarketGroups" | "MatchTracker" | "PrematchSingleHeader" | "StatisticsWidget">;
+  readonly " $fragmentSpreads": FragmentRefs<"EventLiveState" | "MarketGroups" | "MatchTracker" | "PrematchSingleHeader">;
   readonly " $fragmentType": "PrematchSingleView";
 };
 export type PrematchSingleView$key = {
@@ -24,7 +27,12 @@ export type PrematchSingleView$key = {
 };
 
 const node: ReaderFragment = {
-  "argumentDefinitions": [],
+  "argumentDefinitions": [
+    {
+      "kind": "RootArgument",
+      "name": "showStats"
+    }
+  ],
   "kind": "Fragment",
   "metadata": null,
   "name": "PrematchSingleView",
@@ -80,11 +88,29 @@ const node: ReaderFragment = {
       "name": "MatchTracker"
     },
     {
-      "kind": "Defer",
+      "condition": "showStats",
+      "kind": "Condition",
+      "passingValue": true,
       "selections": [
         {
-          "args": null,
-          "kind": "FragmentSpread",
+          "fragment": {
+            "kind": "InlineFragment",
+            "selections": [
+              {
+                "kind": "Defer",
+                "selections": [
+                  {
+                    "args": null,
+                    "kind": "FragmentSpread",
+                    "name": "StatisticsWidget"
+                  }
+                ]
+              }
+            ],
+            "type": "Event",
+            "abstractKey": null
+          },
+          "kind": "AliasedInlineFragmentSpread",
           "name": "StatisticsWidget"
         }
       ]
@@ -104,6 +130,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "e09a67f7a1fe19ecf9ae7a116f2a2742";
+(node as any).hash = "3e7f9102137127801563cf065fb5c872";
 
 export default node;
