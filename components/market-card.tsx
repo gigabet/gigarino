@@ -7,6 +7,7 @@ import { graphql, useFragment } from 'react-relay'
 import { OddDelta } from '@/components/odd-delta'
 import { useHasOdd, useToggleOdd } from '@/context/betslip'
 import { useUpDown } from '@/context/hooks'
+import { useT } from '@/context/providers'
 import { cn } from '@/lib/utils'
 import type { MarketCard$key } from '@/relay/__generated__/MarketCard.graphql'
 
@@ -71,6 +72,7 @@ function OutcomeToggle(props: {
   const toggleOdd = useToggleOdd()
   const upDown = useUpDown(Number(props.odd.price))
   const locked = props.suspended || props.odd.status !== 'OPEN'
+  const t = useT()
 
   return (
     <Toggle.Root
@@ -86,7 +88,7 @@ function OutcomeToggle(props: {
       onPressedChange={() => toggleOdd(props.odd.id)}
     >
       <span className='group-data-[state=on]:text-foreground text-shadow-foreground text-secondary text-xs group-data-[state=on]:text-shadow-[0_0_8px]'>
-        {props.odd.name}
+        {t(props.odd.name)}
       </span>
       <span className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground relative flex flex-col items-center justify-center gap-1 text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'>
         {locked ? (

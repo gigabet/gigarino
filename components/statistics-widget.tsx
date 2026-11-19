@@ -680,6 +680,7 @@ function FormTab(props: { home: FormTeam; away: FormTeam }) {
             )}
           >
             <span className={cn('size-2 shrink-0 rounded-full', TEAM[side].dot)} />
+            {/* eslint-disable-next-line local-i18n/no-untranslated-api-string */}
             <span className='truncate'>{props[side].name}</span>
           </button>
         ))}
@@ -705,6 +706,7 @@ function FormColumn(props: { team: FormTeam; side: Side; className?: string }) {
     <Panel
       className={props.className}
       headerClassName='max-sm:hidden' // the switcher is the header on mobile
+      // eslint-disable-next-line local-i18n/no-untranslated-api-string
       header={<TeamLabel name={props.team.name} side={props.side} position={props.team.position} />}
     >
       {props.team.matches.map((m, i) => (

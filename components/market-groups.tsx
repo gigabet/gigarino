@@ -101,7 +101,7 @@ export default function MarketGroups(props: { event: MarketGroups$key }) {
             value={group}
             className='data-[state=active]:bg-primary group border-control-border shrink-0 rounded-full border bg-white/10 px-4 py-2 text-xs font-medium whitespace-nowrap text-white shadow-none data-[state=active]:text-black'
           >
-            {GROUP_LABEL[group]}
+            {t(GROUP_LABEL[group])}
             <span className='ml-1.5 opacity-60'>{byGroup[group].length}</span>
           </Tabs.Trigger>
         ))}
@@ -122,7 +122,7 @@ export default function MarketGroups(props: { event: MarketGroups$key }) {
                 <Accordion.Item key={kind} value={kind}>
                   <Accordion.Header>
                     <Accordion.Trigger className='group flex w-full items-center gap-2 py-4 text-left text-sm font-semibold tracking-wide text-white uppercase'>
-                      <span className='min-w-0 truncate'>{kind.replaceAll('_', ' ')}</span>
+                      <span className='min-w-0 truncate'>{t(kind.replaceAll('_', ' '))}</span>
                       <FaCaretDown className='size-4 shrink-0 -rotate-90 transition-transform duration-200 group-data-[state=open]:rotate-0' />
                     </Accordion.Trigger>
                   </Accordion.Header>

@@ -4,6 +4,7 @@ import i18next from 'eslint-plugin-i18next'
 import relay from 'eslint-plugin-relay'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
+import localI18n from './eslint-rules/index.mjs'
 
 export default defineConfig([
   {
@@ -40,5 +41,12 @@ export default defineConfig([
         },
       ],
     },
+  },
+  {
+    // dynamic API strings (sport, market, outcome names...) that bypass the literal-string rule
+    files: ['app/(sport)/**/*.tsx', 'app/live/**/*.tsx', 'components/**/*.tsx'],
+    ignores: ['components/ui/**'],
+    plugins: { 'local-i18n': localI18n },
+    rules: { 'local-i18n/no-untranslated-api-string': 'error' },
   },
 ])

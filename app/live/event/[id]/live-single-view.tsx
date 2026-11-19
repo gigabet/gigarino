@@ -138,8 +138,10 @@ function LiveSingleHeader(props: { event: LiveSingleHeader$key }) {
           )}
           <SportIcon sport={data.sport.key} className='size-3.5 shrink-0' />
           <div className='flex min-w-0 items-center gap-2'>
+            {/* eslint-disable-next-line local-i18n/no-untranslated-api-string */}
             <span className='truncate'>{data.tournament.name}</span>
             <span className='shrink-0'>·</span>
+            {/* eslint-disable-next-line local-i18n/no-untranslated-api-string */}
             <span className='truncate'>{data.category.name}</span>
           </div>
         </>
@@ -323,6 +325,7 @@ function LiveScoreboard(props: { event: LiveScoreboard$key }) {
                 scope='row'
                 className='truncate py-1 text-left font-sans font-normal text-white/90'
               >
+                {/* eslint-disable-next-line local-i18n/no-untranslated-api-string */}
                 {row.name}
               </th>
               {row.periods.map((p, i) => (
@@ -367,15 +370,17 @@ function KickoffTime(props: { startTime: string }) {
 }
 
 function EventNotFound() {
+  const t = useT()
+
   return (
     <main className='flex min-w-0 flex-col items-center justify-center gap-4 px-4 py-16 text-center sm:py-24'>
       <div className='bg-dark-300 text-muted-foreground flex size-14 items-center justify-center rounded-full'>
         <SearchXIcon className='size-6' />
       </div>
       <div className='space-y-1'>
-        <h3 className='text-foreground text-sm font-semibold'>Event not found</h3>
+        <h3 className='text-foreground text-sm font-semibold'>{t('Event not found')}</h3>
         <p className='text-secondary text-xs'>
-          This event may have ended, been removed, or is temporarily unavailable.
+          {t('This event may have ended, been removed, or is temporarily unavailable.')}
         </p>
       </div>
     </main>
