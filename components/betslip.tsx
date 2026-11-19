@@ -922,7 +922,7 @@ function Tip(props: {
     >
       <Link
         prefetch={false}
-        href={`/${data.isLive ? 'live' : ''}/event/${data.eventId}`}
+        href={`${data.isLive ? '/live' : ''}/event/${data.eventId}`}
         className='flex items-start gap-2'
       >
         <div className='min-w-0 flex-1'>

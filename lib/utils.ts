@@ -191,3 +191,15 @@ export function stripCategory(name: string, category: string): string {
     .replace(/^[\s\-–:·,]+|[\s\-–:·,]+$/g, '')
   return stripped || name
 }
+
+/**
+ * Returns `path` only if it is a same-origin relative path, otherwise `fallback`.
+ * `//host/..` and `/\\host/..` are rejected: browsers treat them as protocol-relative
+ * URLs, so redirecting to them leaves the site (e.g. `//event/1` -> `https://event/1`).
+ */
+export function safeRelativePath(path: string | null | undefined, fallback = '/') {
+  if (!path || !path.startsWith('/') || path.startsWith('//') || path.startsWith('/\\')) {
+    return fallback
+  }
+  return path
+}

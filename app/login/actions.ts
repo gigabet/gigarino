@@ -4,6 +4,7 @@ import { isArray } from 'lodash'
 import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { getT } from '@/i18n/t'
+import { safeRelativePath } from '@/lib/utils'
 import type { ErrorResponse } from '@/types'
 
 export async function login(
@@ -78,7 +79,7 @@ export async function login(
       domain: process.env.COOKIE_DOMAIN, // '.gigarino.com', unset on localhost
       maxAge: data.rememberMe ? 60 * 60 * 24 * 30 : undefined, // 30 days if rememberMe, otherwise session cookie
     })
-    redirect((formData.get('from') as string) || '/')
+    redirect(safeRelativePath(formData.get('from') as string | null))
   }
 }
 
