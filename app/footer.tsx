@@ -129,6 +129,7 @@ export default async function Footer() {
             <div className='bg-primary/10 flex h-6 w-6 items-center justify-center rounded-full'>
               <LockIcon className='text-primary h-3 w-3' />
             </div>
+            {/* eslint-disable-next-line i18next/no-literal-string */}
             <span className='text-xs text-gray-400'>256-bit SSL</span>
           </div>
           <div className='flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2'>
@@ -162,6 +163,7 @@ export default async function Footer() {
             href='mailto:support@gigarino.com'
             className='hover:text-primary flex items-center gap-2 transition-colors'
           >
+            {/* eslint-disable-next-line i18next/no-literal-string */}
             <Mail className='h-4 w-4' />
             support@gigarino.com
           </a>
@@ -169,10 +171,12 @@ export default async function Footer() {
             href='tel:+441234567890'
             className='hover:text-primary flex items-center gap-2 transition-colors'
           >
+            {/* eslint-disable-next-line i18next/no-literal-string */}
             <Phone className='h-4 w-4' />
             +44 (123) 456-7890
           </a>
           <span className='flex items-center gap-2'>
+            {/* eslint-disable-next-line i18next/no-literal-string */}
             <MapPin className='h-4 w-4' />
             Malta, EU
           </span>
@@ -189,6 +193,7 @@ export default async function Footer() {
             )}
           </p>
           <div className='flex items-center gap-4'>
+            {/* eslint-disable-next-line i18next/no-literal-string */}
             <p>2024 © GigaRino Gaming. All rights reserved.</p>
             <LocaleSwitcher current={locale} />
           </div>

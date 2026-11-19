@@ -1,4 +1,5 @@
 import { cx } from 'class-variance-authority'
+import { useT } from '@/context/providers'
 
 interface LogoProps {
   variant?: 'dark' | 'light'
@@ -7,6 +8,7 @@ interface LogoProps {
   Component?: keyof React.JSX.IntrinsicElements
 }
 export default function Logo({ size = 'md', subtitle, Component = 'h1' }: LogoProps) {
+  const t = useT()
   return (
     <div className='inline-flex flex-col items-center gap-2 select-none'>
       <Component
@@ -23,7 +25,9 @@ export default function Logo({ size = 'md', subtitle, Component = 'h1' }: LogoPr
         </span>
       </Component>
       {subtitle && (
-        <p className='text-sm tracking-[0.3em] text-gray-500 uppercase'>High Energy Gaming</p>
+        <p className='text-sm tracking-[0.3em] text-gray-500 uppercase'>
+          {t('High Energy Gaming')}
+        </p>
       )}
     </div>
   )

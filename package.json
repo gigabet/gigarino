@@ -90,6 +90,7 @@
     "chokidar-cli": "^3.0.0",
     "concurrently": "^10.0.5",
     "eslint": "^10.6.0",
+    "eslint-plugin-i18next": "^6.1.5",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-relay": "^2.0.0",
     "globals": "^17.7.0",

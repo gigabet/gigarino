@@ -667,6 +667,7 @@ function FormTab(props: { home: FormTeam; away: FormTeam }) {
   return (
     <div className='flex flex-col gap-3'>
       <div className='bg-dark-200 flex gap-1 rounded-full p-1 sm:hidden'>
+        {/* eslint-disable-next-line i18next/no-literal-string */}
         {(['home', 'away'] as const).map(side => (
           <button
             key={side}
@@ -685,6 +686,7 @@ function FormTab(props: { home: FormTeam; away: FormTeam }) {
       </div>
 
       <div className='grid gap-8 sm:grid-cols-2 sm:gap-x-10'>
+        {/* eslint-disable-next-line i18next/no-literal-string */}
         {(['home', 'away'] as const).map(side => (
           <FormColumn
             key={side}

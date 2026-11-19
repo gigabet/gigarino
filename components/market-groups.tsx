@@ -8,6 +8,7 @@ import { graphql, useFragment } from 'react-relay'
 import MarketCard from '@/components/market-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import * as Tabs from '@/components/ui/tabs'
+import { useT } from '@/context/providers'
 import type {
   MarketGroup,
   MarketGroups$data,
@@ -81,10 +82,12 @@ export default function MarketGroups(props: { event: MarketGroups$key }) {
 
   const populatedGroups = GROUP_ORDER.filter(g => byGroup[g]?.length)
 
+  const t = useT()
+
   if (populatedGroups.length === 0) {
     return (
       <p className='text-secondary rounded-2xl p-8 text-center text-sm'>
-        No markets available for this event right now.
+        {t('No markets available for this event right now.')}
       </p>
     )
   }
@@ -96,7 +99,7 @@ export default function MarketGroups(props: { event: MarketGroups$key }) {
           <Tabs.Trigger
             key={group}
             value={group}
-            className='data-[state=active]:bg-primary group shrink-0 rounded-full border border-control-border bg-white/10 px-4 py-2 text-xs font-medium whitespace-nowrap text-white shadow-none data-[state=active]:text-black'
+            className='data-[state=active]:bg-primary group border-control-border shrink-0 rounded-full border bg-white/10 px-4 py-2 text-xs font-medium whitespace-nowrap text-white shadow-none data-[state=active]:text-black'
           >
             {GROUP_LABEL[group]}
             <span className='ml-1.5 opacity-60'>{byGroup[group].length}</span>

@@ -76,11 +76,13 @@ function TrackerFrame(props: { matchId: string; className?: string }) {
     return () => window.removeEventListener('message', onMessage)
   }, [])
 
+  const t = useT()
+
   return (
     <div className={props.className}>
       <iframe
         ref={ref}
-        title='Match tracker'
+        title={t('Match tracker')}
         src={`https://googstreams.com/matchtracker.html#${locale}/${props.matchId}`}
         style={{ height }}
         className='block w-full overflow-hidden border-0 transition-[height] duration-200'
@@ -176,7 +178,7 @@ function TrackerPanel(props: {
       <div className='flex items-center gap-2 px-4 py-2'>
         <GiSoccerField className='text-primary size-4 shrink-0' />
         <p className='min-w-0 flex-1 truncate text-xs font-semibold text-white'>
-          {data.homeCompetitor} <span className='text-secondary font-normal'>vs</span>{' '}
+          {data.homeCompetitor} <span className='text-secondary font-normal'>{t('vs')}</span>{' '}
           {data.awayCompetitor}
         </p>
         <Button

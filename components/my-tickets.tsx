@@ -191,10 +191,13 @@ function FakeTicketRow(props: { status: 'Open' | 'Won' | 'Lost'; combi?: boolean
               {props.combi ? t('{n}-fold Combi', { n: 3 }) : t('Single')}
             </span>
           </div>
+          {/* eslint-disable-next-line i18next/no-literal-string */}
           <p className='text-secondary mt-1 truncate text-xs'>Team A vs Team B</p>
         </div>
         <div className='flex shrink-0 flex-col items-end'>
+          {/* eslint-disable-next-line i18next/no-literal-string */}
           <span className='font-mono text-sm font-semibold text-white'>€25.00</span>
+          {/* eslint-disable-next-line i18next/no-literal-string */}
           <span className='text-secondary text-[0.65rem]'>Today, 18:30</span>
         </div>
       </div>
