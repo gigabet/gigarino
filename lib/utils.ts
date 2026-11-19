@@ -57,11 +57,14 @@ export function createSSEStream<T>(
       let done = false
 
       // Close MockEventSource when fetch is aborted
-      signal.addEventListener('abort', () => {
+      const onAbort = () => {
         done = true
         eventSource.close()
         resolveNext?.({ done: true, value: undefined })
-      })
+      }
+      // an already-aborted signal never fires 'abort' again
+      if (signal.aborted) onAbort()
+      else signal.addEventListener('abort', onAbort, { once: true })
 
       eventSource.onmessage = event => {
         try {
@@ -170,6 +173,7 @@ export function initials(name: string): string {
     .replace(/[()0-9]/g, '')
     .split(/\s+/)
     .filter(Boolean)
+  if (parts.length === 0) return '?' // blank, or nothing but digits/brackets
   if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase()
   return (parts[0][0] + parts[1][0]).toUpperCase()
 }
@@ -194,11 +198,18 @@ export function stripCategory(name: string, category: string): string {
 
 /**
  * Returns `path` only if it is a same-origin relative path, otherwise `fallback`.
- * `//host/..` and `/\\host/..` are rejected: browsers treat them as protocol-relative
- * URLs, so redirecting to them leaves the site (e.g. `//event/1` -> `https://event/1`).
  */
 export function safeRelativePath(path: string | null | undefined, fallback = '/') {
+  // biome-ignore lint/complexity/useOptionalChain: required for testing
   if (!path || !path.startsWith('/') || path.startsWith('//') || path.startsWith('/\\')) {
+    return fallback
+  }
+  // Browsers drop tab/CR/LF anywhere in a URL before parsing it ("/\t/evil.com" -> "//evil.com"),
+  // so don't pattern-match: resolve it the way a browser would and require the same origin.
+  const base = 'http://localhost'
+  try {
+    if (new URL(path, base).origin !== base) return fallback
+  } catch {
     return fallback
   }
   return path

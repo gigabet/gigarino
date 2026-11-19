@@ -70,21 +70,32 @@ export function useCombo() {
   )
 }
 
+/**
+ * Writes `expectedPrice` onto items from `prices`. With `onlyMissing`, items that already have
+ * an expected price are left alone (stamping); otherwise changed prices overwrite (accepting).
+ * Returns the same reference when nothing changed, so the subscription does not restart.
+ */
+export function withPrices(
+  prev: BetslipInput,
+  prices: ReadonlyMap<string, string>,
+  onlyMissing: boolean
+): BetslipInput {
+  let changed = false
+  const items = prev.items.map(i => {
+    const p = prices.get(i.outcomeId)
+    if (!p || (onlyMissing && i.expectedPrice) || i.expectedPrice === p) return i
+    changed = true
+    return { ...i, expectedPrice: p }
+  })
+  return changed ? { ...prev, items } : prev
+}
+
 export function useBetslipPrices() {
   const setInput = useSetAtom(betslipInputAtom)
 
   const apply = useCallback(
     (prices: ReadonlyMap<string, string>, onlyMissing: boolean) =>
-      setInput(prev => {
-        let changed = false
-        const items = prev.items.map(i => {
-          const p = prices.get(i.outcomeId)
-          if (!p || (onlyMissing && i.expectedPrice) || i.expectedPrice === p) return i
-          changed = true
-          return { ...i, expectedPrice: p }
-        })
-        return changed ? { ...prev, items } : prev // same ref => no resubscribe
-      }),
+      setInput(prev => withPrices(prev, prices, onlyMissing)),
     [setInput]
   )
 
@@ -154,16 +165,23 @@ export function useApplyBoost() {
   )
 }
 
+/** A boost only applies while unexpired and when the slip is exactly the boosted selections. */
+export function isBoostActive(
+  input: BetslipInput,
+  boost: ActiveBoost | null,
+  now: number
+): boost is ActiveBoost {
+  if (!boost || input.betType === 'SYSTEM') return false
+  if (boost.validTo && Date.parse(boost.validTo) <= now) return false
+  const ids = new Set(input.items.map(i => i.outcomeId))
+  const same = ids.size === boost.outcomeIds.length && boost.outcomeIds.every(id => ids.has(id))
+  return same && (ids.size === 1 || input.betType === 'MULTIPLE')
+}
+
 export function useActiveBoost() {
   const input = useAtomValue(betslipInputAtom)
   const boost = useAtomValue(boostAtom)
-  return useMemo(() => {
-    if (!boost || input.betType === 'SYSTEM') return null
-    if (boost.validTo && Date.parse(boost.validTo) <= Date.now()) return null
-    const ids = new Set(input.items.map(i => i.outcomeId))
-    const same = ids.size === boost.outcomeIds.length && boost.outcomeIds.every(id => ids.has(id))
-    return same && (ids.size === 1 || input.betType === 'MULTIPLE') ? boost : null
-  }, [input, boost])
+  return useMemo(() => (isBoostActive(input, boost, Date.now()) ? boost : null), [input, boost])
 }
 
 export function useSetLegStake() {
