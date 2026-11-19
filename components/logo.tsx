@@ -1,5 +1,7 @@
-import { cx } from 'class-variance-authority'
+'use client'
+
 import { useT } from '@/context/providers'
+import { cn } from '@/lib/utils'
 
 interface LogoProps {
   variant?: 'dark' | 'light'
@@ -9,10 +11,11 @@ interface LogoProps {
 }
 export default function Logo({ size = 'md', subtitle, Component = 'h1' }: LogoProps) {
   const t = useT()
+
   return (
     <div className='inline-flex flex-col items-center gap-2 select-none'>
       <Component
-        className={cx('font-display font-bold tracking-wider', {
+        className={cn('font-display font-bold tracking-wider', {
           'text-[1.67rem] sm:text-3xl': size === 'md',
           'text-4xl lg:text-4xl': size === 'lg',
         })}
