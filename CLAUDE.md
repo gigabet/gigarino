@@ -16,7 +16,7 @@ pnpm build          # next build (output: standalone; Dockerfile uses it)
 pnpm i18n:extract | i18n:validate | i18n:prune | i18n:translate   # see i18n below
 ```
 
-- No test runner is configured. Verify with `tsc`, `pnpm lint`, and `pnpm relay` (compiler errors).
+- Vitest limited coverage. Verify with `tsc`, `pnpm lint`, and `pnpm relay` (compiler errors).
 - Dev env lives in `.env.development` (gitignored). Needs `NEXT_PUBLIC_API_URL` (casino REST, :3001),
   `NEXT_PUBLIC_GRAPHQL_URL` (:3002), `NEXT_PUBLIC_CURRENCY`, `SUPERVISOR_ID`, `BRANCH_ID`.
   Admin editor also uses `ADMIN_PASSWORD`, `GITHUB_REPO`, `GITHUB_BASE_BRANCH`, `DEEPL_API_KEY`.
