@@ -1,12 +1,11 @@
 import { RuleTester } from 'eslint'
 import tseslint from 'typescript-eslint'
-import { afterAll, describe, it } from 'vitest'
+import { describe, it } from 'vitest'
 import { noUntranslatedApiString } from './no-untranslated-api-string.mjs'
 
 RuleTester.describe = describe
 RuleTester.it = it
 RuleTester.itOnly = it.only
-RuleTester.afterAll = afterAll
 
 const tester = new RuleTester({
   languageOptions: {
