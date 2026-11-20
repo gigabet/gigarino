@@ -12,6 +12,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useHasOdd, useToggleOdd } from '@/context/betslip'
 import { useUpDown } from '@/context/hooks'
 import { useT } from '@/context/providers'
+import { translateOutcomeName } from '@/lib/api-names'
 import { cn, getRelativeDayLabel } from '@/lib/utils'
 import type { EventSidebar$key } from '@/relay/__generated__/EventSidebar.graphql'
 import type { EventSidebarMarket$key } from '@/relay/__generated__/EventSidebarMarket.graphql'
@@ -94,6 +95,7 @@ function EventSidebarTournament(props: {
 
   const list = (onNavigate?: () => void) => (
     <TournamentEvents
+      // eslint-disable-next-line local-i18n/no-untranslated-api-string -- proper noun
       name={tournament.name}
       sportKey={tournament.sport.key}
       events={events}
@@ -118,6 +120,7 @@ function EventSidebarTournament(props: {
           <SportIconBadge sport={tournament.sport.key} size='sm' />
           <div className='min-w-0 flex-1'>
             <p className='text-secondary text-[0.65rem]'>{t('Other matches in this tournament')}</p>
+            {/* eslint-disable-next-line local-i18n/no-untranslated-api-string -- proper noun */}
             <p className='truncate text-sm font-semibold text-white'>{tournament.name}</p>
           </div>
           <span className='bg-dark-300 rounded-full px-2 py-0.5 font-mono text-[0.65rem]'>
@@ -134,6 +137,7 @@ function EventSidebarTournament(props: {
               aria-describedby={undefined}
             >
               <VisuallyHidden.Root>
+                {/* eslint-disable-next-line local-i18n/no-untranslated-api-string -- proper noun */}
                 <Drawer.Title>{tournament.name}</Drawer.Title>
               </VisuallyHidden.Root>
               <div className='flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-4'>
@@ -292,6 +296,7 @@ function EventSidebarOdd(props: { outcome: EventSidebarOdd$key }) {
   const toggleOdd = useToggleOdd()
   const upDown = useUpDown(Number(outcome.price))
   const suspended = outcome.status !== 'OPEN'
+  const t = useT()
 
   return (
     <Toggle.Root
@@ -306,7 +311,7 @@ function EventSidebarOdd(props: { outcome: EventSidebarOdd$key }) {
       onPressedChange={() => toggleOdd(outcome.id)}
     >
       <span className='group-data-[state=on]/odd:text-foreground text-secondary text-[0.6rem]'>
-        {outcome.name}
+        {translateOutcomeName(t, outcome.name)}
       </span>
       <span
         className='group-data-[state=on]/odd:text-primary text-foreground text-xs font-semibold'

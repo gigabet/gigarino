@@ -42,6 +42,7 @@ export default function LiveStripTournament(props: {
       <SportIconBadge sport={data.sport.key} size='sm' />
       <div className='min-w-0'>
         <p className='text-secondary truncate text-[0.65rem] tracking-wider uppercase'>
+          {/* eslint-disable-next-line local-i18n/no-untranslated-api-string -- proper noun */}
           {data.category.name}
         </p>
         <p className='text-foreground truncate text-sm font-semibold'>

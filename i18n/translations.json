@@ -35,6 +35,10 @@
     "de": "{n}-fach Kombi",
     "tr": "{n}'li Kombine"
   },
+  "+{n} more": {
+    "de": "+{n} weitere",
+    "tr": "+{n} daha"
+  },
   "1 invalid bet.": {
     "de": "1 ungültige Wette.",
     "tr": "1 geçersiz bahis."
@@ -223,6 +227,10 @@
     "de": "Basketball",
     "tr": "Basketbol"
   },
+  "Bet": {
+    "de": "Wette",
+    "tr": "Bahis"
+  },
   "Bet Boost": {
     "de": "Wett-Boost",
     "tr": "Bahis Artışı"
@@ -275,9 +283,21 @@
     "de": "Pause",
     "tr": "Ara"
   },
+  "By competition": {
+    "de": "Nach Wettbewerb",
+    "tr": "Yarışmaya göre"
+  },
+  "By start time": {
+    "de": "Nach Startzeit",
+    "tr": "Başlangıç saatine göre"
+  },
   "Cancelled": {
     "de": "Storniert",
     "tr": "İptal edildi"
+  },
+  "Cards": {
+    "de": "Karten",
+    "tr": "Kartlar"
   },
   "Cash Out": {
     "de": "Cashout",
@@ -331,6 +351,10 @@
     "de": "Suche löschen",
     "tr": "Aramayı temizle"
   },
+  "Close": {
+    "de": "Schließen",
+    "tr": "Kapat"
+  },
   "Close match tracker": {
     "de": "Tracker schließen",
     "tr": "Takipçiyi kapat"
@@ -382,6 +406,10 @@
   "Corners full time": {
     "de": "Ecken Spielende",
     "tr": "Maç sonu korner"
+  },
+  "Correct Score": {
+    "de": "Korrektes Ergebnis",
+    "tr": "Doğru Skor"
   },
   "Corrected": {
     "de": "Korrigiert",
@@ -591,6 +619,10 @@
     "de": "Spiel nicht verfügbar.",
     "tr": "Oyun mevcut değil."
   },
+  "Games": {
+    "de": "Spiele",
+    "tr": "Oyunlar"
+  },
   "Games by {name}": {
     "de": "Spiele von {name}",
     "tr": "{name} oyunları"
@@ -602,6 +634,10 @@
   "Goal attempts": {
     "de": "Torschüsse",
     "tr": "Şut denemesi"
+  },
+  "Goals": {
+    "de": "Tore",
+    "tr": "Goller"
   },
   "Good luck — track it under My Tickets.": {
     "de": "Viel Glück – verfolgen Sie sie unter Tickets.",
@@ -626,6 +662,10 @@
   "Hide match tracker": {
     "de": "Tracker ausblenden",
     "tr": "Takipçiyi gizle"
+  },
+  "High Energy Gaming": {
+    "de": "High Energy Gaming",
+    "tr": "High Energy Gaming"
   },
   "Highlights": {
     "de": "Highlights",
@@ -663,6 +703,14 @@
     "de": "Interner Fehler.",
     "tr": "Dahili hata."
   },
+  "International": {
+    "de": "International",
+    "tr": "Uluslararası"
+  },
+  "Its selections, score and payout show up here.": {
+    "de": "Auswahlen, Spielstand und Auszahlung erscheinen hier.",
+    "tr": "Seçimleri, skoru ve ödemesi burada görünür."
+  },
   "Join {brand} for exclusive bonuses": {
     "de": "Registriere dich bei {brand} für exklusive Boni",
     "tr": "Özel bonuslar için {brand}'a katılın"
@@ -687,9 +735,17 @@
     "de": "Lizenziert",
     "tr": "Lisanslı"
   },
+  "List": {
+    "de": "Liste",
+    "tr": "Liste"
+  },
   "Live": {
     "de": "Live",
     "tr": "Canlı"
+  },
+  "Live bet": {
+    "de": "Live-Wette",
+    "tr": "Canlı bahis"
   },
   "Live Betting": {
     "de": "Live-Wetten",
@@ -723,6 +779,10 @@
     "de": "Verloren",
     "tr": "Kaybetti"
   },
+  "Main": {
+    "de": "Haupt",
+    "tr": "Ana"
+  },
   "Match": {
     "de": "Spiel",
     "tr": "Maç"
@@ -730,6 +790,10 @@
   "Match state changed.": {
     "de": "Spielstatus geändert.",
     "tr": "Maç durumu değişti."
+  },
+  "Match tracker": {
+    "de": "Match-Tracker",
+    "tr": "Maç takipçisi"
   },
   "Match Winner": {
     "de": "Spielsieger",
@@ -791,9 +855,17 @@
     "de": "Keine Live-Events entsprechen Ihrer Suche.",
     "tr": "Aramanızla eşleşen canlı etkinlik yok."
   },
+  "No markets available for this event right now.": {
+    "de": "Derzeit keine Märkte für dieses Event verfügbar.",
+    "tr": "Bu etkinlik için şu anda market yok."
+  },
   "No matches for \"{query}\"": {
     "de": "Keine Treffer für „{query}“",
     "tr": "\"{query}\" için sonuç bulunamadı"
+  },
+  "No tickets match this filter": {
+    "de": "Keine Tickets entsprechen diesem Filter",
+    "tr": "Bu filtreye uygun kupon yok"
   },
   "No tickets yet": {
     "de": "Noch keine Tickets",
@@ -802,6 +874,10 @@
   "Odd": {
     "de": "Ungerade",
     "tr": "Tek"
+  },
+  "Odds": {
+    "de": "Quoten",
+    "tr": "Oranlar"
   },
   "Odds have changed.": {
     "de": "Quoten geändert.",
@@ -839,6 +915,10 @@
     "de": "Offen ({n})",
     "tr": "Açık ({n})"
   },
+  "or": {
+    "de": "oder",
+    "tr": "veya"
+  },
   "Or continue with": {
     "de": "Oder weiter mit",
     "tr": "Veya şununla devam et"
@@ -846,6 +926,10 @@
   "OT": {
     "de": "Verl.",
     "tr": "UZ"
+  },
+  "Other": {
+    "de": "Sonstige",
+    "tr": "Diğer"
   },
   "Other matches in this tournament": {
     "de": "Weitere Spiele im Turnier",
@@ -919,6 +1003,18 @@
     "de": "Elfmeter",
     "tr": "Penaltılar"
   },
+  "Penalty": {
+    "de": "Elfmeter",
+    "tr": "Penaltı"
+  },
+  "Penalty missed": {
+    "de": "Elfmeter verschossen",
+    "tr": "Kaçan penaltı"
+  },
+  "Penalty scored": {
+    "de": "Elfmeter verwandelt",
+    "tr": "Penaltı golü"
+  },
   "Pending": {
     "de": "Ausstehend",
     "tr": "Bekliyor"
@@ -935,9 +1031,17 @@
     "de": "Wette platzieren",
     "tr": "Bahis Yap"
   },
+  "Placed": {
+    "de": "Platziert",
+    "tr": "Yerleştirildi"
+  },
   "Placing bet...": {
     "de": "Wette wird platziert...",
     "tr": "Bahis yapılıyor..."
+  },
+  "Players": {
+    "de": "Spieler",
+    "tr": "Oyuncular"
   },
   "Please confirm your age": {
     "de": "Bitte Alter bestätigen",
@@ -947,6 +1051,10 @@
     "de": "Bitte erneut versuchen.",
     "tr": "Lütfen tekrar deneyin."
   },
+  "Points": {
+    "de": "Punkte",
+    "tr": "Puanlar"
+  },
   "Possession": {
     "de": "Ballbesitz",
     "tr": "Topla oynama"
@@ -954,6 +1062,10 @@
   "Postponed": {
     "de": "Verschoben",
     "tr": "Ertelendi"
+  },
+  "Potential": {
+    "de": "Potenzial",
+    "tr": "Potansiyel"
   },
   "Potential payout": {
     "de": "Möglicher Gewinn",
@@ -978,6 +1090,10 @@
   "Recent": {
     "de": "Zuletzt",
     "tr": "Son"
+  },
+  "Red card": {
+    "de": "Rote Karte",
+    "tr": "Kırmızı kart"
   },
   "Red cards": {
     "de": "Rote Karten",
@@ -1039,6 +1155,10 @@
     "de": "Erneut versuchen",
     "tr": "Tekrar dene"
   },
+  "Return": {
+    "de": "Auszahlung",
+    "tr": "Getiri"
+  },
   "Round": {
     "de": "Runde",
     "tr": "Tur"
@@ -1046,6 +1166,10 @@
   "Saves": {
     "de": "Paraden",
     "tr": "Kurtarışlar"
+  },
+  "Score at bet": {
+    "de": "Spielstand bei Wette",
+    "tr": "Bahis anındaki skor"
   },
   "Scroll left": {
     "de": "Nach links scrollen",
@@ -1099,6 +1223,10 @@
     "de": "Teams, Ligen suchen...",
     "tr": "Takım, lig ara..."
   },
+  "Searching older tickets...": {
+    "de": "Ältere Tickets werden gesucht...",
+    "tr": "Eski kuponlar aranıyor..."
+  },
   "Secure": {
     "de": "Sicher",
     "tr": "Güvenli"
@@ -1110,6 +1238,10 @@
   "Select": {
     "de": "Auswählen",
     "tr": "Seç"
+  },
+  "Select a ticket": {
+    "de": "Ticket auswählen",
+    "tr": "Kupon seç"
   },
   "Selection": {
     "de": "Auswahl",
@@ -1191,6 +1323,10 @@
     "de": "Etwas ist schiefgelaufen.",
     "tr": "Bir şeyler ters gitti."
   },
+  "Special": {
+    "de": "Spezial",
+    "tr": "Özel"
+  },
   "Sport Promotions": {
     "de": "Sport-Aktionen",
     "tr": "Spor Promosyonları"
@@ -1222,6 +1358,10 @@
   "Stats": {
     "de": "Statistiken",
     "tr": "İstatistikler"
+  },
+  "Status": {
+    "de": "Status",
+    "tr": "Durum"
   },
   "Substitutions": {
     "de": "Auswechslungen",
@@ -1271,9 +1411,17 @@
     "de": "Event evtl. beendet, entfernt oder vorübergehend nicht verfügbar.",
     "tr": "Etkinlik bitmiş, kaldırılmış veya geçici olarak kullanılamıyor olabilir."
   },
+  "Ticket details": {
+    "de": "Ticketdetails",
+    "tr": "Kupon detayları"
+  },
   "Tiebreak": {
     "de": "Tiebreak",
     "tr": "Tiebreak"
+  },
+  "Timeline": {
+    "de": "Zeitverlauf",
+    "tr": "Zaman çizelgesi"
   },
   "Too many singles.": {
     "de": "Zu viele Einzelwetten.",
@@ -1330,6 +1478,10 @@
   "V": {
     "de": "U",
     "tr": "İ"
+  },
+  "View all": {
+    "de": "Alle anzeigen",
+    "tr": "Tümünü gör"
   },
   "Viewing": {
     "de": "Anzeigen",
@@ -1406,101 +1558,5 @@
   "Your betslip is empty": {
     "de": "Ihr Wettschein ist leer",
     "tr": "Kuponunuz boş"
-  },
-  "+{n} more": {
-    "de": "",
-    "tr": ""
-  },
-  "Bet": {
-    "de": "",
-    "tr": ""
-  },
-  "Close": {
-    "de": "",
-    "tr": ""
-  },
-  "High Energy Gaming": {
-    "de": "",
-    "tr": ""
-  },
-  "Its selections, score and payout show up here.": {
-    "de": "",
-    "tr": ""
-  },
-  "Live bet": {
-    "de": "",
-    "tr": ""
-  },
-  "Match tracker": {
-    "de": "",
-    "tr": ""
-  },
-  "No markets available for this event right now.": {
-    "de": "",
-    "tr": ""
-  },
-  "No tickets match this filter": {
-    "de": "",
-    "tr": ""
-  },
-  "Odds": {
-    "de": "",
-    "tr": ""
-  },
-  "Penalty": {
-    "de": "",
-    "tr": ""
-  },
-  "Penalty missed": {
-    "de": "",
-    "tr": ""
-  },
-  "Penalty scored": {
-    "de": "",
-    "tr": ""
-  },
-  "Placed": {
-    "de": "",
-    "tr": ""
-  },
-  "Potential": {
-    "de": "",
-    "tr": ""
-  },
-  "Red card": {
-    "de": "",
-    "tr": ""
-  },
-  "Return": {
-    "de": "",
-    "tr": ""
-  },
-  "Score at bet": {
-    "de": "",
-    "tr": ""
-  },
-  "Searching older tickets...": {
-    "de": "",
-    "tr": ""
-  },
-  "Select a ticket": {
-    "de": "",
-    "tr": ""
-  },
-  "Status": {
-    "de": "",
-    "tr": ""
-  },
-  "Ticket details": {
-    "de": "",
-    "tr": ""
-  },
-  "Timeline": {
-    "de": "",
-    "tr": ""
-  },
-  "View all": {
-    "de": "",
-    "tr": ""
   }
 }

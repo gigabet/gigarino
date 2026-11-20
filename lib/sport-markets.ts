@@ -74,7 +74,6 @@ export function getAvailableMarkets(scope?: string | null): MarketKind[] {
   return BY_SPORT[scope] ?? MIXED
 }
 
-// BETSLIP ONLY
 // keyed by the English market name the API sends, without the trailing line
 export const MARKET_NAME: Record<string, string> = {
   'Fulltime Result': tKey('Fulltime Result'),

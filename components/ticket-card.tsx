@@ -18,6 +18,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useT } from '@/context/providers'
 import { unseenResettlementsAtom } from '@/context/tickets'
 import { tKey } from '@/i18n/tKey'
+import { translateMarketName, translateOutcomeName } from '@/lib/api-names'
 import { cn, formatBalance } from '@/lib/utils'
 import type { TicketCard$data, TicketCard$key } from '@/relay/__generated__/TicketCard.graphql'
 import type { TicketCardAcknowledgeMutation } from '@/relay/__generated__/TicketCardAcknowledgeMutation.graphql'
@@ -298,7 +299,7 @@ export function TicketCardDetails(props: {
                     {selectionLabel(item.outcomeName, item.eventName)}
                   </p>
                   <p className='text-secondary'>
-                    {item.marketName} · {item.eventName}
+                    {translateMarketName(t, item.marketName)} · {item.eventName}
                   </p>
                   <p className='text-secondary/80 flex flex-wrap items-center gap-x-2 text-[0.7rem]'>
                     <span>{format(new Date(item.eventStartTime), 'dd MMM, HH:mm')}</span>
@@ -372,7 +373,8 @@ export function TicketCardDetails(props: {
             return (
               <div key={c.id} className='space-y-0.5'>
                 <p className='text-white/90'>
-                  {t(CORRECTION_LABEL[c.kind] ?? c.kind)} · {item?.outcomeName}
+                  {t(CORRECTION_LABEL[c.kind] ?? c.kind)} ·{' '}
+                  {item && translateOutcomeName(t, item.outcomeName)}
                 </p>
                 <div className='text-secondary flex justify-between font-mono'>
                   <span>

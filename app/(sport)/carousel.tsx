@@ -24,6 +24,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useActiveBoost, useApplyBoost, useCombo, useHasOdd, useToggleOdd } from '@/context/betslip'
 import { useUpDown } from '@/context/hooks'
 import { useT } from '@/context/providers'
+import { translateMarketName, translateOutcomeName } from '@/lib/api-names'
 import { cn, formatBalance, getRelativeDayLabel } from '@/lib/utils'
 import type { BetBoostCard$key } from '@/relay/__generated__/BetBoostCard.graphql'
 import type { Carousel$data, Carousel$key } from '@/relay/__generated__/Carousel.graphql'
@@ -264,8 +265,8 @@ function BetBoostCard(props: { bet: BetBoostCard$key; id: string }) {
           )}
         </p>
         <p className='text-secondary mt-0.5 truncate text-[0.65rem] tracking-wide uppercase'>
-          {leg?.marketName}
-          {leg?.outcomeName ? ` · ${leg.outcomeName}` : ''}
+          {leg?.marketName && translateMarketName(t, leg.marketName)}
+          {leg?.outcomeName ? ` · ${translateOutcomeName(t, leg.outcomeName)}` : ''}
         </p>
       </div>
 
@@ -388,7 +389,7 @@ function ComboOfWeekCard(props: { bet: ComboOfWeekCard$key }) {
             )}
           >
             <span className='truncate text-white/90'>
-              {s.outcomeName ?? '—'}
+              {s.outcomeName ? translateOutcomeName(t, s.outcomeName) : '—'}
               {s.eventName && <span className='text-secondary'> · {s.eventName}</span>}
             </span>
             {s.price && (
@@ -500,6 +501,7 @@ function FeaturedGameCard(props: { bet: FeaturedGameCard$key }) {
         <>
           <div className='text-secondary relative flex items-center gap-1.5 text-[0.6rem] tracking-wide uppercase'>
             <SportIcon sport={event.sport.key} className='size-3 shrink-0' />
+            {/* eslint-disable-next-line local-i18n/no-untranslated-api-string -- proper noun */}
             <span className='min-w-0 truncate'>{event.tournament.name}</span>
             {event.status === 'LIVE' ? (
               <span className='text-destructive ml-auto flex shrink-0 items-center gap-1 font-bold'>
@@ -559,6 +561,7 @@ function FeaturedOutcomeToggle(props: {
   const toggleOdd = useToggleOdd()
   const upDown = useUpDown(Number(props.outcome.price))
   const suspended = props.outcome.status !== 'OPEN'
+  const t = useT()
 
   return (
     <Toggle.Root
@@ -573,7 +576,7 @@ function FeaturedOutcomeToggle(props: {
       onPressedChange={() => toggleOdd(props.outcome.id)}
     >
       <span className='group-data-[state=on]/odd:text-foreground text-secondary text-[0.65rem]'>
-        {props.outcome.name}
+        {translateOutcomeName(t, props.outcome.name)}
       </span>
       <span
         className='text-foreground text-sm font-semibold group-data-[state=on]/odd:text-sky-400'

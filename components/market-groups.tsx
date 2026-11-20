@@ -9,6 +9,8 @@ import MarketCard from '@/components/market-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import * as Tabs from '@/components/ui/tabs'
 import { useT } from '@/context/providers'
+import { tKeysObj } from '@/i18n/tKey'
+import { translateMarketKind } from '@/lib/api-names'
 import type {
   MarketGroup,
   MarketGroups$data,
@@ -30,7 +32,7 @@ const GROUP_ORDER: TabGroup[] = [
   'SPECIAL',
 ]
 
-const GROUP_LABEL: Record<TabGroup, string> = {
+const GROUP_LABEL: Record<TabGroup, string> = tKeysObj({
   MAIN: 'Main',
   ALL: 'All',
   GOALS: 'Goals',
@@ -43,9 +45,9 @@ const GROUP_LABEL: Record<TabGroup, string> = {
   SPECIAL: 'Special',
   // eslint-disable-next-line relay/no-future-added-value
   '%future added value': 'Other',
-}
+})
 
-const DEFAULT_OPEN_COUNT = 3
+const DEFAULT_OPEN_COUNT = 10
 
 export default function MarketGroups(props: { event: MarketGroups$key }) {
   const data = useFragment(
@@ -122,7 +124,7 @@ export default function MarketGroups(props: { event: MarketGroups$key }) {
                 <Accordion.Item key={kind} value={kind}>
                   <Accordion.Header>
                     <Accordion.Trigger className='group flex w-full items-center gap-2 py-4 text-left text-sm font-semibold tracking-wide text-white uppercase'>
-                      <span className='min-w-0 truncate'>{t(kind.replaceAll('_', ' '))}</span>
+                      <span className='min-w-0 truncate'>{translateMarketKind(t, kind)}</span>
                       <FaCaretDown className='size-4 shrink-0 -rotate-90 transition-transform duration-200 group-data-[state=open]:rotate-0' />
                     </Accordion.Trigger>
                   </Accordion.Header>

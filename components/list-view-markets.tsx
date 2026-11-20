@@ -19,6 +19,7 @@ import { useHasOdd, useToggleOdd } from '@/context/betslip'
 import { useUpDown } from '@/context/hooks'
 import { useT } from '@/context/providers'
 import { tKey } from '@/i18n/tKey'
+import { fitOutcomeLabels, shortOutcomeKey, translateOutcomeKey } from '@/lib/api-names'
 import {
   getAvailableMarkets,
   MARKET_LABEL,
@@ -39,6 +40,9 @@ export const MARKETS_COL =
 
 // One odds column. No max-w: it fills the container.
 export const MARKET_CELL = 'min-w-42 flex-1'
+
+// Roughly how many characters of text-xs fit across MARKET_CELL, shared by its outcomes.
+const CELL_CHARS = 26
 
 // Teams + score block in a row
 export const ROW_LEAD = 'min-w-0 shrink-0 grow basis-34 sm:basis-40 lg:basis-64'
@@ -199,6 +203,7 @@ export function ListViewMarketDropdowns(props: { sport?: string | null }) {
 }
 
 function Market(props: { className?: string; market: ListViewMarket$key }) {
+  const t = useT()
   const data = useFragment(
     graphql`
       fragment ListViewMarket on Market {
@@ -232,18 +237,31 @@ function Market(props: { className?: string; market: ListViewMarket$key }) {
     return null
   }
 
+  const outcomes = sortBy(data.outcomes, e => e.index)
+  const labels = fitOutcomeLabels(
+    outcomes.map(odd => {
+      const line = lineFor(odd.key)
+      const withLine = (text: string) => (line ? `${text} ${line}` : text)
+      const tag = shortOutcomeKey(odd.key)
+      return { label: withLine(translateOutcomeKey(t, odd.key)), short: tag && withLine(tag) }
+    }),
+    Math.floor(CELL_CHARS / outcomes.length)
+  )
+
   return (
     <div className={cn(MARKET_CELL, 'flex h-15 gap-1', props.className)}>
-      {sortBy(data.outcomes, e => e.index).map(odd => (
-        <OddToggle key={odd.id} odd={odd} line={lineFor(odd.key)} />
+      {outcomes.map((odd, i) => (
+        <OddToggle key={odd.id} odd={odd} label={labels[i].text} title={labels[i].title} />
       ))}
     </div>
   )
 }
 
 function OddToggle(props: {
-  odd: { id: string; key: string; price: unknown; status: OutcomeStatus }
-  line?: string | null
+  odd: { id: string; price: unknown; status: OutcomeStatus }
+  label: string
+  /** The full label, when `label` is a short tag. */
+  title?: string
 }) {
   const hasOdd = useHasOdd()
   const toggleOdd = useToggleOdd()
@@ -262,9 +280,11 @@ function OddToggle(props: {
       onPressedChange={() => toggleOdd(props.odd.id)}
       disabled={props.odd.status !== 'OPEN'}
     >
-      <span className='group-data-[state=on]:text-foreground text-shadow-foreground text-secondary text-xs group-data-[state=on]:text-shadow-[0_0_8px]'>
-        <span className='capitalize'>{props.odd.key}</span>
-        {props.line && <span> {props.line}</span>}
+      <span
+        title={props.title}
+        className='group-data-[state=on]:text-foreground text-shadow-foreground text-secondary max-w-full truncate text-xs capitalize group-data-[state=on]:text-shadow-[0_0_8px]'
+      >
+        {props.label}
       </span>
       <span className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground relative flex flex-col items-center justify-center gap-1 text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'>
         {props.odd.status === 'OPEN' ? (

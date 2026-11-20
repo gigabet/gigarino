@@ -13,6 +13,7 @@ import { SportIcon } from '@/components/sport-icon'
 import { StatisticsSection } from '@/components/statistics-widget'
 import { TeamBadge } from '@/components/team-badge'
 import { useT } from '@/context/providers'
+import { tKeysObj } from '@/i18n/tKey'
 import { getRelativeDayLabel, pairToHues } from '@/lib/utils'
 import type { EventLiveState$key } from '@/relay/__generated__/EventLiveState.graphql'
 import type { PrematchSingleHeader$key } from '@/relay/__generated__/PrematchSingleHeader.graphql'
@@ -135,8 +136,10 @@ function PrematchSingleHeader(props: { event: PrematchSingleHeader$key }) {
             }}
             className='group relative flex min-w-0 items-center gap-2 text-current transition-colors hover:text-white'
           >
+            {/* eslint-disable-next-line local-i18n/no-untranslated-api-string -- proper noun */}
             <span className='truncate'>{data.tournament.name}</span>
             <span className='shrink-0'>·</span>
+            {/* eslint-disable-next-line local-i18n/no-untranslated-api-string -- proper noun */}
             <span className='truncate'>{data.category.name}</span>
             <ExternalLinkIcon className='size-3 shrink-0' />
             <span className='bg-primary absolute bottom-0 h-px w-full opacity-0 transition-all group-hover:opacity-100' />
@@ -171,6 +174,12 @@ function Competitor(props: {
   )
 }
 
+const TRADING_STATUS_LABEL: Record<string, string> = tKeysObj({
+  OPEN: 'Open',
+  SUSPENDED: 'Suspended',
+  CLOSED: 'Closed',
+})
+
 function EventLiveState(props: { event: EventLiveState$key; startTime: string }) {
   const data = useFragment(
     graphql`
@@ -183,8 +192,11 @@ function EventLiveState(props: { event: EventLiveState$key; startTime: string })
     `,
     props.event
   )
+  const t = useT()
 
   if (data.status !== 'LIVE') return <KickoffTime startTime={props.startTime} />
+
+  const tradingStatus = TRADING_STATUS_LABEL[data.tradingStatus]
 
   return (
     <div className='flex shrink-0 flex-col items-center gap-1 px-1'>
@@ -192,7 +204,7 @@ function EventLiveState(props: { event: EventLiveState$key; startTime: string })
         {data.homeScore ?? 0} - {data.awayScore ?? 0}
       </span>
       <span className='text-secondary text-[0.6rem] uppercase sm:text-[0.65rem]'>
-        {data.tradingStatus}
+        {tradingStatus && t(tradingStatus)}
       </span>
     </div>
   )

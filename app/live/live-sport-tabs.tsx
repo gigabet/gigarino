@@ -5,6 +5,7 @@ import { fetchQuery, graphql, useRefetchableFragment, useRelayEnvironment } from
 import { SportIcon } from '@/components/sport-icon'
 import { useScrollFade } from '@/context/hooks'
 import { useT } from '@/context/providers'
+import { translateSportName } from '@/lib/api-names'
 import { getSportTheme } from '@/lib/sport-theme'
 import { cn } from '@/lib/utils'
 import type { LiveSportTabs$key } from '@/relay/__generated__/LiveSportTabs.graphql'
@@ -71,7 +72,7 @@ export default function LiveSportTabs(props: {
               active={isActive}
               onClick={() => props.onChangeAction(sport.key)}
               icon={<SportIcon sport={sport.key} colored className='size-5 lg:size-4' />}
-              label={sport.name}
+              label={translateSportName(t, sport.key, sport.name)}
               count={sport.liveEventCount}
               style={
                 isActive

@@ -8,7 +8,8 @@ import { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import ReactCountryFlag from 'react-country-flag'
 import { graphql, useFragment } from 'react-relay'
 import { useScrollFade } from '@/context/hooks'
-import { useT } from '@/context/providers'
+import { useLocale, useT } from '@/context/providers'
+import { getCountryName } from '@/i18n/countryNames'
 import { cn } from '@/lib/utils'
 import type {
   LiveCountryTabs$data,
@@ -20,6 +21,19 @@ const GAP_PX = 8
 
 type Country = LiveCountryTabs$data['sports'][number]['liveCategories'][number]
 
+/**
+ * The country in the user's language. Categories without a country code keep the API name, except
+ * "International".
+ */
+function countryLabel(
+  country: Country,
+  locale: ReturnType<typeof useLocale>,
+  t: ReturnType<typeof useT>
+) {
+  if (country.countryCode) return getCountryName(country.countryCode, locale, t)
+  return country.name === 'International' ? t('International') : country.name
+}
+
 export default function LiveCountryTabs(props: {
   query: LiveCountryTabs$key
   /** Selected sport tab; null means all sports. */
@@ -29,6 +43,7 @@ export default function LiveCountryTabs(props: {
   onChangeAction: (country: string | null) => void
 }) {
   const t = useT()
+  const locale = useLocale()
   const data = useFragment(
     graphql`
       fragment LiveCountryTabs on Query {
@@ -158,7 +173,7 @@ export default function LiveCountryTabs(props: {
               className={cn(!visibleKeys.has(c.key) && 'lg:hidden')}
             >
               <Flag code={c.countryCode} />
-              <CountryLabel code={c.countryCode} name={c.name} />
+              <CountryLabel code={c.countryCode} name={countryLabel(c, locale, t)} />
               <span className='text-secondary'>{c.liveEventCount}</span>
             </Chip>
           ))}
@@ -184,7 +199,7 @@ export default function LiveCountryTabs(props: {
         {countries.map(c => (
           <Chip key={c.key}>
             <Flag code={c.countryCode} />
-            <CountryLabel code={c.countryCode} name={c.name} />
+            <CountryLabel code={c.countryCode} name={countryLabel(c, locale, t)} />
             <span>{c.liveEventCount}</span>
           </Chip>
         ))}
@@ -281,7 +296,9 @@ function CountryList(props: {
   onSelectAction: (country: string | null) => void
 }) {
   const t = useT()
-  const alphabetical = useMemo(() => sortBy(props.countries, c => c.name), [props.countries])
+  const locale = useLocale()
+  // by the name shown, which is no longer the API's once translated
+  const alphabetical = sortBy(props.countries, c => countryLabel(c, locale, t))
 
   const item =
     'flex w-full cursor-pointer items-center gap-3 rounded-lg px-2 py-2.5 text-left text-sm text-neutral-200 data-[selected=true]:bg-white/8'
@@ -303,12 +320,12 @@ function CountryList(props: {
         {alphabetical.map(c => (
           <Command.Item
             key={c.key}
-            value={c.name}
+            value={countryLabel(c, locale, t)}
             onSelect={() => props.onSelectAction(c.key)}
             className={item}
           >
             <Flag code={c.countryCode} />
-            <span className='min-w-0 flex-1 truncate'>{c.name}</span>
+            <span className='min-w-0 flex-1 truncate'>{countryLabel(c, locale, t)}</span>
             <span className='text-secondary text-xs'>{c.liveEventCount}</span>
             {props.active === c.key && <CheckIcon className='text-primary size-4 shrink-0' />}
           </Command.Item>

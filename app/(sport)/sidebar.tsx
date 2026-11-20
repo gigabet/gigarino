@@ -24,6 +24,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { useSelectedTournaments } from '@/context/hooks'
 import { useLocale, useT } from '@/context/providers'
 import { getCountryName } from '@/i18n/countryNames'
+import { translateSportName } from '@/lib/api-names'
 import type { PrematchLayoutQuery } from '@/relay/__generated__/PrematchLayoutQuery.graphql'
 import PrematchLayoutQueryNode from '@/relay/__generated__/PrematchLayoutQuery.graphql'
 import type { Sidebar$data, Sidebar$key } from '@/relay/__generated__/Sidebar.graphql'
@@ -86,7 +87,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
             <SportSubmenu
               key={sport.key}
               sportKey={sport.key}
-              sportName={sport.name}
+              sportName={translateSportName(t, sport.key, sport.name)}
               side='bottom'
               trigger={
                 <button
@@ -94,7 +95,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
                   className='bg-dark-300 sport-texture flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-xs whitespace-nowrap transition-colors hover:bg-white/5'
                 >
                   <SportIcon sport={sport.key} colored className='size-4' />
-                  {sport.name}
+                  {translateSportName(t, sport.key, sport.name)}
                   <span className='text-secondary flex items-center'>{sport.eventCount}</span>
                 </button>
               }
@@ -129,7 +130,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
             <SportSubmenu
               key={sport.key}
               sportKey={sport.key}
-              sportName={sport.name}
+              sportName={translateSportName(t, sport.key, sport.name)}
               side='right'
               trigger={
                 <button
@@ -223,9 +224,6 @@ function SportSubmenu(props: {
 }) {
   const [queryRef, loadQuery, disposeQuery] =
     useQueryLoader<SidebarSportDetails>(SidebarSportDetailsNode)
-  // NOTE: sportName comes from the API — if the backend already localises
-  // sport names, leave as-is; otherwise wrap with t() here.
-  const sportName = props.sportName
 
   return (
     <Popover.Root
@@ -244,7 +242,7 @@ function SportSubmenu(props: {
           className='bg-dark-200 z-40 max-h-[70dvh] w-72 overflow-y-auto rounded-2xl border border-white/5 p-3 shadow-2xl'
         >
           <p className='text-secondary mb-2 px-1 text-xs font-semibold tracking-wider uppercase'>
-            {sportName}
+            {props.sportName}
           </p>
           <Suspense fallback={<CategorySkeleton />}>
             {queryRef && <CountryList queryRef={queryRef} />}
@@ -302,6 +300,7 @@ function Sport(props: { sport: SidebarSport$key }) {
     `,
     props.sport
   )
+  const t = useT()
 
   const [queryRef, loadQuery, disposeQuery] = useQueryLoader(graphql`
     query SidebarSportDetails($key: String) {
@@ -331,7 +330,7 @@ function Sport(props: { sport: SidebarSport$key }) {
         onMouseDown={() => loadQuery({ key: data.key })}
       >
         <SportIconBadge sport={data.key} size='sm' />
-        <span className='mr-auto text-sm'>{data.name}</span>
+        <span className='mr-auto text-sm'>{translateSportName(t, data.key, data.name)}</span>
         <span className='text-secondary flex items-center text-xs'>{data.eventCount}</span>
       </Accordion.Trigger>
       <Accordion.Content
@@ -542,6 +541,7 @@ function Tournaments(props: { category: SidebarTournaments$key }) {
               htmlFor={t.key}
               className='text-secondary peer-data-[state=checked]:text-foreground flex grow cursor-pointer justify-between gap-4 text-xs font-normal'
             >
+              {/* eslint-disable-next-line local-i18n/no-untranslated-api-string -- proper noun */}
               <span className='line-clamp-2 leading-tight'>{t.name}</span>
               <span className='bg-dark-300 rounded-lg px-2 py-1 font-mono text-[0.67rem]'>
                 {t.eventCount}

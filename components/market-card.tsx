@@ -8,6 +8,12 @@ import { OddDelta } from '@/components/odd-delta'
 import { useHasOdd, useToggleOdd } from '@/context/betslip'
 import { useUpDown } from '@/context/hooks'
 import { useT } from '@/context/providers'
+import {
+  fitOutcomeLabels,
+  shortOutcomeName,
+  translateMarketName,
+  translateOutcomeName,
+} from '@/lib/api-names'
 import { cn } from '@/lib/utils'
 import type { MarketCard$key } from '@/relay/__generated__/MarketCard.graphql'
 
@@ -16,6 +22,9 @@ function getOutcomesLayout(count: number) {
   if (count === 4) return 'grid-cols-4'
   return 'grid-cols-3'
 }
+
+// Roughly how many characters of text-xs fit across a mobile-width card, shared by its columns.
+const ROW_CHARS = 28
 
 const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, '')
 
@@ -42,20 +51,30 @@ export default function MarketCard(props: {
     props.market
   )
 
+  const t = useT()
   const suspended = market.status !== 'OPEN'
 
   const line = market.line == null ? '' : String(Math.abs(Number(market.line)))
-  const outcomeLabel = (name: string) => (line && !name.includes(line) ? `${name} ${line}` : name)
+  const withLine = (label: string) => (line && !label.includes(line) ? `${label} ${line}` : label)
+
+  const outcomes = sortBy(market.outcomes, e => e.index)
+  const labels = fitOutcomeLabels(
+    outcomes.map(odd => {
+      const tag = shortOutcomeName(odd.name)
+      return { label: withLine(translateOutcomeName(t, odd.name)), short: tag && withLine(tag) }
+    }),
+    Math.floor(ROW_CHARS / outcomes.length)
+  )
 
   return (
     <div className='flex flex-col gap-2'>
-      <p className='text-secondary text-xs'>{market.name}</p>
+      <p className='text-secondary text-xs'>{translateMarketName(t, market.name)}</p>
 
       <div className={cn('grid gap-2', getOutcomesLayout(market.outcomes.length))}>
-        {sortBy(market.outcomes, e => e.index).map(odd => (
+        {outcomes.map((odd, i) => (
           <OutcomeToggle
             key={odd.id}
-            odd={{ ...odd, name: outcomeLabel(odd.name) }}
+            odd={{ ...odd, label: labels[i].text, title: labels[i].title }}
             suspended={suspended}
           />
         ))}
@@ -65,14 +84,13 @@ export default function MarketCard(props: {
 }
 
 function OutcomeToggle(props: {
-  odd: { id: string; name: string; price: unknown; status: string }
+  odd: { id: string; label: string; title?: string; price: unknown; status: string }
   suspended: boolean
 }) {
   const hasOdd = useHasOdd()
   const toggleOdd = useToggleOdd()
   const upDown = useUpDown(Number(props.odd.price))
   const locked = props.suspended || props.odd.status !== 'OPEN'
-  const t = useT()
 
   return (
     <Toggle.Root
@@ -87,8 +105,11 @@ function OutcomeToggle(props: {
       pressed={hasOdd(props.odd.id)}
       onPressedChange={() => toggleOdd(props.odd.id)}
     >
-      <span className='group-data-[state=on]:text-foreground text-shadow-foreground text-secondary text-xs group-data-[state=on]:text-shadow-[0_0_8px]'>
-        {t(props.odd.name)}
+      <span
+        title={props.odd.title}
+        className='group-data-[state=on]:text-foreground text-shadow-foreground text-secondary max-w-full truncate text-xs group-data-[state=on]:text-shadow-[0_0_8px]'
+      >
+        {props.odd.label}
       </span>
       <span className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground relative flex flex-col items-center justify-center gap-1 text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'>
         {locked ? (

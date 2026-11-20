@@ -3,6 +3,7 @@
 import { cx } from 'class-variance-authority'
 import { LayoutListIcon, Rows3Icon, SlidersHorizontalIcon } from 'lucide-react'
 import * as DropdownMenu from '@/components/ui/dropdown-menu'
+import { useT } from '@/context/providers'
 
 export type LiveSort = 'tournament' | 'chronological'
 export type LiveView = 'list' | 'single'
@@ -17,7 +18,7 @@ export default function LiveToolbar(props: {
   search: string
   onSearchChangeAction: (search: string) => void
 }) {
-  // const t = useT()
+  const t = useT()
 
   // // typing stays local; only the settled value reaches the queries
   // const [text, setText] = useState(props.search)
@@ -36,7 +37,7 @@ export default function LiveToolbar(props: {
             className='bg-control border-control-border flex items-center gap-2 rounded-full border px-3.5 py-2 text-xs text-white/80 transition-colors hover:bg-white/12 hover:text-white'
           >
             <SlidersHorizontalIcon className='size-3.5' />
-            {props.sort === 'tournament' ? 'By competition' : 'By start time'}
+            {props.sort === 'tournament' ? t('By competition') : t('By start time')}
           </button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content align='start' className='w-44'>
@@ -44,13 +45,13 @@ export default function LiveToolbar(props: {
             className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'
             onClick={() => props.onSortChangeAction('tournament')}
           >
-            By competition
+            {t('By competition')}
           </DropdownMenu.Item>
           <DropdownMenu.Item
             className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'
             onClick={() => props.onSortChangeAction('chronological')}
           >
-            By start time
+            {t('By start time')}
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Root>
@@ -86,13 +87,13 @@ export default function LiveToolbar(props: {
           active={props.view === 'single'}
           onClick={() => props.onViewChangeAction('single')}
           icon={<LayoutListIcon className='size-3.5' />}
-          label='Single'
+          label={t('Single')}
         />
         <ViewButton
           active={props.view === 'list'}
           onClick={() => props.onViewChangeAction('list')}
           icon={<Rows3Icon className='size-3.5' />}
-          label='List'
+          label={t('List')}
         />
       </div>
     </div>

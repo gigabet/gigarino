@@ -50,7 +50,8 @@ import {
 import { useMediaQuery } from '@/context/hooks'
 import { useBetslipQuote, useCurrency, useT, useUser } from '@/context/providers'
 import { unseenResettlementsAtom } from '@/context/tickets'
-import { MARKET_NAME, OUTCOME_NAME, splitMarketName } from '@/lib/sport-markets'
+import { translateOutcomeKey, translateOutcomeName } from '@/lib/api-names'
+import { MARKET_NAME, splitMarketName } from '@/lib/sport-markets'
 import { cn, formatBalance, nCk } from '@/lib/utils'
 import type { Betslip$data, Betslip$key } from '@/relay/__generated__/Betslip.graphql'
 import type { BetslipMobileBar$key } from '@/relay/__generated__/BetslipMobileBar.graphql'
@@ -870,7 +871,7 @@ function getLabel(
   if (key === 'home') return home ?? t('Home')
   if (key === 'away') return away ?? t('Away')
 
-  const label = OUTCOME_NAME[key] ? t(OUTCOME_NAME[key]) : name || key
+  const label = name ? translateOutcomeName(t, name) : translateOutcomeKey(t, key)
   const { line } = splitMarketName(marketName)
   return line && !label.includes(line) ? `${label} ${line}` : label
 }

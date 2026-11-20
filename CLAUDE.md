@@ -104,8 +104,9 @@ Global client state: Jotai (`context/*.ts`). Betslip/tickets/favourites/tracker 
 - Strings outside render (module constants, arrays) must be marked with `tKey('...')` /
   `tKeys([...])` / `tKeysObj({...})` and translated at use. Only **string literals** are extracted.
 - API display strings (sport/market/outcome names, ...) arrive in English and are localised here: map
-  a stable `key`/`kind` to a `tKey()` table and render with `t()`. The local ESLint rule
-  `local-i18n/no-untranslated-api-string` (`eslint-rules/`) flags raw `{x.name}` renders.
+  a stable `key`/`kind` to a `tKey()` table and render with `t()` (helpers: `lib/api-names.ts`).
+  The local ESLint rule `local-i18n/no-untranslated-api-string` (`eslint-rules/`) flags raw
+  `{x.name}` renders; disable it inline only for proper nouns.
 - `translations.json` is generated: `pnpm dev` re-runs `i18n:extract` on file changes. Do not
   hand-edit it; run the scripts. Run `pnpm i18n:validate` before finishing UI-text changes.
 

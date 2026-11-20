@@ -12,6 +12,7 @@ import { OddDelta } from '@/components/odd-delta'
 import { useHasOdd, useToggleOdd } from '@/context/betslip'
 import { useUpDown } from '@/context/hooks'
 import { useT } from '@/context/providers'
+import { translateOutcomeName } from '@/lib/api-names'
 import { cn } from '@/lib/utils'
 import type { LiveEventStrip$key } from '@/relay/__generated__/LiveEventStrip.graphql'
 import type { LiveStripMarket$key } from '@/relay/__generated__/LiveStripMarket.graphql'
@@ -133,6 +134,7 @@ function LiveStripOdd(props: { outcome: LiveStripOdd$key; suspended: boolean }) 
   const hasOdd = useHasOdd()
   const toggleOdd = useToggleOdd()
   const upDown = useUpDown(Number(outcome.price))
+  const t = useT()
 
   return (
     <Toggle.Root
@@ -148,7 +150,7 @@ function LiveStripOdd(props: { outcome: LiveStripOdd$key; suspended: boolean }) 
       onPressedChange={() => toggleOdd(outcome.id)}
     >
       <span className='text-secondary group-data-[state=on]/odd:text-foreground text-[0.6rem]'>
-        {outcome.name}
+        {translateOutcomeName(t, outcome.name)}
       </span>
       {props.suspended || outcome.status !== 'OPEN' ? (
         <LockKeyhole className='size-3' />
