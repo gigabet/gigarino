@@ -86,10 +86,8 @@ export function useSelectedTournaments() {
     [searchParams]
   )
 
-  const toggle = useCallback(
-    (id: string) => {
-      const next = selected.includes(id) ? selected.filter(v => v !== id) : [...selected, id]
-
+  const commit = useCallback(
+    (next: string[]) => {
       const params = new URLSearchParams(searchParams)
       next.length ? params.set('tournaments', next.join(',')) : params.delete('tournaments')
       params.delete('q') // selecting a tournament exits search mode — same view can't show both
@@ -98,10 +96,20 @@ export function useSelectedTournaments() {
       // not a route match change, so page.tsx/layout.tsx are not remounted.
       router.replace(`${pathname}?${params.toString()}`, { scroll: false })
     },
-    [selected, searchParams, pathname, router]
+    [searchParams, pathname, router]
   )
 
-  return { selected, toggle }
+  // checkbox behaviour: add to / remove from the selection
+  const toggle = useCallback(
+    (id: string) =>
+      commit(selected.includes(id) ? selected.filter(v => v !== id) : [...selected, id]),
+    [selected, commit]
+  )
+
+  // radio behaviour: replace the whole selection; null clears it
+  const select = useCallback((id: string | null) => commit(id ? [id] : []), [commit])
+
+  return { selected, toggle, select }
 }
 
 export function useMediaQuery(query: string) {

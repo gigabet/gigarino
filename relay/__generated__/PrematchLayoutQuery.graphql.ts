@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<852b1799379b1e6ef34cb944072f4478>>
+ * @generated SignedSource<<c3c86ce3ec942ca5afa65b2c83df9c71>>
  * @lightSyntaxTransform
  */
 
@@ -64,6 +64,19 @@ v5 = {
   "storageKey": null
 },
 v6 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "Sport",
+  "kind": "LinkedField",
+  "name": "sport",
+  "plural": false,
+  "selections": [
+    (v2/*:: as any*/),
+    (v5/*:: as any*/)
+  ],
+  "storageKey": null
+},
+v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -170,6 +183,55 @@ return {
         ]
       },
       {
+        "if": null,
+        "kind": "Stream",
+        "label": "TopTournaments$stream$tt_topTournaments_4ktKph",
+        "selections": [
+          {
+            "alias": "tt_topTournaments",
+            "args": [
+              {
+                "kind": "Literal",
+                "name": "first",
+                "value": 6
+              }
+            ],
+            "concreteType": "Tournament",
+            "kind": "LinkedField",
+            "name": "topTournaments",
+            "plural": true,
+            "selections": [
+              (v6/*:: as any*/),
+              (v2/*:: as any*/),
+              (v3/*:: as any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Category",
+                "kind": "LinkedField",
+                "name": "category",
+                "plural": false,
+                "selections": [
+                  (v3/*:: as any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "countryCode",
+                    "storageKey": null
+                  },
+                  (v5/*:: as any*/)
+                ],
+                "storageKey": null
+              },
+              (v4/*:: as any*/),
+              (v5/*:: as any*/)
+            ],
+            "storageKey": "topTournaments(first:6)"
+          }
+        ]
+      },
+      {
         "condition": "hasEvent",
         "kind": "Condition",
         "passingValue": true,
@@ -199,19 +261,7 @@ return {
                 "selections": [
                   (v5/*:: as any*/),
                   (v3/*:: as any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Sport",
-                    "kind": "LinkedField",
-                    "name": "sport",
-                    "plural": false,
-                    "selections": [
-                      (v2/*:: as any*/),
-                      (v5/*:: as any*/)
-                    ],
-                    "storageKey": null
-                  },
+                  (v6/*:: as any*/),
                   {
                     "alias": null,
                     "args": [
@@ -264,7 +314,7 @@ return {
                                 "name": "startTime",
                                 "storageKey": null
                               },
-                              (v6/*:: as any*/),
+                              (v7/*:: as any*/),
                               {
                                 "alias": null,
                                 "args": [
@@ -313,7 +363,7 @@ return {
                                         "name": "price",
                                         "storageKey": null
                                       },
-                                      (v6/*:: as any*/)
+                                      (v7/*:: as any*/)
                                     ],
                                     "storageKey": null
                                   }
@@ -340,12 +390,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "778cf74a7c2691bf562f9dcdbea75d50",
+    "cacheID": "00574c998b766e520fc6e3ba8b37f49a",
     "id": null,
     "metadata": {},
     "name": "PrematchLayoutQuery",
     "operationKind": "query",
-    "text": "query PrematchLayoutQuery(\n  $hasEvent: Boolean!\n  $eventId: ID = \"\"\n) {\n  ...Sidebar\n  ...EventSidebar @include(if: $hasEvent)\n}\n\nfragment EventSidebar on Query {\n  event(id: $eventId) {\n    id\n    tournament {\n      ...EventSidebarTournament\n      id\n    }\n  }\n}\n\nfragment EventSidebarMarket on Market {\n  id\n  kind\n  outcomes {\n    id\n    index\n    ...EventSidebarOdd\n  }\n}\n\nfragment EventSidebarOdd on Outcome {\n  id\n  name\n  price\n  status\n}\n\nfragment EventSidebarTournament on Tournament {\n  id\n  name\n  sport {\n    key\n    id\n  }\n  events(first: 20) {\n    edges {\n      node {\n        id\n        ...EventStripCard\n      }\n    }\n  }\n}\n\nfragment EventStripCard on Event {\n  id\n  homeCompetitor\n  awayCompetitor\n  startTime\n  status\n  markets(groups: [MAIN]) {\n    id\n    kind\n    ...EventSidebarMarket\n  }\n}\n\nfragment Sidebar on Query {\n  sports @stream(label: \"Sidebar$stream$sports\", initialCount: 4) {\n    key\n    name\n    eventCount\n    ...SidebarSport\n    id\n  }\n  sb_topTournaments: topTournaments(first: 4) @stream(label: \"Sidebar$stream$sb_topTournaments_3z2gQm\", initialCount: 1) {\n    eventCount\n    id\n  }\n}\n\nfragment SidebarSport on Sport {\n  key\n  name\n  eventCount\n}\n"
+    "text": "query PrematchLayoutQuery(\n  $hasEvent: Boolean!\n  $eventId: ID = \"\"\n) {\n  ...Sidebar\n  ...EventSidebar @include(if: $hasEvent)\n}\n\nfragment EventSidebar on Query {\n  event(id: $eventId) {\n    id\n    tournament {\n      ...EventSidebarTournament\n      id\n    }\n  }\n}\n\nfragment EventSidebarMarket on Market {\n  id\n  kind\n  outcomes {\n    id\n    index\n    ...EventSidebarOdd\n  }\n}\n\nfragment EventSidebarOdd on Outcome {\n  id\n  name\n  price\n  status\n}\n\nfragment EventSidebarTournament on Tournament {\n  id\n  name\n  sport {\n    key\n    id\n  }\n  events(first: 20) {\n    edges {\n      node {\n        id\n        ...EventStripCard\n      }\n    }\n  }\n}\n\nfragment EventStripCard on Event {\n  id\n  homeCompetitor\n  awayCompetitor\n  startTime\n  status\n  markets(groups: [MAIN]) {\n    id\n    kind\n    ...EventSidebarMarket\n  }\n}\n\nfragment Sidebar on Query {\n  sports @stream(label: \"Sidebar$stream$sports\", initialCount: 4) {\n    key\n    name\n    eventCount\n    ...SidebarSport\n    id\n  }\n  sb_topTournaments: topTournaments(first: 4) @stream(label: \"Sidebar$stream$sb_topTournaments_3z2gQm\", initialCount: 1) {\n    eventCount\n    id\n  }\n  ...TopTournaments\n}\n\nfragment SidebarSport on Sport {\n  key\n  name\n  eventCount\n}\n\nfragment TopTournaments on Query {\n  tt_topTournaments: topTournaments(first: 6) @stream(label: \"TopTournaments$stream$tt_topTournaments_4ktKph\", initialCount: 1) {\n    sport {\n      key\n      id\n    }\n    key\n    name\n    category {\n      name\n      countryCode\n      id\n    }\n    eventCount\n    id\n  }\n}\n"
   }
 };
 })();

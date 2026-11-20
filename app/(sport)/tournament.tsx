@@ -14,7 +14,15 @@ import { cn, stripCategory } from '@/lib/utils'
 import type { Tournament$key } from '@/relay/__generated__/Tournament.graphql'
 import type { TournamentEventList$key } from '@/relay/__generated__/TournamentEventList.graphql'
 
-export default function Tournament(props: { queryRef: Tournament$key }) {
+/** Events fetched per step; the API serves at most 100 per request. */
+export const EVENTS_PAGE_SIZE = 20
+export const MAX_EVENTS = 100
+
+export default function Tournament(props: {
+  queryRef: Tournament$key
+  /** Shows a "Show more" button under the events while the tournament has more. */
+  onShowMore?: () => void
+}) {
   const [data, refetch] = useRefetchableFragment(
     graphql`
       fragment Tournament on Tournament @refetchable(queryName: "TournamentRefetch") {
@@ -105,17 +113,21 @@ export default function Tournament(props: { queryRef: Tournament$key }) {
         <div className='hidden sm:block sm:w-0 lg:w-34' />
       </div>
       <Suspense fallback={<EventListSkeleton />}>
-        <EventList tournament={data} />
+        <EventList tournament={data} onShowMore={props.onShowMore} />
       </Suspense>
     </section>
   )
 }
 
-function EventList(props: { tournament: TournamentEventList$key }) {
+function EventList(props: { tournament: TournamentEventList$key; onShowMore?: () => void }) {
+  const t = useT()
   const data = useFragment(
     graphql`
       fragment TournamentEventList on Tournament {
         events(first: $eventCount) {
+          pageInfo {
+            hasNextPage
+          }
           edges {
             node {
               id
@@ -136,6 +148,15 @@ function EventList(props: { tournament: TournamentEventList$key }) {
         .map(edge => (
           <PrematchEvent key={edge.node.id} node={edge.node} />
         ))}
+      {props.onShowMore && data?.events?.pageInfo.hasNextPage && (
+        <button
+          type='button'
+          onClick={props.onShowMore}
+          className='hover:bg-primary/10 hover:border-primary/30 hover:text-primary self-center rounded-full border border-control-border bg-control px-4 py-2 text-xs font-medium text-white uppercase transition-all'
+        >
+          {t('Show more')}
+        </button>
+      )}
     </div>
   )
 }

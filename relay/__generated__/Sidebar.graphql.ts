@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<58bca5c6a9b71715490ab558c1d887a5>>
+ * @generated SignedSource<<4ac961580299d642ab21b5a042aadb0f>>
  * @lightSyntaxTransform
  */
 
@@ -19,6 +19,7 @@ export type Sidebar$data = {
     readonly name: string;
     readonly " $fragmentSpreads": FragmentRefs<"SidebarSport">;
   }>;
+  readonly " $fragmentSpreads": FragmentRefs<"TopTournaments">;
   readonly " $fragmentType": "Sidebar";
 };
 export type Sidebar$key = {
@@ -98,6 +99,11 @@ return {
           "storageKey": "topTournaments(first:4)"
         }
       ]
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "TopTournaments"
     }
   ],
   "type": "Query",
@@ -105,6 +111,6 @@ return {
 };
 })();
 
-(node as any).hash = "f90b16974b2fd6fd3dbdaa5f6a26d499";
+(node as any).hash = "8b94d9e68fa7b67b791f24e4e62ec55e";
 
 export default node;

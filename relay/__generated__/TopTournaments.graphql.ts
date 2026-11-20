@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<774b630f325e655740a767cd72cb8f82>>
+ * @generated SignedSource<<e8fc35afb78194e59b78462491869a9d>>
  * @lightSyntaxTransform
  */
 
@@ -9,19 +9,24 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ShortcutRow$data = {
-  readonly scr_topTournaments: ReadonlyArray<{
+export type TopTournaments$data = {
+  readonly tt_topTournaments: ReadonlyArray<{
+    readonly category: {
+      readonly countryCode: string | null | undefined;
+      readonly name: string;
+    };
+    readonly eventCount: number;
     readonly key: string;
     readonly name: string;
     readonly sport: {
       readonly key: string;
     };
   } | null | undefined>;
-  readonly " $fragmentType": "ShortcutRow";
+  readonly " $fragmentType": "TopTournaments";
 };
-export type ShortcutRow$key = {
-  readonly " $data"?: ShortcutRow$data;
-  readonly " $fragmentSpreads": FragmentRefs<"ShortcutRow">;
+export type TopTournaments$key = {
+  readonly " $data"?: TopTournaments$data;
+  readonly " $fragmentSpreads": FragmentRefs<"TopTournaments">;
 };
 
 const node: ReaderFragment = (function(){
@@ -35,18 +40,25 @@ var v0 = {
     "storageKey": null
   },
   "action": "NONE"
+},
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
 };
 return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "ShortcutRow",
+  "name": "TopTournaments",
   "selections": [
     {
       "kind": "Stream",
       "selections": [
         {
-          "alias": "scr_topTournaments",
+          "alias": "tt_topTournaments",
           "args": [
             {
               "kind": "Literal",
@@ -76,11 +88,31 @@ return {
               "action": "NONE"
             },
             (v0/*:: as any*/),
+            (v1/*:: as any*/),
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "Category",
+              "kind": "LinkedField",
+              "name": "category",
+              "plural": false,
+              "selections": [
+                (v1/*:: as any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "countryCode",
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
+            },
             {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "name",
+              "name": "eventCount",
               "storageKey": null
             }
           ],
@@ -94,6 +126,6 @@ return {
 };
 })();
 
-(node as any).hash = "4c5fba739f723022f56c0b8a7f6cfef3";
+(node as any).hash = "e594fc99230f1442913ece45f34ac5f8";
 
 export default node;

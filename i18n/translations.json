@@ -191,6 +191,10 @@
     "de": "Alle",
     "tr": "Tümü"
   },
+  "All events": {
+    "de": "Alle Events",
+    "tr": "Tüm etkinlikler"
+  },
   "All Games": {
     "de": "Alle Spiele",
     "tr": "Tüm Oyunlar"
@@ -1291,6 +1295,10 @@
     "de": "Tracker anzeigen",
     "tr": "Takipçiyi göster"
   },
+  "Show more": {
+    "de": "Mehr anzeigen",
+    "tr": "Daha fazla göster"
+  },
   "Show statistics": {
     "de": "Statistik anzeigen",
     "tr": "İstatistikleri göster"
@@ -1434,6 +1442,10 @@
   "Top Pick": {
     "de": "Top-Tipp",
     "tr": "Öne Çıkan"
+  },
+  "Top tournaments": {
+    "de": "Top-Turniere",
+    "tr": "Öne çıkan turnuvalar"
   },
   "Total": {
     "de": "Gesamt",

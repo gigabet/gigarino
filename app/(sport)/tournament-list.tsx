@@ -1,7 +1,7 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { Suspense, useEffect, useMemo, useTransition } from 'react'
+import { Suspense, useEffect, useMemo, useState, useTransition } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import {
   fetchQuery,
@@ -13,7 +13,11 @@ import {
   useRelayEnvironment,
 } from 'react-relay'
 import SearchResults, { SearchResultsSkeleton } from '@/app/(sport)/search-results'
-import Tournament, { TournamentSkeleton } from '@/app/(sport)/tournament'
+import Tournament, {
+  EVENTS_PAGE_SIZE,
+  MAX_EVENTS,
+  TournamentSkeleton,
+} from '@/app/(sport)/tournament'
 import { SectionErrorFallback } from '@/components/section-error-fallback'
 import { useSidebarSearch } from '@/context/hooks'
 import { cn } from '@/lib/utils'
@@ -47,6 +51,13 @@ export default function TournamentList() {
   const filterActive = tournamentKeys.length > 0
   const hasSearch = search.length > 0
 
+  // How many pages of events the selection shows. Tied to the selection it was grown for, so
+  // picking another tournament starts over at one page without an effect to reset it.
+  const selectionKey = tournamentKeys.join(',')
+  const [grown, setGrown] = useState({ selectionKey, pages: 1 })
+  const pages = grown.selectionKey === selectionKey ? grown.pages : 1
+  const eventCount = filterActive ? Math.min(pages * EVENTS_PAGE_SIZE, MAX_EVENTS) : 4
+
   const variables = useMemo<TournamentListQuery['variables']>(
     () => ({
       filterActive,
@@ -54,9 +65,9 @@ export default function TournamentList() {
       hasSearch,
       hasAny: filterActive || hasSearch,
       search: hasSearch ? search : null,
-      eventCount: filterActive ? 20 : 4,
+      eventCount,
     }),
-    [filterActive, tournamentKeys, hasSearch, search]
+    [filterActive, tournamentKeys, hasSearch, search, eventCount]
   )
 
   const [queryRef, loadQuery, disposeQuery] =
@@ -89,12 +100,19 @@ export default function TournamentList() {
       loadQuery(variables, { fetchPolicy: 'network-only' })
     })
 
+  const showMore =
+    filterActive && eventCount < MAX_EVENTS
+      ? () => {
+          if (!isPending) setGrown({ selectionKey, pages: pages + 1 })
+        }
+      : undefined
+
   if (!queryRef) return <TournamentListSkeleton />
 
   return (
     <div className={cn('mt-2 space-y-8', isPending && 'opacity-60 transition-opacity')}>
       <Suspense fallback={hasSearch ? <SearchResultsSkeleton /> : <TournamentSkeletons />}>
-        <TournamentListContent queryRef={queryRef} onReset={reload} />
+        <TournamentListContent queryRef={queryRef} onReset={reload} onShowMore={showMore} />
       </Suspense>
     </div>
   )
@@ -103,6 +121,7 @@ export default function TournamentList() {
 function TournamentListContent(props: {
   queryRef: PreloadedQuery<TournamentListQuery>
   onReset: () => void
+  onShowMore?: () => void
 }) {
   const preloaded = usePreloadedQuery<TournamentListQuery>(tournamentListQuery, props.queryRef)
   const data = useFragment<TournamentList$key>(
@@ -167,7 +186,7 @@ function TournamentListContent(props: {
           onReset={props.onReset}
         >
           <Suspense fallback={<TournamentSkeleton />}>
-            <Tournament queryRef={tournament} />
+            <Tournament queryRef={tournament} onShowMore={props.onShowMore} />
           </Suspense>
         </ErrorBoundary>
       ))}

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6234c51a5eb9ed83c6b98f4e2d0922a0>>
+ * @generated SignedSource<<5e7f050045d1d07510e32a83159efe34>>
  * @lightSyntaxTransform
  */
 
@@ -18,6 +18,9 @@ export type TournamentEventList$data = {
         readonly " $fragmentSpreads": FragmentRefs<"PrematchEvent">;
       };
     }>;
+    readonly pageInfo: {
+      readonly hasNextPage: boolean;
+    };
   };
   readonly " $fragmentType": "TournamentEventList";
 };
@@ -51,6 +54,24 @@ const node: ReaderFragment = {
       "name": "events",
       "plural": false,
       "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "PageInfo",
+          "kind": "LinkedField",
+          "name": "pageInfo",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "hasNextPage",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
         {
           "alias": null,
           "args": null,
@@ -100,6 +121,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "7d9f319e9dacca768195da9f50b5d8ce";
+(node as any).hash = "345a10da920e409e89e9800db2836413";
 
 export default node;

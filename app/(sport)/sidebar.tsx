@@ -16,10 +16,12 @@ import {
   useRelayEnvironment,
 } from 'react-relay'
 import SidebarSearch from '@/app/(sport)/sidebar-search'
+import TopTournaments, { TopTournamentsSkeleton } from '@/app/(sport)/top-tournaments'
 import { SportIcon, SportIconBadge } from '@/components/sport-icon'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Field, FieldGroup } from '@/components/ui/field'
 import { Label } from '@/components/ui/label'
+import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useSelectedTournaments } from '@/context/hooks'
 import { useLocale, useT } from '@/context/providers'
@@ -38,6 +40,7 @@ import type { SidebarTournaments$key } from '@/relay/__generated__/SidebarTourna
 import SidebarTournamentsLoadNode, {
   type SidebarTournamentsLoad,
 } from '@/relay/__generated__/SidebarTournamentsLoad.graphql'
+import type { TopTournaments$key } from '@/relay/__generated__/TopTournaments.graphql'
 
 export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayoutQuery> }) {
   const preloaded = usePreloadedQuery<PrematchLayoutQuery>(PrematchLayoutQueryNode, props.queryRef)
@@ -54,6 +57,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
         sb_topTournaments: topTournaments(first: 4) @stream(initialCount: 1) {
           eventCount
         }
+        ...TopTournaments
       }
     `,
     preloaded
@@ -149,6 +153,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
             <FullSidebarContent
               filteredSports={filteredSports}
               topTournamentsEventCount={topTournamentsEventCount}
+              topTournaments={data}
             />
           </div>
         )}
@@ -159,6 +164,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
         <FullSidebarContent
           filteredSports={filteredSports}
           topTournamentsEventCount={topTournamentsEventCount}
+          topTournaments={data}
         />
       </aside>
     </>
@@ -195,6 +201,10 @@ export function SidebarSkeleton() {
               {t('search games...')}
             </span>
           </div>
+
+          <Separator className='bg-white/7' />
+          <TopTournamentsSkeleton layout='list' />
+          <Separator className='bg-white/7' />
 
           <div className='flex flex-col gap-2'>
             {Array(5)
@@ -256,11 +266,18 @@ function SportSubmenu(props: {
 function FullSidebarContent(props: {
   filteredSports: Sidebar$data['sports']
   topTournamentsEventCount: number
+  topTournaments: TopTournaments$key
 }) {
   const t = useT()
   return (
     <div className='flex w-full flex-col gap-4'>
       <SidebarSearch />
+
+      <Separator className='bg-white/7' />
+      <SectionLabel>{t('Top tournaments')}</SectionLabel>
+      <TopTournaments query={props.topTournaments} layout='list' />
+      <Separator className='bg-white/7' />
+      <SectionLabel>{t('All events')}</SectionLabel>
 
       <Accordion.Root
         data-slot='accordion'
@@ -286,6 +303,14 @@ function FullSidebarContent(props: {
         ))}
       </Accordion.Root>
     </div>
+  )
+}
+
+function SectionLabel(props: React.PropsWithChildren) {
+  return (
+    <p className='text-secondary -mb-2 px-1 text-xs font-semibold tracking-wider uppercase'>
+      {props.children}
+    </p>
   )
 }
 
