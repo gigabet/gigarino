@@ -117,7 +117,7 @@ export default function TicketHistory() {
               'border-control-border flex shrink-0 items-center gap-2 rounded-full border px-4 py-2 text-xs font-medium whitespace-nowrap transition-colors',
               filter === key
                 ? 'bg-primary border-primary text-black'
-                : 'bg-white/10 text-white hover:bg-white/15'
+                : 'bg-foreground/10 text-foreground hover:bg-foreground/15'
             )}
           >
             {t(FILTERS[key].label)}
@@ -269,7 +269,7 @@ function TicketHistoryContent(props: {
             <Drawer.Overlay className='fixed inset-0 z-50 bg-black/50' />
             <Drawer.Content
               className={cn(
-                'bg-dark-200 fixed z-50 flex flex-col outline-none',
+                'bg-surface-200 fixed z-50 flex flex-col outline-none',
                 isWiderThanMobile
                   ? 'inset-y-0 right-0 h-full w-full max-w-sm'
                   : 'inset-x-0 bottom-0 max-h-[85dvh]'
@@ -280,7 +280,7 @@ function TicketHistoryContent(props: {
                 <Drawer.Title>{t('Ticket details')}</Drawer.Title>
               </VisuallyHidden.Root>
               {!isWiderThanMobile && (
-                <div className='mx-auto mt-3 h-1.5 w-10 shrink-0 rounded-full bg-white/20' />
+                <div className='mx-auto mt-3 h-1.5 w-10 shrink-0 rounded-full bg-foreground/20' />
               )}
               {shown && (
                 <TicketDetailsPanel
@@ -331,7 +331,7 @@ function TicketDetailsPanel(props: {
 
   return (
     <div className='flex h-full min-h-0 flex-1 flex-col'>
-      <div className='flex shrink-0 items-start justify-between gap-3 border-b border-white/5 px-4 py-3'>
+      <div className='flex shrink-0 items-start justify-between gap-3 border-b border-foreground/5 px-4 py-3'>
         <div className='min-w-0 space-y-1'>
           <div className='flex items-center gap-2'>
             <TicketStatusPill status={data.status} />
@@ -366,7 +366,7 @@ function NoTicketSelected() {
 
   return (
     <div className='text-secondary flex h-full flex-col items-center justify-center gap-3 px-6 text-center'>
-      <div className='bg-dark flex size-14 items-center justify-center rounded-full border border-white/5'>
+      <div className='bg-surface flex size-14 items-center justify-center rounded-full border border-foreground/5'>
         <PiTicket className='size-6 opacity-40' />
       </div>
       <p className='text-sm'>{t('Select a ticket')}</p>
@@ -398,8 +398,8 @@ function EmptyHistory(props: { filtered: boolean }) {
   const t = useT()
 
   return (
-    <div className='text-secondary flex flex-col items-center justify-center gap-3 rounded-2xl border border-white/5 bg-black/20 px-6 py-16 text-center'>
-      <div className='bg-dark flex size-14 items-center justify-center rounded-full border border-white/5'>
+    <div className='text-secondary flex flex-col items-center justify-center gap-3 rounded-2xl border border-foreground/5 bg-inset px-6 py-16 text-center'>
+      <div className='bg-surface flex size-14 items-center justify-center rounded-full border border-foreground/5'>
         <PiTicket className='size-6 opacity-40' />
       </div>
       <p className='text-sm'>
@@ -419,7 +419,7 @@ function TicketHistorySkeleton() {
     <div className='flex flex-col gap-2'>
       {Array.from({ length: 6 }).map((_, i) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: identical
-        <div key={i} className='rounded-xl border border-white/5 bg-black/20 p-4'>
+        <div key={i} className='rounded-xl border border-foreground/5 bg-inset p-4'>
           <Skeleton className='h-9 w-full' />
         </div>
       ))}

@@ -66,8 +66,8 @@ export default function TicketRow(props: {
         TICKET_GRID,
         'relative w-full rounded-xl border px-4 py-4 text-left text-xs transition-colors @4xl:py-3.5',
         props.selected
-          ? 'border-primary/40 bg-white/6'
-          : 'border-white/5 bg-black/20 hover:border-white/10 hover:bg-white/3'
+          ? 'border-primary/40 bg-foreground/6'
+          : 'border-foreground/5 bg-inset hover:border-foreground/10 hover:bg-foreground/3'
       )}
     >
       {/* card: status left, date right (clear of the chevron). Column layout: two cells. */}
@@ -91,7 +91,7 @@ export default function TicketRow(props: {
       <span className='col-span-3 min-w-0 @4xl:col-span-1'>
         {first && (
           <>
-            <span className='block truncate text-base font-semibold text-white @4xl:text-sm @4xl:font-medium'>
+            <span className='block truncate text-base font-semibold text-foreground @4xl:text-sm @4xl:font-medium'>
               {selectionLabel(first.outcomeName, first.eventName)}
               {more > 0 && (
                 <span className='text-secondary ml-1.5 text-xs font-normal'>
@@ -107,12 +107,12 @@ export default function TicketRow(props: {
       </span>
 
       {/* card: a separate strip under the pick. Column layout: three cells. */}
-      <span className='col-span-3 grid grid-cols-3 border-t border-white/5 pt-3 @4xl:contents'>
+      <span className='col-span-3 grid grid-cols-3 border-t border-foreground/5 pt-3 @4xl:contents'>
         <span className='flex flex-col items-start @4xl:items-end'>
           <span className='text-secondary text-[0.65rem] tracking-wide uppercase @4xl:hidden'>
             {t('Stake')}
           </span>
-          <span className='font-mono text-sm text-white @4xl:text-xs'>
+          <span className='font-mono text-sm text-foreground @4xl:text-xs'>
             {formatBalance(stake, data.currency)}
           </span>
         </span>
@@ -121,7 +121,7 @@ export default function TicketRow(props: {
           <span className='text-secondary text-[0.65rem] tracking-wide uppercase @4xl:hidden'>
             {t('Odds')}
           </span>
-          <span className='font-mono text-sm text-white @4xl:text-xs'>
+          <span className='font-mono text-sm text-foreground @4xl:text-xs'>
             {Number(data.effectiveOdds).toFixed(2)}
           </span>
         </span>
@@ -134,7 +134,7 @@ export default function TicketRow(props: {
             className={cn(
               'font-mono text-sm font-semibold @4xl:text-xs',
               returned === null && 'text-secondary',
-              returned !== null && (returned > stake ? 'text-primary' : 'text-white'),
+              returned !== null && (returned > stake ? 'text-brand' : 'text-foreground'),
               returned === 0 && 'text-secondary'
             )}
           >
@@ -150,7 +150,7 @@ export default function TicketRow(props: {
         aria-hidden
         className={cn(
           'absolute top-4 right-4 size-4 transition-colors @4xl:static',
-          props.selected ? 'text-primary' : 'text-secondary'
+          props.selected ? 'text-brand' : 'text-secondary'
         )}
       />
     </button>

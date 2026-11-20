@@ -121,7 +121,7 @@ export function BetslipTracker(props: { variant: 'panel' | 'drawer' }) {
   if (!eventId || (props.variant === 'panel') !== isXl) return null
 
   return (
-    <div className='shrink-0 border-b border-white/5'>
+    <div className='shrink-0 border-b border-foreground/5'>
       <ErrorBoundary
         // a different event is a fresh attempt
         key={eventId}
@@ -176,8 +176,8 @@ function TrackerPanel(props: {
   return (
     <>
       <div className='flex items-center gap-2 px-4 py-2'>
-        <GiSoccerField className='text-primary size-4 shrink-0' />
-        <p className='min-w-0 flex-1 truncate text-xs font-semibold text-white'>
+        <GiSoccerField className='text-brand size-4 shrink-0' />
+        <p className='min-w-0 flex-1 truncate text-xs font-semibold text-foreground'>
           {data.homeCompetitor} <span className='text-secondary font-normal'>{t('vs')}</span>{' '}
           {data.awayCompetitor}
         </p>
@@ -192,7 +192,7 @@ function TrackerPanel(props: {
           <XIcon className='size-4' />
         </Button>
       </div>
-      <MatchTracker event={data} className='bg-black/20' />
+      <MatchTracker event={data} className='bg-inset' />
     </>
   )
 }

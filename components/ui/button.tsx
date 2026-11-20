@@ -8,9 +8,9 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-100 disabled:bg-muted-foreground disabled:text-muted',
+          'bg-primary text-primary-foreground hover:bg-primary/90 light:hover:bg-primary-hover disabled:opacity-100 disabled:bg-muted-foreground disabled:text-muted light:disabled:bg-muted light:disabled:text-muted-foreground',
         accent:
-          'bg-accent text-accent-foreground hover:bg-accent/90 disabled:opacity-100 disabled:bg-muted-foreground disabled:text-muted',
+          'bg-accent text-accent-foreground hover:bg-accent/90 disabled:opacity-100 disabled:bg-muted-foreground disabled:text-muted light:disabled:bg-muted light:disabled:text-muted-foreground',
         destructive:
           'bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
         outline:
@@ -20,8 +20,8 @@ const buttonVariants = cva(
         secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
         // ghost: 'hover:bg-current/15',
         ghost:
-          'hover:text-foreground hover:drop-shadow-[0_0_2px,0_0_6px,0_0_12px] hover:drop-shadow-current/80',
-        link: 'text-primary underline-offset-4 hover:underline',
+          'hover:text-foreground hover:drop-shadow-[0_0_2px,0_0_6px,0_0_12px] hover:drop-shadow-current/80 light:hover:drop-shadow-none',
+        link: 'text-brand underline-offset-4 hover:underline',
       },
       size: {
         default: 'h-9 px-4 py-2 has-[>svg]:px-3',

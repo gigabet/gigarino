@@ -27,7 +27,7 @@ export function RailSlot(props: { skeleton: React.ReactNode }) {
     <aside
       className={
         reserved
-          ? 'group bg-dark-200 hidden w-80 shrink-0 border-l border-white/5 xl:block'
+          ? 'group bg-surface-200 hidden w-80 shrink-0 border-l border-foreground/5 xl:block'
           : 'hidden'
       }
     >

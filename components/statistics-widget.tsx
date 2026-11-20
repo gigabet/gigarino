@@ -173,7 +173,7 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key; b
     <section
       className={cn(
         'flex flex-col gap-4',
-        !props.bare && 'rounded-2xl border border-white/5 bg-black/20 p-4 sm:p-6'
+        !props.bare && 'rounded-2xl border border-foreground/5 bg-inset p-4 sm:p-6'
       )}
     >
       {meta && <p className='text-secondary truncate text-xs'>{meta}</p>}
@@ -189,7 +189,7 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key; b
               <Tabs.Trigger
                 key={tab}
                 value={tab}
-                className='data-[state=active]:bg-primary border-control-border shrink-0 rounded-full border bg-white/10 px-4 py-2 text-xs font-medium whitespace-nowrap text-gray-300 shadow-none data-[state=active]:text-black'
+                className='data-[state=active]:bg-primary border-control-border shrink-0 rounded-full border bg-foreground/10 px-4 py-2 text-xs font-medium whitespace-nowrap text-secondary shadow-none data-[state=active]:text-black'
               >
                 {TAB_LABEL[tab]}
               </Tabs.Trigger>
@@ -267,7 +267,7 @@ export function StatisticsSection(props: { event?: StatisticsWidget$key | null; 
           id={switchId}
           checked={enabled}
           onCheckedChange={setEnabled}
-          className='data-[state=checked]:bg-primary focus-visible:ring-ring relative h-5 w-9 shrink-0 cursor-pointer rounded-full bg-white/15 transition-colors outline-none focus-visible:ring-2'
+          className='data-[state=checked]:bg-primary focus-visible:ring-ring relative h-5 w-9 shrink-0 cursor-pointer rounded-full bg-foreground/15 transition-colors outline-none focus-visible:ring-2'
         >
           <Switch.Thumb className='data-[state=checked]:bg-primary-foreground block size-4 translate-x-0.5 rounded-full bg-white shadow transition-transform data-[state=checked]:translate-x-4.5' />
         </Switch.Root>
@@ -296,10 +296,10 @@ type Side = 'home' | 'away'
 const TEAM = {
   home: {
     dot: 'bg-primary',
-    text: 'text-primary',
+    text: 'text-brand',
     bar: 'bg-primary',
     barDim: 'bg-primary/30',
-    pill: 'bg-primary/10 text-primary',
+    pill: 'bg-primary/10 text-brand',
   },
   away: {
     dot: 'bg-purple-accent',
@@ -309,17 +309,17 @@ const TEAM = {
     pill: 'bg-purple-accent/15 text-purple-accent',
   },
   draw: {
-    dot: 'bg-white/40',
-    text: 'text-white',
-    bar: 'bg-white/30',
-    barDim: 'bg-white/15',
-    pill: 'bg-white/10 text-white/70',
+    dot: 'bg-foreground/40',
+    text: 'text-foreground',
+    bar: 'bg-foreground/30',
+    barDim: 'bg-foreground/15',
+    pill: 'bg-foreground/10 text-foreground/70',
   },
 } as const
 
 const RESULT_STYLE: Record<string, string> = {
   W: 'bg-primary text-black',
-  D: 'bg-white/20 text-white',
+  D: 'bg-foreground/20 text-foreground',
   L: 'bg-red-500 text-white',
 }
 
@@ -332,11 +332,11 @@ function Panel(props: {
   return (
     <div className={props.className}>
       {props.header && (
-        <div className={cn('border-b border-white/5 pb-3', props.headerClassName)}>
+        <div className={cn('border-b border-foreground/5 pb-3', props.headerClassName)}>
           {props.header}
         </div>
       )}
-      <div className='divide-y divide-white/4'>{props.children}</div>
+      <div className='divide-y divide-foreground/4'>{props.children}</div>
     </div>
   )
 }
@@ -356,9 +356,9 @@ function TeamLabel(props: {
       )}
     >
       <span className={cn('size-2.5 shrink-0 rounded-full', TEAM[props.side].dot)} />
-      <span className='truncate text-sm font-semibold text-white'>{props.name}</span>
+      <span className='truncate text-sm font-semibold text-foreground'>{props.name}</span>
       {props.position != null && (
-        <span className='bg-dark-300 rounded-full px-2 py-0.5 font-mono text-[0.65rem]'>
+        <span className='bg-surface-300 rounded-full px-2 py-0.5 font-mono text-[0.65rem]'>
           #{props.position}
         </span>
       )}
@@ -386,9 +386,9 @@ function Chip(props: { className?: string; children: React.ReactNode }) {
 
 function ScoreBox(props: { home?: string | null; away?: string | null }) {
   return (
-    <span className='flex min-w-12 shrink-0 items-center justify-center gap-1.5 font-mono text-sm font-bold text-white tabular-nums'>
+    <span className='flex min-w-12 shrink-0 items-center justify-center gap-1.5 font-mono text-sm font-bold text-foreground tabular-nums'>
       <span>{props.home ?? '-'}</span>
-      <span className='text-white/30'>:</span>
+      <span className='text-muted-foreground'>:</span>
       <span>{props.away ?? '-'}</span>
     </span>
   )
@@ -403,9 +403,9 @@ function MatchCells(props: {
 }) {
   return (
     <>
-      <span className='min-w-0 truncate text-right text-sm text-white/90'>{props.homeName}</span>
+      <span className='min-w-0 truncate text-right text-sm text-foreground/90'>{props.homeName}</span>
       <ScoreBox home={props.homeScore} away={props.awayScore} />
-      <span className='min-w-0 truncate text-left text-sm text-white/90'>{props.awayName}</span>
+      <span className='min-w-0 truncate text-left text-sm text-foreground/90'>{props.awayName}</span>
     </>
   )
 }
@@ -488,21 +488,21 @@ function StatRow(props: { stat: { home: string; away: string }; label: string })
   return (
     <div className='flex flex-col gap-1 py-1.5'>
       <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-xs'>
-        <span className={cn('font-mono font-semibold', h >= a ? TEAM.home.text : 'text-white/60')}>
+        <span className={cn('font-mono font-semibold', h >= a ? TEAM.home.text : 'text-foreground/60')}>
           {props.stat.home}
         </span>
         <span className='text-secondary text-center'>{props.label}</span>
         <span
           className={cn(
             'text-right font-mono font-semibold',
-            a >= h ? TEAM.away.text : 'text-white/60'
+            a >= h ? TEAM.away.text : 'text-foreground/60'
           )}
         >
           {props.stat.away}
         </span>
       </div>
       <div className='flex h-1 gap-1'>
-        <div className='flex flex-1 justify-end overflow-hidden rounded-full bg-white/5'>
+        <div className='flex flex-1 justify-end overflow-hidden rounded-full bg-foreground/5'>
           <div
             className={cn(
               'h-full rounded-full transition-all',
@@ -511,7 +511,7 @@ function StatRow(props: { stat: { home: string; away: string }; label: string })
             style={{ width: `${homePct}%` }}
           />
         </div>
-        <div className='flex flex-1 overflow-hidden rounded-full bg-white/5'>
+        <div className='flex flex-1 overflow-hidden rounded-full bg-foreground/5'>
           <div
             className={cn(
               'h-full rounded-full transition-all',
@@ -620,14 +620,14 @@ function IncidentRow(props: { incident: StatisticsWidgetIncident$key }) {
         <TargetIcon
           className={cn(
             'size-4 shrink-0',
-            i.outcome === 'MISSED' ? 'text-red-400' : 'text-primary'
+            i.outcome === 'MISSED' ? 'text-red-400' : 'text-brand'
           )}
         />
       ) : (
         <SportIcon sport='football' className='size-4 shrink-0' />
       )}
       <div className='min-w-0'>
-        <p className='truncate text-sm text-white/90'>{title}</p>
+        <p className='truncate text-sm text-foreground/90'>{title}</p>
         {subtitle && <p className='text-secondary truncate text-[0.7rem]'>{subtitle}</p>}
       </div>
     </div>
@@ -639,7 +639,7 @@ function IncidentRow(props: { incident: StatisticsWidgetIncident$key }) {
       <div className='flex flex-col items-center gap-0.5'>
         <span className='text-secondary font-mono text-xs'>{minute}</span>
         {showScore && (
-          <span className='font-mono text-xs font-semibold text-white'>
+          <span className='font-mono text-xs font-semibold text-foreground'>
             {i.homeScore}-{i.awayScore}
           </span>
         )}
@@ -666,7 +666,7 @@ function FormTab(props: { home: FormTeam; away: FormTeam }) {
 
   return (
     <div className='flex flex-col gap-3'>
-      <div className='bg-dark-200 flex gap-1 rounded-full p-1 sm:hidden'>
+      <div className='bg-surface-200 flex gap-1 rounded-full p-1 sm:hidden'>
         {/* eslint-disable-next-line i18next/no-literal-string */}
         {(['home', 'away'] as const).map(side => (
           <button
@@ -676,7 +676,7 @@ function FormTab(props: { home: FormTeam; away: FormTeam }) {
             aria-pressed={active === side}
             className={cn(
               'flex min-w-0 flex-1 items-center justify-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium transition-colors',
-              active === side ? 'bg-white/10 text-white' : 'text-white/50'
+              active === side ? 'bg-foreground/10 text-foreground' : 'text-muted-foreground'
             )}
           >
             <span className={cn('size-2 shrink-0 rounded-full', TEAM[side].dot)} />
@@ -722,7 +722,7 @@ function PastMatchRow(props: { match: StatisticsWidgetPastMatch$key }) {
 
   return (
     <div className='grid grid-cols-[auto_1fr_auto_1fr] items-center gap-x-3 gap-y-1 py-2.5'>
-      <Chip className={cn('row-span-2', (m.outcome && RESULT_STYLE[m.outcome]) || 'bg-white/10')}>
+      <Chip className={cn('row-span-2', (m.outcome && RESULT_STYLE[m.outcome]) || 'bg-foreground/10')}>
         {m.outcome ?? ''}
       </Chip>
       <MatchCells
@@ -818,7 +818,7 @@ function H2HRow(props: { match: StatisticsWidgetPastMatch$key }) {
           className='text-secondary flex min-w-0 shrink-0 flex-col items-end text-[0.7rem] leading-snug sm:order-last sm:justify-self-end'
           suppressHydrationWarning
         >
-          <span className='text-white/70'>{format(m.startTime, 'dd MMM yyyy')}</span>
+          <span className='text-foreground/70'>{format(m.startTime, 'dd MMM yyyy')}</span>
           {m.competition && (
             <span className='hidden max-w-full truncate sm:block' title={m.competition}>
               {m.competition}

@@ -56,7 +56,7 @@ export default function AccountForm(props: {
       className='relative w-full max-w-lg'
     >
       {/* Card */}
-      <div className='rounded-2xl border border-white/5 bg-black/20 p-8 shadow-2xl'>
+      <div className='rounded-2xl border border-foreground/5 bg-inset p-8 shadow-2xl'>
         {/* Error Message */}
         <Activity mode={prevState.error ? 'visible' : 'hidden'}>
           <motion.div
@@ -78,11 +78,11 @@ export default function AccountForm(props: {
             transition={{ delay: 0.1 }}
             className='space-y-2'
           >
-            <Label htmlFor='username' className='text-sm font-medium text-gray-300'>
+            <Label htmlFor='username' className='text-sm font-medium text-secondary'>
               Username
             </Label>
             <div className='relative'>
-              <UserIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
+              <UserIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-muted-foreground' />
               <Input
                 id='username'
                 name='username'
@@ -101,11 +101,11 @@ export default function AccountForm(props: {
             transition={{ delay: 0.1 }}
             className='space-y-2'
           >
-            <Label htmlFor='displayName' className='text-sm font-medium text-gray-300'>
+            <Label htmlFor='displayName' className='text-sm font-medium text-secondary'>
               Display name
             </Label>
             <div className='relative'>
-              <UserIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
+              <UserIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-muted-foreground' />
               <Input
                 id='displayName'
                 name='displayName'
@@ -124,11 +124,11 @@ export default function AccountForm(props: {
             transition={{ delay: 0.2 }}
             className='space-y-2'
           >
-            <Label htmlFor='email' className='text-sm font-medium text-gray-300'>
+            <Label htmlFor='email' className='text-sm font-medium text-secondary'>
               Email
             </Label>
             <div className='relative'>
-              <MailIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
+              <MailIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-muted-foreground' />
               <Input
                 id='email'
                 name='email'
@@ -147,11 +147,11 @@ export default function AccountForm(props: {
             transition={{ delay: 0.3 }}
             className='relative space-y-2'
           >
-            <Label htmlFor='password' className='text-sm font-medium text-gray-300'>
+            <Label htmlFor='password' className='text-sm font-medium text-secondary'>
               New password
             </Label>
             <div className='relative'>
-              <LockIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
+              <LockIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-muted-foreground' />
               <Input
                 id='password'
                 name='password'
@@ -164,7 +164,7 @@ export default function AccountForm(props: {
               <button
                 type='button'
                 onClick={() => setShowPassword(!showPassword)}
-                className='absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 transition-colors hover:text-gray-300'
+                className='absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-secondary'
               >
                 {showPassword ? <EyeOffIcon className='size-5' /> : <EyeIcon className='size-5' />}
               </button>
@@ -182,7 +182,7 @@ export default function AccountForm(props: {
                           : passwordStrength >= 2
                             ? 'bg-yellow-500'
                             : 'bg-red-500'
-                        : 'bg-gray-700'
+                        : 'bg-gray-700 light:bg-surface-300'
                     }`}
                   />
                 ))}
@@ -197,11 +197,11 @@ export default function AccountForm(props: {
             transition={{ delay: 0.4 }}
             className='space-y-2'
           >
-            <Label htmlFor='confirmPassword' className='text-sm font-medium text-gray-300'>
+            <Label htmlFor='confirmPassword' className='text-sm font-medium text-secondary'>
               Confirm new password
             </Label>
             <div className='relative'>
-              <LockIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
+              <LockIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-muted-foreground' />
               <Input
                 id='confirmPassword'
                 type={showConfirmPassword ? 'text' : 'password'}
@@ -213,7 +213,7 @@ export default function AccountForm(props: {
               <button
                 type='button'
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className='absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 transition-colors hover:text-gray-300'
+                className='absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-secondary'
               >
                 {showConfirmPassword ? (
                   <EyeOffIcon className='size-5' />

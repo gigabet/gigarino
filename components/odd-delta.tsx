@@ -26,7 +26,7 @@ export function OddDelta(props: {
           className={cn(
             'pointer-events-none absolute text-[0.6rem]',
             !below && 'top-0 left-full ml-1',
-            delta > 0 ? 'text-primary' : 'text-destructive',
+            delta > 0 ? 'text-brand' : 'text-destructive',
             props.className
           )}
         >

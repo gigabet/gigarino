@@ -34,7 +34,7 @@ export default function LiveToolbar(props: {
         <DropdownMenu.Trigger asChild>
           <button
             type='button'
-            className='bg-control border-control-border flex items-center gap-2 rounded-full border px-3.5 py-2 text-xs text-white/80 transition-colors hover:bg-white/12 hover:text-white'
+            className='bg-control border-control-border flex items-center gap-2 rounded-full border px-3.5 py-2 text-xs text-foreground/80 transition-colors hover:bg-foreground/12 hover:text-foreground'
           >
             <SlidersHorizontalIcon className='size-3.5' />
             {props.sort === 'tournament' ? t('By competition') : t('By start time')}
@@ -42,13 +42,13 @@ export default function LiveToolbar(props: {
         </DropdownMenu.Trigger>
         <DropdownMenu.Content align='start' className='w-44'>
           <DropdownMenu.Item
-            className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'
+            className='cursor-pointer text-secondary focus:bg-foreground/5 focus:text-foreground'
             onClick={() => props.onSortChangeAction('tournament')}
           >
             {t('By competition')}
           </DropdownMenu.Item>
           <DropdownMenu.Item
-            className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'
+            className='cursor-pointer text-secondary focus:bg-foreground/5 focus:text-foreground'
             onClick={() => props.onSortChangeAction('chronological')}
           >
             {t('By start time')}
@@ -58,7 +58,7 @@ export default function LiveToolbar(props: {
 
       {/* lg: between sort and view; below lg: its own full-width row underneath them */}
       {/* <div className='relative order-last w-full lg:order-0 lg:mx-auto lg:w-auto lg:max-w-md lg:flex-1'>
-        <SearchIcon className='pointer-events-none absolute top-1/2 left-3.5 size-3.5 -translate-y-1/2 text-white/50' />
+        <SearchIcon className='pointer-events-none absolute top-1/2 left-3.5 size-3.5 -translate-y-1/2 text-muted-foreground' />
         <input
           type='text'
           inputMode='search'
@@ -68,14 +68,14 @@ export default function LiveToolbar(props: {
           onChange={e => setText(e.target.value)}
           placeholder={t('Search live events')}
           aria-label={t('Search live events')}
-          className='bg-control focus:border-primary w-full rounded-full border border-control-border py-2 pr-9 pl-9 text-xs text-white transition-colors outline-none placeholder:text-white/40'
+          className='bg-control focus:border-primary w-full rounded-full border border-control-border py-2 pr-9 pl-9 text-xs text-foreground transition-colors outline-none placeholder:text-muted-foreground'
         />
         {text && (
           <button
             type='button'
             onClick={() => setText('')}
             aria-label={t('Clear search')}
-            className='absolute top-1/2 right-2.5 flex size-5 -translate-y-1/2 items-center justify-center rounded-full text-white/50 transition-colors hover:text-white'
+            className='absolute top-1/2 right-2.5 flex size-5 -translate-y-1/2 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground'
           >
             <XIcon className='size-3.5' />
           </button>
@@ -112,7 +112,7 @@ function ViewButton(props: {
       onClick={props.onClick}
       className={cx(
         'flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors',
-        props.active ? 'bg-primary text-black' : 'text-white/60 hover:text-white'
+        props.active ? 'bg-primary text-black' : 'text-foreground/60 hover:text-foreground'
       )}
     >
       {props.icon}

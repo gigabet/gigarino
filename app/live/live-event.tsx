@@ -64,7 +64,7 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key; scope?: stri
   return (
     <div
       className={cn(
-        'sport-texture group relative flex h-32 flex-col gap-2 overflow-hidden border-b border-white/15 py-3 last:border-b-0 max-sm:overflow-visible sm:gap-3 sm:rounded-2xl sm:border-b-0 sm:border-white/5 sm:bg-black/20 sm:px-4 lg:h-27 lg:flex-row lg:flex-nowrap lg:items-center lg:gap-4 lg:px-5',
+        'sport-texture group relative flex h-32 flex-col gap-2 overflow-hidden border-b border-foreground/15 py-3 last:border-b-0 max-sm:overflow-visible sm:gap-3 sm:rounded-2xl sm:border-b-0 sm:border-foreground/5 sm:bg-inset sm:px-4 lg:h-27 lg:flex-row lg:flex-nowrap lg:items-center lg:gap-4 lg:px-5',
         suspended && 'opacity-60'
       )}
     >
@@ -365,7 +365,7 @@ export function LiveScore(props: { event: LiveScore$key }) {
           {tiebreak && (
             <span
               title={t('Tiebreak')}
-              className='bg-primary/15 text-primary absolute -top-3.5 left-3 rounded px-1 text-[0.55rem] leading-4 font-bold tracking-wide uppercase'
+              className='bg-primary/15 text-brand absolute -top-3.5 left-3 rounded px-1 text-[0.55rem] leading-4 font-bold tracking-wide uppercase'
             >
               {t('TB')}
             </span>
@@ -373,7 +373,7 @@ export function LiveScore(props: { event: LiveScore$key }) {
           <Column
             home={data.pointScore.home}
             away={data.pointScore.away}
-            className='text-primary border-l border-white/10 pl-3 text-xs'
+            className='text-brand border-l border-foreground/10 pl-3 text-xs'
           />
         </div>
       )}
@@ -393,7 +393,7 @@ function ScoreCell(props: { value: number | null | undefined; enabled: boolean }
 
   return (
     <span
-      className={cn('relative flex h-6 items-center transition-colors', goalId && 'text-primary')}
+      className={cn('relative flex h-6 items-center transition-colors', goalId && 'text-brand')}
       suppressHydrationWarning
     >
       <GoalBadge goalId={goalId} />

@@ -21,7 +21,7 @@ export default function UserSidebar(props: { user: User | null; pt: string }) {
 
   return (
     <motion.aside
-      className='sticky hidden max-w-60 min-w-60 flex-col overflow-hidden rounded-2xl border border-white/5 bg-black/20 text-sm leading-relaxed min-[1440px]:flex'
+      className='sticky hidden max-w-60 min-w-60 flex-col overflow-hidden rounded-2xl border border-foreground/5 bg-inset text-sm leading-relaxed min-[1440px]:flex'
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5 }}
@@ -33,7 +33,7 @@ export default function UserSidebar(props: { user: User | null; pt: string }) {
         <h2 className='mb-0.5 text-base'>{props.user.username}</h2>
         <div className='text-muted-foreground text-sm'>{props.user.email}</div>
       </div>
-      <hr className='border-white/7' />
+      <hr className='border-foreground/7' />
       <div className='flex flex-col gap-1 px-2 py-2'>
         <MenuLink href='/user/account' {...{ pathname }}>
           <UserIcon className='size-4' />
@@ -70,10 +70,10 @@ function MenuLink(props: { pathname: string } & LinkProps & React.JSX.IntrinsicE
     <Link
       href={props.href}
       className={cx(
-        'flex items-center gap-2 rounded-lg px-4 py-3 text-gray-300',
+        'flex items-center gap-2 rounded-lg px-4 py-3 text-secondary',
         props.pathname === props.href
-          ? 'bg-primary/10 text-primary'
-          : 'hover:bg-white/5 hover:text-white'
+          ? 'bg-primary/10 text-brand'
+          : 'hover:bg-foreground/5 hover:text-foreground'
       )}
     >
       {props.children}

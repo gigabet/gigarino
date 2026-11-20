@@ -58,7 +58,7 @@ export default function Navbar(props: { token: string | undefined }) {
 
   return (
     <>
-      <header className='bg-dark/90 sticky top-0 right-0 left-0 z-50 border-b border-white/5 backdrop-blur-xl transition-all duration-500'>
+      <header className='bg-surface/90 sticky top-0 right-0 left-0 z-50 border-b border-foreground/5 backdrop-blur-xl transition-all duration-500'>
         <div className='mx-auto max-w-480 px-6 lg:px-8'>
           {/* Top Bar */}
           <div className={cx(NAVBAR_HEIGHT, 'flex items-center justify-between py-3')}>
@@ -82,8 +82,8 @@ export default function Navbar(props: { token: string | undefined }) {
                         'group/nav relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300',
                         pathname === link.href ||
                           (pathname.startsWith('/live') && link.href.startsWith('/live'))
-                          ? 'text-primary'
-                          : 'text-gray-400 hover:text-white'
+                          ? 'text-brand'
+                          : 'text-secondary hover:text-foreground'
                       )}
                     >
                       <span>{t(link.label)}</span>
@@ -114,47 +114,47 @@ export default function Navbar(props: { token: string | undefined }) {
                     <DropdownMenu.Trigger asChild>
                       <button
                         type='button'
-                        className='-mr-2 flex items-center gap-2 rounded-full p-1.5 transition-colors hover:bg-white/5'
+                        className='-mr-2 flex items-center gap-2 rounded-full p-1.5 transition-colors hover:bg-foreground/5'
                       >
                         <div className='from-primary-200 to-primary-400 relative flex size-6 items-center justify-center rounded-full bg-linear-to-br sm:size-8'>
                           <UserIcon className='size-3 text-black sm:size-4' />
                           <CountBadge count={unseen} className='absolute -top-1.5 -right-1.5' />
                         </div>
-                        <span className='hidden text-sm font-medium text-white md:block'>
+                        <span className='hidden text-sm font-medium text-foreground md:block'>
                           {user.displayName}
                         </span>
-                        <ChevronDownIcon className='size-4 text-gray-400' />
+                        <ChevronDownIcon className='size-4 text-secondary' />
                       </button>
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content align='end' className='w-56'>
-                      <div className='border-b border-white/10 px-3 py-2'>
-                        <p className='text-sm font-medium text-white'>{user.username}</p>
-                        <p className='text-xs text-gray-400'>{user.email}</p>
+                      <div className='border-b border-foreground/10 px-3 py-2'>
+                        <p className='text-sm font-medium text-foreground'>{user.username}</p>
+                        <p className='text-xs text-secondary'>{user.email}</p>
                       </div>
                       <DropdownMenu.Item
                         onClick={() => router.push('/user/account')}
-                        className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'
+                        className='cursor-pointer text-secondary focus:bg-foreground/5 focus:text-foreground'
                       >
                         <UserIcon className='mr-2 size-4' />
                         {t('Account')}
                       </DropdownMenu.Item>
                       <DropdownMenu.Item
                         onClick={() => router.push('/user/wallet')}
-                        className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'
+                        className='cursor-pointer text-secondary focus:bg-foreground/5 focus:text-foreground'
                       >
                         <WalletIcon className='mr-2 size-4' />
                         {t('Wallet')}
                       </DropdownMenu.Item>
                       <DropdownMenu.Item
                         onClick={() => router.push('/user/transactions')}
-                        className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'
+                        className='cursor-pointer text-secondary focus:bg-foreground/5 focus:text-foreground'
                       >
                         <CreditCardIcon className='mr-2 size-4' />
                         {t('Transactions')}
                       </DropdownMenu.Item>
                       <DropdownMenu.Item
                         onClick={() => router.push('/user/tickets')}
-                        className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'
+                        className='cursor-pointer text-secondary focus:bg-foreground/5 focus:text-foreground'
                       >
                         <TicketIcon className='mr-2 size-4' />
                         {t('My Tickets')}
@@ -162,12 +162,12 @@ export default function Navbar(props: { token: string | undefined }) {
                       </DropdownMenu.Item>
                       <DropdownMenu.Item
                         onClick={() => router.push('/user/bonuses')}
-                        className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'
+                        className='cursor-pointer text-secondary focus:bg-foreground/5 focus:text-foreground'
                       >
                         <GiftIcon className='mr-2 size-4' />
                         {t('Bonuses')}
                       </DropdownMenu.Item>
-                      <DropdownMenu.Separator className='bg-white/10' />
+                      <DropdownMenu.Separator className='bg-foreground/10' />
                       <DropdownMenu.Item
                         className='group/logout cursor-pointer text-red-400 focus:bg-red-500/10 focus:text-red-300'
                         onClick={handleLogout}
@@ -185,7 +185,7 @@ export default function Navbar(props: { token: string | undefined }) {
                 <>
                   <Link
                     href='/register'
-                    className='hidden cursor-default rounded-full border border-white/20 px-4 py-2 text-sm font-medium text-white uppercase transition-all hover:bg-white/5 sm:block'
+                    className='hidden cursor-default rounded-full border border-foreground/20 px-4 py-2 text-sm font-medium text-foreground uppercase transition-all hover:bg-foreground/5 sm:block'
                   >
                     {t('Register')}
                   </Link>
@@ -218,7 +218,7 @@ function BalanceDisplay(props: { token: string; wallet: Wallet }) {
       animate={{ opacity: 1, scale: 1 }}
       className='border-primary-500/30 bg-primary-500/10 flex items-center gap-2 rounded-full border px-3 py-1.5'
     >
-      <span className='text-primary text-xs font-semibold sm:text-sm'>
+      <span className='text-brand text-xs font-semibold sm:text-sm'>
         {formatBalance(Number(balance))}
       </span>
     </motion.div>
@@ -238,7 +238,7 @@ function MobileMenu() {
       {/** biome-ignore lint/a11y/noStaticElementInteractions: is background overlay */}
       {/** biome-ignore lint/a11y/useKeyWithClickEvents: no need */}
       <div
-        className='bg-dark/95 absolute inset-0 backdrop-blur-xl'
+        className='bg-surface/95 absolute inset-0 backdrop-blur-xl'
         onClick={() => setIsMobileMenuOpen(false)}
       />
       <div
@@ -254,8 +254,8 @@ function MobileMenu() {
               key={link.label}
               className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left transition-all ${
                 pathname === link.href
-                  ? 'bg-primary/10 text-primary border-primary/30 border'
-                  : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                  ? 'bg-primary/10 text-brand border-primary/30 border'
+                  : 'text-secondary hover:bg-foreground/5 hover:text-foreground'
               }`}
               onClick={() => setIsMobileMenuOpen(false)}
             >

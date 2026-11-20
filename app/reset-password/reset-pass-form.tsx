@@ -54,7 +54,7 @@ export default function ResetPassForm() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className='font-display mb-2 text-3xl font-bold text-white'
+            className='font-display mb-2 text-3xl font-bold text-foreground'
           >
             Reset Password
           </motion.h1>
@@ -88,11 +88,11 @@ export default function ResetPassForm() {
             transition={{ delay: 0.4 }}
             className='relative space-y-2'
           >
-            <Label htmlFor='newPassword' className='text-sm font-medium text-gray-300'>
+            <Label htmlFor='newPassword' className='text-sm font-medium text-secondary'>
               Password
             </Label>
             <div className='relative'>
-              <LockIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
+              <LockIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-muted-foreground' />
               <Input
                 id='newPassword'
                 name='newPassword'
@@ -106,7 +106,7 @@ export default function ResetPassForm() {
               <button
                 type='button'
                 onClick={() => setShowPassword(!showPassword)}
-                className='absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 transition-colors hover:text-gray-300'
+                className='absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-secondary'
               >
                 {showPassword ? <EyeOffIcon className='size-5' /> : <EyeIcon className='size-5' />}
               </button>
@@ -124,7 +124,7 @@ export default function ResetPassForm() {
                           : passwordStrength >= 2
                             ? 'bg-yellow-500'
                             : 'bg-red-500'
-                        : 'bg-gray-700'
+                        : 'bg-gray-700 light:bg-surface-300'
                     }`}
                   />
                 ))}
@@ -139,11 +139,11 @@ export default function ResetPassForm() {
             transition={{ delay: 0.45 }}
             className='space-y-2'
           >
-            <Label htmlFor='confirmPassword' className='text-sm font-medium text-gray-300'>
+            <Label htmlFor='confirmPassword' className='text-sm font-medium text-secondary'>
               Confirm Password
             </Label>
             <div className='relative'>
-              <LockIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
+              <LockIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-muted-foreground' />
               <Input
                 id='confirmPassword'
                 name='confirmPassword'
@@ -157,7 +157,7 @@ export default function ResetPassForm() {
               <button
                 type='button'
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className='absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 transition-colors hover:text-gray-300'
+                className='absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-secondary'
               >
                 {showConfirmPassword ? (
                   <EyeOffIcon className='size-5' />
@@ -198,7 +198,7 @@ export default function ResetPassForm() {
           >
             <Link
               href='/login'
-              className='hover:text-primary mx-auto inline-flex items-center justify-center gap-2 px-4 text-sm text-gray-500 transition-colors'
+              className='hover:text-brand mx-auto inline-flex items-center justify-center gap-2 px-4 text-sm text-muted-foreground transition-colors'
             >
               <ArrowLeftIcon className='size-4' />
               <span>Back to Login</span>

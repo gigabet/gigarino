@@ -137,7 +137,7 @@ function Strips(props: { queryRef: LayoutRef; activeId: string }) {
   return (
     <div className='mb-4'>
       {/* same look as LiveStripTournament */}
-      <div className='relative mb-2 flex items-center gap-2 border-b border-white/5 bg-[#0c0c0c] px-1 py-2'>
+      <div className='relative mb-2 flex items-center gap-2 border-b border-foreground/5 bg-[#0c0c0c] px-1 py-2'>
         <span
           className='pointer-events-none absolute inset-x-0 -bottom-px h-px opacity-70'
           style={{ background: theme.primary }}

@@ -95,7 +95,7 @@ export default function TopTournaments(props: {
           <Option value={ALL} checked={value === ALL} layout='bar'>
             {t('All')}
           </Option>
-          <span aria-hidden className='h-4 w-px shrink-0 bg-white/10' />
+          <span aria-hidden className='h-4 w-px shrink-0 bg-foreground/10' />
           <div
             ref={fade.ref}
             style={fade.style}
@@ -123,11 +123,11 @@ function Option({
     <RadioGroup.Item
       className={cn(
         'flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.7rem] leading-4 transition-colors',
-        checked ? 'text-foreground bg-dark-400' : 'text-secondary hover:text-foreground',
+        checked ? 'text-foreground bg-surface-400' : 'text-secondary hover:text-foreground',
         layout === 'list'
           ? cn(
-              'w-full gap-2.5 px-3 py-2 text-left hover:bg-white/8',
-              checked && 'bg-dark-300 hover:bg-dark-300'
+              'w-full gap-2.5 px-3 py-2 text-left hover:bg-foreground/8',
+              checked && 'bg-surface-300 hover:bg-surface-300'
             )
           : 'shrink-0 whitespace-nowrap',
         className

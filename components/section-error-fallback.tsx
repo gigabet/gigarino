@@ -11,7 +11,7 @@ export function SectionErrorFallback({ error, resetErrorBoundary }: FallbackProp
     <div className='flex flex-col items-center justify-center gap-3 rounded-2xl border border-red-500/20 bg-red-500/5 px-6 py-10 text-center'>
       <AlertCircleIcon className='size-6 text-red-400' />
       <div>
-        <p className='text-sm font-semibold text-white'>
+        <p className='text-sm font-semibold text-foreground'>
           {t('Something went wrong loading this section.')}
         </p>
         <p className='text-secondary mt-1 text-xs'>
@@ -22,7 +22,7 @@ export function SectionErrorFallback({ error, resetErrorBoundary }: FallbackProp
       <button
         type='button'
         onClick={resetErrorBoundary}
-        className='hover:bg-primary/10 hover:border-primary/30 hover:text-primary group inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-medium text-white uppercase transition-all'
+        className='hover:bg-primary/10 light:hover:bg-foreground/6 hover:border-primary/30 light:hover:border-foreground/25 hover:text-brand group inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-inset px-4 py-2 text-xs font-medium text-foreground uppercase transition-all'
       >
         <RotateCwIcon className='size-3.5' />
         {t('Retry')}

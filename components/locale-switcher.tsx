@@ -33,7 +33,7 @@ export function LocaleSwitcher({ current }: { current: string }) {
     <Select value={current} onValueChange={handleChange} disabled={isPending}>
       <SelectTrigger
         size='sm'
-        className='hover:text-primary data-[state=open]:text-primary h-auto gap-1.5 border-none bg-transparent p-0 text-xs text-gray-500 shadow-none transition-colors'
+        className='hover:text-brand data-[state=open]:text-brand h-auto gap-1.5 border-none bg-transparent p-0 text-xs text-muted-foreground shadow-none transition-colors'
       >
         <GlobeIcon className='size-3.5' />
         <SelectValue>{currentLabel}</SelectValue>
@@ -43,7 +43,7 @@ export function LocaleSwitcher({ current }: { current: string }) {
         align='end'
         position='popper'
         sideOffset={8}
-        className='bg-dark-200 min-w-32 border-white/10 text-xs'
+        className='bg-surface-200 min-w-32 border-foreground/10 text-xs'
       >
         {LOCALES.map(l => (
           <SelectItem key={l.code} value={l.code} className='text-xs'>

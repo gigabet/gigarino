@@ -64,7 +64,7 @@ function TrackerToggle(props: { eventId: string; className?: string }) {
       <GiSoccerField
         className={cn(
           'size-4 transition-colors',
-          active && 'text-primary drop-shadow-primary drop-shadow-[0_0_2px,0_0_6px,0_0_12px]'
+          active && 'text-brand drop-shadow-primary drop-shadow-[0_0_2px,0_0_6px,0_0_12px] light:drop-shadow-none'
         )}
       />
     </Button>

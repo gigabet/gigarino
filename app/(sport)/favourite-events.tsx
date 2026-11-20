@@ -82,7 +82,7 @@ function FavouriteEventsList(props: { queryRef: PreloadedQuery<PrematchQuery> })
 
   return (
     <section>
-      <div className='text-secondary relative mb-4 flex items-end gap-4 border-b border-white/5 py-2 text-sm'>
+      <div className='text-secondary relative mb-4 flex items-end gap-4 border-b border-foreground/5 py-2 text-sm'>
         <span
           className='pointer-events-none absolute inset-x-0 -bottom-px h-px opacity-70'
           style={{
@@ -94,7 +94,7 @@ function FavouriteEventsList(props: { queryRef: PreloadedQuery<PrematchQuery> })
           <span className='text-foreground font-display min-w-0 truncate text-lg font-bold'>
             {t('Favourites')}
           </span>
-          <span className='bg-dark-300 flex size-5 items-center justify-center rounded-full text-[0.6rem] leading-none font-semibold'>
+          <span className='bg-surface-300 flex size-5 items-center justify-center rounded-full text-[0.6rem] leading-none font-semibold'>
             {events.length}
           </span>
         </h2>

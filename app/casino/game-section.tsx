@@ -76,7 +76,7 @@ export default function GameSection({
             {data?.total && (
               <Link
                 href={`/casino/${category.slug}`}
-                className='hover:text-primary group flex items-center gap-1 text-sm text-white/60 transition-colors'
+                className='hover:text-brand group flex items-center gap-1 text-sm text-foreground/60 transition-colors'
               >
                 <span>{t('See all {n}', { n: data.total })}</span>
                 <ChevronRightIcon className='size-4 transition-transform group-hover:translate-x-1' />
@@ -104,7 +104,7 @@ export default function GameSection({
           <div className='flex items-center justify-end pt-6'>
             <Link
               href={`/casino/${category.slug}`}
-              className='hover:text-primary group flex items-center gap-1 text-sm text-white/60 transition-colors'
+              className='hover:text-brand group flex items-center gap-1 text-sm text-foreground/60 transition-colors'
             >
               <span>{t('See all {n}', { n: data.total })}</span>
               <ChevronRightIcon className='size-4 transition-transform group-hover:translate-x-1' />
@@ -184,7 +184,7 @@ export function GameCard({ game }: { game: Game }) {
           {/* Badge */}
           <div className='absolute top-2 right-2 flex items-center gap-1'>
             {game.isNew && (
-              <div className='bg-dark/70 flex h-5 items-center rounded-full px-2 text-[0.675rem] leading-none font-semibold text-white uppercase'>
+              <div className='bg-black/70 flex h-5 items-center rounded-full px-2 text-[0.675rem] leading-none font-semibold text-white uppercase'>
                 {t('new')}
               </div>
             )}
@@ -216,7 +216,7 @@ export function GameCard({ game }: { game: Game }) {
           <h3 className='mb-0.5 h-4.5 truncate text-left text-sm leading-none font-semibold text-white text-shadow-[0_0_3px_black]'>
             {game.name}
           </h3>
-          <div className='flex items-center text-xs text-gray-400'>
+          <div className='flex items-center text-xs text-secondary'>
             <span>{game.providerName}</span>
           </div>
         </div>

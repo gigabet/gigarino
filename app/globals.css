@@ -5,6 +5,8 @@ layer(base);
 @plugin 'tailwindcss-animate';
 
 @custom-variant dark (&:is(.dark *));
+/* theme is switched with data-theme on <html> (next-themes). Dark is the default :root. */
+@custom-variant light (&:is([data-theme='light'] *));
 
 /* ------------------------------------------------------------------ */
 /* Semantic tokens. Tailwind palette variables wherever an exact match */
@@ -42,6 +44,31 @@ layer(base);
     --sidebar-accent-foreground: var(--color-white);
     --sidebar-border: var(--border);
     --sidebar-ring: var(--primary);
+
+    /* page/card/raised surfaces (formerly the static dark-* scale) */
+    --surface: var(--color-neutral-950);
+    --surface-100: oklch(16.8% 0 0);
+    --surface-200: oklch(21.8% 0 0);
+    --surface-300: oklch(28.5% 0 0);
+    --surface-400: oklch(34.8% 0 0);
+    /* recessed wells inside cards */
+    --inset: oklch(0% 0 0 / 0.2);
+    /* brand colour for TEXT. The lime fill is unreadable as text on light surfaces */
+    --brand: var(--color-lime);
+    /* neon halo in dark; a soft coloured drop shadow in light (see --shadow-glow*) */
+    --glow-y: 0px;
+    --glow-color: var(--color-lime);
+    --primary-hover: var(--primary);
+
+    /* sport accent colours (consumed through lib/sport-theme.ts) */
+    --sport-highlights: #facc15;
+    --sport-football: #fff;
+    --sport-tennis: #d1f366;
+    --sport-basketball: #fb923c;
+    --sport-ice-hockey: #38bdf8;
+    --sport-esports: #c084fc;
+    --sport-fallback: #9ca3af;
+    color-scheme: dark;
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -51,6 +78,66 @@ layer(base);
       --control-border: oklch(100% 0 0 / 0.14);
       --secondary: oklch(74% 0.022 261.5);
     }
+  }
+
+  :root[data-theme='light'] {
+    --background: var(--color-neutral-50);
+    --foreground: var(--color-neutral-950);
+    --card: oklch(100% 0 0);
+    --card-foreground: var(--color-neutral-950);
+    --popover: var(--card);
+    --popover-foreground: var(--color-neutral-950);
+    --primary: var(--color-lime);
+    --primary-foreground: var(--color-black);
+    --secondary: oklch(44% 0.022 261.5);
+    --secondary-foreground: var(--color-neutral-950);
+    --muted: var(--color-neutral-100);
+    --muted-foreground: oklch(57% 0 0);
+    --accent: var(--color-purple-accent);
+    --accent-foreground: var(--color-white);
+    --destructive: var(--color-red-700);
+    --destructive-foreground: var(--color-neutral-50);
+    --border: var(--color-neutral-200);
+    --input: var(--color-neutral-300);
+    --control: oklch(0% 0 0 / 0.04);
+    --control-border: oklch(0% 0 0 / 0.12);
+    --ring: var(--brand);
+    --sidebar-foreground: var(--color-neutral-950);
+    --sidebar-accent-foreground: var(--color-neutral-950);
+
+    --surface: var(--color-neutral-50);
+    --surface-100: oklch(100% 0 0);
+    --surface-200: var(--color-neutral-100);
+    --surface-300: var(--color-neutral-200);
+    --surface-400: var(--color-neutral-300);
+    --inset: oklch(0% 0 0 / 0.04);
+    --brand: oklch(51% 0.12 121.3);
+    /* light: no neon. Glows become a soft neutral elevation shadow, and hovering a lime
+       fill darkens it instead of lightening it */
+    --glow-y: 4px;
+    --glow-color: oklch(0% 0 0 / 0.3);
+    --primary-hover: oklch(84% 0.18 121.3);
+
+    --sport-highlights: var(--color-yellow-600);
+    --sport-football: var(--color-neutral-800);
+    --sport-tennis: oklch(64% 0.18 121.3);
+    --sport-basketball: var(--color-orange-600);
+    --sport-ice-hockey: var(--color-sky-600);
+    --sport-esports: var(--color-purple-accent);
+    --sport-fallback: var(--color-neutral-500);
+
+    /* The pastel -400 text colours and the purple accent were picked for a dark background.
+       Remapping the palette variables here fixes every text-red-400, text-sky-400, ... at once
+       and leaves dark mode untouched. All pairs are >=4.5:1 on white and the grey surfaces. */
+    --color-purple-accent: oklch(54% 0.23 287.2);
+    --color-red-200: var(--color-red-900);
+    --color-red-300: var(--color-red-800);
+    --color-red-400: var(--color-red-700);
+    --color-green-400: var(--color-green-800);
+    --color-amber-400: var(--color-amber-800);
+    --color-yellow-400: var(--color-yellow-800);
+    --color-sky-400: var(--color-sky-700);
+    color-scheme: light;
   }
 
   * {
@@ -88,6 +175,15 @@ layer(base);
 
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
+
+  --color-surface: var(--surface);
+  --color-surface-100: var(--surface-100);
+  --color-surface-200: var(--surface-200);
+  --color-surface-300: var(--surface-300);
+  --color-surface-400: var(--surface-400);
+  --color-inset: var(--inset);
+  --color-brand: var(--brand);
+  --color-primary-hover: var(--primary-hover);
 
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
@@ -129,16 +225,10 @@ layer(base);
   --color-lime: oklch(91.2% 0.17 121.3);
   --color-purple-accent: oklch(60.2% 0.23 287.2);
 
-  --color-dark: var(--color-neutral-950);
-  --color-dark-100: oklch(16.8% 0 0);
-  --color-dark-200: oklch(21.8% 0 0);
-  --color-dark-300: oklch(28.5% 0 0);
-  --color-dark-400: oklch(34.8% 0 0);
-
   /* Tailwind's default --shadow-xs is identical to the one that used to be redefined here */
-  --shadow-glow: 0 0 20px --alpha(var(--color-lime) / 50%);
-  --shadow-glow-lg: 0 0 40px --alpha(var(--color-lime) / 60%);
-  --shadow-glow-purple: 0 0 20px --alpha(var(--color-purple-accent) / 50%);
+  --shadow-glow: 0 var(--glow-y) 20px --alpha(var(--glow-color) / 50%);
+  --shadow-glow-lg: 0 var(--glow-y) 40px --alpha(var(--glow-color) / 60%);
+  --shadow-glow-purple: 0 var(--glow-y) 20px --alpha(var(--color-purple-accent) / 50%);
 
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
@@ -311,11 +401,15 @@ layer(base);
 }
 
 @utility glass {
-  @apply border border-white/10 bg-white/5 backdrop-blur-xl;
+  @apply border border-foreground/10 bg-foreground/5 backdrop-blur-xl;
 }
 
 @utility glass-dark {
-  @apply border border-white/5 bg-black/40 backdrop-blur-xl;
+  @apply border border-foreground/5 bg-black/40 backdrop-blur-xl;
+
+  :root[data-theme='light'] & {
+    @apply bg-white/60;
+  }
 }
 
 @utility btn-primary {
@@ -441,11 +535,11 @@ layer(base);
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-dark-100);
+  background: var(--surface-100);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-dark-300);
+  background: var(--surface-300);
   border-radius: 4px;
 }
 
@@ -456,7 +550,7 @@ layer(base);
 /* Selection color */
 ::selection {
   background: --alpha(var(--color-lime) / 30%);
-  color: var(--color-white);
+  color: var(--foreground);
 }
 
 /* Reduced motion preference */

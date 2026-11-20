@@ -15,7 +15,7 @@ export default function WalletError() {
           <Dialog.Footer>
             <Link
               href='/'
-              className='rounded-full border border-white/20 px-4 py-2 text-center text-sm font-medium text-white uppercase transition-all hover:bg-white/5'
+              className='rounded-full border border-foreground/20 px-4 py-2 text-center text-sm font-medium text-foreground uppercase transition-all hover:bg-foreground/5'
             >
               Cancel
             </Link>

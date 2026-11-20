@@ -137,7 +137,7 @@ export default function HeroBanner() {
             isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
           )}
         >
-          <span className='text-primary text-xs font-medium tracking-wider uppercase'>
+          <span className='text-brand text-xs font-medium tracking-wider uppercase'>
             {t('Welcome Offer')}
           </span>
         </div>
@@ -147,19 +147,19 @@ export default function HeroBanner() {
             isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
           )}
         >
-          <span className='text-white'>Turbo</span>{' '}
+          <span className='text-foreground'>Turbo</span>{' '}
           <span className='gradient-text-primary text-glow'>Boost</span>
         </h1>
         <p
           className={cx(
-            'mb-8 text-lg text-gray-300 transition-all delay-200 duration-700 sm:text-xl lg:text-2xl',
+            'mb-8 text-lg text-secondary transition-all delay-200 duration-700 sm:text-xl lg:text-2xl',
             isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
           )}
         >
-          <span className='text-primary font-semibold'>100% up to €50</span>
-          <span className='mx-2 text-gray-500'>+</span>
-          <span className='font-medium text-white'>200 FS</span>
-          <span className='mx-2 text-gray-500'>+</span>
+          <span className='text-brand font-semibold'>100% up to €50</span>
+          <span className='mx-2 text-muted-foreground'>+</span>
+          <span className='font-medium text-foreground'>200 FS</span>
+          <span className='mx-2 text-muted-foreground'>+</span>
           <span className='text-purple-accent font-medium'>1 Bonus Item</span>
         </p>
         <div
@@ -184,17 +184,17 @@ export default function HeroBanner() {
             isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
           )}
         >
-          <div className='flex items-center gap-2 text-gray-400'>
+          <div className='flex items-center gap-2 text-secondary'>
             <div className='bg-primary/10 flex h-8 w-8 items-center justify-center rounded-full'>
-              <ShieldCheckIcon className='text-primary size-4' />
+              <ShieldCheckIcon className='text-brand size-4' />
             </div>
             <span className='text-sm'>
               {t('Secure')} &amp; {t('Licensed')}
             </span>
           </div>
-          <div className='flex items-center gap-2 text-gray-400'>
+          <div className='flex items-center gap-2 text-secondary'>
             <div className='bg-primary/10 flex h-8 w-8 items-center justify-center rounded-full'>
-              <ZapIcon className='text-primary size-4' />
+              <ZapIcon className='text-brand size-4' />
             </div>
             <span className='text-sm'>{t('Fast Payouts')}</span>
           </div>

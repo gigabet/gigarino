@@ -40,11 +40,11 @@ export default function Offer({ claim, ...props }: OfferProps) {
       <Dialog.Trigger asChild>
         <Card
           // data-claimed={claim?.status}
-          // className='group bg-dark-200 data-[claimed=PENDING_TRIGGER]:border-accent data-[claimed=ACTIVE]:border-primary data-[claimed=PENDING_TRIGGER]:shadow-accent data-[claimed=ACTIVE]:shadow-primary @container cursor-pointer gap-0 overflow-clip p-0 transition-transform duration-300 hover:scale-103 data-claimed:shadow-[0_0_6px]'
+          // className='group bg-surface-200 data-[claimed=PENDING_TRIGGER]:border-accent data-[claimed=ACTIVE]:border-primary data-[claimed=PENDING_TRIGGER]:shadow-accent data-[claimed=ACTIVE]:shadow-primary @container cursor-pointer gap-0 overflow-clip p-0 transition-transform duration-300 hover:scale-103 data-claimed:shadow-[0_0_6px] light:shadow-none'
           className={cn(
-            'group bg-dark-200 @container cursor-pointer gap-0 overflow-clip p-0 transition-transform duration-300 hover:scale-103 data-claimed:shadow-[0_0_6px]',
-            claim?.status === 'PENDING_TRIGGER' && 'border-accent shadow-accent shadow-[0_0_6px]',
-            claim?.status === 'ACTIVE' && 'border-primary shadow-primary shadow-[0_0_6px]',
+            'group bg-surface-200 @container cursor-pointer gap-0 overflow-clip p-0 transition-transform duration-300 hover:scale-103 data-claimed:shadow-[0_0_6px] light:shadow-none',
+            claim?.status === 'PENDING_TRIGGER' && 'border-accent shadow-accent shadow-[0_0_6px] light:shadow-none',
+            claim?.status === 'ACTIVE' && 'border-primary shadow-primary shadow-[0_0_6px] light:shadow-none',
             claim?.status === 'EXPIRED' && 'grayscale'
           )}
         >
@@ -82,14 +82,14 @@ export default function Offer({ claim, ...props }: OfferProps) {
         className={cn(
           'data-claimed:border-accent data-claimed:shadow-accent w-full! max-w-3xl! gap-0 overflow-hidden p-0',
           claim?.status === 'PENDING_TRIGGER' &&
-            'border-accent/70 shadow-accent/70 shadow-[0_0_24px]',
-          claim?.status === 'ACTIVE' && 'border-primary/60 shadow-primary/50 shadow-[0_0_24px]',
+            'border-accent/70 shadow-accent/70 shadow-[0_0_24px] light:shadow-none',
+          claim?.status === 'ACTIVE' && 'border-primary/60 shadow-primary/50 shadow-[0_0_24px] light:shadow-none',
           claim?.status === 'EXPIRED' && 'grayscale'
         )}
         aria-describedby={undefined}
       >
         <Dialog.Header className='relative'>
-          <Dialog.Title className='bg-dark-200 px-6 py-4 text-center'>{props.name}</Dialog.Title>
+          <Dialog.Title className='bg-surface-200 px-6 py-4 text-center'>{props.name}</Dialog.Title>
         </Dialog.Header>
         <div className='flex flex-nowrap'>
           <div className='relative aspect-8/9 flex-2 overflow-hidden'>
@@ -141,7 +141,7 @@ const getDesc = (
     return {
       summary: (
         <div className='flex items-center justify-between text-xs'>
-          <div className='text-primary'>
+          <div className='text-brand'>
             {formatBalance(Number(offer.rules.resolvedStake?.perSpinAmount))} each
           </div>
           {offer.validUntil && (
@@ -158,13 +158,13 @@ const getDesc = (
             <CardContent>
               <ul className='text-card-foreground/60 space-y-3 text-sm'>
                 <li>
-                  The bonus includes <span className='text-primary'>{offer.rules.quantity}</span>{' '}
+                  The bonus includes <span className='text-brand'>{offer.rules.quantity}</span>{' '}
                   freespins for the game{' '}
-                  <span className='text-primary'>{offer.name.match(/spins for (.*)$/)?.[1]}</span>.
+                  <span className='text-brand'>{offer.name.match(/spins for (.*)$/)?.[1]}</span>.
                 </li>
                 <li>
                   Each freespin is worth{' '}
-                  <span className='text-primary'>
+                  <span className='text-brand'>
                     {formatBalance(Number(offer.rules.resolvedStake?.perSpinAmount))}
                   </span>
                   .
@@ -172,13 +172,13 @@ const getDesc = (
                 {offer.validUntil && (
                   <li>
                     The offer is valid until{' '}
-                    <span className='text-primary'>{format(offer.validUntil, 'dd MMM y')}</span>.
+                    <span className='text-brand'>{format(offer.validUntil, 'dd MMM y')}</span>.
                   </li>
                 )}
                 {offer.rules.wagering?.bonusMultiplier && (
                   <li>
                     You must bet a total of{' '}
-                    <span className='text-primary'>
+                    <span className='text-brand'>
                       {formatBalance(
                         Number(offer.rules.resolvedStake?.perSpinAmount) *
                           offer.rules.quantity *
@@ -218,7 +218,7 @@ const getDesc = (
               <span
                 className={cn(
                   'text-accent text-lg leading-tight font-semibold',
-                  claim.status === 'ACTIVE' && 'text-primary'
+                  claim.status === 'ACTIVE' && 'text-brand'
                 )}
               >
                 {formatBalance(Number(claim.bonusBalance))}
@@ -246,7 +246,7 @@ const getDesc = (
               />
               <div className='text-foreground text-center text-xs leading-none text-nowrap'>
                 bet{' '}
-                <span className='text-primary'>
+                <span className='text-brand'>
                   {formatBalance(Number(claim.wageringRequired) - Number(claim.wageringProgress))}
                 </span>{' '}
                 to unlock
@@ -286,7 +286,7 @@ const getDesc = (
               {claim?.status === 'ACTIVE' && (
                 <p className='mb-2 text-sm'>
                   Bet{' '}
-                  <span className='text-primary'>
+                  <span className='text-brand'>
                     {formatBalance(Number(claim.wageringRequired) - Number(claim.wageringProgress))}
                   </span>{' '}
                   more to withdraw your bonus.
@@ -306,7 +306,7 @@ const getDesc = (
                   <span className='text-foreground/70 text-xs tracking-wider text-nowrap uppercase'>
                     Bonus Balance
                   </span>
-                  <span className='text-primary text-lg leading-tight font-semibold'>
+                  <span className='text-brand text-lg leading-tight font-semibold'>
                     {formatBalance(Number(claim.bonusBalance))}
                   </span>
                 </div>
@@ -395,7 +395,7 @@ const getDesc = (
                 {!!offer.rules.wagering.bonusMultiplier && (
                   <li>
                     Bonus Multiplier:{' '}
-                    <span className='text-primary font-semibold'>
+                    <span className='text-brand font-semibold'>
                       &times;{offer.rules.wagering.bonusMultiplier}
                     </span>
                   </li>
@@ -403,7 +403,7 @@ const getDesc = (
                 {!!offer.rules.wagering.principalMultiplier && (
                   <li>
                     Principal Multiplier:{' '}
-                    <span className='text-primary font-semibold'>
+                    <span className='text-brand font-semibold'>
                       &times;{offer.rules.wagering.principalMultiplier}
                     </span>
                   </li>
@@ -443,7 +443,7 @@ const getDesc = (
                 <span className='text-foreground/70 text-xs tracking-wider text-nowrap uppercase'>
                   Balance
                 </span>
-                <span className='text-primary text-lg leading-tight font-semibold'>
+                <span className='text-brand text-lg leading-tight font-semibold'>
                   {formatBalance(Number(claim.bonusBalance))}
                 </span>
               </div>
@@ -453,7 +453,7 @@ const getDesc = (
                 />
                 <div className='text-foreground text-center text-xs leading-none text-nowrap'>
                   bet{' '}
-                  <span className='text-primary'>
+                  <span className='text-brand'>
                     {formatBalance(Number(claim.wageringRequired) - Number(claim.wageringProgress))}
                   </span>{' '}
                   to unlock
@@ -484,21 +484,21 @@ const getDesc = (
               {!claim && (
                 <p className='mb-2 text-sm'>
                   Claim this offer, then make a deposit to receive{' '}
-                  <span className='text-primary'>{offer.rules.matchPct}%</span> of your deposit as
+                  <span className='text-brand'>{offer.rules.matchPct}%</span> of your deposit as
                   bonus credit.
                 </p>
               )}
               {claim?.status === 'PENDING_TRIGGER' && (
                 <p className='mb-2 text-sm'>
                   Make a deposit to receive{' '}
-                  <span className='text-primary'>{offer.rules.matchPct}%</span> of your deposit as
+                  <span className='text-brand'>{offer.rules.matchPct}%</span> of your deposit as
                   bonus credit.
                 </p>
               )}
               {claim?.status === 'ACTIVE' && (
                 <p className='mb-2 text-sm'>
                   Bet{' '}
-                  <span className='text-primary'>
+                  <span className='text-brand'>
                     {formatBalance(Number(claim.wageringRequired) - Number(claim.wageringProgress))}
                   </span>{' '}
                   more to withdraw your bonus.
@@ -514,7 +514,7 @@ const getDesc = (
                   <span className='text-foreground/70 text-xs tracking-wider text-nowrap uppercase'>
                     Bonus Balance
                   </span>
-                  <span className='text-primary text-lg leading-tight font-semibold'>
+                  <span className='text-brand text-lg leading-tight font-semibold'>
                     {formatBalance(Number(claim.bonusBalance))}
                   </span>
                 </div>
@@ -560,7 +560,7 @@ const getDesc = (
                 {offer.rules.wagering.bonusMultiplier && (
                   <li>
                     Bonus Multiplier:{' '}
-                    <span className='text-primary font-semibold'>
+                    <span className='text-brand font-semibold'>
                       &times;{offer.rules.wagering.bonusMultiplier}
                     </span>
                   </li>
@@ -568,7 +568,7 @@ const getDesc = (
                 {offer.rules.wagering.principalMultiplier && (
                   <li>
                     Principal Multiplier:{' '}
-                    <span className='text-primary font-semibold'>
+                    <span className='text-brand font-semibold'>
                       &times;{offer.rules.wagering.principalMultiplier}
                     </span>
                   </li>

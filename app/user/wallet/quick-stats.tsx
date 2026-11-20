@@ -9,18 +9,18 @@ export default function QuickStats() {
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className='flex-1 space-y-4 rounded-2xl border border-white/5 bg-black/20 p-6'
+      className='flex-1 space-y-4 rounded-2xl border border-foreground/5 bg-inset p-6'
     >
-      <h3 className='text-sm font-semibold tracking-wider text-gray-400 uppercase'>Quick Stats</h3>
+      <h3 className='text-sm font-semibold tracking-wider text-secondary uppercase'>Quick Stats</h3>
 
       <div className='flex items-center justify-between'>
         <div className='flex items-center gap-3'>
           <div className='flex size-8 items-center justify-center rounded-full bg-sky-500/10'>
             <TrendingUpIcon className='size-4 text-sky-400' />
           </div>
-          <span className='text-gray-400'>Total Deposited</span>
+          <span className='text-secondary'>Total Deposited</span>
         </div>
-        <span className='font-semibold text-white'>€0.00</span>
+        <span className='font-semibold text-foreground'>€0.00</span>
       </div>
 
       <div className='flex items-center justify-between'>
@@ -28,9 +28,9 @@ export default function QuickStats() {
           <div className='flex size-8 items-center justify-center rounded-full bg-red-500/10'>
             <TrendingDownIcon className='size-4 text-red-400' />
           </div>
-          <span className='text-gray-400'>Total Withdrawn</span>
+          <span className='text-secondary'>Total Withdrawn</span>
         </div>
-        <span className='font-semibold text-white'>€0.00</span>
+        <span className='font-semibold text-foreground'>€0.00</span>
       </div>
 
       <div className='flex items-center justify-between'>
@@ -38,9 +38,9 @@ export default function QuickStats() {
           <div className='flex size-8 items-center justify-center rounded-full bg-yellow-500/10'>
             <ClockIcon className='size-4 text-yellow-400' />
           </div>
-          <span className='text-gray-400'>Pending</span>
+          <span className='text-secondary'>Pending</span>
         </div>
-        <span className='font-semibold text-white'>€0.00</span>
+        <span className='font-semibold text-foreground'>€0.00</span>
       </div>
     </motion.div>
   )

@@ -59,7 +59,7 @@ export default function ProviderSection(
             <h2 className='font-display text-2xl font-bold sm:text-3xl'>Providers</h2>
             <Link
               href={`/casino/providers`}
-              className='hover:text-primary group flex items-center gap-1 text-sm text-white/60 transition-colors'
+              className='hover:text-brand group flex items-center gap-1 text-sm text-foreground/60 transition-colors'
             >
               <span>See all ({data?.length})</span>
               <ChevronRightIcon className='size-4 transition-transform group-hover:translate-x-1' />
@@ -86,7 +86,7 @@ export default function ProviderSection(
           <div className='flex items-center justify-end pt-6'>
             <Link
               href={`/casino/providers`}
-              className='hover:text-primary group flex items-center gap-1 text-sm text-white/60 transition-colors'
+              className='hover:text-brand group flex items-center gap-1 text-sm text-foreground/60 transition-colors'
             >
               <span>See all ({data?.length})</span>
               <ChevronRightIcon className='size-4 transition-transform group-hover:translate-x-1' />

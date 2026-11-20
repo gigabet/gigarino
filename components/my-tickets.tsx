@@ -127,7 +127,7 @@ function MyTicketsContent() {
           href='/user/tickets'
           // the drawer would otherwise stay open on top of the new page
           onClick={() => setBetslipOpen(false)}
-          className='text-primary text-xs font-medium hover:underline'
+          className='text-brand text-xs font-medium hover:underline'
         >
           {t('View all')}
         </Link>
@@ -174,11 +174,11 @@ function FakeTicketRow(props: { status: 'Open' | 'Won' | 'Lost'; combi?: boolean
     props.status === 'Open'
       ? { label: t('Open'), className: 'bg-sky-500/10 text-sky-400' }
       : props.status === 'Won'
-        ? { label: t('Won'), className: 'bg-primary/10 text-primary' }
+        ? { label: t('Won'), className: 'bg-primary/10 text-brand' }
         : { label: t('Lost'), className: 'bg-red-500/10 text-red-400' }
 
   return (
-    <div className='rounded-xl border border-white/5 bg-black/20 p-3'>
+    <div className='rounded-xl border border-foreground/5 bg-inset p-3'>
       <div className='flex w-full items-center justify-between gap-3'>
         <div className='min-w-0'>
           <div className='flex items-center gap-2'>
@@ -196,7 +196,7 @@ function FakeTicketRow(props: { status: 'Open' | 'Won' | 'Lost'; combi?: boolean
         </div>
         <div className='flex shrink-0 flex-col items-end'>
           {/* eslint-disable-next-line i18next/no-literal-string */}
-          <span className='font-mono text-sm font-semibold text-white'>€25.00</span>
+          <span className='font-mono text-sm font-semibold text-foreground'>€25.00</span>
           {/* eslint-disable-next-line i18next/no-literal-string */}
           <span className='text-secondary text-[0.65rem]'>Today, 18:30</span>
         </div>
@@ -232,12 +232,12 @@ function LoggedOutTickets() {
         </section>
       </div>
 
-      <div className='bg-dark-200/70 absolute inset-0 flex flex-col items-center justify-center gap-4 px-6 text-center backdrop-blur-[1px]'>
-        <div className='bg-dark flex size-14 items-center justify-center rounded-full border border-white/10'>
+      <div className='bg-surface-200/70 absolute inset-0 flex flex-col items-center justify-center gap-4 px-6 text-center backdrop-blur-[1px]'>
+        <div className='bg-surface flex size-14 items-center justify-center rounded-full border border-foreground/10'>
           <LockKeyholeIcon className='text-secondary size-6' />
         </div>
         <div>
-          <p className='font-semibold text-white'>{t('Sign in to view your tickets')}</p>
+          <p className='font-semibold text-foreground'>{t('Sign in to view your tickets')}</p>
           <p className='text-secondary mt-1 max-w-56 text-xs'>
             {t("Track your open bets and betting history once you're logged in.")}
           </p>
@@ -254,7 +254,7 @@ function EmptyTickets() {
   const t = useT()
   return (
     <div className='text-secondary flex h-96.25 flex-col items-center justify-center gap-3 px-6 text-center'>
-      <div className='bg-dark flex size-14 items-center justify-center rounded-full border border-white/5'>
+      <div className='bg-surface flex size-14 items-center justify-center rounded-full border border-foreground/5'>
         <PiTicket className='size-6 opacity-40' />
       </div>
       <p className='text-sm'>{t('No tickets yet')}</p>

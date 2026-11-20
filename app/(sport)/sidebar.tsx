@@ -77,12 +77,12 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
   return (
     <>
       {/* ---- md and below: horizontal topbar, pills open a submenu ---- */}
-      <div className='bg-dark sticky top-20 z-20 -mx-4 -mt-8 border-b border-white/5 px-4 py-2 sm:-mx-6 sm:px-6 lg:hidden'>
+      <div className='bg-surface sticky top-20 z-20 -mx-4 -mt-8 border-b border-foreground/5 px-4 py-2 sm:-mx-6 sm:px-6 lg:hidden'>
         <div className='flex scrollbar-none items-center gap-2 overflow-x-auto'>
           <Link
             href='/'
             prefetch
-            className='bg-dark-300 sport-texture flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-xs whitespace-nowrap transition-colors hover:bg-white/5'
+            className='bg-surface-300 sport-texture flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-xs whitespace-nowrap transition-colors hover:bg-foreground/5'
           >
             <SportIcon sport='highlights' colored className='size-4' />
             {t('Highlights')}
@@ -96,7 +96,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
               trigger={
                 <button
                   type='button'
-                  className='bg-dark-300 sport-texture flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-xs whitespace-nowrap transition-colors hover:bg-white/5'
+                  className='bg-surface-300 sport-texture flex shrink-0 items-center gap-2 rounded-full px-3.5 py-2 text-xs whitespace-nowrap transition-colors hover:bg-foreground/5'
                 >
                   <SportIcon sport={sport.key} colored className='size-4' />
                   {translateSportName(t, sport.key, sport.name)}
@@ -110,12 +110,12 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
 
       {/* ---- lg only: icon strip; icons open a submenu, arrow expands to full size ---- */}
       <div className='sticky top-26.25 z-30 hidden h-fit lg:block xl:hidden'>
-        <div className='bg-dark-200 flex w-16 flex-col items-center gap-3 rounded-2xl border border-white/5 py-4'>
+        <div className='bg-surface-200 flex w-16 flex-col items-center gap-3 rounded-2xl border border-foreground/5 py-4'>
           <button
             type='button'
             onClick={() => setExpanded(e => !e)}
             aria-label={expanded ? t('Collapse sidebar') : t('Expand sidebar')}
-            className='text-secondary hover:bg-dark-300 hover:text-foreground flex size-8 items-center justify-center rounded-full transition-colors'
+            className='text-secondary hover:bg-surface-300 hover:text-foreground flex size-8 items-center justify-center rounded-full transition-colors'
           >
             {expanded ? (
               <ChevronLeftIcon className='size-4' />
@@ -123,10 +123,10 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
               <ChevronRightIcon className='size-4' />
             )}
           </button>
-          <hr className='w-8 border-white/7' />
+          <hr className='w-8 border-foreground/7' />
           <Link
             href='/'
-            className='text-secondary hover:bg-dark-300 hover:text-foreground flex size-9 items-center justify-center rounded-full transition-all hover:scale-110'
+            className='text-secondary hover:bg-surface-300 hover:text-foreground flex size-9 items-center justify-center rounded-full transition-all hover:scale-110'
           >
             <SportIcon sport='highlights' colored className='size-5' />
           </Link>
@@ -139,7 +139,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
               trigger={
                 <button
                   type='button'
-                  className='text-secondary hover:bg-dark-300 hover:text-foreground flex size-9 items-center justify-center rounded-full transition-all hover:scale-110'
+                  className='text-secondary hover:bg-surface-300 hover:text-foreground flex size-9 items-center justify-center rounded-full transition-all hover:scale-110'
                 >
                   <SportIcon sport={sport.key} colored className='size-5' />
                 </button>
@@ -149,7 +149,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
         </div>
 
         {expanded && (
-          <div className='bg-dark-200 fade-bottom absolute top-0 left-full ml-2 max-h-[calc(100dvh-7rem)] w-72 overflow-y-auto rounded-2xl border border-white/5 p-3 pb-10 shadow-2xl'>
+          <div className='bg-surface-200 fade-bottom absolute top-0 left-full ml-2 max-h-[calc(100dvh-7rem)] w-72 overflow-y-auto rounded-2xl border border-foreground/5 p-3 pb-10 shadow-2xl'>
             <FullSidebarContent
               filteredSports={filteredSports}
               topTournamentsEventCount={topTournamentsEventCount}
@@ -160,7 +160,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
       </div>
 
       {/* ---- xl and up: full sidebar ---- */}
-      <aside className='scrollbar-hide! scrollbar-thumb-dark-300 fade-bottom sticky top-26.25 hidden max-h-[calc(100dvh-7rem)] w-full scrollbar-thin scrollbar-track-transparent place-self-start overflow-y-auto pb-10 xl:block'>
+      <aside className='scrollbar-hide! scrollbar-thumb-surface-300 fade-bottom sticky top-26.25 hidden max-h-[calc(100dvh-7rem)] w-full scrollbar-thin scrollbar-track-transparent place-self-start overflow-y-auto pb-10 xl:block'>
         <FullSidebarContent
           filteredSports={filteredSports}
           topTournamentsEventCount={topTournamentsEventCount}
@@ -175,7 +175,7 @@ export function SidebarSkeleton() {
   const t = useT()
   return (
     <>
-      <div className='bg-dark sticky top-20 z-20 -mx-4 -mt-8 flex gap-2 border-b border-white/5 px-4 py-2 sm:-mx-6 sm:px-6 lg:hidden'>
+      <div className='bg-surface sticky top-20 z-20 -mx-4 -mt-8 flex gap-2 border-b border-foreground/5 px-4 py-2 sm:-mx-6 sm:px-6 lg:hidden'>
         {Array(6)
           .fill(6)
           .map((_, i) => (
@@ -184,7 +184,7 @@ export function SidebarSkeleton() {
           ))}
       </div>
 
-      <div className='bg-dark-200 sticky top-26.25 hidden h-fit w-16 flex-col items-center gap-3 rounded-2xl border border-white/5 py-4 lg:flex xl:hidden'>
+      <div className='bg-surface-200 sticky top-26.25 hidden h-fit w-16 flex-col items-center gap-3 rounded-2xl border border-foreground/5 py-4 lg:flex xl:hidden'>
         {Array(6)
           .fill(6)
           .map((_, i) => (
@@ -193,26 +193,26 @@ export function SidebarSkeleton() {
           ))}
       </div>
 
-      <aside className='scrollbar-hide! scrollbar-thumb-dark-300 sticky top-26.25 hidden max-h-[calc(100dvh-7rem)] w-full scrollbar-thin scrollbar-track-transparent place-self-start overflow-y-auto xl:block'>
+      <aside className='scrollbar-hide! scrollbar-thumb-surface-300 sticky top-26.25 hidden max-h-[calc(100dvh-7rem)] w-full scrollbar-thin scrollbar-track-transparent place-self-start overflow-y-auto xl:block'>
         <div className='flex w-full flex-col gap-4'>
-          <div className='flex h-10 items-center justify-center gap-4 rounded-full border bg-black/50 px-4 xl:justify-start'>
+          <div className='flex h-10 items-center justify-center gap-4 rounded-full border bg-black/50 light:bg-inset px-4 xl:justify-start'>
             <SearchIcon className='size-4 shrink-0' />
             <span className='text-muted-foreground hidden text-sm xl:inline'>
               {t('search games...')}
             </span>
           </div>
 
-          <Separator className='bg-white/7' />
+          <Separator className='bg-foreground/7' />
           <TopTournamentsSkeleton layout='list' />
-          <Separator className='bg-white/7' />
+          <Separator className='bg-foreground/7' />
 
           <div className='flex flex-col gap-2'>
             {Array(5)
               .fill(5)
               .map((_, i) => (
                 // biome-ignore lint/suspicious/noArrayIndexKey: identical
-                <div key={i} className='bg-dark-200 overflow-hidden rounded-xl'>
-                  <div className='flex w-full items-center gap-2 px-4 py-3 hover:bg-white/4 data-[state=open]:bg-white/4'>
+                <div key={i} className='bg-surface-200 overflow-hidden rounded-xl'>
+                  <div className='flex w-full items-center gap-2 px-4 py-3 hover:bg-foreground/4 data-[state=open]:bg-foreground/4'>
                     <Skeleton className='size-5' />
                     <Skeleton className='h-4 w-20' />
                   </div>
@@ -249,7 +249,7 @@ function SportSubmenu(props: {
           align='start'
           sideOffset={8}
           collisionPadding={16}
-          className='bg-dark-200 z-40 max-h-[70dvh] w-72 overflow-y-auto rounded-2xl border border-white/5 p-3 shadow-2xl'
+          className='bg-surface-200 z-40 max-h-[70dvh] w-72 overflow-y-auto rounded-2xl border border-foreground/5 p-3 shadow-2xl'
         >
           <p className='text-secondary mb-2 px-1 text-xs font-semibold tracking-wider uppercase'>
             {props.sportName}
@@ -273,10 +273,10 @@ function FullSidebarContent(props: {
     <div className='flex w-full flex-col gap-4'>
       <SidebarSearch />
 
-      <Separator className='bg-white/7' />
+      <Separator className='bg-foreground/7' />
       <SectionLabel>{t('Top tournaments')}</SectionLabel>
       <TopTournaments query={props.topTournaments} layout='list' />
-      <Separator className='bg-white/7' />
+      <Separator className='bg-foreground/7' />
       <SectionLabel>{t('All events')}</SectionLabel>
 
       <Accordion.Root
@@ -285,10 +285,10 @@ function FullSidebarContent(props: {
         collapsible
         className='flex flex-col gap-2'
       >
-        <div className='bg-dark-200 sport-texture overflow-hidden rounded-xl'>
+        <div className='bg-surface-200 sport-texture overflow-hidden rounded-xl'>
           <Link
             href='/'
-            className='group flex w-full items-center gap-2 px-4 py-3 transition-colors hover:bg-white/4 data-[state=open]:bg-white/4'
+            className='group flex w-full items-center gap-2 px-4 py-3 transition-colors hover:bg-foreground/4 data-[state=open]:bg-foreground/4'
             prefetch={true}
           >
             <SportIconBadge sport='highlights' size='sm' />
@@ -346,11 +346,11 @@ function Sport(props: { sport: SidebarSport$key }) {
       data-slot='accordion-item'
       key={data.key}
       value={data.key}
-      className='bg-dark-200 sport-texture overflow-hidden rounded-xl'
+      className='bg-surface-200 sport-texture overflow-hidden rounded-xl'
     >
       <Accordion.Trigger
         data-slot='accordion-trigger'
-        className='group flex w-full items-center gap-2 px-4 py-3 transition-colors hover:bg-white/4 data-[state=open]:bg-white/4'
+        className='group flex w-full items-center gap-2 px-4 py-3 transition-colors hover:bg-foreground/4 data-[state=open]:bg-foreground/4'
         onFocus={() => loadQuery({ key: data.key })}
         onMouseDown={() => loadQuery({ key: data.key })}
       >
@@ -452,7 +452,7 @@ function CountryItem(props: { country: SidebarCountryItem$key }) {
   return (
     <Accordion.Item value={data.key}>
       <Accordion.Trigger
-        className='flex w-full items-center gap-2.5 px-4 py-2 text-sm transition-all hover:bg-white/3 data-[state=open]:bg-white/3 data-[state=open]:pt-4'
+        className='flex w-full items-center gap-2.5 px-4 py-2 text-sm transition-all hover:bg-foreground/3 data-[state=open]:bg-foreground/3 data-[state=open]:pt-4'
         onMouseEnter={() => (timer.current = setTimeout(prefetch, HOVER_PREFETCH_DELAY_MS))}
         onMouseLeave={() => clearTimeout(timer.current)}
         onMouseDown={prefetch}
@@ -461,7 +461,7 @@ function CountryItem(props: { country: SidebarCountryItem$key }) {
         <ReactCountryFlag
           svg
           countryCode={data.countryCode ?? 'UN'}
-          className='w-5 rounded-[3px] ring-1 ring-white/0 transition-all hover:ring-white/40'
+          className='w-5 rounded-[3px] ring-1 ring-foreground/0 transition-all hover:ring-foreground/40'
           style={{ width: undefined, height: undefined }}
         />{' '}
         <span className='mr-auto text-[0.8rem] font-normal'>
@@ -470,7 +470,7 @@ function CountryItem(props: { country: SidebarCountryItem$key }) {
       </Accordion.Trigger>
       <Accordion.Content
         data-slot='accordion-content'
-        className='data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden bg-white/3 px-4 pt-2 pb-3 text-sm'
+        className='data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden bg-foreground/3 px-4 pt-2 pb-3 text-sm'
       >
         <Suspense fallback={<TournamentListSkeleton />}>
           <Tournaments category={data} />
@@ -568,7 +568,7 @@ function Tournaments(props: { category: SidebarTournaments$key }) {
             >
               {/* eslint-disable-next-line local-i18n/no-untranslated-api-string -- proper noun */}
               <span className='line-clamp-2 leading-tight'>{t.name}</span>
-              <span className='bg-dark-300 rounded-lg px-2 py-1 font-mono text-[0.67rem]'>
+              <span className='bg-surface-300 rounded-lg px-2 py-1 font-mono text-[0.67rem]'>
                 {t.eventCount}
               </span>
             </Label>
@@ -588,7 +588,7 @@ function CategorySkeleton() {
           <div
             // biome-ignore lint/suspicious/noArrayIndexKey: identical elements
             key={i}
-            className='flex w-full items-center gap-2 px-4 py-2 hover:bg-white/3 data-[state=open]:bg-white/3'
+            className='flex w-full items-center gap-2 px-4 py-2 hover:bg-foreground/3 data-[state=open]:bg-foreground/3'
           >
             <Skeleton className='h-4 w-5 rounded-[3px]' /> <Skeleton className='h-4 w-25' />
           </div>

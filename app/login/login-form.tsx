@@ -60,7 +60,7 @@ export default function LoginForm(props: { from?: string }) {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className='font-display mb-2 text-3xl font-bold text-white'
+            className='font-display mb-2 text-3xl font-bold text-foreground'
           >
             {t('Welcome Back')}
           </motion.h1>
@@ -94,8 +94,8 @@ export default function LoginForm(props: { from?: string }) {
             transition={{ delay: 0.5 }}
             className='border-primary-500/30 bg-primary-500/10 mb-6 flex items-center gap-3 rounded-lg border p-4'
           >
-            <AlertCircleIcon className='text-primary size-5 shrink-0' />
-            <p className='text-primary text-sm'>{t('Registration successful!')}</p>
+            <AlertCircleIcon className='text-brand size-5 shrink-0' />
+            <p className='text-brand text-sm'>{t('Registration successful!')}</p>
           </motion.div>
         </Activity>
 
@@ -108,11 +108,11 @@ export default function LoginForm(props: { from?: string }) {
             transition={{ delay: 0.3 }}
             className='space-y-2'
           >
-            <Label htmlFor='identifier' className='text-sm font-medium text-gray-300'>
+            <Label htmlFor='identifier' className='text-sm font-medium text-secondary'>
               {t('Email or Username')}
             </Label>
             <div className='relative'>
-              <MailIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
+              <MailIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-muted-foreground' />
               <Input
                 className='pl-10'
                 id='identifier'
@@ -132,11 +132,11 @@ export default function LoginForm(props: { from?: string }) {
             transition={{ delay: 0.4 }}
             className='space-y-2'
           >
-            <Label htmlFor='password' className='text-sm font-medium text-gray-300'>
+            <Label htmlFor='password' className='text-sm font-medium text-secondary'>
               {t('Password')}
             </Label>
             <div className='relative'>
-              <LockIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
+              <LockIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-muted-foreground' />
               <Input
                 className='px-10'
                 id='password'
@@ -149,7 +149,7 @@ export default function LoginForm(props: { from?: string }) {
               <button
                 type='button'
                 onClick={() => setShowPassword(!showPassword)}
-                className='absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 transition-colors hover:text-gray-300'
+                className='absolute top-1/2 right-3 -translate-y-1/2 text-muted-foreground transition-colors hover:text-secondary'
               >
                 {showPassword ? <EyeOffIcon className='size-5' /> : <EyeIcon className='size-5' />}
               </button>
@@ -165,13 +165,13 @@ export default function LoginForm(props: { from?: string }) {
           >
             <div className='flex items-center space-x-2'>
               <Checkbox id='rememberMe' name='rememberMe' defaultChecked={formData.rememberMe} />
-              <Label htmlFor='rememberMe' className='cursor-pointer text-sm text-gray-400'>
+              <Label htmlFor='rememberMe' className='cursor-pointer text-sm text-secondary'>
                 {t('Remember me')}
               </Label>
             </div>
             <Link
               href='/forgot-password'
-              className='text-primary group relative text-sm transition-colors hover:text-white'
+              className='text-brand group relative text-sm transition-colors hover:text-foreground'
             >
               {t('Forgot password?')}
               <span className='bg-primary absolute -bottom-0.5 left-0 h-px w-0 transition-all duration-300 group-hover:w-full' />
@@ -213,11 +213,11 @@ export default function LoginForm(props: { from?: string }) {
           className='my-8 flex items-center gap-4'
         >
           <div className='grow'>
-            <div className='w-full border-t border-white/10' />
+            <div className='w-full border-t border-foreground/10' />
           </div>
-          <div className='text-sm text-gray-500'>{t('Or continue with')}</div>
+          <div className='text-sm text-muted-foreground'>{t('Or continue with')}</div>
           <div className='grow'>
-            <div className='w-full border-t border-white/10' />
+            <div className='w-full border-t border-foreground/10' />
           </div>
         </motion.div>
 
@@ -231,7 +231,7 @@ export default function LoginForm(props: { from?: string }) {
           <Button
             type='button'
             variant='outline'
-            className='border-white/20 text-white hover:border-white/40 hover:bg-white/5'
+            className='border-foreground/20 text-foreground hover:border-foreground/40 hover:bg-foreground/5'
           >
             <svg className='mr-1 size-5' viewBox='0 0 24 24'>
               <title>Google Icon</title>
@@ -257,7 +257,7 @@ export default function LoginForm(props: { from?: string }) {
           <Button
             type='button'
             variant='outline'
-            className='border-white/20 text-white hover:border-white/40 hover:bg-white/5'
+            className='border-foreground/20 text-foreground hover:border-foreground/40 hover:bg-foreground/5'
           >
             <svg className='mr-1 size-5' fill='currentColor' viewBox='0 0 24 24'>
               <title>Facebook Icon</title>
@@ -272,12 +272,12 @@ export default function LoginForm(props: { from?: string }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.9 }}
-          className='mt-8 text-center text-sm text-gray-400'
+          className='mt-8 text-center text-sm text-secondary'
         >
           {t("Don't have an account?")}{' '}
           <Link
             href='/register'
-            className='text-primary group relative font-medium transition-colors hover:text-white'
+            className='text-brand group relative font-medium transition-colors hover:text-foreground'
           >
             {t('Register now')}
             <span className='bg-primary absolute -bottom-0.5 left-0 h-px w-0 transition-all duration-300 group-hover:w-full' />

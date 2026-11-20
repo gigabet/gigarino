@@ -89,17 +89,17 @@ export default function DepositWithdrawal(props: { balance: number }) {
       className='lg:col-span-2'
     >
       <Tabs.Root value={activeTab} onValueChange={tab => setActiveTab(tab)} className='w-full'>
-        <Tabs.List className='mb-6 grid w-full grid-cols-2 border border-white/5 p-1'>
+        <Tabs.List className='mb-6 grid w-full grid-cols-2 border border-foreground/5 p-1'>
           <Tabs.Trigger
             value='deposit'
-            className='data-[state=active]:bg-primary text-gray-400 data-[state=active]:text-black'
+            className='data-[state=active]:bg-primary text-secondary data-[state=active]:text-black'
           >
             <ArrowDownIcon className='mr-2 size-4' />
             Deposit
           </Tabs.Trigger>
           <Tabs.Trigger
             value='withdraw'
-            className='data-[state=active]:bg-primary text-gray-400 data-[state=active]:text-black'
+            className='data-[state=active]:bg-primary text-secondary data-[state=active]:text-black'
           >
             <ArrowUpIcon className='mr-2 size-4' />
             Withdraw
@@ -142,8 +142,8 @@ function DepositForm() {
   }
 
   return (
-    <Form action={deposit} className='bg-dark/40 rounded-2xl border border-white/5 p-6'>
-      <h2 className='mb-6 text-xl font-bold text-white'>Add Funds</h2>
+    <Form action={deposit} className='bg-surface/40 rounded-2xl border border-foreground/5 p-6'>
+      <h2 className='mb-6 text-xl font-bold text-foreground'>Add Funds</h2>
 
       {/* Payment Methods */}
       <div className='mb-6 grid grid-cols-2 gap-3'>
@@ -155,16 +155,16 @@ function DepositForm() {
             className={`rounded-xl border p-4 text-left transition-all ${
               selectedMethod === method.id
                 ? 'border-primary bg-primary/10'
-                : 'bg-dark border-white/10 hover:border-white/30'
+                : 'bg-surface border-foreground/10 hover:border-foreground/30'
             }`}
           >
             <method.icon
               className={`mb-2 h-6 w-6 ${
-                selectedMethod === method.id ? 'text-primary' : 'text-gray-400'
+                selectedMethod === method.id ? 'text-brand' : 'text-secondary'
               }`}
             />
-            <div className='text-sm font-medium text-white'>{method.name}</div>
-            <div className='text-xs text-gray-500'>{method.description}</div>
+            <div className='text-sm font-medium text-foreground'>{method.name}</div>
+            <div className='text-xs text-muted-foreground'>{method.description}</div>
           </button>
         ))}
       </div>
@@ -172,7 +172,7 @@ function DepositForm() {
 
       {/* Amount Selection */}
       <div className='mb-6'>
-        <Label className='mb-3 block text-sm text-gray-400' htmlFor='amount'>
+        <Label className='mb-3 block text-sm text-secondary' htmlFor='amount'>
           Select Amount
         </Label>
         <div className='mb-4 grid grid-cols-3 gap-2 sm:grid-cols-6'>
@@ -184,7 +184,7 @@ function DepositForm() {
               className={`rounded-lg px-3 py-2 text-sm font-medium transition-all ${
                 amount === amt.toFixed(2)
                   ? 'bg-primary text-black'
-                  : 'bg-dark border border-white/10 text-gray-400 hover:text-white'
+                  : 'bg-surface border border-foreground/10 text-secondary hover:text-foreground'
               }`}
             >
               €{amt}
@@ -198,7 +198,7 @@ function DepositForm() {
           placeholder='Or enter custom amount'
           value={amount}
           onChange={e => setAmount(e.target.value)}
-          className='bg-dark focus:border-primary border-white/10 text-white placeholder:text-gray-600'
+          className='bg-surface focus:border-primary border-foreground/10 text-foreground placeholder:text-muted-foreground'
         />
       </div>
 
@@ -234,7 +234,7 @@ function DepositForm() {
           <span className='relative'>Deposit</span>
         )}
       </button>
-      <p className='mt-4 text-center text-xs text-gray-500'>
+      <p className='mt-4 text-center text-xs text-muted-foreground'>
         Processing time: {paymentMethods.find(m => m.id === selectedMethod)?.processingTime}
       </p>
     </Form>
@@ -257,8 +257,8 @@ function WithdrawForm(props: { balance: number }) {
   }
 
   return (
-    <Form action={withdraw} className='bg-dark/40 rounded-2xl border border-white/5 p-6'>
-      <h2 className='mb-6 text-xl font-bold text-white'>Withdraw Funds</h2>
+    <Form action={withdraw} className='bg-surface/40 rounded-2xl border border-foreground/5 p-6'>
+      <h2 className='mb-6 text-xl font-bold text-foreground'>Withdraw Funds</h2>
 
       {/* Payment Methods */}
       <div className='mb-6 grid grid-cols-2 gap-3'>
@@ -270,16 +270,16 @@ function WithdrawForm(props: { balance: number }) {
             className={`rounded-xl border p-4 text-left transition-all ${
               selectedMethod === method.id
                 ? 'border-primary bg-primary/10'
-                : 'bg-dark border-white/10 hover:border-white/30'
+                : 'bg-surface border-foreground/10 hover:border-foreground/30'
             }`}
           >
             <method.icon
               className={`mb-2 h-6 w-6 ${
-                selectedMethod === method.id ? 'text-primary' : 'text-gray-400'
+                selectedMethod === method.id ? 'text-brand' : 'text-secondary'
               }`}
             />
-            <div className='text-sm font-medium text-white'>{method.name}</div>
-            <div className='text-xs text-gray-500'>{method.description}</div>
+            <div className='text-sm font-medium text-foreground'>{method.name}</div>
+            <div className='text-xs text-muted-foreground'>{method.description}</div>
           </button>
         ))}
       </div>
@@ -287,7 +287,7 @@ function WithdrawForm(props: { balance: number }) {
 
       {/* Amount Input */}
       <div className='mb-6'>
-        <Label className='mb-3 block text-sm text-gray-400'>Amount</Label>
+        <Label className='mb-3 block text-sm text-secondary'>Amount</Label>
         <div className='relative'>
           <Input
             type='number'
@@ -295,12 +295,12 @@ function WithdrawForm(props: { balance: number }) {
             placeholder='Enter amount'
             value={amount}
             onChange={e => setAmount(e.target.value)}
-            className='bg-dark focus:border-primary border-white/10 pr-20 text-white placeholder:text-gray-600'
+            className='bg-surface focus:border-primary border-foreground/10 pr-20 text-foreground placeholder:text-muted-foreground'
           />
           <button
             type='button'
             onClick={() => handleAmountSelect(props.balance)}
-            className='text-primary hover:text-primary-400 absolute top-1/2 right-4 -translate-y-1/2 text-xs font-medium'
+            className='text-brand hover:text-primary-400 absolute top-1/2 right-4 -translate-y-1/2 text-xs font-medium'
           >
             MAX
           </button>
@@ -308,16 +308,16 @@ function WithdrawForm(props: { balance: number }) {
       </div>
 
       {/* Withdrawal Info */}
-      <div className='bg-dark mb-6 space-y-2 rounded-xl p-4'>
-        <div className='flex items-center gap-2 text-sm text-gray-400'>
+      <div className='bg-surface mb-6 space-y-2 rounded-xl p-4'>
+        <div className='flex items-center gap-2 text-sm text-secondary'>
           <ClockIcon className='size-4' />
           Processing time: {paymentMethods.find(m => m.id === selectedMethod)?.processingTime}
         </div>
-        <div className='flex items-center gap-2 text-sm text-gray-400'>
+        <div className='flex items-center gap-2 text-sm text-secondary'>
           <ArrowRightLeftIcon className='size-4' />
           Min: {formatCurrency(paymentMethods.find(m => m.id === selectedMethod)?.minAmount || 0)}
         </div>
-        <div className='flex items-center gap-2 text-sm text-gray-400'>
+        <div className='flex items-center gap-2 text-sm text-secondary'>
           <ArrowRightLeftIcon className='size-4' />
           Max: {formatCurrency(paymentMethods.find(m => m.id === selectedMethod)?.maxAmount || 0)}
           /day

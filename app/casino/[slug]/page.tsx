@@ -19,7 +19,7 @@ export default async function GamesByCategory(props: { params: Promise<{ slug: s
   if (!label || !category)
     return (
       <div className='mx-auto max-w-360'>
-        <div className='px-8 py-6 text-xl font-bold text-neutral-700'>{t('No games')}</div>
+        <div className='px-8 py-6 text-xl font-bold text-muted-foreground'>{t('No games')}</div>
       </div>
     )
 

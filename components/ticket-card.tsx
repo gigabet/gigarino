@@ -40,9 +40,9 @@ const STATUS_META: Record<TicketStatus, { label: string; className: string }> = 
     label: tKey('Partially Cashed Out'),
     className: 'bg-purple-accent/10 text-purple-accent',
   },
-  WON: { label: tKey('Won'), className: 'bg-primary/10 text-primary' },
+  WON: { label: tKey('Won'), className: 'bg-primary/10 text-brand' },
   LOST: { label: tKey('Lost'), className: 'bg-red-500/10 text-red-400' },
-  VOID: { label: tKey('Void'), className: 'bg-white/10 text-secondary' },
+  VOID: { label: tKey('Void'), className: 'bg-foreground/10 text-secondary' },
   REJECTED: {
     label: tKey('Rejected'),
     className: 'bg-red-500/10 text-red-400',
@@ -58,13 +58,13 @@ const STATUS_META: Record<TicketStatus, { label: string; className: string }> = 
 }
 
 const ITEM_STATUS_META: Record<BetItemStatus, { label: string; className: string }> = {
-  PENDING: { label: '', className: 'bg-white/20' },
+  PENDING: { label: '', className: 'bg-foreground/20' },
   WON: { label: tKey('W'), className: 'bg-primary text-black' },
   HALF_WON: { label: tKey('½W'), className: 'bg-primary/60 text-black' },
   LOST: { label: tKey('L'), className: 'bg-red-500 text-white' },
   HALF_LOST: { label: tKey('½L'), className: 'bg-red-500/60 text-white' },
-  PUSH: { label: tKey('P'), className: 'bg-white/30 text-white' },
-  VOID: { label: tKey('V'), className: 'bg-white/20 text-secondary' },
+  PUSH: { label: tKey('P'), className: 'bg-foreground/30 text-foreground' },
+  VOID: { label: tKey('V'), className: 'bg-foreground/20 text-secondary' },
 }
 
 const CORRECTION_LABEL: Record<string, string> = {
@@ -99,7 +99,7 @@ export function TicketStatusPill(props: { status: string }) {
   const t = useT()
   const meta = STATUS_META[props.status as TicketStatus] ?? {
     label: props.status,
-    className: 'bg-white/10 text-secondary',
+    className: 'bg-foreground/10 text-secondary',
   }
 
   return (
@@ -176,7 +176,7 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
   const first = data.items[0]
 
   return (
-    <div className='rounded-xl border border-white/5 bg-black/20 p-3'>
+    <div className='rounded-xl border border-foreground/5 bg-inset p-3'>
       <button
         type='button'
         onClick={() => setExpanded(e => !e)}
@@ -202,7 +202,7 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
             </p>
           </div>
           <div className='flex shrink-0 flex-col items-end'>
-            <span className='font-mono text-sm font-semibold text-white'>
+            <span className='font-mono text-sm font-semibold text-foreground'>
               {formatBalance(Number(data.stake), data.currency)}
             </span>
             <span className='text-secondary text-[0.65rem]'>
@@ -220,7 +220,7 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
       </button>
 
       {expanded && (
-        <div className='mt-3 border-t border-white/5 pt-3'>
+        <div className='mt-3 border-t border-foreground/5 pt-3'>
           <TicketCardDetails ticket={data} onCashedOutAction={props.action} />
         </div>
       )}
@@ -278,7 +278,7 @@ export function TicketCardDetails(props: {
 
   return (
     <div className='space-y-3'>
-      <div className='divide-y divide-white/5'>
+      <div className='divide-y divide-foreground/5'>
         {data.items.map(item => {
           const itemMeta = ITEM_STATUS_META[item.status as BetItemStatus]
           return (
@@ -295,7 +295,7 @@ export function TicketCardDetails(props: {
                   </span>
                 )}
                 <div className='min-w-0 space-y-0.5'>
-                  <p className='truncate text-sm font-medium text-white/90'>
+                  <p className='truncate text-sm font-medium text-foreground/90'>
                     {selectionLabel(item.outcomeName, item.eventName)}
                   </p>
                   <p className='text-secondary'>
@@ -311,7 +311,7 @@ export function TicketCardDetails(props: {
                     {item.scoreAtBet && (
                       <span>
                         {t('Score at bet')}{' '}
-                        <span className='font-mono text-white/70'>
+                        <span className='font-mono text-foreground/70'>
                           {item.scoreAtBet.home}–{item.scoreAtBet.away}
                         </span>
                       </span>
@@ -319,7 +319,7 @@ export function TicketCardDetails(props: {
                   </p>
                 </div>
               </div>
-              <span className='shrink-0 font-mono text-white/70'>
+              <span className='shrink-0 font-mono text-foreground/70'>
                 {Number(item.priceAtAcceptance).toFixed(2)}
               </span>
             </div>
@@ -327,19 +327,19 @@ export function TicketCardDetails(props: {
         })}
       </div>
 
-      <div className='flex items-center justify-between border-t border-white/10 pt-3 text-xs'>
+      <div className='flex items-center justify-between border-t border-foreground/10 pt-3 text-xs'>
         <span className='text-secondary'>{t('Stake')}</span>
-        <span className='font-mono text-white'>
+        <span className='font-mono text-foreground'>
           {formatBalance(Number(data.stake), data.currency)}
         </span>
       </div>
       <div className='flex items-center justify-between text-xs'>
         <span className='text-secondary'>{t('Combined odds')}</span>
-        <span className='font-mono text-white'>{Number(data.effectiveOdds).toFixed(2)}</span>
+        <span className='font-mono text-foreground'>{Number(data.effectiveOdds).toFixed(2)}</span>
       </div>
       <div className='flex items-center justify-between text-xs'>
         <span className='text-secondary'>{t('Potential payout')}</span>
-        <span className='text-primary font-mono font-semibold'>
+        <span className='text-brand font-mono font-semibold'>
           {formatBalance(Number(data.potentialPayout), data.currency)}
         </span>
       </div>
@@ -347,7 +347,7 @@ export function TicketCardDetails(props: {
       {data.settledAt && (
         <div className='flex items-center justify-between text-xs'>
           <span className='text-secondary'>{t('Settled')}</span>
-          <span className='text-white/70'>
+          <span className='text-foreground/70'>
             {formatDistanceToNowStrict(new Date(data.settledAt), {
               addSuffix: true,
             })}
@@ -358,7 +358,7 @@ export function TicketCardDetails(props: {
       {data.payout != null && (
         <div className='flex items-center justify-between text-xs'>
           <span className='text-secondary'>{t('Payout')}</span>
-          <span className='font-mono font-semibold text-white'>
+          <span className='font-mono font-semibold text-foreground'>
             {formatBalance(Number(data.payout), data.currency)}
           </span>
         </div>
@@ -372,7 +372,7 @@ export function TicketCardDetails(props: {
             const amount = Number(c.amount)
             return (
               <div key={c.id} className='space-y-0.5'>
-                <p className='text-white/90'>
+                <p className='text-foreground/90'>
                   {t(CORRECTION_LABEL[c.kind] ?? c.kind)} ·{' '}
                   {item && translateOutcomeName(t, item.outcomeName)}
                 </p>
@@ -382,7 +382,7 @@ export function TicketCardDetails(props: {
                     {c.previousStatus !== c.newStatus && ` · ${c.previousStatus} → ${c.newStatus}`}
                   </span>
                   {amount !== 0 && (
-                    <span className={amount > 0 ? 'text-primary' : 'text-red-400'}>
+                    <span className={amount > 0 ? 'text-brand' : 'text-red-400'}>
                       {amount > 0 && '+'}
                       {formatBalance(amount, data.currency)}
                     </span>
@@ -432,7 +432,7 @@ function CashoutButton(props: { ticketId: string; onCashedOut?: () => void }) {
           side='top'
           align='center'
           sideOffset={8}
-          className='bg-dark-200 z-40 w-64 rounded-2xl border border-white/5 p-4 shadow-2xl'
+          className='bg-surface-200 z-40 w-64 rounded-2xl border border-foreground/5 p-4 shadow-2xl'
         >
           <Suspense fallback={<CashoutQuoteSkeleton />}>
             {queryRef && (
@@ -504,7 +504,7 @@ function CashoutQuote(props: {
     <div className='space-y-3'>
       <div className='text-center'>
         <p className='text-secondary text-xs'>{t("You'll receive")}</p>
-        <p className='text-primary text-2xl font-bold'>
+        <p className='text-brand text-2xl font-bold'>
           {formatBalance(Number(cashoutQuote.amount), cashoutQuote.currency)}
         </p>
       </div>
