@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d4ea8d962aa27266828b5e20a00d2617>>
+ * @generated SignedSource<<02631353f2ae9197abca74e8539a8910>>
  * @lightSyntaxTransform
  */
 
@@ -109,7 +109,19 @@ return {
     },
     {
       "alias": null,
-      "args": null,
+      "args": [
+        {
+          "kind": "Literal",
+          "name": "types",
+          "value": [
+            "GOAL",
+            "RED_CARD",
+            "PENALTY",
+            "CORNER",
+            "YELLOW_CARD"
+          ]
+        }
+      ],
       "concreteType": "MatchIncident",
       "kind": "LinkedField",
       "name": "timeline",
@@ -117,7 +129,7 @@ return {
       "selections": [
         (v0/*:: as any*/)
       ],
-      "storageKey": null
+      "storageKey": "timeline(types:[\"GOAL\",\"RED_CARD\",\"PENALTY\",\"CORNER\",\"YELLOW_CARD\"])"
     },
     {
       "args": null,
@@ -247,6 +259,6 @@ return {
 };
 })();
 
-(node as any).hash = "5ce6bc3cdceacccf13de4102e0ebc66e";
+(node as any).hash = "1540eea9ff3b08c00cadd700979fc255";
 
 export default node;

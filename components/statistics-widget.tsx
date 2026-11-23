@@ -2,7 +2,7 @@
 
 import { format } from 'date-fns'
 import { useAtom } from 'jotai'
-import { ChevronDownIcon, TargetIcon } from 'lucide-react'
+import { ChevronDownIcon, FlagTriangleRightIcon, TargetIcon } from 'lucide-react'
 import { Switch } from 'radix-ui'
 import { Suspense, useEffect, useId, useState } from 'react'
 import {
@@ -13,6 +13,7 @@ import {
   useRelayEnvironment,
 } from 'react-relay'
 import { SportIcon } from '@/components/sport-icon'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Skeleton } from '@/components/ui/skeleton'
 import * as Tabs from '@/components/ui/tabs'
 import { useScrollFade } from '@/context/hooks'
@@ -20,15 +21,13 @@ import { useT } from '@/context/providers'
 import { statisticsEnabledAtom } from '@/context/statistics'
 import { tKey } from '@/i18n/tKey'
 import { cn } from '@/lib/utils'
+import type { StatisticsWidget$key } from '@/relay/__generated__/StatisticsWidget.graphql'
 import type {
-  StatisticsWidget$data,
-  StatisticsWidget$key,
-} from '@/relay/__generated__/StatisticsWidget.graphql'
-import type { StatisticsWidgetIncident$key } from '@/relay/__generated__/StatisticsWidgetIncident.graphql'
+  StatisticsWidgetIncident$data,
+  StatisticsWidgetIncident$key,
+} from '@/relay/__generated__/StatisticsWidgetIncident.graphql'
 import type { StatisticsWidgetPastMatch$key } from '@/relay/__generated__/StatisticsWidgetPastMatch.graphql'
-import StatisticsWidgetRefetchNode, {
-  type StatisticsWidgetRefetch,
-} from '@/relay/__generated__/StatisticsWidgetRefetch.graphql'
+import StatisticsWidgetRefetchNode from '@/relay/__generated__/StatisticsWidgetRefetch.graphql'
 import type { StatisticsWidgetTimeline$key } from '@/relay/__generated__/StatisticsWidgetTimeline.graphql'
 
 const POLL_MS = 30_000
@@ -69,7 +68,9 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key; b
         status
         homeCompetitor
         awayCompetitor
-        timeline {
+        # must list the same types as StatisticsWidgetTimeline: the API only returns corners
+        # and yellow cards when asked, and one response key can't have two different filters
+        timeline(types: [GOAL, RED_CARD, PENALTY, CORNER, YELLOW_CARD]) {
           id
         }
         ...StatisticsWidgetTimeline
@@ -347,12 +348,14 @@ function TeamLabel(props: {
   reverse?: boolean
   position?: number | null
   value?: number
+  className?: string
 }) {
   return (
     <div
       className={cn(
         'flex min-w-0 items-center gap-2.5',
-        props.reverse && 'flex-row-reverse text-right'
+        props.reverse && 'flex-row-reverse text-right',
+        props.className
       )}
     >
       <span className={cn('size-2.5 shrink-0 rounded-full', TEAM[props.side].dot)} />
@@ -531,6 +534,8 @@ const INCIDENT_LABEL: Record<string, string> = {
   GOAL: tKey('Goal'),
   PENALTY: tKey('Penalty'),
   RED_CARD: tKey('Red card'),
+  YELLOW_CARD: tKey('Yellow card'),
+  CORNER: tKey('Corner'),
 }
 
 const PENALTY_OUTCOME_LABEL: Record<string, string> = {
@@ -538,47 +543,185 @@ const PENALTY_OUTCOME_LABEL: Record<string, string> = {
   MISSED: tKey('Penalty missed'),
 }
 
+const LANE_SIDE = { home: 'HOME', away: 'AWAY' } as const
+
+// minutes shown on the bar; extra time stretches it from 90 to 120
+const AXIS_STEP = 15
+const axisMax = (timeline: ReadonlyArray<{ minute?: number | null }>) =>
+  timeline.some(i => (i.minute ?? 0) > 90) ? 120 : 90
+
+const ROW_PX = 22 // distance between stacked markers on the same side of the line
+const MINUTE_PX = 5 // mobile scale: the vertical line is 5px per minute
+// Minutes one marker (20px) covers on the axis, i.e. how close two can be before they stack.
+// Mobile has a fixed scale; the horizontal bar flexes with the width, ~7px a minute at typical sizes.
+const SPAN_MOBILE = 4
+const SPAN_DESKTOP = 3
+
+// One DOM serves both layouts, so placement is pure CSS: a horizontal bar from sm up (home above
+// the line, away below) and a vertical one below it (home left, away right) that grows downwards.
+// Per-element inputs come in as CSS variables: --m is the minute, --row/--rowm the stacking row
+// on desktop/mobile (they stack differently, the scales differ).
+const ALONG =
+  'sm:left-[calc(var(--m)/var(--max)*100%)] sm:-translate-x-1/2 max-sm:top-[calc(var(--m)*var(--minpx))] max-sm:-translate-y-1/2'
+const OUT = {
+  home: 'sm:bottom-[calc(100%+2px+var(--row)*var(--step))] max-sm:right-[calc(100%+2px+var(--rowm)*var(--step))]',
+  away: 'sm:top-[calc(100%+2px+var(--row)*var(--step))] max-sm:left-[calc(100%+2px+var(--rowm)*var(--step))]',
+}
+const vars = (v: Record<`--${string}`, string | number>) => v as React.CSSProperties
+
+function incidentLabel(i: Pick<StatisticsWidgetIncident$data, 'type' | 'outcome'>) {
+  return (
+    (i.type === 'PENALTY' && i.outcome ? PENALTY_OUTCOME_LABEL[i.outcome] : undefined) ??
+    INCIDENT_LABEL[i.type] ??
+    INCIDENT_LABEL.GOAL
+  )
+}
+
+/** Row per marker (0 = next to the line) so markers closer than `span` minutes don't overlap. */
+function stackRows(positions: ReadonlyArray<number>, span: number) {
+  const lastInRow: number[] = []
+  return positions.map(p => {
+    const free = lastInRow.findIndex(last => p - last >= span)
+    const row = free === -1 ? lastInRow.length : free
+    lastInRow[row] = p
+    return row
+  })
+}
+
+/**
+ * One line with a minute axis; incidents sit on one side of it by team and stack outwards when
+ * they would overlap. Details are in each marker's popover.
+ */
 function TimelineTab(props: { event: StatisticsWidgetTimeline$key }) {
   const data = useFragment(
     graphql`
       fragment StatisticsWidgetTimeline on Event {
         homeCompetitor
         awayCompetitor
-        timeline {
+        timeline(types: [GOAL, RED_CARD, PENALTY, CORNER, YELLOW_CARD]) {
           id
+          side
+          minute
+          addedTime
           ...StatisticsWidgetIncident
         }
       }
     `,
     props.event
   )
+  const t = useT()
 
-  // the feed is oldest-first (undated entries leading); a live list reads best newest-first
-  const incidents = [...data.timeline].reverse()
+  const max = axisMax(data.timeline)
+  const position = (i: { minute?: number | null; addedTime?: number | null }) =>
+    Math.min((i.minute ?? 0) + (i.addedTime ?? 0), max)
+  const dated = data.timeline.filter(i => i.minute != null)
+  const undated = data.timeline.filter(i => i.minute == null)
+  const name = { home: data.homeCompetitor, away: data.awayCompetitor }
+
+  const lane = (side: Side) => {
+    const incidents = dated.filter(i => i.side === LANE_SIDE[side])
+    const positions = incidents.map(position)
+    const rows = stackRows(positions, SPAN_DESKTOP)
+    const rowsM = stackRows(positions, SPAN_MOBILE)
+    return {
+      side,
+      markers: incidents.map((incident, k) => ({
+        incident,
+        at: { minute: positions[k], row: rows[k], rowM: rowsM[k] },
+      })),
+      // room the stacked markers need beside the line
+      pad: Math.max(0, ...rows.map(r => r + 1)) * ROW_PX + 2,
+      padM: Math.max(0, ...rowsM.map(r => r + 1)) * ROW_PX + 2,
+    }
+  }
+  const lanes = [lane('home'), lane('away')]
+
+  // mobile: the line only runs to the latest incident, so it grows downwards as the match goes on
+  const latest = Math.max(0, ...dated.map(position))
+  const end = Math.min(max, Math.max(AXIS_STEP, Math.ceil(latest / AXIS_STEP) * AXIS_STEP))
+  const ticks = Array.from({ length: max / AXIS_STEP + 1 }, (_, k) => k * AXIS_STEP)
 
   return (
-    <Panel
-      header={
-        <div className='grid grid-cols-[1fr_3rem_1fr] items-center gap-x-3'>
-          <TeamLabel name={data.homeCompetitor} side='home' reverse />
-          <span />
-          <TeamLabel name={data.awayCompetitor} side='away' />
+    <div className='grid grid-cols-2 gap-y-3 sm:grid-cols-1'>
+      <TeamLabel name={name.home} side='home' />
+      <TeamLabel name={name.away} side='away' className='justify-end sm:order-3 sm:justify-start' />
+
+      <div
+        className='col-span-2 max-sm:px-(--pad-m) sm:order-2 sm:col-span-1 sm:pt-(--pad-home) sm:pb-(--pad-away)'
+        style={vars({
+          '--max': max,
+          '--end': end,
+          '--pad-home': `${lanes[0].pad}px`,
+          '--pad-away': `${lanes[1].pad}px`,
+          // mobile keeps the line centred, so both sides get the deeper stack
+          '--pad-m': `${Math.max(lanes[0].padM, lanes[1].padM)}px`,
+          '--step': `${ROW_PX}px`,
+          '--minpx': `${MINUTE_PX}px`,
+        })}
+      >
+        <div className='relative rounded-full bg-white/5 max-sm:mx-auto max-sm:h-[calc(var(--end)*var(--minpx)+2rem)] max-sm:w-6 sm:h-6'>
+          {/* the positioning box: inset so the end labels and markers stay inside the track */}
+          <div className='absolute inset-0 max-sm:inset-y-4 sm:inset-x-4'>
+            {ticks.map(m => (
+              <span
+                key={m}
+                aria-hidden
+                style={vars({ '--m': m })}
+                className={cn(
+                  'text-secondary absolute -translate-x-1/2 -translate-y-1/2 font-mono text-[0.65rem] leading-none max-sm:top-[calc(var(--m)*var(--minpx))] max-sm:left-1/2 sm:top-1/2 sm:left-[calc(var(--m)/var(--max)*100%)]',
+                  m > end && 'max-sm:hidden'
+                )}
+              >
+                {m}
+              </span>
+            ))}
+            {lanes.flatMap(lane =>
+              lane.markers.map(m => (
+                <IncidentMarker
+                  key={m.incident.id}
+                  incident={m.incident}
+                  side={lane.side}
+                  teamName={name[lane.side]}
+                  at={m.at}
+                />
+              ))
+            )}
+          </div>
         </div>
-      }
-    >
-      {incidents.map(incident => (
-        <IncidentRow key={incident.id} incident={incident} />
-      ))}
-    </Panel>
+      </div>
+
+      {undated.length > 0 && (
+        <div className='col-span-2 flex items-center gap-1 sm:order-4 sm:col-span-1'>
+          <span className='text-secondary mr-1 text-[0.7rem]'>{t('Time unknown')}</span>
+          {undated.map(i => (
+            <IncidentMarker
+              key={i.id}
+              incident={i}
+              side={i.side === 'HOME' ? 'home' : 'away'}
+              teamName={i.side === 'HOME' ? name.home : name.away}
+            />
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 
-function IncidentRow(props: { incident: StatisticsWidgetIncident$key }) {
+/**
+ * A marker on the line and its popover. The popover opens on hover for a mouse and on tap for
+ * touch (Radix tooltips and hover cards ignore touch, hence a popover).
+ */
+function IncidentMarker(props: {
+  incident: StatisticsWidgetIncident$key
+  side: Side
+  teamName: string
+  /** Minute on the axis and stacking rows (desktop, mobile); without it the marker flows inline */
+  at?: { minute: number; row: number; rowM: number }
+}) {
   const i = useFragment(
     graphql`
       fragment StatisticsWidgetIncident on MatchIncident {
         type
-        side
         minute
         addedTime
         scorer
@@ -593,60 +736,100 @@ function IncidentRow(props: { incident: StatisticsWidgetIncident$key }) {
     props.incident
   )
   const t = useT()
+  const [open, setOpen] = useState(false)
 
-  const home = i.side === 'HOME'
   const minute = i.minute == null ? '–' : `${i.minute}${i.addedTime ? `+${i.addedTime}` : ''}'`
-  const label =
-    (i.type === 'PENALTY' && i.outcome ? PENALTY_OUTCOME_LABEL[i.outcome] : undefined) ??
-    INCIDENT_LABEL[i.type] ??
-    INCIDENT_LABEL.GOAL
-  const title = (i.type === 'GOAL' && i.scorer) || t(label)
-  const subtitle = [i.penalty && t('Penalty'), i.detail, i.cancelled && t('Cancelled')]
+  const label = t(incidentLabel(i))
+  const title = (i.type === 'GOAL' && i.scorer) || label
+  const subtitle = [
+    props.teamName,
+    i.penalty && t('Penalty'),
+    i.detail,
+    i.cancelled && t('Cancelled'),
+  ]
     .filter(Boolean)
     .join(' · ')
   const showScore = i.type === 'GOAL' && i.homeScore != null && i.awayScore != null
 
-  const body = (
-    <div
-      className={cn(
-        'flex min-w-0 items-center gap-2',
-        home && 'flex-row-reverse text-right',
-        i.cancelled && 'line-through opacity-50'
-      )}
-    >
-      {i.type === 'RED_CARD' ? (
-        <span className='h-3.5 w-2.5 shrink-0 rounded-xs bg-red-500' />
-      ) : i.type === 'PENALTY' ? (
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type='button'
+          aria-label={label}
+          onPointerEnter={e => e.pointerType === 'mouse' && setOpen(true)}
+          onPointerLeave={e => e.pointerType === 'mouse' && setOpen(false)}
+          onClick={e => {
+            // hover already opened it: a mouse click must not toggle it shut again
+            if ((e.nativeEvent as PointerEvent).pointerType === 'mouse') e.preventDefault()
+          }}
+          className={cn(
+            'flex items-center justify-center rounded-md p-0.5 transition-colors hover:bg-white/10 data-[state=open]:bg-white/15',
+            props.at ? ['absolute', ALONG, OUT[props.side]] : 'relative',
+            i.cancelled && 'opacity-40'
+          )}
+          style={
+            props.at
+              ? vars({
+                  '--m': props.at.minute,
+                  '--row': props.at.row,
+                  '--rowm': props.at.rowM,
+                })
+              : undefined
+          }
+        >
+          <IncidentIcon type={i.type} outcome={i.outcome} />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent
+        side={props.side === 'home' ? 'top' : 'bottom'}
+        collisionPadding={8}
+        onOpenAutoFocus={e => e.preventDefault()} // hovering must not steal focus
+        className='pointer-events-none w-auto max-w-72 p-3'
+      >
+        <div className={cn('flex items-center gap-3', i.cancelled && 'line-through opacity-50')}>
+          <IncidentIcon type={i.type} outcome={i.outcome} />
+          <div className='min-w-0'>
+            <p className='text-sm text-white/90'>{title}</p>
+            <p className='text-secondary text-[0.7rem]'>{subtitle}</p>
+          </div>
+          <div className='flex flex-col items-end gap-0.5'>
+            <span className='text-secondary font-mono text-xs'>{minute}</span>
+            {showScore && (
+              <span className='font-mono text-xs font-semibold text-white'>
+                {i.homeScore}-{i.awayScore}
+              </span>
+            )}
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
+  )
+}
+
+function IncidentIcon(props: {
+  type: StatisticsWidgetIncident$data['type']
+  outcome: StatisticsWidgetIncident$data['outcome']
+}) {
+  switch (props.type) {
+    case 'RED_CARD':
+      return <span className='h-3.5 w-2.5 shrink-0 rounded-xs bg-red-500' />
+    case 'YELLOW_CARD':
+      return <span className='h-3.5 w-2.5 shrink-0 rounded-xs bg-yellow-400' />
+    case 'CORNER':
+      return <FlagTriangleRightIcon className='text-secondary size-4 shrink-0' />
+    case 'PENALTY':
+      return (
         <TargetIcon
           className={cn(
             'size-4 shrink-0',
-            i.outcome === 'MISSED' ? 'text-red-400' : 'text-primary'
+            props.outcome === 'MISSED' ? 'text-red-400' : 'text-primary'
           )}
         />
-      ) : (
-        <SportIcon sport='football' className='size-4 shrink-0' />
-      )}
-      <div className='min-w-0'>
-        <p className='truncate text-sm text-white/90'>{title}</p>
-        {subtitle && <p className='text-secondary truncate text-[0.7rem]'>{subtitle}</p>}
-      </div>
-    </div>
-  )
-
-  return (
-    <div className='grid grid-cols-[1fr_3rem_1fr] items-center gap-x-3 py-2.5'>
-      {home ? body : <span />}
-      <div className='flex flex-col items-center gap-0.5'>
-        <span className='text-secondary font-mono text-xs'>{minute}</span>
-        {showScore && (
-          <span className='font-mono text-xs font-semibold text-white'>
-            {i.homeScore}-{i.awayScore}
-          </span>
-        )}
-      </div>
-      {home ? <span /> : body}
-    </div>
-  )
+      )
+    default:
+      return <SportIcon sport='football' className='size-4 shrink-0' />
+  }
 }
 
 /* --------------------------------- Form ----------------------------------- */

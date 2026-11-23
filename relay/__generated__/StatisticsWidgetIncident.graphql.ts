@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<328691fba877b0fc222383a7804d9e7d>>
+ * @generated SignedSource<<0821e98cf89a63876645d25d5d485683>>
  * @lightSyntaxTransform
  */
 
@@ -10,7 +10,6 @@
 import { ReaderFragment } from 'relay-runtime';
 export type MatchIncidentType = "CORNER" | "GOAL" | "PENALTY" | "RED_CARD" | "YELLOW_CARD" | "%future added value";
 export type PenaltyOutcome = "MISSED" | "SCORED" | "%future added value";
-export type Side = "AWAY" | "HOME" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type StatisticsWidgetIncident$data = {
   readonly addedTime: number | null | undefined;
@@ -22,7 +21,6 @@ export type StatisticsWidgetIncident$data = {
   readonly outcome: PenaltyOutcome | null | undefined;
   readonly penalty: boolean;
   readonly scorer: string | null | undefined;
-  readonly side: Side;
   readonly type: MatchIncidentType;
   readonly " $fragmentType": "StatisticsWidgetIncident";
 };
@@ -42,13 +40,6 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "ScalarField",
       "name": "type",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "side",
       "storageKey": null
     },
     {
@@ -119,6 +110,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "d112678f3dff0b28680b62026e204430";
+(node as any).hash = "7f7a1a3d2fe716c351757cb4f643be40";
 
 export default node;

@@ -1570,5 +1570,17 @@
   "Your betslip is empty": {
     "de": "Ihr Wettschein ist leer",
     "tr": "Kuponunuz boş"
+  },
+  "Corner": {
+    "de": "",
+    "tr": ""
+  },
+  "Time unknown": {
+    "de": "",
+    "tr": ""
+  },
+  "Yellow card": {
+    "de": "",
+    "tr": ""
   }
 }

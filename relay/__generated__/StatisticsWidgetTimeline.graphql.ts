@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1e0a04596916a1cacd96e5a921e7b999>>
+ * @generated SignedSource<<ac737f5a567ceae87223b3ddf4bfff21>>
  * @lightSyntaxTransform
  */
 
@@ -8,12 +8,16 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
+export type Side = "AWAY" | "HOME" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type StatisticsWidgetTimeline$data = {
   readonly awayCompetitor: string;
   readonly homeCompetitor: string;
   readonly timeline: ReadonlyArray<{
+    readonly addedTime: number | null | undefined;
     readonly id: string;
+    readonly minute: number | null | undefined;
+    readonly side: Side;
     readonly " $fragmentSpreads": FragmentRefs<"StatisticsWidgetIncident">;
   }>;
   readonly " $fragmentType": "StatisticsWidgetTimeline";
@@ -45,7 +49,19 @@ const node: ReaderFragment = {
     },
     {
       "alias": null,
-      "args": null,
+      "args": [
+        {
+          "kind": "Literal",
+          "name": "types",
+          "value": [
+            "GOAL",
+            "RED_CARD",
+            "PENALTY",
+            "CORNER",
+            "YELLOW_CARD"
+          ]
+        }
+      ],
       "concreteType": "MatchIncident",
       "kind": "LinkedField",
       "name": "timeline",
@@ -59,18 +75,39 @@ const node: ReaderFragment = {
           "storageKey": null
         },
         {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "side",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "minute",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "addedTime",
+          "storageKey": null
+        },
+        {
           "args": null,
           "kind": "FragmentSpread",
           "name": "StatisticsWidgetIncident"
         }
       ],
-      "storageKey": null
+      "storageKey": "timeline(types:[\"GOAL\",\"RED_CARD\",\"PENALTY\",\"CORNER\",\"YELLOW_CARD\"])"
     }
   ],
   "type": "Event",
   "abstractKey": null
 };
 
-(node as any).hash = "154a32b0033f4359eb0a5b88fcc31989";
+(node as any).hash = "5ae0b23d05f4ddb8dfcda605ce673ae6";
 
 export default node;

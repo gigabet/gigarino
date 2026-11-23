@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ea7c03531cfc2fc53283c8cba87792d8>>
+ * @generated SignedSource<<bf29b4b5b3a4aaa2c6dbe609592fa111>>
  * @lightSyntaxTransform
  */
 
@@ -309,20 +309,25 @@ return {
                   (v3/*:: as any*/),
                   {
                     "alias": null,
-                    "args": null,
+                    "args": [
+                      {
+                        "kind": "Literal",
+                        "name": "types",
+                        "value": [
+                          "GOAL",
+                          "RED_CARD",
+                          "PENALTY",
+                          "CORNER",
+                          "YELLOW_CARD"
+                        ]
+                      }
+                    ],
                     "concreteType": "MatchIncident",
                     "kind": "LinkedField",
                     "name": "timeline",
                     "plural": true,
                     "selections": [
                       (v6/*:: as any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "type",
-                        "storageKey": null
-                      },
                       {
                         "alias": null,
                         "args": null,
@@ -342,6 +347,13 @@ return {
                         "args": null,
                         "kind": "ScalarField",
                         "name": "addedTime",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "type",
                         "storageKey": null
                       },
                       {
@@ -376,7 +388,7 @@ return {
                       (v9/*:: as any*/),
                       (v10/*:: as any*/)
                     ],
-                    "storageKey": null
+                    "storageKey": "timeline(types:[\"GOAL\",\"RED_CARD\",\"PENALTY\",\"CORNER\",\"YELLOW_CARD\"])"
                   },
                   {
                     "alias": null,
@@ -563,12 +575,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "e74098e20ea40b3aa1967fed7d707374",
+    "cacheID": "991cbf20be7aa3fdf263ed265ecba46c",
     "id": null,
     "metadata": {},
     "name": "PrematchSingleViewQuery",
     "operationKind": "query",
-    "text": "query PrematchSingleViewQuery(\n  $id: ID!\n  $showStats: Boolean!\n) {\n  event(id: $id) {\n    ...PrematchSingleView\n    id\n  }\n}\n\nfragment EventLiveState on Event {\n  status\n  tradingStatus\n  homeScore\n  awayScore\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  outcomes {\n    id\n    index\n    name\n    price\n    status\n  }\n}\n\nfragment MarketGroups on Event {\n  markets {\n    id\n    groups\n    kind\n    index\n    ...MarketCard\n  }\n}\n\nfragment MatchTracker on Event {\n  sportradarMatchId\n}\n\nfragment PrematchSingleHeader on Event {\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    name\n    id\n  }\n  category {\n    name\n    id\n  }\n  status\n  ...FavouriteButton\n}\n\nfragment PrematchSingleView on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  ...PrematchSingleHeader\n  ...EventLiveState\n  ...MatchTracker\n  ...StatisticsWidget @include(if: $showStats) @defer(label: \"PrematchSingleView$defer$StatisticsWidget\")\n  ...MarketGroups @defer(label: \"PrematchSingleView$defer$MarketGroups\")\n}\n\nfragment StatisticsWidget on Event {\n  id\n  status\n  homeCompetitor\n  awayCompetitor\n  timeline {\n    id\n  }\n  ...StatisticsWidgetTimeline\n  insights {\n    homePosition\n    awayPosition\n    venue\n    referee\n    round\n    stats {\n      key\n      home\n      away\n    }\n    homeRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    awayRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    headToHead {\n      outcome\n      ...StatisticsWidgetPastMatch\n    }\n  }\n}\n\nfragment StatisticsWidgetIncident on MatchIncident {\n  type\n  side\n  minute\n  addedTime\n  scorer\n  detail\n  penalty\n  outcome\n  cancelled\n  homeScore\n  awayScore\n}\n\nfragment StatisticsWidgetPastMatch on PastMatch {\n  homeName\n  awayName\n  homeScore\n  awayScore\n  competition\n  startTime\n  outcome\n}\n\nfragment StatisticsWidgetTimeline on Event {\n  homeCompetitor\n  awayCompetitor\n  timeline {\n    id\n    ...StatisticsWidgetIncident\n  }\n}\n"
+    "text": "query PrematchSingleViewQuery(\n  $id: ID!\n  $showStats: Boolean!\n) {\n  event(id: $id) {\n    ...PrematchSingleView\n    id\n  }\n}\n\nfragment EventLiveState on Event {\n  status\n  tradingStatus\n  homeScore\n  awayScore\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  outcomes {\n    id\n    index\n    name\n    price\n    status\n  }\n}\n\nfragment MarketGroups on Event {\n  markets {\n    id\n    groups\n    kind\n    index\n    ...MarketCard\n  }\n}\n\nfragment MatchTracker on Event {\n  sportradarMatchId\n}\n\nfragment PrematchSingleHeader on Event {\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    name\n    id\n  }\n  category {\n    name\n    id\n  }\n  status\n  ...FavouriteButton\n}\n\nfragment PrematchSingleView on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  ...PrematchSingleHeader\n  ...EventLiveState\n  ...MatchTracker\n  ...StatisticsWidget @include(if: $showStats) @defer(label: \"PrematchSingleView$defer$StatisticsWidget\")\n  ...MarketGroups @defer(label: \"PrematchSingleView$defer$MarketGroups\")\n}\n\nfragment StatisticsWidget on Event {\n  id\n  status\n  homeCompetitor\n  awayCompetitor\n  timeline(types: [GOAL, RED_CARD, PENALTY, CORNER, YELLOW_CARD]) {\n    id\n  }\n  ...StatisticsWidgetTimeline\n  insights {\n    homePosition\n    awayPosition\n    venue\n    referee\n    round\n    stats {\n      key\n      home\n      away\n    }\n    homeRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    awayRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    headToHead {\n      outcome\n      ...StatisticsWidgetPastMatch\n    }\n  }\n}\n\nfragment StatisticsWidgetIncident on MatchIncident {\n  type\n  minute\n  addedTime\n  scorer\n  detail\n  penalty\n  outcome\n  cancelled\n  homeScore\n  awayScore\n}\n\nfragment StatisticsWidgetPastMatch on PastMatch {\n  homeName\n  awayName\n  homeScore\n  awayScore\n  competition\n  startTime\n  outcome\n}\n\nfragment StatisticsWidgetTimeline on Event {\n  homeCompetitor\n  awayCompetitor\n  timeline(types: [GOAL, RED_CARD, PENALTY, CORNER, YELLOW_CARD]) {\n    id\n    side\n    minute\n    addedTime\n    ...StatisticsWidgetIncident\n  }\n}\n"
   }
 };
 })();

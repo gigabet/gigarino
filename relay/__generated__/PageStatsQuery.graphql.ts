@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<eda4df6bc1589139cb3731e9e808ade3>>
+ * @generated SignedSource<<1e2ce45daa09051d7677ee358dce1353>>
  * @lightSyntaxTransform
  */
 
@@ -180,20 +180,25 @@ return {
           },
           {
             "alias": null,
-            "args": null,
+            "args": [
+              {
+                "kind": "Literal",
+                "name": "types",
+                "value": [
+                  "GOAL",
+                  "RED_CARD",
+                  "PENALTY",
+                  "CORNER",
+                  "YELLOW_CARD"
+                ]
+              }
+            ],
             "concreteType": "MatchIncident",
             "kind": "LinkedField",
             "name": "timeline",
             "plural": true,
             "selections": [
               (v2/*:: as any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "type",
-                "storageKey": null
-              },
               {
                 "alias": null,
                 "args": null,
@@ -213,6 +218,13 @@ return {
                 "args": null,
                 "kind": "ScalarField",
                 "name": "addedTime",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "type",
                 "storageKey": null
               },
               {
@@ -247,7 +259,7 @@ return {
               (v4/*:: as any*/),
               (v5/*:: as any*/)
             ],
-            "storageKey": null
+            "storageKey": "timeline(types:[\"GOAL\",\"RED_CARD\",\"PENALTY\",\"CORNER\",\"YELLOW_CARD\"])"
           },
           {
             "alias": null,
@@ -371,12 +383,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "60ffe72e4164739c80e5437cf23b385a",
+    "cacheID": "9077948e270fa3f7b66d16f5b0b8927f",
     "id": null,
     "metadata": {},
     "name": "PageStatsQuery",
     "operationKind": "query",
-    "text": "query PageStatsQuery(\n  $id: ID!\n) {\n  event(id: $id) {\n    ...PageStatsView\n    id\n  }\n}\n\nfragment PageStatsView on Event {\n  homeCompetitor\n  awayCompetitor\n  ...StatisticsWidget\n}\n\nfragment StatisticsWidget on Event {\n  id\n  status\n  homeCompetitor\n  awayCompetitor\n  timeline {\n    id\n  }\n  ...StatisticsWidgetTimeline\n  insights {\n    homePosition\n    awayPosition\n    venue\n    referee\n    round\n    stats {\n      key\n      home\n      away\n    }\n    homeRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    awayRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    headToHead {\n      outcome\n      ...StatisticsWidgetPastMatch\n    }\n  }\n}\n\nfragment StatisticsWidgetIncident on MatchIncident {\n  type\n  side\n  minute\n  addedTime\n  scorer\n  detail\n  penalty\n  outcome\n  cancelled\n  homeScore\n  awayScore\n}\n\nfragment StatisticsWidgetPastMatch on PastMatch {\n  homeName\n  awayName\n  homeScore\n  awayScore\n  competition\n  startTime\n  outcome\n}\n\nfragment StatisticsWidgetTimeline on Event {\n  homeCompetitor\n  awayCompetitor\n  timeline {\n    id\n    ...StatisticsWidgetIncident\n  }\n}\n"
+    "text": "query PageStatsQuery(\n  $id: ID!\n) {\n  event(id: $id) {\n    ...PageStatsView\n    id\n  }\n}\n\nfragment PageStatsView on Event {\n  homeCompetitor\n  awayCompetitor\n  ...StatisticsWidget\n}\n\nfragment StatisticsWidget on Event {\n  id\n  status\n  homeCompetitor\n  awayCompetitor\n  timeline(types: [GOAL, RED_CARD, PENALTY, CORNER, YELLOW_CARD]) {\n    id\n  }\n  ...StatisticsWidgetTimeline\n  insights {\n    homePosition\n    awayPosition\n    venue\n    referee\n    round\n    stats {\n      key\n      home\n      away\n    }\n    homeRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    awayRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    headToHead {\n      outcome\n      ...StatisticsWidgetPastMatch\n    }\n  }\n}\n\nfragment StatisticsWidgetIncident on MatchIncident {\n  type\n  minute\n  addedTime\n  scorer\n  detail\n  penalty\n  outcome\n  cancelled\n  homeScore\n  awayScore\n}\n\nfragment StatisticsWidgetPastMatch on PastMatch {\n  homeName\n  awayName\n  homeScore\n  awayScore\n  competition\n  startTime\n  outcome\n}\n\nfragment StatisticsWidgetTimeline on Event {\n  homeCompetitor\n  awayCompetitor\n  timeline(types: [GOAL, RED_CARD, PENALTY, CORNER, YELLOW_CARD]) {\n    id\n    side\n    minute\n    addedTime\n    ...StatisticsWidgetIncident\n  }\n}\n"
   }
 };
 })();
