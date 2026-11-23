@@ -27,10 +27,6 @@
     "de": "{n} Ergebnisse für „{query}“",
     "tr": "\"{query}\" için {n} sonuç"
   },
-  "{n} selections": {
-    "de": "{n} Auswahlen",
-    "tr": "{n} seçim"
-  },
   "{n}-fold Combi": {
     "de": "{n}-fach Kombi",
     "tr": "{n}'li Kombine"
@@ -50,10 +46,6 @@
   "1 result for \"{query}\"": {
     "de": "1 Ergebnis für „{query}“",
     "tr": "\"{query}\" için 1 sonuç"
-  },
-  "1 selection": {
-    "de": "1 Auswahl",
-    "tr": "1 seçim"
   },
   "1. Half": {
     "de": "1. Halbzeit",
@@ -222,6 +214,10 @@
   "Back to Login": {
     "de": "Zurück zur Anmeldung",
     "tr": "Girişe Dön"
+  },
+  "Banker": {
+    "de": "Banker",
+    "tr": "Banko"
   },
   "Baseball": {
     "de": "Baseball",
@@ -398,6 +394,10 @@
   "Cookie Notice": {
     "de": "Cookie-Hinweis",
     "tr": "Çerez Bildirimi"
+  },
+  "Corner": {
+    "de": "Ecke",
+    "tr": "Korner"
   },
   "Corners": {
     "de": "Ecken",
@@ -819,10 +819,6 @@
     "de": "Mobil optimiert",
     "tr": "Mobil Uyumlu"
   },
-  "Most Searched": {
-    "de": "Beliebteste Suchen",
-    "tr": "En Çok Aranan"
-  },
   "My Tickets": {
     "de": "Tickets",
     "tr": "Biletlerim"
@@ -846,10 +842,6 @@
   "No events are live right now.": {
     "de": "Derzeit keine Live-Events.",
     "tr": "Şu anda canlı etkinlik yok."
-  },
-  "No events found": {
-    "de": "Keine Events gefunden",
-    "tr": "Etkinlik bulunamadı"
   },
   "No games": {
     "de": "Keine Spiele",
@@ -1199,10 +1191,6 @@
     "de": "Events suchen",
     "tr": "Etkinlik ara"
   },
-  "Search events, games, providers...": {
-    "de": "Events, Spiele, Anbieter suchen...",
-    "tr": "Etkinlik, oyun, sağlayıcı ara..."
-  },
   "Search games, providers...": {
     "de": "Spiele, Anbieter suchen...",
     "tr": "Oyun, sağlayıcı ara..."
@@ -1210,10 +1198,6 @@
   "search games...": {
     "de": "Spiele suchen...",
     "tr": "oyun ara..."
-  },
-  "Search live events": {
-    "de": "Live-Events suchen",
-    "tr": "Canlı etkinlik ara"
   },
   "Search sports": {
     "de": "Sport suchen",
@@ -1258,10 +1242,6 @@
   "Send Reset Link": {
     "de": "Link senden",
     "tr": "Bağlantı Gönder"
-  },
-  "Serving": {
-    "de": "Aufschlag",
-    "tr": "Servis"
   },
   "Settled": {
     "de": "Abgerechnet",
@@ -1427,6 +1407,10 @@
     "de": "Tiebreak",
     "tr": "Tiebreak"
   },
+  "Time unknown": {
+    "de": "Zeit unbekannt",
+    "tr": "Saat bilinmiyor"
+  },
   "Timeline": {
     "de": "Zeitverlauf",
     "tr": "Zaman çizelgesi"
@@ -1551,6 +1535,10 @@
     "de": "xG",
     "tr": "xG"
   },
+  "Yellow card": {
+    "de": "Gelbe Karte",
+    "tr": "Sarı kart"
+  },
   "Yellow cards": {
     "de": "Gelbe Karten",
     "tr": "Sarı kartlar"
@@ -1570,17 +1558,5 @@
   "Your betslip is empty": {
     "de": "Ihr Wettschein ist leer",
     "tr": "Kuponunuz boş"
-  },
-  "Corner": {
-    "de": "",
-    "tr": ""
-  },
-  "Time unknown": {
-    "de": "",
-    "tr": ""
-  },
-  "Yellow card": {
-    "de": "",
-    "tr": ""
   }
 }

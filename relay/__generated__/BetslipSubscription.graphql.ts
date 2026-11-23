@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<30e2f33086e5b30911d69023c8fe7931>>
+ * @generated SignedSource<<a89f8fe553f7e170f2525089f2ff3257>>
  * @lightSyntaxTransform
  */
 
@@ -100,48 +100,6 @@ return {
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "stake",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "effectiveOdds",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "potentialPayout",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "placeable",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "betType",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "blockers",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
             "concreteType": "BetslipQuoteItem",
             "kind": "LinkedField",
             "name": "items",
@@ -186,6 +144,13 @@ return {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
+                "name": "id",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
                 "name": "eventName",
                 "storageKey": null
               },
@@ -223,15 +188,43 @@ return {
                 "kind": "ScalarField",
                 "name": "eventId",
                 "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "id",
-                "storageKey": null
               }
             ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "betType",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "effectiveOdds",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "potentialPayout",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "placeable",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "blockers",
             "storageKey": null
           }
         ],
@@ -240,12 +233,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f52149bf079a4ed13d4838528b6c9bbf",
+    "cacheID": "bfdb6cd1fbdf56a3ab75e313bd0920f1",
     "id": null,
     "metadata": {},
     "name": "BetslipSubscription",
     "operationKind": "subscription",
-    "text": "subscription BetslipSubscription(\n  $input: BetslipQuoteInput!\n) {\n  betslipUpdated(input: $input) {\n    ...Betslip\n    ...BetslipMobileBar\n  }\n}\n\nfragment Betslip on BetslipQuote {\n  stake\n  effectiveOdds\n  potentialPayout\n  placeable\n  betType\n  blockers\n  items {\n    outcomeId\n    availability\n    price\n    expectedPrice\n    priceChanged\n    ...Tip\n    id\n  }\n}\n\nfragment BetslipMobileBar on BetslipQuote {\n  effectiveOdds\n  items {\n    id\n  }\n}\n\nfragment Tip on BetslipQuoteItem {\n  outcomeId\n  eventName\n  marketName\n  name\n  key\n  price\n  expectedPrice\n  priceChanged\n  availability\n  isLive\n  eventId\n}\n"
+    "text": "subscription BetslipSubscription(\n  $input: BetslipQuoteInput!\n) {\n  betslipUpdated(input: $input) {\n    ...Betslip\n    ...BetslipMobileBar\n  }\n}\n\nfragment BetTypeTabs on BetslipQuote {\n  betType\n  items {\n    outcomeId\n    id\n  }\n}\n\nfragment Betslip on BetslipQuote {\n  ...BetslipBody\n}\n\nfragment BetslipBody on BetslipQuote {\n  items {\n    outcomeId\n    availability\n    price\n    expectedPrice\n    priceChanged\n    id\n  }\n  ...BetTypeTabs\n  ...SystemSizeSelect\n  ...SelectionList\n  ...BetslipFooter\n}\n\nfragment BetslipFooter on BetslipQuote {\n  betType\n  effectiveOdds\n  potentialPayout\n  placeable\n  items {\n    outcomeId\n    availability\n    price\n    id\n  }\n  ...BlockersBanner\n}\n\nfragment BetslipMobileBar on BetslipQuote {\n  effectiveOdds\n  items {\n    id\n  }\n}\n\nfragment BlockersBanner on BetslipQuote {\n  blockers\n}\n\nfragment SelectionList on BetslipQuote {\n  items {\n    outcomeId\n    ...Tip\n    id\n  }\n}\n\nfragment SystemSizeSelect on BetslipQuote {\n  betType\n}\n\nfragment Tip on BetslipQuoteItem {\n  outcomeId\n  eventName\n  marketName\n  name\n  key\n  price\n  expectedPrice\n  priceChanged\n  availability\n  isLive\n  eventId\n}\n"
   }
 };
 })();

@@ -35,16 +35,20 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import * as Tabs from '@/components/ui/tabs'
 import {
+  type ActiveBoost,
   betCodeCopy,
   betslipInputAtom,
   betslipOpenAtom,
   betslipTabAtom,
   boostAtom,
   oddsPolicyAtom,
+  systemPoolSize,
   useActiveBoost,
   useBetslipPrices,
   useSetDefaultStake,
   useSetLegStake,
+  withBanker,
+  withBetType,
   withoutItems,
 } from '@/context/betslip'
 import { useMediaQuery } from '@/context/hooks'
@@ -53,13 +57,18 @@ import { unseenResettlementsAtom } from '@/context/tickets'
 import { translateOutcomeKey, translateOutcomeName } from '@/lib/api-names'
 import { MARKET_NAME, splitMarketName } from '@/lib/sport-markets'
 import { cn, formatBalance, nCk } from '@/lib/utils'
-import type { Betslip$data, Betslip$key } from '@/relay/__generated__/Betslip.graphql'
+import type { Betslip$key } from '@/relay/__generated__/Betslip.graphql'
+import type { BetslipBody$key } from '@/relay/__generated__/BetslipBody.graphql'
+import type { BetslipFooter$key } from '@/relay/__generated__/BetslipFooter.graphql'
 import type { BetslipMobileBar$key } from '@/relay/__generated__/BetslipMobileBar.graphql'
 import type { BetslipPlaceBetMutation } from '@/relay/__generated__/BetslipPlaceBetMutation.graphql'
+import type { BetTypeTabs$key } from '@/relay/__generated__/BetTypeTabs.graphql'
+import type { BlockersBanner$key } from '@/relay/__generated__/BlockersBanner.graphql'
+import type { SelectionList$key } from '@/relay/__generated__/SelectionList.graphql'
+import type { SystemSizeSelect$key } from '@/relay/__generated__/SystemSizeSelect.graphql'
 import type { Tip$key } from '@/relay/__generated__/Tip.graphql'
 import type { TicketType } from '@/types'
 
-type Quote = Betslip$data
 type MainTab = 'betslip' | 'tickets'
 type Placed = { id: string; stake: string; potentialPayout: string | null }
 
@@ -76,77 +85,29 @@ export default function Betslip(props: {
     useFragment(
       graphql`
         fragment Betslip on BetslipQuote {
-          stake
-          effectiveOdds
-          potentialPayout
-          placeable
-          betType
-          blockers
-          items {
-            outcomeId
-            availability
-            price
-            expectedPrice
-            priceChanged
-            ...Tip
-          }
+          ...BetslipBody
         }
       `,
       props.query
     ) ?? null
 
   const input = useAtomValue(betslipInputAtom)
-  const [mainTab, setMainTab] = useState<MainTab>(props.initialTab ?? 'betslip')
-  const [ticketsKey, setTicketsKey] = useState(0)
-
-  const clearAll = useClearBetslip()
-  const totals = useBetslipTotals(data)
-  const changes = usePriceChanges(data)
-  const bet = usePlaceBet({
-    data,
-    boostId: totals.boost?.id,
-    onPriceChanged: changes.reset,
-    onPlaced: () => setTicketsKey(k => k + 1),
-  })
-
-  return (
-    <div className='bg-dark-200 scrollbar-hide flex h-full min-h-0 w-full flex-col overflow-y-auto'>
-      <BetslipTracker variant={props.variant === 'drawer' ? 'drawer' : 'panel'} />
-      <BetslipHeader
-        tab={mainTab}
-        onTabChange={setMainTab}
-        showClear={mainTab === 'betslip' && input.items.length > 0 && !bet.placed}
-        onClear={clearAll}
-      />
-
-      {mainTab === 'tickets' ? (
-        <MyTickets key={ticketsKey} />
-      ) : bet.placed ? (
-        <PlacedState
-          ticket={bet.placed}
-          onNewBet={bet.startNewBet}
-          onViewTickets={() => setMainTab('tickets')}
-        />
-      ) : input.items.length === 0 ? (
-        <EmptyState />
-      ) : !data ? (
-        <BetslipBodySkeleton count={input.items.length} />
-      ) : (
-        <BetslipBody data={data} totals={totals} changes={changes} bet={bet} />
-      )}
-    </div>
-  )
-}
-
-/* -------------------------------------------------------------------------- */
-/*  Hooks (state + logic, no markup)                                          */
-/* -------------------------------------------------------------------------- */
-
-function useClearBetslip() {
   const setInput = useSetAtom(betslipInputAtom)
   const setBoost = useSetAtom(boostAtom)
+  const setPolicy = useSetAtom(oddsPolicyAtom)
 
-  return () => {
+  const [mainTab, setMainTab] = useState<MainTab>(props.initialTab ?? 'betslip')
+  const [ticketsKey, setTicketsKey] = useState(0)
+  const [placed, setPlaced] = useState<Placed | null>(null)
+
+  const isEmpty = input.items.length === 0
+
+  // an emptied slip starts over with the default odds policy
+  useEffect(() => {
+    if (isEmpty) setPolicy('REJECT')
+  }, [isEmpty, setPolicy])
+
+  const clearAll = () => {
     setInput(prev => ({
       ...prev,
       items: [],
@@ -155,216 +116,44 @@ function useClearBetslip() {
     }))
     setBoost(null)
   }
-}
 
-/** Stake / odds / payout figures shown in the summary and used for the place button. */
-function useBetslipTotals(data: Quote | null) {
-  const input = useAtomValue(betslipInputAtom)
-  const boost = useActiveBoost()
-
-  const legStake = (id: string) =>
-    Number(input.items.find(i => i.outcomeId === id)?.stake ?? input.stake) || 0
-
-  const singlesTotal = (data?.items ?? [])
-    .filter(i => i.availability === 'AVAILABLE')
-    .reduce((a, i) => a + legStake(i.outcomeId), 0)
-
-  const stakeNum = data?.betType === 'SINGLE' ? singlesTotal : Number(input.stake) || 0
-  const overBoostMax = !!boost?.maxStake && stakeNum > Number(boost.maxStake)
-  const shownOdds = boost ? Number(boost.boostedPrice) : Number(data?.effectiveOdds)
-  const shownPayout = boost
-    ? stakeNum * Number(boost.boostedPrice)
-    : Number(data?.potentialPayout) || 0
-
-  return { boost, singlesTotal, stakeNum, overBoostMax, shownOdds, shownPayout }
-}
-
-/**
- * Odds-change detection, the dismiss state and the accept actions.
- *
- * Accepting also switches the odds policy sent with placeBet (ACCEPT_HIGHER /
- * ACCEPT_ANY) so the server does not reject the slip for a move the player
- * already accepted. The policy lives until the slip is empty or submitted.
- */
-function usePriceChanges(data: Quote | null) {
-  const input = useAtomValue(betslipInputAtom)
-  const setInput = useSetAtom(betslipInputAtom)
-  const [policy, setPolicy] = useAtom(oddsPolicyAtom)
-  const { stamp, accept } = useBetslipPrices()
-  const [dismissedSig, setDismissedSig] = useState<string | null>(null)
-
-  // remember the first price we saw for each leg so we can detect moves later
-  useEffect(() => {
-    if (!data) return
-    const unseen = new Map(
-      data.items.filter(i => i.price && !i.expectedPrice).map(i => [i.outcomeId, i.price as string])
-    )
-    if (unseen.size) stamp(unseen)
-  }, [data, stamp])
-
-  // an emptied slip starts over with the default policy
-  const isEmpty = input.items.length === 0
-  useEffect(() => {
-    if (isEmpty) setPolicy('REJECT')
-  }, [isEmpty, setPolicy])
-
-  const changed = (data?.items ?? []).filter(i => i.priceChanged && i.price && i.expectedPrice)
-  const higher = changed.filter(i => Number(i.price) > Number(i.expectedPrice))
-  const lower = changed.filter(i => Number(i.price) < Number(i.expectedPrice))
-
-  // moves the active policy already covers will be accepted by the server: no prompt
-  const pending = policy === 'ACCEPT_ANY' ? [] : policy === 'ACCEPT_HIGHER' ? lower : changed
-  const signature = pending.map(i => `${i.outcomeId}:${i.price}`).join('|')
-
-  const toMap = (items: typeof changed) => new Map(items.map(i => [i.outcomeId, i.price as string]))
-  const dropLower = () => {
-    if (lower.length === 0) return // nothing to drop; avoids a needless input change/resubscribe
-    const lowerIds = new Set(lower.map(i => i.outcomeId))
-    setInput(prev => withoutItems(prev, lowerIds))
-  }
-
-  return {
-    pending,
-    // always offer the narrower option while the policy is still REJECT,
-    // whatever mix of higher/lower moves we got
-    showAcceptHigher: policy === 'REJECT' && pending.length > 0,
-    show: pending.length > 0 && signature !== dismissedSig, // moves again => re-shows
-    // the X: reject the worse odds by dropping those legs (same idea as the invalid-bets X).
-    // With nothing lower to drop, there is nothing to reject, so just hide the prompt.
-    reject: () => (lower.length > 0 ? dropLower() : setDismissedSig(signature)),
-    // unexpected rejection: ask again from scratch
-    reset: () => {
-      setDismissedSig(null)
-      setPolicy('REJECT')
-    },
-    acceptAll: () => {
-      accept(toMap(changed))
-      setPolicy('ACCEPT_ANY')
-    },
-    acceptHigher: () => {
-      accept(toMap(higher)) // rebase the legs that went up (no-op if none)
-      dropLower() // drop the legs that went down (no-op if none)
-      setPolicy('ACCEPT_HIGHER')
-    },
-  }
-}
-
-/** Place-bet mutation + the "placed" / error state that surrounds it. */
-function usePlaceBet(opts: {
-  data: Quote | null
-  boostId: string | undefined
-  onPriceChanged: () => void
-  onPlaced: () => void
-}) {
-  const t = useT()
-  const input = useAtomValue(betslipInputAtom)
-  const setBoost = useSetAtom(boostAtom)
-  const [oddsPolicy, setOddsPolicy] = useAtom(oddsPolicyAtom)
-  const clearAll = useClearBetslip()
-
-  const [placed, setPlaced] = useState<Placed | null>(null)
-  const [placeError, setPlaceError] = useState<string | null>(null)
-  const clientRequestId = useRef<string>(crypto.randomUUID())
-
-  const [commit, isPlacing] = useMutation<BetslipPlaceBetMutation>(graphql`
-    mutation BetslipPlaceBetMutation($input: PlaceBetInput!) {
-      placeBet(input: $input) {
-        ticket {
-          id
-          status
-          stake
-          potentialPayout
-        }
-        rejection {
-          code
-          message
-          priceChanges {
-            outcomeId
-            expectedPrice
-            currentPrice
-          }
-        }
-      }
-    }
-  `)
-
-  const { user } = useUser()
-  const setLoginOpen = useSetAtom(loginDialogOpenAtom)
-  const setBetslipOpen = useSetAtom(betslipOpenAtom)
-  const place = () => {
-    const { data } = opts
-    if (!data) return
-
-    // guests can't place bets: ask them to log in instead of hitting the API
-    if (!user) {
-      setBetslipOpen(false) // close the mobile drawer so it doesn't fight the dialog for focus
-      setLoginOpen(true)
-      return
-    }
-
-    const byId = new Map(input.items.map(i => [i.outcomeId, i]))
-    const items = data.items
-      .filter(i => i.availability === 'AVAILABLE')
-      .map(i => ({
-        outcomeId: i.outcomeId,
-        expectedPrice: byId.get(i.outcomeId)?.expectedPrice ?? i.price,
-        stake:
-          data.betType === 'SINGLE'
-            ? String(byId.get(i.outcomeId)?.stake ?? input.stake)
-            : undefined,
-      }))
-
-    commit({
-      variables: {
-        input: {
-          betType: data.betType,
-          items,
-          stake: input.stake || '0',
-          systemSize: input.systemSize ?? null,
-          clientRequestId: clientRequestId.current,
-          oddsPolicy,
-          boostId: opts.boostId,
-        },
-      },
-      onCompleted: response => {
-        const rej = response.placeBet.rejection
-        if (rej) {
-          if (rej.code === 'PRICE_CHANGED') {
-            opts.onPriceChanged()
-            setPlaceError(null)
-          } else {
-            if (rej.code === 'BOOST_UNAVAILABLE') setBoost(null)
-            setPlaceError(betCodeCopy(rej.code, t) ?? rej.message)
-          }
-          return
-        }
-
-        const ticket = response.placeBet.ticket
-        if (ticket) {
-          setBoost(null)
-          setOddsPolicy('REJECT') // accepted odds changes only apply to the slip just submitted
-          setPlaced({
-            id: ticket.id,
-            stake: ticket.stake,
-            potentialPayout: ticket.potentialPayout,
-          })
-          opts.onPlaced()
-        }
-      },
-      onError: error => {
-        setPlaceError(error.message || t('Failed to place bet. Please try again.'))
-      },
-    })
+  const onPlaced = (ticket: Placed) => {
+    setPlaced(ticket)
+    setTicketsKey(k => k + 1) // remount My Tickets so the new ticket shows up
   }
 
   const startNewBet = () => {
-    clientRequestId.current = crypto.randomUUID()
     setPlaced(null)
-    setPlaceError(null)
     clearAll()
   }
 
-  return { place, isPlacing, placed, placeError, startNewBet }
+  return (
+    <div className='bg-dark-200 scrollbar-hide flex h-full min-h-0 w-full flex-col overflow-y-auto'>
+      <BetslipTracker variant={props.variant === 'drawer' ? 'drawer' : 'panel'} />
+      <BetslipHeader
+        tab={mainTab}
+        onTabChange={setMainTab}
+        showClear={mainTab === 'betslip' && !isEmpty && !placed}
+        onClear={clearAll}
+      />
+
+      {mainTab === 'tickets' ? (
+        <MyTickets key={ticketsKey} />
+      ) : placed ? (
+        <PlacedState
+          ticket={placed}
+          onNewBet={startNewBet}
+          onViewTickets={() => setMainTab('tickets')}
+        />
+      ) : isEmpty ? (
+        <EmptyState />
+      ) : !data ? (
+        <BetslipBodySkeleton count={input.items.length} />
+      ) : (
+        <BetslipBody quoteRef={data} onPlaced={onPlaced} />
+      )}
+    </div>
+  )
 }
 
 /* -------------------------------------------------------------------------- */
@@ -456,32 +245,90 @@ function MainTabButton(props: {
 /*  Body (active betslip with selections)                                     */
 /* -------------------------------------------------------------------------- */
 
-function BetslipBody(props: {
-  data: Quote
-  totals: ReturnType<typeof useBetslipTotals>
-  changes: ReturnType<typeof usePriceChanges>
-  bet: ReturnType<typeof usePlaceBet>
-}) {
-  const { data, totals, changes, bet } = props
+function BetslipBody(props: { quoteRef: BetslipBody$key; onPlaced: (ticket: Placed) => void }) {
+  const data = useFragment(
+    graphql`
+      fragment BetslipBody on BetslipQuote {
+        items {
+          outcomeId
+          availability
+          price
+          expectedPrice
+          priceChanged
+        }
+        ...BetTypeTabs
+        ...SystemSizeSelect
+        ...SelectionList
+        ...BetslipFooter
+      }
+    `,
+    props.quoteRef
+  )
   const setInput = useSetAtom(betslipInputAtom)
+  const [policy, setPolicy] = useAtom(oddsPolicyAtom)
+  const { stamp, accept } = useBetslipPrices()
+  const [dismissedSig, setDismissedSig] = useState<string | null>(null)
 
   const unavailable = new Set(
     data.items.filter(i => i.availability !== 'AVAILABLE').map(i => i.outcomeId)
   )
 
-  const canPlace =
-    !bet.isPlacing &&
-    data.placeable &&
-    unavailable.size === 0 &&
-    !changes.show &&
-    !totals.overBoostMax
+  // --- odds changes: detection, the dismiss state and the accept actions ---
+  //
+  // Accepting also switches the odds policy sent with placeBet (ACCEPT_HIGHER /
+  // ACCEPT_ANY) so the server does not reject the slip for a move the player
+  // already accepted. The policy lives until the slip is empty or submitted.
+
+  // remember the first price we saw for each leg so we can detect moves later
+  useEffect(() => {
+    const unseen = new Map(
+      data.items.filter(i => i.price && !i.expectedPrice).map(i => [i.outcomeId, i.price as string])
+    )
+    if (unseen.size) stamp(unseen)
+  }, [data, stamp])
+
+  const changed = data.items.filter(i => i.priceChanged && i.price && i.expectedPrice)
+  const higher = changed.filter(i => Number(i.price) > Number(i.expectedPrice))
+  const lower = changed.filter(i => Number(i.price) < Number(i.expectedPrice))
+
+  // moves the active policy already covers will be accepted by the server: no prompt
+  const pending = policy === 'ACCEPT_ANY' ? [] : policy === 'ACCEPT_HIGHER' ? lower : changed
+  const signature = pending.map(i => `${i.outcomeId}:${i.price}`).join('|')
+  // a further move changes the signature, which re-shows a dismissed prompt
+  const hasPriceChanges = pending.length > 0 && signature !== dismissedSig
+
+  const toMap = (items: typeof changed) => new Map(items.map(i => [i.outcomeId, i.price as string]))
+  const dropLower = () => {
+    if (lower.length === 0) return // nothing to drop; avoids a needless input change/resubscribe
+    const lowerIds = new Set(lower.map(i => i.outcomeId))
+    setInput(prev => withoutItems(prev, lowerIds))
+  }
+
+  // the X: reject the worse odds by dropping those legs (same idea as the invalid-bets X).
+  // With nothing lower to drop, there is nothing to reject, so just hide the prompt.
+  const rejectPriceChanges = () => (lower.length > 0 ? dropLower() : setDismissedSig(signature))
+  const acceptAll = () => {
+    accept(toMap(changed))
+    setPolicy('ACCEPT_ANY')
+  }
+  const acceptHigher = () => {
+    accept(toMap(higher)) // rebase the legs that went up (no-op if none)
+    dropLower() // drop the legs that went down (no-op if none)
+    setPolicy('ACCEPT_HIGHER')
+  }
+
+  // placeBet rejected the odds unexpectedly: ask again from scratch
+  const resetPriceChanges = () => {
+    setDismissedSig(null)
+    setPolicy('REJECT')
+  }
 
   return (
     <div className='flex flex-1 flex-col'>
       {/* tabs, actionable banners and tips; scrolls with the rail */}
       <div className='flex-1'>
-        <BetTypeTabs data={data} />
-        <SystemSizeSelect data={data} />
+        <BetTypeTabs quoteRef={data} />
+        <SystemSizeSelect quoteRef={data} />
 
         {/* pinned while scrolling: these block placing, so they must stay visible */}
         <div className='bg-dark-200 sticky top-0 z-10 mt-2 empty:hidden'>
@@ -494,32 +341,31 @@ function BetslipBody(props: {
                 />
               </Collapse>
             )}
-            {changes.show && (
+            {hasPriceChanges && (
               <Collapse key='changes'>
-                <PriceChangesBanner changes={changes} />
+                <PriceChangesBanner
+                  count={pending.length}
+                  // always offer the narrower option while the policy is still REJECT,
+                  // whatever mix of higher/lower moves we got
+                  showAcceptHigher={policy === 'REJECT'}
+                  onAcceptHigher={acceptHigher}
+                  onAcceptAll={acceptAll}
+                  onReject={rejectPriceChanges}
+                />
               </Collapse>
             )}
           </AnimatePresence>
         </div>
 
-        <SelectionList data={data} />
+        <SelectionList quoteRef={data} />
       </div>
 
-      {/* pinned to the bottom of the rail/drawer */}
-      <div className='bg-dark-200 sticky bottom-0 z-20 shrink-0 border-t border-white/5'>
-        <PlaceErrorBanner message={bet.placeError} />
-        {!data.placeable && unavailable.size === 0 && !changes.show && (
-          <BlockersBanner blockers={data.blockers} />
-        )}
-        <BetslipSummary data={data} totals={totals}>
-          <PlaceBetButton
-            disabled={!canPlace}
-            isPlacing={bet.isPlacing}
-            stake={totals.stakeNum}
-            onClick={bet.place}
-          />
-        </BetslipSummary>
-      </div>
+      <BetslipFooter
+        quoteRef={data}
+        hasPriceChanges={hasPriceChanges}
+        onPriceChanged={resetPriceChanges}
+        onPlaced={props.onPlaced}
+      />
     </div>
   )
 }
@@ -550,10 +396,20 @@ function BetslipBodySkeleton(props: { count: number }) {
   )
 }
 
-function BetTypeTabs(props: { data: Quote }) {
+function BetTypeTabs(props: { quoteRef: BetTypeTabs$key }) {
+  const data = useFragment(
+    graphql`
+      fragment BetTypeTabs on BetslipQuote {
+        betType
+        items {
+          outcomeId
+        }
+      }
+    `,
+    props.quoteRef
+  )
   const setInput = useSetAtom(betslipInputAtom)
   const t = useT()
-  const { data } = props
 
   const triggerClass =
     'data-[state=active]:bg-primary hover:bg-dark-300 transition-colors data-[state=active]:text-black'
@@ -561,13 +417,7 @@ function BetTypeTabs(props: { data: Quote }) {
   return (
     <Tabs.Root
       value={data.betType}
-      onValueChange={v =>
-        setInput(i => ({
-          ...i,
-          betType: v as TicketType,
-          systemSize: v === 'SYSTEM' && !i.systemSize ? 2 : i.systemSize,
-        }))
-      }
+      onValueChange={v => setInput(i => withBetType(i, v as TicketType))}
       className='px-5 pt-4'
     >
       <Tabs.List className='grid w-full grid-cols-3 gap-1 border border-white/5 p-1'>
@@ -585,14 +435,22 @@ function BetTypeTabs(props: { data: Quote }) {
   )
 }
 
-function SystemSizeSelect(props: { data: Quote }) {
+function SystemSizeSelect(props: { quoteRef: SystemSizeSelect$key }) {
+  const data = useFragment(
+    graphql`
+      fragment SystemSizeSelect on BetslipQuote {
+        betType
+      }
+    `,
+    props.quoteRef
+  )
   const [input, setInput] = useAtom(betslipInputAtom)
   const t = useT()
-  const { data } = props
 
   if (data.betType !== 'SYSTEM' || !input.systemSize || input.systemSize < 2) return null
 
-  const n = data.items.length
+  // bankers sit in every combination, so only the other selections are chosen "k out of n"
+  const n = systemPoolSize(input)
   const label = (k: number) => t('{k} out of {n} ({b} bets)', { k, n, b: nCk(n, k) })
   const options = Array.from({ length: n - 2 }, (_, i) => i + 2)
 
@@ -617,11 +475,18 @@ function SystemSizeSelect(props: { data: Quote }) {
   )
 }
 
-function SelectionList(props: { data: Quote }) {
-  const input = useAtomValue(betslipInputAtom)
-  const setInput = useSetAtom(betslipInputAtom)
-  const setLegStake = useSetLegStake()
-  const { data } = props
+function SelectionList(props: { quoteRef: SelectionList$key }) {
+  const data = useFragment(
+    graphql`
+      fragment SelectionList on BetslipQuote {
+        items {
+          outcomeId
+          ...Tip
+        }
+      }
+    `,
+    props.quoteRef
+  )
 
   return (
     <MotionConfig reducedMotion='user'>
@@ -629,15 +494,7 @@ function SelectionList(props: { data: Quote }) {
         <AnimatePresence>
           {data.items.map((item, i) => (
             <SlipPresence key={item.outcomeId} index={i}>
-              <Tip
-                item={item}
-                showStake={data.betType === 'SINGLE'}
-                stakeValue={String(
-                  input.items.find(x => x.outcomeId === item.outcomeId)?.stake ?? input.stake
-                )}
-                onStakeChange={v => setLegStake(item.outcomeId, v)}
-                onRemove={() => setInput(prev => withoutItems(prev, new Set([item.outcomeId])))}
-              />
+              <Tip item={item} />
             </SlipPresence>
           ))}
         </AnimatePresence>
@@ -683,19 +540,27 @@ function PlaceErrorBanner(props: { message: string | null }) {
   )
 }
 
-function BlockersBanner(props: { blockers: Quote['blockers'] }) {
+function BlockersBanner(props: { quoteRef: BlockersBanner$key }) {
+  const { blockers } = useFragment(
+    graphql`
+      fragment BlockersBanner on BetslipQuote {
+        blockers
+      }
+    `,
+    props.quoteRef
+  )
   const t = useT()
-  if (props.blockers.length === 0) return null
+  if (blockers.length === 0) return null
 
   return (
     <div className='flex items-center gap-2 bg-red-500/10 px-5 py-1.5 text-red-400'>
       <AlertTriangleIcon className='size-3.5 shrink-0' />
       <div className='mr-auto space-y-0.5 text-xs'>
-        {[...new Set(props.blockers)].map(b => (
+        {[...new Set(blockers)].map(b => (
           <p key={b}>{betCodeCopy(b, t) ?? t('Bet unavailable.')}</p>
         ))}
       </div>
-      {props.blockers.includes('INSUFFICIENT_FUNDS') && (
+      {blockers.includes('INSUFFICIENT_FUNDS') && (
         <Link href='/user/wallet' className='shrink-0 text-xs underline'>
           {t('Deposit')}
         </Link>
@@ -704,10 +569,15 @@ function BlockersBanner(props: { blockers: Quote['blockers'] }) {
   )
 }
 
-function PriceChangesBanner(props: { changes: ReturnType<typeof usePriceChanges> }) {
+function PriceChangesBanner(props: {
+  count: number
+  showAcceptHigher: boolean
+  onAcceptHigher: () => void
+  onAcceptAll: () => void
+  onReject: () => void
+}) {
   const t = useT()
-  const { changes } = props
-  const count = changes.pending.length
+  const { count } = props
   const btn = 'h-6 shrink-0 rounded-full px-2.5 text-[0.65rem] whitespace-nowrap'
 
   return (
@@ -716,12 +586,12 @@ function PriceChangesBanner(props: { changes: ReturnType<typeof usePriceChanges>
       <p className='min-w-0 flex-1 truncate text-xs'>
         {count === 1 ? t('1 odd change.') : t('{n} odds changes.', { n: count })}
       </p>
-      {changes.showAcceptHigher && (
+      {props.showAcceptHigher && (
         <Button
           variant='outline'
           size='sm'
           className={cn(btn, 'border-amber-400/50')}
-          onClick={changes.acceptHigher}
+          onClick={props.onAcceptHigher}
         >
           {t('Accept higher')}
         </Button>
@@ -729,7 +599,7 @@ function PriceChangesBanner(props: { changes: ReturnType<typeof usePriceChanges>
       <Button
         size='sm'
         className={cn(btn, 'border-transparent bg-amber-400 text-black hover:bg-amber-300')}
-        onClick={changes.acceptAll}
+        onClick={props.onAcceptAll}
       >
         {t('Accept all')}
       </Button>
@@ -738,7 +608,7 @@ function PriceChangesBanner(props: { changes: ReturnType<typeof usePriceChanges>
         size='icon-sm'
         aria-label={t('Remove lower odds')}
         className='-mr-1 size-6 shrink-0 rounded-full text-xs text-amber-400 hover:bg-amber-400/30 hover:text-white'
-        onClick={changes.reject}
+        onClick={props.onReject}
       >
         <XIcon />
       </Button>
@@ -747,12 +617,176 @@ function PriceChangesBanner(props: { changes: ReturnType<typeof usePriceChanges>
 }
 
 /* -------------------------------------------------------------------------- */
-/*  Summary + place button                                                    */
+/*  Footer: summary + place button                                           */
 /* -------------------------------------------------------------------------- */
 
+/** Pinned to the bottom of the rail/drawer: the figures, and placing the bet. */
+function BetslipFooter(props: {
+  quoteRef: BetslipFooter$key
+  hasPriceChanges: boolean
+  onPriceChanged: () => void
+  onPlaced: (ticket: Placed) => void
+}) {
+  const data = useFragment(
+    graphql`
+      fragment BetslipFooter on BetslipQuote {
+        betType
+        effectiveOdds
+        potentialPayout
+        placeable
+        items {
+          outcomeId
+          availability
+          price
+        }
+        ...BlockersBanner
+      }
+    `,
+    props.quoteRef
+  )
+  const t = useT()
+  const { user } = useUser()
+  const input = useAtomValue(betslipInputAtom)
+  const setBoost = useSetAtom(boostAtom)
+  const setBetslipOpen = useSetAtom(betslipOpenAtom)
+  const setLoginOpen = useSetAtom(loginDialogOpenAtom)
+  const [policy, setPolicy] = useAtom(oddsPolicyAtom)
+  const boost = useActiveBoost()
+
+  const [placeError, setPlaceError] = useState<string | null>(null)
+  const clientRequestId = useRef<string>(crypto.randomUUID())
+
+  const [commit, isPlacing] = useMutation<BetslipPlaceBetMutation>(graphql`
+    mutation BetslipPlaceBetMutation($input: PlaceBetInput!) {
+      placeBet(input: $input) {
+        ticket {
+          id
+          status
+          stake
+          potentialPayout
+        }
+        rejection {
+          code
+          message
+          priceChanges {
+            outcomeId
+            expectedPrice
+            currentPrice
+          }
+        }
+      }
+    }
+  `)
+
+  // --- the figures shown in the summary and on the place button ---
+
+  const isSingle = data.betType === 'SINGLE'
+  const legStake = (id: string) =>
+    Number(input.items.find(i => i.outcomeId === id)?.stake ?? input.stake) || 0
+
+  const stake = isSingle
+    ? data.items
+        .filter(i => i.availability === 'AVAILABLE')
+        .reduce((sum, i) => sum + legStake(i.outcomeId), 0)
+    : Number(input.stake) || 0
+  const overBoostMax = !!boost?.maxStake && stake > Number(boost.maxStake)
+  const odds = boost ? Number(boost.boostedPrice) : Number(data.effectiveOdds)
+  const payout = boost ? stake * Number(boost.boostedPrice) : Number(data.potentialPayout) || 0
+
+  // --- placing the bet ---
+
+  const hasInvalidLegs = data.items.some(i => i.availability !== 'AVAILABLE')
+  const canPlace =
+    !isPlacing && data.placeable && !hasInvalidLegs && !props.hasPriceChanges && !overBoostMax
+
+  const place = () => {
+    // guests can't place bets: ask them to log in instead of hitting the API
+    if (!user) {
+      setBetslipOpen(false) // close the mobile drawer so it doesn't fight the dialog for focus
+      setLoginOpen(true)
+      return
+    }
+
+    const byId = new Map(input.items.map(i => [i.outcomeId, i]))
+    const items = data.items
+      .filter(i => i.availability === 'AVAILABLE')
+      .map(i => ({
+        outcomeId: i.outcomeId,
+        expectedPrice: byId.get(i.outcomeId)?.expectedPrice ?? i.price,
+        banker: data.betType === 'SYSTEM' && !!byId.get(i.outcomeId)?.banker,
+        stake: isSingle ? String(byId.get(i.outcomeId)?.stake ?? input.stake) : undefined,
+      }))
+
+    commit({
+      variables: {
+        input: {
+          betType: data.betType,
+          items,
+          stake: input.stake || '0',
+          systemSize: input.systemSize ?? null,
+          clientRequestId: clientRequestId.current,
+          oddsPolicy: policy,
+          boostId: boost?.id,
+        },
+      },
+      onCompleted: response => {
+        const rej = response.placeBet.rejection
+        if (rej) {
+          if (rej.code === 'PRICE_CHANGED') {
+            props.onPriceChanged()
+            setPlaceError(null)
+          } else {
+            if (rej.code === 'BOOST_UNAVAILABLE') setBoost(null)
+            setPlaceError(betCodeCopy(rej.code, t) ?? rej.message)
+          }
+          return
+        }
+
+        const ticket = response.placeBet.ticket
+        if (ticket) {
+          setBoost(null)
+          setPolicy('REJECT') // accepted odds changes only apply to the slip just submitted
+          props.onPlaced({
+            id: ticket.id,
+            stake: ticket.stake,
+            potentialPayout: ticket.potentialPayout,
+          })
+        }
+      },
+      onError: error => {
+        setPlaceError(error.message || t('Failed to place bet. Please try again.'))
+      },
+    })
+  }
+
+  return (
+    <div className='bg-dark-200 sticky bottom-0 z-20 shrink-0 border-t border-white/5'>
+      <PlaceErrorBanner message={placeError} />
+      {!data.placeable && !hasInvalidLegs && !props.hasPriceChanges && (
+        <BlockersBanner quoteRef={data} />
+      )}
+      <BetslipSummary
+        boost={boost}
+        isSingle={isSingle}
+        stake={stake}
+        overBoostMax={overBoostMax}
+        odds={odds}
+        payout={payout}
+      >
+        <PlaceBetButton disabled={!canPlace} isPlacing={isPlacing} stake={stake} onClick={place} />
+      </BetslipSummary>
+    </div>
+  )
+}
+
+/** Boost banner, stake input and the stake/odds + payout tile. */
 function BetslipSummary(props: {
-  data: Quote
-  totals: ReturnType<typeof useBetslipTotals>
+  boost: ActiveBoost | null
+  isSingle: boolean
+  stake: number // total stake: per-leg stakes added up for singles
+  overBoostMax: boolean
+  odds: number
+  payout: number
   children: React.ReactNode // the place button
 }) {
   const [input, setInput] = useAtom(betslipInputAtom)
@@ -760,9 +794,7 @@ function BetslipSummary(props: {
   const currency = useCurrency()
   const t = useT()
   const fmt = (n: number) => formatBalance(n, currency)
-  const { data, totals } = props
-  const { boost } = totals
-  const isSingle = data.betType === 'SINGLE'
+  const { boost, isSingle } = props
 
   return (
     <div className='space-y-2.5 px-5 py-3'>
@@ -792,7 +824,7 @@ function BetslipSummary(props: {
         />
       </div>
 
-      {totals.overBoostMax && boost?.maxStake && (
+      {props.overBoostMax && boost?.maxStake && (
         <p className='text-xs text-amber-400'>
           {t('Boost applies up to {max}. Lower your stake to use it.', {
             max: fmt(Number(boost.maxStake)),
@@ -807,14 +839,12 @@ function BetslipSummary(props: {
             {isSingle ? t('Total stake') : t('Combined odds')}
           </span>
           <span className={cn('text-sm font-semibold text-white', !isSingle && 'font-mono')}>
-            {isSingle ? fmt(totals.singlesTotal) : totals.shownOdds.toFixed(2)}
+            {isSingle ? fmt(props.stake) : props.odds.toFixed(2)}
           </span>
         </div>
         <div className='flex flex-col items-end'>
           <span className='text-secondary text-[0.65rem] uppercase'>{t('Potential payout')}</span>
-          <span className='text-primary text-lg leading-tight font-bold'>
-            {fmt(totals.shownPayout)}
-          </span>
+          <span className='text-primary text-lg leading-tight font-bold'>{fmt(props.payout)}</span>
         </div>
       </div>
 
@@ -876,13 +906,7 @@ function getLabel(
   return line && !label.includes(line) ? `${label} ${line}` : label
 }
 
-function Tip(props: {
-  item: Tip$key
-  showStake: boolean
-  stakeValue: string
-  onStakeChange: (v: string) => void
-  onRemove: () => void
-}) {
+function Tip(props: { item: Tip$key }) {
   const data = useFragment(
     graphql`
       fragment Tip on BetslipQuoteItem {
@@ -901,8 +925,17 @@ function Tip(props: {
     `,
     props.item
   )
+  const [input, setInput] = useAtom(betslipInputAtom)
+  const setLegStake = useSetLegStake()
   const t = useT()
   const currency = useCurrency()
+
+  const leg = input.items.find(x => x.outcomeId === data.outcomeId)
+  const stake = String(leg?.stake ?? input.stake)
+  const banker = !!leg?.banker
+  // "k out of n" needs 3+ non-banker selections left, so the last ones can't become bankers
+  const bankerDisabled = !banker && systemPoolSize(input) <= 3
+
   const changed = data.priceChanged && !!data.expectedPrice && !!data.price
   const up = changed && Number(data.price) > Number(data.expectedPrice)
   const blocked = data.availability !== 'AVAILABLE'
@@ -926,6 +959,27 @@ function Tip(props: {
         href={`${data.isLive ? '/live' : ''}/event/${data.eventId}`}
         className='flex items-start gap-2'
       >
+        {!blocked && input.betType === 'SYSTEM' && (
+          <button
+            type='button'
+            aria-label={t('Banker')}
+            aria-pressed={banker}
+            title={t('Banker')}
+            disabled={bankerDisabled}
+            onClick={e => {
+              e.preventDefault() // the row is a link to the event
+              setInput(prev => withBanker(prev, data.outcomeId, !banker))
+            }}
+            className={cn(
+              'flex size-5 shrink-0 items-center justify-center self-center rounded-full border text-[0.65rem] leading-none font-bold transition-colors disabled:pointer-events-none disabled:opacity-40',
+              banker
+                ? 'border-primary bg-primary text-black'
+                : 'text-secondary border-white/20 hover:text-white'
+            )}
+          >
+            B
+          </button>
+        )}
         <div className='min-w-0 flex-1'>
           <p
             className={cn(
@@ -961,7 +1015,7 @@ function Tip(props: {
         {/* always visible: there is no hover on touch devices */}
         <button
           type='button'
-          onClick={props.onRemove}
+          onClick={() => setInput(prev => withoutItems(prev, new Set([data.outcomeId])))}
           aria-label={t('Remove selection')}
           className='text-secondary hover:bg-dark-300 -mr-1 flex size-5 shrink-0 items-center justify-center rounded-full transition-colors hover:text-white'
         >
@@ -976,11 +1030,11 @@ function Tip(props: {
         </p>
       )}
 
-      {!blocked && props.showStake && (
+      {!blocked && input.betType === 'SINGLE' && (
         <div className='mt-1.5 flex items-center gap-2'>
-          <StakeInput compact value={props.stakeValue} onCommit={props.onStakeChange} />
+          <StakeInput compact value={stake} onCommit={v => setLegStake(data.outcomeId, v)} />
           <span className='text-primary ml-auto text-xs font-semibold'>
-            → {formatBalance((Number(props.stakeValue) || 0) * (Number(data.price) || 0), currency)}
+            → {formatBalance((Number(stake) || 0) * (Number(data.price) || 0), currency)}
           </span>
         </div>
       )}

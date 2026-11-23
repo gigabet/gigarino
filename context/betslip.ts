@@ -196,6 +196,50 @@ export function useSetLegStake() {
   )
 }
 
+/**
+ * SYSTEM only: the selections that are not bankers. A banker sits in every combination, so
+ * `systemSize` and the "k out of N" label count only these.
+ */
+export function systemPoolSize(input: Pick<BetslipInput, 'items'>): number {
+  return input.items.filter(i => !i.banker).length
+}
+
+/** Bankers only exist on SYSTEM bets; drop the flags when leaving it. Same reference if none set. */
+function withoutBankers(items: BetslipInput['items']): BetslipInput['items'] {
+  return items.some(i => i.banker !== undefined)
+    ? items.map(({ banker: _banker, ...rest }) => rest)
+    : items
+}
+
+/**
+ * Switches the bet type, keeping the SYSTEM invariants: `systemSize` stays in 2..N-1 (N = non-banker
+ * selections) and bankers are cleared when leaving SYSTEM. Entering SYSTEM needs N >= 3.
+ */
+export function withBetType(prev: BetslipInput, betType: BetslipInput['betType']): BetslipInput {
+  if (betType !== 'SYSTEM') return { ...prev, betType, items: withoutBankers(prev.items) }
+
+  const pool = systemPoolSize(prev)
+  if (pool < 3) return prev
+  const systemSize = Math.min(Math.max(prev.systemSize ?? 2, 2), pool - 1)
+  return { ...prev, betType, systemSize }
+}
+
+/**
+ * Flags (or unflags) a SYSTEM selection as a banker. Ignored outside SYSTEM, and refused when it
+ * would leave fewer than 3 other selections, since "k out of N" needs 2 <= k < N.
+ */
+export function withBanker(prev: BetslipInput, outcomeId: string, banker: boolean): BetslipInput {
+  const target = prev.items.find(i => i.outcomeId === outcomeId)
+  if (prev.betType !== 'SYSTEM' || !target || !!target.banker === banker) return prev
+
+  const items = prev.items.map(i => (i.outcomeId === outcomeId ? { ...i, banker } : i))
+  const pool = systemPoolSize({ items })
+  if (pool < 3) return prev
+
+  const { systemSize } = prev
+  return { ...prev, items, systemSize: systemSize && systemSize >= pool ? pool - 1 : systemSize }
+}
+
 export function withoutItems(prev: BetslipInput, ids: ReadonlySet<string>): BetslipInput {
   const items = prev.items.filter(i => !ids.has(i.outcomeId))
   let { betType, systemSize } = prev
@@ -204,15 +248,21 @@ export function withoutItems(prev: BetslipInput, ids: ReadonlySet<string>): Bets
     betType = 'SINGLE'
     systemSize = undefined
   } else if (betType === 'SYSTEM') {
-    if (items.length < 3) {
+    const pool = systemPoolSize({ items })
+    if (pool < 3) {
       betType = 'MULTIPLE'
       systemSize = undefined
-    } else if (systemSize && systemSize >= items.length) {
-      systemSize = items.length - 1
+    } else if (systemSize && systemSize >= pool) {
+      systemSize = pool - 1
     }
   }
 
-  return { ...prev, items, betType, systemSize }
+  return {
+    ...prev,
+    items: betType === 'SYSTEM' ? items : withoutBankers(items),
+    betType,
+    systemSize,
+  }
 }
 
 /** Which tab the drawer opens on. Only read when the drawer mounts. */

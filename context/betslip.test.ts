@@ -4,6 +4,9 @@ import {
   type BetslipInput,
   betCodeCopy,
   isBoostActive,
+  systemPoolSize,
+  withBanker,
+  withBetType,
   withoutItems,
   withPrices,
 } from '@/context/betslip'
@@ -122,6 +125,137 @@ describe('withoutItems', () => {
       { outcomeId: 'c', stake: '7' },
     ])
     expect(prev).toEqual(snapshot)
+  })
+})
+
+/** A SYSTEM slip over `ids`; every id in `bankers` is flagged. */
+function systemSlip(ids: string[], bankers: string[], systemSize: number | undefined = 2) {
+  return slip(ids, {
+    betType: 'SYSTEM',
+    systemSize,
+    items: ids.map(outcomeId => ({ outcomeId, banker: bankers.includes(outcomeId) })),
+  })
+}
+
+const bankerIds = (input: BetslipInput) => input.items.filter(i => i.banker).map(i => i.outcomeId)
+
+describe('systemPoolSize', () => {
+  it('counts only the selections that are not bankers', () => {
+    expect(systemPoolSize(systemSlip(['a', 'b', 'c', 'd', 'e'], ['a']))).toBe(4)
+    expect(systemPoolSize(systemSlip(['a', 'b', 'c', 'd', 'e'], ['a', 'b']))).toBe(3)
+  })
+
+  it('is the leg count when nothing is flagged or the flag is absent', () => {
+    expect(systemPoolSize(slip(['a', 'b', 'c']))).toBe(3)
+    expect(systemPoolSize(systemSlip(['a', 'b', 'c'], []))).toBe(3)
+  })
+})
+
+describe('withBanker', () => {
+  it('flags a leg as banker on a SYSTEM slip', () => {
+    const next = withBanker(systemSlip(['a', 'b', 'c', 'd'], []), 'a', true)
+    expect(bankerIds(next)).toEqual(['a'])
+  })
+
+  it('unflags a banker', () => {
+    const next = withBanker(systemSlip(['a', 'b', 'c', 'd'], ['a']), 'a', false)
+    expect(bankerIds(next)).toEqual([])
+  })
+
+  it('refuses a banker that would leave fewer than 3 other selections', () => {
+    const prev = systemSlip(['a', 'b', 'c'], [])
+    expect(withBanker(prev, 'a', true)).toBe(prev)
+
+    const four = systemSlip(['a', 'b', 'c', 'd'], ['a'])
+    expect(withBanker(four, 'b', true)).toBe(four)
+  })
+
+  it('shrinks systemSize so it stays below the non-banker count', () => {
+    // 5 legs, "4 out of 5"; one banker -> only 4 others, so at most "3 out of 4"
+    const next = withBanker(systemSlip(['a', 'b', 'c', 'd', 'e'], [], 4), 'a', true)
+    expect(next.systemSize).toBe(3)
+  })
+
+  it('leaves a valid systemSize alone', () => {
+    const next = withBanker(systemSlip(['a', 'b', 'c', 'd', 'e'], [], 2), 'a', true)
+    expect(next.systemSize).toBe(2)
+  })
+
+  it('ignores non-SYSTEM slips, unknown legs and no-op changes (same reference)', () => {
+    const multiple = slip(['a', 'b', 'c', 'd'])
+    expect(withBanker(multiple, 'a', true)).toBe(multiple)
+
+    const system = systemSlip(['a', 'b', 'c', 'd'], ['a'])
+    expect(withBanker(system, 'zzz', true)).toBe(system)
+    expect(withBanker(system, 'a', true)).toBe(system)
+  })
+
+  it('does not mutate its input', () => {
+    const prev = systemSlip(['a', 'b', 'c', 'd'], [])
+    const snapshot = structuredClone(prev)
+    withBanker(prev, 'a', true)
+    expect(prev).toEqual(snapshot)
+  })
+})
+
+describe('withBetType', () => {
+  it('defaults systemSize to 2 when entering SYSTEM', () => {
+    const next = withBetType(slip(['a', 'b', 'c']), 'SYSTEM')
+    expect(next.betType).toBe('SYSTEM')
+    expect(next.systemSize).toBe(2)
+  })
+
+  it('clamps a stale systemSize when entering SYSTEM', () => {
+    const next = withBetType(slip(['a', 'b', 'c'], { systemSize: 4 }), 'SYSTEM')
+    expect(next.systemSize).toBe(2)
+  })
+
+  it('does not enter SYSTEM with fewer than 3 selections', () => {
+    const prev = slip(['a', 'b'])
+    expect(withBetType(prev, 'SYSTEM')).toBe(prev)
+  })
+
+  it.each(['SINGLE', 'MULTIPLE'] as const)('clears bankers when leaving SYSTEM for %s', betType => {
+    const next = withBetType(systemSlip(['a', 'b', 'c', 'd'], ['a']), betType)
+    expect(next.betType).toBe(betType)
+    expect(bankerIds(next)).toEqual([])
+    expect(next.items.every(i => i.banker === undefined)).toBe(true)
+  })
+
+  it('keeps the leg objects when there were no bankers to clear', () => {
+    const prev = slip(['a', 'b', 'c'])
+    expect(withBetType(prev, 'MULTIPLE').items).toBe(prev.items)
+  })
+})
+
+describe('withoutItems with bankers', () => {
+  it('keeps SYSTEM and the remaining bankers when a non-banker is removed', () => {
+    const next = withoutItems(systemSlip(['a', 'b', 'c', 'd', 'e'], ['a'], 2), new Set(['e']))
+    expect(next.betType).toBe('SYSTEM')
+    expect(bankerIds(next)).toEqual(['a'])
+    expect(next.systemSize).toBe(2)
+  })
+
+  it('shrinks systemSize against the non-banker count, not the leg count', () => {
+    // 5 legs, 1 banker, "3 out of 4"; removing a non-banker leaves 3 others -> "2 out of 3"
+    const next = withoutItems(systemSlip(['a', 'b', 'c', 'd', 'e'], ['a'], 3), new Set(['e']))
+    expect(next.betType).toBe('SYSTEM')
+    expect(next.systemSize).toBe(2)
+  })
+
+  it('downgrades to MULTIPLE and clears bankers when fewer than 3 non-bankers remain', () => {
+    const next = withoutItems(systemSlip(['a', 'b', 'c', 'd'], ['a'], 2), new Set(['d']))
+    expect(next.betType).toBe('MULTIPLE')
+    expect(next.systemSize).toBeUndefined()
+    expect(ids(next)).toEqual(['a', 'b', 'c'])
+    expect(bankerIds(next)).toEqual([])
+  })
+
+  it('removing a banker leg keeps the other selections and their count', () => {
+    const next = withoutItems(systemSlip(['a', 'b', 'c', 'd'], ['a'], 2), new Set(['a']))
+    expect(next.betType).toBe('SYSTEM')
+    expect(ids(next)).toEqual(['b', 'c', 'd'])
+    expect(next.systemSize).toBe(2)
   })
 })
 
