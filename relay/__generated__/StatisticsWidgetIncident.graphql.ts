@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2580b060435a42247263df1e47978568>>
+ * @generated SignedSource<<328691fba877b0fc222383a7804d9e7d>>
  * @lightSyntaxTransform
  */
 
@@ -8,7 +8,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from 'relay-runtime';
-export type MatchIncidentType = "GOAL" | "PENALTY" | "RED_CARD" | "%future added value";
+export type MatchIncidentType = "CORNER" | "GOAL" | "PENALTY" | "RED_CARD" | "YELLOW_CARD" | "%future added value";
 export type PenaltyOutcome = "MISSED" | "SCORED" | "%future added value";
 export type Side = "AWAY" | "HOME" | "%future added value";
 import { FragmentRefs } from "relay-runtime";

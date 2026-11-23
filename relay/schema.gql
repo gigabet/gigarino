@@ -68,6 +68,10 @@ enum BetslipItemAvailability {
 }
 
 input BetslipItemInput {
+  """
+  SYSTEM only: a banker is in every combination. systemSize and N count the other selections, so "2/4 + 1 banker" is 5 selections, one flagged.
+  """
+  banker: Boolean! = false
   expectedPrice: String
   outcomeId: ID!
   stake: String
@@ -419,9 +423,14 @@ type Event implements Node {
   status: EventStatus!
 
   """
-  Goals, red cards and penalties so far, in match order (undated entries first). Football and e-soccer, from the live feed; empty for other sports and for matches it never covered.
+  Timeline so far, in match order (undated entries first). Goals, red cards and penalties from the live feed (football and e-soccer); corners and yellow cards from the official timeline (football). Empty for other sports and for matches never covered.
   """
-  timeline: [MatchIncident!]!
+  timeline(
+    """
+    Entry types to return. Default GOAL, RED_CARD, PENALTY; add CORNER and YELLOW_CARD to get those.
+    """
+    types: [MatchIncidentType!]
+  ): [MatchIncident!]!
   tournament: Tournament!
   tradingStatus: TradingStatus!
 }
@@ -679,7 +688,7 @@ enum MarketStatus {
 }
 
 """
-One timeline entry, from the live feed. Football and e-soccer; pushed with the score on `eventStateUpdated`.
+One timeline entry. Goals, red cards and penalties from the live feed (football and e-soccer); corners and yellow cards from the official timeline (football). Pushed on `eventStateUpdated`.
 """
 type MatchIncident {
   """
@@ -689,12 +698,12 @@ type MatchIncident {
   awayScore: Int
 
   """
-  Disallowed goal (VAR, correction) or rescinded card. Kept so the change is visible; show it struck through or hide it.
+  Disallowed goal (VAR, correction), rescinded card, or a corner/card the official timeline withdrew. Kept so the change is visible; show it struck through or hide it.
   """
   cancelled: Boolean!
 
   """
-  GOAL: how, as the provider writes it, e.g. "Header (Assist: Gomes)".
+  GOAL: how, as the provider writes it, e.g. "Header (Assist: Gomes)". YELLOW_CARD: the booked player, when named.
   """
   detail: String
 
@@ -734,12 +743,14 @@ type MatchIncident {
 }
 
 """
-Kind of timeline entry.
+Kind of timeline entry. CORNER and YELLOW_CARD come from the official timeline (BetsAPI), real football only, about 2 minutes behind play; ask for them with `Event.timeline(types:)`.
 """
 enum MatchIncidentType {
+  CORNER
   GOAL
   PENALTY
   RED_CARD
+  YELLOW_CARD
 }
 
 """
@@ -1011,6 +1022,11 @@ input PlaceBetInput {
 }
 
 input PlaceBetItemInput {
+  """
+  SYSTEM only: a banker is in every combination. systemSize and N count the other selections, so "2/4 + 1 banker" is 5 selections, one flagged.
+  """
+  banker: Boolean! = false
+
   """
   The price the player saw when adding this selection to the betslip.
   """
@@ -1403,6 +1419,11 @@ type Ticket {
   settledAt: DateTimeISO
   stake: Decimal!
   status: TicketStatus!
+
+  """
+  SYSTEM only: the k in "k/N", where N counts the non-banker items. Null for SINGLE and MULTIPLE.
+  """
+  systemSize: Int
 }
 
 """
@@ -1463,6 +1484,11 @@ One selection on a ticket, frozen at placement.
 """
 type TicketItem {
   """
+  SYSTEM only: a banker, in every combination. Always false otherwise.
+  """
+  banker: Boolean!
+
+  """
   Global ID of the Event bet on.
   """
   eventId: ID!
@@ -1496,10 +1522,33 @@ type TicketItem {
   priceAtAcceptance: Decimal!
 
   """
+  Settled legs: the final score the match was graded on. Null while pending, until the final is in (first-half legs settle at the second-half kick-off), and for a match with no final (cancelled, abandoned).
+  """
+  result: TicketItemResult
+
+  """
   In play: the score when the bet was accepted ("Score at time of bet"). Tennis: sets. Null for prematch.
   """
   scoreAtBet: TicketItemScore
+
+  """
+  When this leg was graded. Null while pending.
+  """
+  settledAt: DateTimeISO
   status: BetItemStatus!
+}
+
+"""
+The final score this selection was settled on, so the player can see why it won or lost. Example: home team won 2-1 and led 1-0 at half-time -> home 2, away 1, halfTime {home 1, away 0}. A common display is "2:1 (1:0)": full time first, half time in brackets. Tennis: sets won, e.g. 2-1. Saved when the bet is settled, so it does not change afterwards.
+"""
+type TicketItemResult {
+  away: Int!
+
+  """
+  Score at half-time, e.g. home 1, away 0. Null when the sport has no halves (tennis) or the data source did not send it.
+  """
+  halfTime: TicketItemScore
+  home: Int!
 }
 
 """

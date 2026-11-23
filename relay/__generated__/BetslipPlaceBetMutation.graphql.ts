@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a5eddb828d0c21e723a49e3afa2d9700>>
+ * @generated SignedSource<<d41cb2aa02e96bd9d080242394efdd93>>
  * @lightSyntaxTransform
  */
 
@@ -22,6 +22,7 @@ export type PlaceBetInput = {
   systemSize?: number | null | undefined;
 };
 export type PlaceBetItemInput = {
+  banker?: boolean;
   expectedPrice: string;
   outcomeId: string;
   stake?: string | null | undefined;
