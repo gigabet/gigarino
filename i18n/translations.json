@@ -771,10 +771,6 @@
     "de": "Live",
     "tr": "Canlı"
   },
-  "Live bet": {
-    "de": "Live-Wette",
-    "tr": "Canlı bahis"
-  },
   "Live Betting": {
     "de": "Live-Wetten",
     "tr": "Canlı Bahis"
@@ -975,10 +971,6 @@
     "de": "Verl.",
     "tr": "UZ"
   },
-  "Other": {
-    "de": "Sonstige",
-    "tr": "Diğer"
-  },
   "Other matches in this tournament": {
     "de": "Weitere Spiele im Turnier",
     "tr": "Turnuvadaki diğer maçlar"
@@ -1147,10 +1139,6 @@
     "de": "Pkt.",
     "tr": "Puan"
   },
-  "Rankings": {
-    "de": "Rangliste",
-    "tr": "Sıralamalar"
-  },
   "Recent": {
     "de": "Zuletzt",
     "tr": "Son"
@@ -1238,10 +1226,6 @@
   "Saves": {
     "de": "Paraden",
     "tr": "Kurtarışlar"
-  },
-  "Score at bet": {
-    "de": "Spielstand bei Wette",
-    "tr": "Bahis anındaki skor"
   },
   "Scroll left": {
     "de": "Nach links scrollen",

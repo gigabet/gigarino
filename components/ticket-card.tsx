@@ -193,7 +193,7 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
         onClick={() => setExpanded(e => !e)}
         className='flex w-full items-center justify-between gap-3 text-left'
       >
-        <div className='flex grow justify-between gap-3'>
+        <div className='flex min-w-0 grow justify-between gap-3'>
           <div className='min-w-0'>
             <div className='flex items-center gap-2'>
               <TicketStatusPill status={data.status} />
@@ -352,31 +352,30 @@ export function TicketCardDetails(props: {
                   <p className='text-secondary'>
                     {translateMarketName(t, item.marketName)} · {item.eventName}
                   </p>
-                  <p className='text-secondary/80 flex flex-wrap items-center gap-x-2 text-[0.7rem]'>
+                  <p className='text-secondary/80 flex flex-col gap-1 text-[0.7rem]'>
                     <span>{format(new Date(item.eventStartTime), 'dd MMM, HH:mm')}</span>
-                    {item.inPlay && (
-                      <span className='rounded bg-red-500/10 px-1 font-semibold text-red-400 uppercase'>
-                        {t('Live bet')}
-                      </span>
-                    )}
-                    {item.scoreAtBet && (
-                      <span>
-                        {t('Score at bet')}{' '}
+                    <div>
+                      {item.inPlay && (
+                        <span className='rounded bg-red-500/10 px-1 text-[0.6rem] font-semibold text-red-400 uppercase'>
+                          {t('Live')}
+                        </span>
+                      )}{' '}
+                      {item.scoreAtBet && (
                         <span className='font-mono text-white/70'>
                           {item.scoreAtBet.home}–{item.scoreAtBet.away}
                         </span>
-                      </span>
-                    )}
-                    {item.result && (
-                      <span>
-                        {t('Final score')}{' '}
-                        <span className='font-mono text-white/70'>
-                          {item.result.home}–{item.result.away}
-                          {item.result.halfTime &&
-                            ` (${item.result.halfTime.home}–${item.result.halfTime.away})`}
+                      )}
+                      {item.result && (
+                        <span>
+                          | {t('Final score')}{' '}
+                          <span className='font-mono text-white/70'>
+                            {item.result.home}–{item.result.away}
+                            {item.result.halfTime &&
+                              ` (${item.result.halfTime.home}–${item.result.halfTime.away})`}
+                          </span>
                         </span>
-                      </span>
-                    )}
+                      )}
+                    </div>
                   </p>
                 </div>
               </div>
