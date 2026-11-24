@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<82652563993faed9bee613e65723d84e>>
+ * @generated SignedSource<<8a1056a80c057883c831e9c5f12241ed>>
  * @lightSyntaxTransform
  */
 
@@ -46,7 +46,25 @@ v3 = {
   "kind": "ScalarField",
   "name": "createdAt",
   "storageKey": null
-};
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "home",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "away",
+  "storageKey": null
+},
+v6 = [
+  (v4/*:: as any*/),
+  (v5/*:: as any*/)
+];
 return {
   "fragment": {
     "argumentDefinitions": [],
@@ -190,19 +208,27 @@ return {
                         "kind": "LinkedField",
                         "name": "scoreAtBet",
                         "plural": false,
+                        "selections": (v6/*:: as any*/),
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "TicketItemResult",
+                        "kind": "LinkedField",
+                        "name": "result",
+                        "plural": false,
                         "selections": [
+                          (v4/*:: as any*/),
+                          (v5/*:: as any*/),
                           {
                             "alias": null,
                             "args": null,
-                            "kind": "ScalarField",
-                            "name": "home",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "away",
+                            "concreteType": "TicketItemScore",
+                            "kind": "LinkedField",
+                            "name": "halfTime",
+                            "plural": false,
+                            "selections": (v6/*:: as any*/),
                             "storageKey": null
                           }
                         ],
@@ -237,6 +263,45 @@ return {
                     "args": null,
                     "kind": "ScalarField",
                     "name": "settledAt",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "payoutCapped",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "rejectReason",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "TicketBoost",
+                    "kind": "LinkedField",
+                    "name": "boost",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "boostedOdds",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "normalOdds",
+                        "storageKey": null
+                      }
+                    ],
                     "storageKey": null
                   },
                   {
@@ -361,12 +426,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "76d4ab9952d253f7c008c783e8da7221",
+    "cacheID": "cd728be9a2e1219ec2c60e0e9910ffbf",
     "id": null,
     "metadata": {},
     "name": "MyTicketsQuery",
     "operationKind": "query",
-    "text": "query MyTicketsQuery {\n  ...MyTicketsList\n}\n\nfragment MyTicketsList on Query {\n  myTickets(first: 10) {\n    edges {\n      node {\n        id\n        status\n        ...TicketCard\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment TicketCard on Ticket {\n  id\n  betType\n  stake\n  currency\n  status\n  createdAt\n  resettled\n  resettlementSeen\n  items {\n    id\n    eventName\n    outcomeName\n  }\n  ...TicketCardDetails\n}\n\nfragment TicketCardDetails on Ticket {\n  id\n  stake\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  settledAt\n  resettled\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n    eventStartTime\n    inPlay\n    scoreAtBet {\n      home\n      away\n    }\n  }\n}\n"
+    "text": "query MyTicketsQuery {\n  ...MyTicketsList\n}\n\nfragment MyTicketsList on Query {\n  myTickets(first: 10) {\n    edges {\n      node {\n        id\n        status\n        ...TicketCard\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment TicketCard on Ticket {\n  id\n  betType\n  stake\n  currency\n  status\n  createdAt\n  resettled\n  resettlementSeen\n  items {\n    id\n    eventName\n    outcomeName\n  }\n  ...TicketCardDetails\n}\n\nfragment TicketCardDetails on Ticket {\n  id\n  stake\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  settledAt\n  payoutCapped\n  rejectReason\n  boost {\n    boostedOdds\n    normalOdds\n  }\n  resettled\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n    eventStartTime\n    inPlay\n    scoreAtBet {\n      home\n      away\n    }\n    result {\n      home\n      away\n      halfTime {\n        home\n        away\n      }\n    }\n  }\n}\n"
   }
 };
 })();

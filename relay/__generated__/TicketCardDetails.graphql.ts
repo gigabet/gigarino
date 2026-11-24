@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9022e7d012e5b473ed21897dadb7c286>>
+ * @generated SignedSource<<c4bb59859c642db82d5e4059ad1b9347>>
  * @lightSyntaxTransform
  */
 
@@ -13,6 +13,10 @@ export type CorrectionKind = "NOT_PLAYED" | "NO_RESULT" | "PALPABLE_ERROR" | "RE
 export type TicketStatus = "ACCEPTED" | "CASHED_OUT" | "CASHOUT_PENDING" | "LOST" | "PARTIALLY_CASHED_OUT" | "PENDING_ACCEPTANCE" | "REJECTED" | "VOID" | "WON" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type TicketCardDetails$data = {
+  readonly boost: {
+    readonly boostedOdds: any;
+    readonly normalOdds: any;
+  } | null | undefined;
   readonly corrections: ReadonlyArray<{
     readonly amount: any;
     readonly createdAt: string;
@@ -35,6 +39,14 @@ export type TicketCardDetails$data = {
     readonly marketName: string;
     readonly outcomeName: string;
     readonly priceAtAcceptance: any;
+    readonly result: {
+      readonly away: number;
+      readonly halfTime: {
+        readonly away: number;
+        readonly home: number;
+      } | null | undefined;
+      readonly home: number;
+    } | null | undefined;
     readonly scoreAtBet: {
       readonly away: number;
       readonly home: number;
@@ -42,7 +54,9 @@ export type TicketCardDetails$data = {
     readonly status: BetItemStatus;
   }>;
   readonly payout: any | null | undefined;
+  readonly payoutCapped: boolean;
   readonly potentialPayout: any;
+  readonly rejectReason: string | null | undefined;
   readonly resettled: boolean;
   readonly settledAt: string | null | undefined;
   readonly stake: any;
@@ -68,7 +82,25 @@ v1 = {
   "kind": "ScalarField",
   "name": "status",
   "storageKey": null
-};
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "home",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "away",
+  "storageKey": null
+},
+v4 = [
+  (v2/*:: as any*/),
+  (v3/*:: as any*/)
+];
 return {
   "argumentDefinitions": [],
   "kind": "Fragment",
@@ -117,6 +149,45 @@ return {
       "args": null,
       "kind": "ScalarField",
       "name": "settledAt",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "payoutCapped",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "rejectReason",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "TicketBoost",
+      "kind": "LinkedField",
+      "name": "boost",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "boostedOdds",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "normalOdds",
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     },
     {
@@ -253,19 +324,27 @@ return {
           "kind": "LinkedField",
           "name": "scoreAtBet",
           "plural": false,
+          "selections": (v4/*:: as any*/),
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "TicketItemResult",
+          "kind": "LinkedField",
+          "name": "result",
+          "plural": false,
           "selections": [
+            (v2/*:: as any*/),
+            (v3/*:: as any*/),
             {
               "alias": null,
               "args": null,
-              "kind": "ScalarField",
-              "name": "home",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "away",
+              "concreteType": "TicketItemScore",
+              "kind": "LinkedField",
+              "name": "halfTime",
+              "plural": false,
+              "selections": (v4/*:: as any*/),
               "storageKey": null
             }
           ],
@@ -280,6 +359,6 @@ return {
 };
 })();
 
-(node as any).hash = "b2a116e49da8415a4c7b048f2b498c6f";
+(node as any).hash = "ddb957b861a10406cbc8f941c8ef99bf";
 
 export default node;

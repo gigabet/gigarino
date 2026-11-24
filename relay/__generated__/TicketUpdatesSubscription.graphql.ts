@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4d68f74fd6514ae95ba531c4b6d8650a>>
+ * @generated SignedSource<<431db433dbb92861bf2b6507bf693e83>>
  * @lightSyntaxTransform
  */
 
@@ -53,7 +53,25 @@ v3 = {
   "kind": "ScalarField",
   "name": "createdAt",
   "storageKey": null
-};
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "home",
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "away",
+  "storageKey": null
+},
+v6 = [
+  (v4/*:: as any*/),
+  (v5/*:: as any*/)
+];
 return {
   "fragment": {
     "argumentDefinitions": [],
@@ -214,19 +232,27 @@ return {
                     "kind": "LinkedField",
                     "name": "scoreAtBet",
                     "plural": false,
+                    "selections": (v6/*:: as any*/),
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "TicketItemResult",
+                    "kind": "LinkedField",
+                    "name": "result",
+                    "plural": false,
                     "selections": [
+                      (v4/*:: as any*/),
+                      (v5/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
-                        "kind": "ScalarField",
-                        "name": "home",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "away",
+                        "concreteType": "TicketItemScore",
+                        "kind": "LinkedField",
+                        "name": "halfTime",
+                        "plural": false,
+                        "selections": (v6/*:: as any*/),
                         "storageKey": null
                       }
                     ],
@@ -261,6 +287,45 @@ return {
                 "args": null,
                 "kind": "ScalarField",
                 "name": "settledAt",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "payoutCapped",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "rejectReason",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "TicketBoost",
+                "kind": "LinkedField",
+                "name": "boost",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "boostedOdds",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "normalOdds",
+                    "storageKey": null
+                  }
+                ],
                 "storageKey": null
               },
               {
@@ -334,12 +399,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5059a2f15a1dd76d34fca1b5a1d7f53d",
+    "cacheID": "7c2e49ed9bd97c356445ab4d4a1e1d0e",
     "id": null,
     "metadata": {},
     "name": "TicketUpdatesSubscription",
     "operationKind": "subscription",
-    "text": "subscription TicketUpdatesSubscription {\n  myTicketUpdated {\n    reason\n    ticket {\n      id\n      ...TicketCard\n    }\n  }\n}\n\nfragment TicketCard on Ticket {\n  id\n  betType\n  stake\n  currency\n  status\n  createdAt\n  resettled\n  resettlementSeen\n  items {\n    id\n    eventName\n    outcomeName\n  }\n  ...TicketCardDetails\n}\n\nfragment TicketCardDetails on Ticket {\n  id\n  stake\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  settledAt\n  resettled\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n    eventStartTime\n    inPlay\n    scoreAtBet {\n      home\n      away\n    }\n  }\n}\n"
+    "text": "subscription TicketUpdatesSubscription {\n  myTicketUpdated {\n    reason\n    ticket {\n      id\n      ...TicketCard\n    }\n  }\n}\n\nfragment TicketCard on Ticket {\n  id\n  betType\n  stake\n  currency\n  status\n  createdAt\n  resettled\n  resettlementSeen\n  items {\n    id\n    eventName\n    outcomeName\n  }\n  ...TicketCardDetails\n}\n\nfragment TicketCardDetails on Ticket {\n  id\n  stake\n  effectiveOdds\n  potentialPayout\n  payout\n  currency\n  status\n  settledAt\n  payoutCapped\n  rejectReason\n  boost {\n    boostedOdds\n    normalOdds\n  }\n  resettled\n  corrections {\n    id\n    itemId\n    kind\n    amount\n    previousPrice\n    newPrice\n    previousStatus\n    newStatus\n    createdAt\n  }\n  items {\n    id\n    eventName\n    marketName\n    outcomeName\n    priceAtAcceptance\n    status\n    eventStartTime\n    inPlay\n    scoreAtBet {\n      home\n      away\n    }\n    result {\n      home\n      away\n      halfTime {\n        home\n        away\n      }\n    }\n  }\n}\n"
   }
 };
 })();

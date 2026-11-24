@@ -1,7 +1,7 @@
 'use client'
 
-import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai'
-import { entries, keys, minBy, sortBy } from 'lodash'
+import { atom, useAtomValue, useSetAtom } from 'jotai'
+import { keys, minBy, sortBy } from 'lodash'
 import { LockKeyhole } from 'lucide-react'
 import { Toggle } from 'radix-ui'
 import { useCallback } from 'react'
@@ -19,7 +19,12 @@ import { useHasOdd, useToggleOdd } from '@/context/betslip'
 import { useUpDown } from '@/context/hooks'
 import { useT } from '@/context/providers'
 import { tKey } from '@/i18n/tKey'
-import { fitOutcomeLabels, shortOutcomeKey, translateOutcomeKey } from '@/lib/api-names'
+import {
+  fitOutcomeLabels,
+  shortOutcomeKey,
+  translateOutcomeKey,
+  translateSuspensionReason,
+} from '@/lib/api-names'
 import {
   getAvailableMarkets,
   MARKET_LABEL,
@@ -28,8 +33,8 @@ import {
 } from '@/lib/sport-markets'
 import { cn, swap } from '@/lib/utils'
 import type {
+  ListViewMarket$data,
   ListViewMarket$key,
-  OutcomeStatus,
 } from '@/relay/__generated__/ListViewMarket.graphql'
 import type { ListViewMarkets$key } from '@/relay/__generated__/ListViewMarkets.graphql'
 
@@ -215,6 +220,7 @@ function Market(props: { className?: string; market: ListViewMarket$key }) {
           key
           price
           status
+          suspensionReason
         }
       }
     `,
@@ -243,7 +249,10 @@ function Market(props: { className?: string; market: ListViewMarket$key }) {
       const line = lineFor(odd.key)
       const withLine = (text: string) => (line ? `${text} ${line}` : text)
       const tag = shortOutcomeKey(odd.key)
-      return { label: withLine(translateOutcomeKey(t, odd.key)), short: tag && withLine(tag) }
+      return {
+        label: withLine(translateOutcomeKey(t, odd.key)),
+        short: tag && withLine(tag),
+      }
     }),
     Math.floor(CELL_CHARS / outcomes.length)
   )
@@ -258,7 +267,7 @@ function Market(props: { className?: string; market: ListViewMarket$key }) {
 }
 
 function OddToggle(props: {
-  odd: { id: string; price: unknown; status: OutcomeStatus }
+  odd: ListViewMarket$data['outcomes'][number]
   label: string
   /** The full label, when `label` is a short tag. */
   title?: string
@@ -266,37 +275,47 @@ function OddToggle(props: {
   const hasOdd = useHasOdd()
   const toggleOdd = useToggleOdd()
   const upDown = useUpDown(Number(props.odd.price))
+  const t = useT()
+  const reason = props.odd.suspensionReason
+    ? translateSuspensionReason(t, props.odd.suspensionReason)
+    : undefined
 
   return (
-    <Toggle.Root
-      suppressHydrationWarning
-      className={cn(
-        'group hover:bg-primary/10 hover:border-primary/60 shadow-primary/60 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 border-control-border bg-control flex flex-1 flex-col items-center justify-center gap-1 rounded-lg border transition-all disabled:pointer-events-none disabled:opacity-40',
-        'data-[state=on]:shadow-[0_0_12px]',
-        upDown === 'up' && 'animate-odds-flash-up',
-        upDown === 'down' && 'animate-odds-flash-down'
-      )}
-      pressed={hasOdd(props.odd.id)}
-      onPressedChange={() => toggleOdd(props.odd.id)}
-      disabled={props.odd.status !== 'OPEN'}
-    >
-      <span
-        title={props.title}
-        className='group-data-[state=on]:text-foreground text-shadow-foreground text-secondary max-w-full truncate text-xs capitalize group-data-[state=on]:text-shadow-[0_0_8px]'
-      >
-        {props.label}
-      </span>
-      <span className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground relative flex flex-col items-center justify-center gap-1 text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'>
-        {props.odd.status === 'OPEN' ? (
-          <>
-            <span suppressHydrationWarning>{Number(props.odd.price).toFixed(2)}</span>
-            <OddDelta price={Number(props.odd.price)} />
-          </>
-        ) : (
-          <LockKeyhole className='size-3' />
+    // a locked toggle ignores the pointer, so the hover text sits on this wrapper
+    <div className='flex flex-1' title={reason}>
+      <Toggle.Root
+        suppressHydrationWarning
+        className={cn(
+          'group hover:bg-primary/10 hover:border-primary/60 shadow-primary/60 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 border-control-border bg-control flex flex-1 flex-col items-center justify-center gap-1 rounded-lg border transition-all disabled:pointer-events-none disabled:opacity-40',
+          'data-[state=on]:shadow-[0_0_12px]',
+          upDown === 'up' && 'animate-odds-flash-up',
+          upDown === 'down' && 'animate-odds-flash-down'
         )}
-      </span>
-    </Toggle.Root>
+        pressed={hasOdd(props.odd.id)}
+        onPressedChange={() => toggleOdd(props.odd.id)}
+        disabled={props.odd.status !== 'OPEN'}
+      >
+        <span
+          title={props.title}
+          className='group-data-[state=on]:text-foreground text-shadow-foreground text-secondary max-w-full text-xs capitalize group-data-[state=on]:text-shadow-[0_0_8px]'
+        >
+          {props.label}
+        </span>
+        <span className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground relative flex flex-col items-center justify-center gap-1 text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'>
+          {props.odd.status === 'OPEN' ? (
+            <>
+              <span suppressHydrationWarning>{Number(props.odd.price).toFixed(2)}</span>
+              <OddDelta price={Number(props.odd.price)} />
+            </>
+          ) : (
+            <>
+              <LockKeyhole className='size-3' />
+              {reason && <span className='sr-only'>{reason}</span>}
+            </>
+          )}
+        </span>
+      </Toggle.Root>
+    </div>
   )
 }
 

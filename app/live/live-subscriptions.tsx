@@ -31,6 +31,7 @@ const stateSubscription = graphql`
         status
         tradingStatus
         ...LiveScore
+        ...LiveTeams
         ...LiveTime
       }
     }

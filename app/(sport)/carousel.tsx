@@ -190,6 +190,7 @@ function BetBoostCard(props: { bet: BetBoostCard$key; id: string }) {
         boostedPrice
         combinedPrice
         maxStake
+        betsRemaining
         validTo
         selections {
           outcomeId
@@ -215,6 +216,8 @@ function BetBoostCard(props: { bet: BetBoostCard$key; id: string }) {
   const applyBoost = useApplyBoost()
   const active = useActiveBoost()
   const allAdded = active?.id === props.id
+  // null when signed out: nothing is known about the player's bets yet
+  const used = data.betsRemaining === 0
 
   const handleSelect = () =>
     applyBoost({
@@ -280,18 +283,26 @@ function BetBoostCard(props: { bet: BetBoostCard$key; id: string }) {
       </div>
 
       <div className='relative flex items-center gap-2'>
-        {data.maxStake && (
-          <span className='text-secondary shrink-0 text-[0.6rem]'>
-            {t('Max {amount}', {
-              amount: formatBalance(Number(data.maxStake)),
-            })}
-          </span>
-        )}
+        <div className='text-secondary flex min-w-0 flex-col text-[0.6rem]'>
+          {data.maxStake && (
+            <span className='shrink-0'>
+              {t('Max {amount}', {
+                amount: formatBalance(Number(data.maxStake)),
+              })}
+            </span>
+          )}
+          {data.betsRemaining != null && (
+            <span className={cn('shrink-0', used && 'text-amber-400')}>
+              {used ? t('Boost used') : t('Bets left: {n}', { n: data.betsRemaining })}
+            </span>
+          )}
+        </div>
         <button
           type='button'
           onClick={handleSelect}
           disabled={
             allAdded ||
+            used ||
             availableSelections.length === 0 ||
             availableSelections.length !== data.selections.length
           }

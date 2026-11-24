@@ -13,6 +13,7 @@ import {
   shortOutcomeName,
   translateMarketName,
   translateOutcomeName,
+  translateSuspensionReason,
 } from '@/lib/api-names'
 import { cn } from '@/lib/utils'
 import type { MarketCard$key } from '@/relay/__generated__/MarketCard.graphql'
@@ -39,12 +40,14 @@ export default function MarketCard(props: {
         name
         line
         status
+        suspensionReason
         outcomes {
           id
           index
           name
           price
           status
+          suspensionReason
         }
       }
     `,
@@ -53,6 +56,9 @@ export default function MarketCard(props: {
 
   const t = useT()
   const suspended = market.status !== 'OPEN'
+  // the whole market is paused, or only some of its selections are
+  const reason =
+    market.suspensionReason ?? market.outcomes.find(o => o.suspensionReason)?.suspensionReason
 
   const line = market.line == null ? '' : String(Math.abs(Number(market.line)))
   const withLine = (label: string) => (line && !label.includes(line) ? `${label} ${line}` : label)
@@ -61,7 +67,10 @@ export default function MarketCard(props: {
   const labels = fitOutcomeLabels(
     outcomes.map(odd => {
       const tag = shortOutcomeName(odd.name)
-      return { label: withLine(translateOutcomeName(t, odd.name)), short: tag && withLine(tag) }
+      return {
+        label: withLine(translateOutcomeName(t, odd.name)),
+        short: tag && withLine(tag),
+      }
     }),
     Math.floor(ROW_CHARS / outcomes.length)
   )
@@ -69,6 +78,12 @@ export default function MarketCard(props: {
   return (
     <div className='flex flex-col gap-2'>
       <p className='text-secondary text-xs'>{translateMarketName(t, market.name)}</p>
+      {reason && (
+        <p className='-mt-1 flex items-center gap-1 text-[0.65rem] text-amber-400'>
+          <LockKeyhole className='size-3' />
+          {translateSuspensionReason(t, reason)}
+        </p>
+      )}
 
       <div className={cn('grid gap-2', getOutcomesLayout(market.outcomes.length))}>
         {outcomes.map((odd, i) => (
@@ -84,7 +99,13 @@ export default function MarketCard(props: {
 }
 
 function OutcomeToggle(props: {
-  odd: { id: string; label: string; title?: string; price: unknown; status: string }
+  odd: {
+    id: string
+    label: string
+    title?: string
+    price: unknown
+    status: string
+  }
   suspended: boolean
 }) {
   const hasOdd = useHasOdd()
@@ -107,7 +128,7 @@ function OutcomeToggle(props: {
     >
       <span
         title={props.odd.title}
-        className='group-data-[state=on]:text-foreground text-shadow-foreground text-secondary max-w-full truncate text-xs group-data-[state=on]:text-shadow-[0_0_8px]'
+        className='group-data-[state=on]:text-foreground text-shadow-foreground text-secondary max-w-full text-xs group-data-[state=on]:text-shadow-[0_0_8px]'
       >
         {props.odd.label}
       </span>

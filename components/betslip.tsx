@@ -57,7 +57,11 @@ import {
 import { useMediaQuery } from '@/context/hooks'
 import { useBetslipQuote, useCurrency, useT, useUser } from '@/context/providers'
 import { unseenResettlementsAtom } from '@/context/tickets'
-import { translateOutcomeKey, translateOutcomeName } from '@/lib/api-names'
+import {
+  translateOutcomeKey,
+  translateOutcomeName,
+  translateSuspensionReason,
+} from '@/lib/api-names'
 import { MARKET_NAME, splitMarketName } from '@/lib/sport-markets'
 import { cn, formatBalance, nCk } from '@/lib/utils'
 import type { Betslip$key } from '@/relay/__generated__/Betslip.graphql'
@@ -921,6 +925,7 @@ function Tip(props: { item: Tip$key }) {
         expectedPrice
         priceChanged
         availability
+        suspensionReason
         isLive
         eventId
       }
@@ -1028,7 +1033,9 @@ function Tip(props: { item: Tip$key }) {
       {blocked && (
         <p className='mt-1 flex items-center gap-1.5 text-xs text-red-400'>
           <AlertTriangleIcon className='size-3.5' />
-          {betCodeCopy(data.availability, t)}
+          {data.suspensionReason
+            ? translateSuspensionReason(t, data.suspensionReason)
+            : betCodeCopy(data.availability, t)}
         </p>
       )}
 

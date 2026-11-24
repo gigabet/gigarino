@@ -254,6 +254,10 @@ export function LiveTeams(props: { event: LiveTeams$key }) {
         homeImageUrl
         awayCompetitor
         awayImageUrl
+        redCards {
+          home
+          away
+        }
       }
     `,
     props.event
@@ -268,13 +272,33 @@ export function LiveTeams(props: { event: LiveTeams$key }) {
       <div className='flex h-6 items-center gap-2'>
         <TeamBadge name={data.homeCompetitor} imageUrl={data.homeImageUrl} hue={homeHue} />
         <span className='truncate'>{data.homeCompetitor}</span>
+        <RedCardMark count={data.redCards?.home} />
       </div>
       {/* away */}
       <div className='flex h-6 items-center gap-2'>
         <TeamBadge name={data.awayCompetitor} imageUrl={data.awayImageUrl} hue={awayHue} />
         <span className='truncate'>{data.awayCompetitor}</span>
+        <RedCardMark count={data.redCards?.away} />
       </div>
     </div>
+  )
+}
+
+/** Pure formatting, so it takes the count verbatim instead of a fragment. */
+function RedCardMark(props: { count: number | undefined }) {
+  const t = useT()
+  if (!props.count) return null
+
+  return (
+    <span
+      role='img'
+      title={t('Red cards')}
+      aria-label={t('Red cards')}
+      className='flex shrink-0 items-center gap-0.5 text-[0.65rem] font-bold'
+    >
+      <span className='h-3 w-2 rounded-[1px] bg-red-500' />
+      {props.count > 1 && props.count}
+    </span>
   )
 }
 

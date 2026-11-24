@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<03e6746d1eaa1594cbe76eb7d9ed8bcb>>
+ * @generated SignedSource<<9c194826a9b5bf68d3753c64e5a8f32d>>
  * @lightSyntaxTransform
  */
 
@@ -10,6 +10,7 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type BetBoostCard$data = {
+  readonly betsRemaining: number | null | undefined;
   readonly boostedPrice: any | null | undefined;
   readonly combinedPrice: any | null | undefined;
   readonly maxStake: any | null | undefined;
@@ -53,6 +54,13 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "ScalarField",
       "name": "maxStake",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "betsRemaining",
       "storageKey": null
     },
     {
@@ -113,6 +121,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "274a79a15df6ebe5d1c139ffe3153515";
+(node as any).hash = "e46b0360020c4bf99de062ca3838535f";
 
 export default node;

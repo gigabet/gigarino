@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b37e032dd675310ffb4f94ac4aed3c38>>
+ * @generated SignedSource<<9b53ccef90b934e17d9f9162a1d9fdf3>>
  * @lightSyntaxTransform
  */
 
@@ -20,7 +20,7 @@ export type LiveStateSubscription$data = {
       readonly id: string;
       readonly status: EventStatus;
       readonly tradingStatus: TradingStatus;
-      readonly " $fragmentSpreads": FragmentRefs<"LiveScore" | "LiveTime">;
+      readonly " $fragmentSpreads": FragmentRefs<"LiveScore" | "LiveTeams" | "LiveTime">;
     };
   };
 };
@@ -79,7 +79,11 @@ v6 = {
   "name": "away",
   "storageKey": null
 },
-v7 = {
+v7 = [
+  (v5/*:: as any*/),
+  (v6/*:: as any*/)
+],
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -116,6 +120,11 @@ return {
                 "args": null,
                 "kind": "FragmentSpread",
                 "name": "LiveScore"
+              },
+              {
+                "args": null,
+                "kind": "FragmentSpread",
+                "name": "LiveTeams"
               },
               {
                 "args": null,
@@ -204,10 +213,7 @@ return {
                 "kind": "LinkedField",
                 "name": "pointScore",
                 "plural": false,
-                "selections": [
-                  (v5/*:: as any*/),
-                  (v6/*:: as any*/)
-                ],
+                "selections": (v7/*:: as any*/),
                 "storageKey": null
               },
               {
@@ -218,13 +224,51 @@ return {
                 "name": "periodScores",
                 "plural": true,
                 "selections": [
-                  (v7/*:: as any*/),
+                  (v8/*:: as any*/),
                   (v5/*:: as any*/),
                   (v6/*:: as any*/)
                 ],
                 "storageKey": null
               },
-              (v7/*:: as any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "homeCompetitor",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "homeImageUrl",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "awayCompetitor",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "awayImageUrl",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "RedCards",
+                "kind": "LinkedField",
+                "name": "redCards",
+                "plural": false,
+                "selections": (v7/*:: as any*/),
+                "storageKey": null
+              },
+              (v8/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -269,16 +313,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "793b6eebe9a1ad898395f6615479533c",
+    "cacheID": "4071480000c3c8161e812c9cdf378a25",
     "id": null,
     "metadata": {},
     "name": "LiveStateSubscription",
     "operationKind": "subscription",
-    "text": "subscription LiveStateSubscription(\n  $eventIds: [ID!]!\n) {\n  eventStateUpdated(eventIds: $eventIds) {\n    event {\n      id\n      status\n      tradingStatus\n      ...LiveScore\n      ...LiveTime\n    }\n  }\n}\n\nfragment LiveScore on Event {\n  status\n  sport {\n    key\n    id\n  }\n  homeScore\n  awayScore\n  serving\n  pointScore {\n    home\n    away\n  }\n  periodScores {\n    period\n    home\n    away\n  }\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n"
+    "text": "subscription LiveStateSubscription(\n  $eventIds: [ID!]!\n) {\n  eventStateUpdated(eventIds: $eventIds) {\n    event {\n      id\n      status\n      tradingStatus\n      ...LiveScore\n      ...LiveTeams\n      ...LiveTime\n    }\n  }\n}\n\nfragment LiveScore on Event {\n  status\n  sport {\n    key\n    id\n  }\n  homeScore\n  awayScore\n  serving\n  pointScore {\n    home\n    away\n  }\n  periodScores {\n    period\n    home\n    away\n  }\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  redCards {\n    home\n    away\n  }\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n"
   }
 };
 })();
 
-(node as any).hash = "4afeb654f1bb60e6740a30e24a3d97e3";
+(node as any).hash = "21f76cfc5fc03579ecd469b25171099c";
 
 export default node;

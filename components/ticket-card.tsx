@@ -2,7 +2,7 @@
 
 import { format, formatDistanceToNowStrict } from 'date-fns'
 import { useSetAtom } from 'jotai'
-import { AlertTriangleIcon, ChevronDownIcon, Loader2Icon } from 'lucide-react'
+import { AlertTriangleIcon, ChevronDownIcon, ChevronsUpIcon, Loader2Icon } from 'lucide-react'
 import { Popover } from 'radix-ui'
 import { Suspense, useEffect, useState } from 'react'
 import {
@@ -177,7 +177,11 @@ export default function TicketCard(props: { ticket: TicketCard$key; action?: () 
   const [expanded, setExpanded] = useState(false)
   const t = useT()
   useAcknowledgeCorrections(
-    { id: data.id, resettled: data.resettled, resettlementSeen: data.resettlementSeen },
+    {
+      id: data.id,
+      resettled: data.resettled,
+      resettlementSeen: data.resettlementSeen,
+    },
     expanded
   )
   const first = data.items[0]
@@ -251,6 +255,12 @@ export function TicketCardDetails(props: {
         currency
         status
         settledAt
+        payoutCapped
+        rejectReason
+        boost {
+          boostedOdds
+          normalOdds
+        }
         resettled
         corrections {
           id
@@ -276,6 +286,14 @@ export function TicketCardDetails(props: {
             home
             away
           }
+          result {
+            home
+            away
+            halfTime {
+              home
+              away
+            }
+          }
         }
       }
     `,
@@ -285,6 +303,32 @@ export function TicketCardDetails(props: {
 
   return (
     <div className='space-y-3'>
+      {data.status === 'REJECTED' && data.rejectReason && (
+        <div className='flex items-start gap-2 rounded-lg bg-red-500/10 p-2 text-xs text-red-400'>
+          <AlertTriangleIcon className='mt-0.5 size-3.5 shrink-0' />
+          <p>
+            <span className='font-semibold'>{t('Rejected')}</span>
+            {': '}
+            {data.rejectReason}
+          </p>
+        </div>
+      )}
+
+      {data.boost && (
+        <div className='border-primary/40 bg-primary/10 flex items-center justify-between rounded-lg border px-3 py-1 text-xs'>
+          <span className='text-primary flex items-center gap-1.5 font-bold uppercase'>
+            <ChevronsUpIcon className='size-3.5' />
+            {t('Bet Boost')}
+          </span>
+          <span className='font-mono'>
+            <span className='text-secondary mr-1 line-through'>
+              {Number(data.boost.normalOdds).toFixed(2)}
+            </span>
+            {Number(data.boost.boostedOdds).toFixed(2)}
+          </span>
+        </div>
+      )}
+
       <div className='divide-y divide-white/5'>
         {data.items.map(item => {
           const itemMeta = ITEM_STATUS_META[item.status as KnownEnum<BetItemStatus>]
@@ -323,6 +367,16 @@ export function TicketCardDetails(props: {
                         </span>
                       </span>
                     )}
+                    {item.result && (
+                      <span>
+                        {t('Final score')}{' '}
+                        <span className='font-mono text-white/70'>
+                          {item.result.home}–{item.result.away}
+                          {item.result.halfTime &&
+                            ` (${item.result.halfTime.home}–${item.result.halfTime.away})`}
+                        </span>
+                      </span>
+                    )}
                   </p>
                 </div>
               </div>
@@ -350,6 +404,12 @@ export function TicketCardDetails(props: {
           {formatBalance(Number(data.potentialPayout), data.currency)}
         </span>
       </div>
+      {data.payoutCapped && (
+        <p className='flex items-center gap-1.5 text-xs text-amber-400'>
+          <AlertTriangleIcon className='size-3.5 shrink-0' />
+          {t('Payout limited to the maximum winnings.')}
+        </p>
+      )}
 
       {data.settledAt && (
         <div className='flex items-center justify-between text-xs'>
@@ -404,7 +464,7 @@ export function TicketCardDetails(props: {
         </div>
       )}
 
-      {CASHOUT_ELIGIBLE.has(data.status as KnownEnum<TicketStatus>) && (
+      {!data.boost && CASHOUT_ELIGIBLE.has(data.status as KnownEnum<TicketStatus>) && (
         <div className='pt-1'>
           <CashoutButton ticketId={data.id} onCashedOut={props.onCashedOutAction} />
         </div>
@@ -446,6 +506,9 @@ function CashoutButton(props: { ticketId: string; onCashedOut?: () => void }) {
               <CashoutQuote
                 queryRef={queryRef}
                 ticketId={props.ticketId}
+                onRequote={() =>
+                  loadQuery({ ticketId: props.ticketId }, { fetchPolicy: 'network-only' })
+                }
                 onDone={() => {
                   setOpen(false)
                   props.onCashedOut?.()
@@ -462,6 +525,8 @@ function CashoutButton(props: { ticketId: string; onCashedOut?: () => void }) {
 function CashoutQuote(props: {
   queryRef: PreloadedQuery<TicketCardCashoutQuoteQuery>
   ticketId: string
+  /** Fetches a fresh quote, e.g. once the value has moved under the player. */
+  onRequote: () => void
   onDone: () => void
 }) {
   const { cashoutQuote } = usePreloadedQuery<TicketCardCashoutQuoteQuery>(
@@ -481,8 +546,8 @@ function CashoutQuote(props: {
   )
 
   const [commitCashout, isCashingOut] = useMutation<TicketCardCashoutMutation>(graphql`
-    mutation TicketCardCashoutMutation($ticketId: ID!) {
-      cashout(ticketId: $ticketId) {
+    mutation TicketCardCashoutMutation($ticketId: ID!, $expectedAmount: Decimal) {
+      cashout(ticketId: $ticketId, expectedAmount: $expectedAmount) {
         amount
         rejectionCode
         rejectionMessage
@@ -496,6 +561,7 @@ function CashoutQuote(props: {
   `)
 
   const [error, setError] = useState<string | null>(null)
+  const [priceChanged, setPriceChanged] = useState(false)
   const t = useT()
 
   if (!cashoutQuote?.available) {
@@ -516,15 +582,31 @@ function CashoutQuote(props: {
         </p>
       </div>
 
+      {priceChanged && (
+        <p className='text-center text-xs text-amber-400'>
+          {t('The cash out value changed. Check the new amount and confirm again.')}
+        </p>
+      )}
       {error && <p className='text-center text-xs text-red-400'>{error}</p>}
 
       <Button
         className='w-full'
         disabled={isCashingOut}
-        onClick={() =>
+        onClick={() => {
+          setPriceChanged(false)
           commitCashout({
-            variables: { ticketId: props.ticketId },
+            // pays exactly the quoted amount, or refuses with PRICE_CHANGED
+            variables: {
+              ticketId: props.ticketId,
+              expectedAmount: cashoutQuote.amount,
+            },
             onCompleted: response => {
+              if (response.cashout.rejectionCode === 'PRICE_CHANGED') {
+                setError(null)
+                setPriceChanged(true)
+                props.onRequote()
+                return
+              }
               if (response.cashout.rejectionCode) {
                 setError(response.cashout.rejectionMessage || t('Cash out failed.'))
                 return
@@ -533,7 +615,7 @@ function CashoutQuote(props: {
             },
             onError: err => setError(err.message || t('Cash out failed.')),
           })
-        }
+        }}
       >
         {isCashingOut ? (
           <>

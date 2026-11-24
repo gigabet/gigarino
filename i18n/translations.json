@@ -243,6 +243,10 @@
     "de": "Wette nicht verfügbar.",
     "tr": "Bahis kullanılamıyor."
   },
+  "Bets left: {n}": {
+    "de": "Verbleibende Wetten: {n}",
+    "tr": "Kalan bahis: {n}"
+  },
   "Bets you place will show up here, open ones first.": {
     "de": "Ihre platzierten Wetten erscheinen hier, offene zuerst.",
     "tr": "Yaptığınız bahisler burada görünür; önce açık olanlar."
@@ -270,6 +274,10 @@
   "Boost expired.": {
     "de": "Boost abgelaufen.",
     "tr": "Boost süresi doldu."
+  },
+  "Boost used": {
+    "de": "Boost verwendet",
+    "tr": "Boost kullanıldı"
   },
   "Both Teams to Score": {
     "de": "Beide Teams treffen",
@@ -451,6 +459,10 @@
     "de": "Währung nicht unterstützt.",
     "tr": "Para birimi desteklenmiyor."
   },
+  "D": {
+    "de": "U",
+    "tr": "B"
+  },
   "Dangerous attacks": {
     "de": "Gefährliche Angriffe",
     "tr": "Tehlikeli ataklar"
@@ -478,6 +490,10 @@
   "Draw No Bet": {
     "de": "Draw No Bet",
     "tr": "Beraberlikte İade"
+  },
+  "Drawn": {
+    "de": "Unentschieden",
+    "tr": "Berabere"
   },
   "Email": {
     "de": "E-Mail",
@@ -570,6 +586,10 @@
   "Featured Bets": {
     "de": "Top-Wetten",
     "tr": "Öne Çıkan Bahisler"
+  },
+  "Final score": {
+    "de": "Endstand",
+    "tr": "Son skor"
   },
   "Find games and providers by name.": {
     "de": "Spiele und Anbieter nach Namen finden.",
@@ -735,6 +755,10 @@
     "de": "Letzte {n} Duelle",
     "tr": "Son {n} karşılaşma"
   },
+  "League table": {
+    "de": "Tabelle",
+    "tr": "Puan durumu"
+  },
   "Licensed": {
     "de": "Lizenziert",
     "tr": "Lisanslı"
@@ -758,6 +782,10 @@
   "Live Casino": {
     "de": "Live-Casino",
     "tr": "Canlı Casino"
+  },
+  "Live prices unavailable": {
+    "de": "Live-Quoten nicht verfügbar",
+    "tr": "Canlı oranlar mevcut değil"
   },
   "Log In": {
     "de": "Anmelden",
@@ -787,9 +815,21 @@
     "de": "Haupt",
     "tr": "Ana"
   },
+  "Market paused": {
+    "de": "Markt pausiert",
+    "tr": "Market duraklatıldı"
+  },
   "Match": {
     "de": "Spiel",
     "tr": "Maç"
+  },
+  "Match closed": {
+    "de": "Spiel geschlossen",
+    "tr": "Maç kapalı"
+  },
+  "Match paused": {
+    "de": "Spiel pausiert",
+    "tr": "Maç duraklatıldı"
   },
   "Match state changed.": {
     "de": "Spielstatus geändert.",
@@ -847,6 +887,10 @@
     "de": "Keine Spiele",
     "tr": "Oyun yok"
   },
+  "No league table is available for this competition.": {
+    "de": "Keine Tabelle für diesen Wettbewerb verfügbar.",
+    "tr": "Bu yarışma için puan durumu yok."
+  },
   "No live events match your search.": {
     "de": "Keine Live-Events entsprechen Ihrer Suche.",
     "tr": "Aramanızla eşleşen canlı etkinlik yok."
@@ -859,6 +903,10 @@
     "de": "Keine Treffer für „{query}“",
     "tr": "\"{query}\" için sonuç bulunamadı"
   },
+  "No price available": {
+    "de": "Keine Quote verfügbar",
+    "tr": "Oran mevcut değil"
+  },
   "No tickets match this filter": {
     "de": "Keine Tickets entsprechen diesem Filter",
     "tr": "Bu filtreye uygun kupon yok"
@@ -866,6 +914,10 @@
   "No tickets yet": {
     "de": "Noch keine Tickets",
     "tr": "Henüz bilet yok"
+  },
+  "Not offered in play": {
+    "de": "Nicht im Live-Angebot",
+    "tr": "Canlıda sunulmuyor"
   },
   "Odd": {
     "de": "Ungerade",
@@ -939,6 +991,10 @@
     "de": "Über",
     "tr": "Üst"
   },
+  "Over boost limit.": {
+    "de": "Boost-Limit überschritten.",
+    "tr": "Boost limiti aşıldı."
+  },
   "Over/Under": {
     "de": "Über/Unter",
     "tr": "Alt/Üst"
@@ -991,6 +1047,10 @@
     "de": "Auszahlung",
     "tr": "Ödeme"
   },
+  "Payout limited to the maximum winnings.": {
+    "de": "Auszahlung auf maximalen Gewinn begrenzt.",
+    "tr": "Ödeme maksimum kazançla sınırlı."
+  },
   "PEN": {
     "de": "Elfm.",
     "tr": "Pen."
@@ -1034,6 +1094,10 @@
   "Placing bet...": {
     "de": "Wette wird platziert...",
     "tr": "Bahis yapılıyor..."
+  },
+  "Played": {
+    "de": "Gespielt",
+    "tr": "Oynandı"
   },
   "Players": {
     "de": "Spieler",
@@ -1082,6 +1146,10 @@
   "Pts": {
     "de": "Pkt.",
     "tr": "Puan"
+  },
+  "Rankings": {
+    "de": "Rangliste",
+    "tr": "Sıralamalar"
   },
   "Recent": {
     "de": "Zuletzt",
@@ -1159,6 +1227,14 @@
     "de": "Runde",
     "tr": "Tur"
   },
+  "Round {current}": {
+    "de": "Runde {current}",
+    "tr": "Tur {current}"
+  },
+  "Round {current} of {max}": {
+    "de": "Runde {current} von {max}",
+    "tr": "Tur {current} / {max}"
+  },
   "Saves": {
     "de": "Paraden",
     "tr": "Kurtarışlar"
@@ -1214,6 +1290,10 @@
   "Searching older tickets...": {
     "de": "Ältere Tickets werden gesucht...",
     "tr": "Eski kuponlar aranıyor..."
+  },
+  "Season {season}": {
+    "de": "Saison {season}",
+    "tr": "Sezon {season}"
   },
   "Secure": {
     "de": "Sicher",
@@ -1391,6 +1471,10 @@
     "de": "AGB",
     "tr": "Şartlar ve Koşullar"
   },
+  "The cash out value changed. Check the new amount and confirm again.": {
+    "de": "Der Cashout-Wert hat sich geändert. Neuen Betrag prüfen und erneut bestätigen.",
+    "tr": "Cash out değeri değişti. Yeni tutarı kontrol edip tekrar onaylayın."
+  },
   "This event is no longer available.": {
     "de": "Dieses Ereignis ist nicht mehr verfügbar.",
     "tr": "Bu etkinlik artık mevcut değil."
@@ -1458,6 +1542,10 @@
   "Type at least {n} characters to search.": {
     "de": "Mindestens {n} Zeichen eingeben.",
     "tr": "Aramak için en az {n} karakter girin."
+  },
+  "Unavailable": {
+    "de": "Nicht verfügbar",
+    "tr": "Mevcut değil"
   },
   "Under": {
     "de": "Unter",

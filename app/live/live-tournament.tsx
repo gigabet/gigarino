@@ -2,6 +2,7 @@
 
 import ReactCountryFlag from 'react-country-flag'
 import { graphql, useFragment } from 'react-relay'
+import { LeagueTableButton } from '@/components/league-table'
 import { HEADER_LEAD, ListViewMarketDropdowns } from '@/components/list-view-markets'
 import { SportIconBadge } from '@/components/sport-icon'
 import { getSportTheme } from '@/lib/sport-theme'
@@ -63,6 +64,7 @@ export function TournamentTitle(props: { tournamentRef: LiveTournamentTitle$key 
           name
           countryCode
         }
+        ...LeagueTableButton
       }
     `,
     props.tournamentRef
@@ -86,6 +88,7 @@ export function TournamentTitle(props: { tournamentRef: LiveTournamentTitle$key 
           style={{ width: undefined, height: undefined }}
         />
         <span className='min-w-0 truncate'>{stripCategory(data.name, data.category.name)}</span>
+        <LeagueTableButton tournament={data} />
       </h2>
     </>
   )

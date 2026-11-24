@@ -1,5 +1,7 @@
 import { tKey } from '@/i18n/tKey'
 import { MARKET_LABEL, MARKET_NAME, OUTCOME_NAME, splitMarketName } from '@/lib/sport-markets'
+import type { SuspensionReason } from '@/relay/__generated__/MarketCard.graphql'
+import type { KnownEnum } from '@/types'
 
 /** The `t` from `useT()` / `getT()`. */
 type Translate = (key: string, params?: Record<string, string | number>) => string
@@ -23,6 +25,22 @@ const SPORT_NAME: Record<string, string> = {
   'ice-hockey': tKey('Ice Hockey'),
   'american-football': tKey('American Football'),
   baseball: tKey('Baseball'),
+}
+
+const SUSPENSION_REASON: Record<KnownEnum<SuspensionReason>, string> = {
+  EVENT_CLOSED: tKey('Match closed'),
+  EVENT_SUSPENDED: tKey('Match paused'),
+  FEED_UNAVAILABLE: tKey('Live prices unavailable'),
+  MARKET_SUSPENDED: tKey('Market paused'),
+  NOT_OFFERED_LIVE: tKey('Not offered in play'),
+  NO_PRICE: tKey('No price available'),
+}
+
+/** Why a selection or market is locked. Unknown (newer) reasons fall back to a generic text. */
+export function translateSuspensionReason(t: Translate, reason: string) {
+  return has(SUSPENSION_REASON, reason)
+    ? t(SUSPENSION_REASON[reason as KnownEnum<SuspensionReason>])
+    : t('Unavailable')
 }
 
 export function translateSportName(t: Translate, key: string, name: string) {

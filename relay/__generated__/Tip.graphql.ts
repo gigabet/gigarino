@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<87f96eb9019033c989cd669390953c70>>
+ * @generated SignedSource<<9954f4a4fdacb076624364645037efc5>>
  * @lightSyntaxTransform
  */
 
@@ -9,6 +9,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type BetslipItemAvailability = "AVAILABLE" | "CUTOFF_PASSED" | "DUPLICATE_EVENT" | "EVENT_NOT_BETTABLE" | "NOT_FOUND" | "SUSPENDED" | "%future added value";
+export type SuspensionReason = "EVENT_CLOSED" | "EVENT_SUSPENDED" | "FEED_UNAVAILABLE" | "MARKET_SUSPENDED" | "NOT_OFFERED_LIVE" | "NO_PRICE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type Tip$data = {
   readonly availability: BetslipItemAvailability;
@@ -22,6 +23,7 @@ export type Tip$data = {
   readonly outcomeId: string;
   readonly price: any | null | undefined;
   readonly priceChanged: boolean;
+  readonly suspensionReason: SuspensionReason | null | undefined;
   readonly " $fragmentType": "Tip";
 };
 export type Tip$key = {
@@ -102,6 +104,13 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
+      "name": "suspensionReason",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
       "name": "isLive",
       "storageKey": null
     },
@@ -117,6 +126,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "a23cfa09360e984f4d5e50df5bf094d5";
+(node as any).hash = "dc47a4dcca33b1c9a139962cd70f4bdd";
 
 export default node;

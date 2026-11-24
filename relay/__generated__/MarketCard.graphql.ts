@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2fc351b6813d7210b205cbe52e2fe42c>>
+ * @generated SignedSource<<5b6bb1e82c6a7d8552aa72b152f5f135>>
  * @lightSyntaxTransform
  */
 
@@ -10,6 +10,7 @@
 import { ReaderFragment } from 'relay-runtime';
 export type MarketStatus = "CLOSED" | "OPEN" | "SUSPENDED" | "%future added value";
 export type OutcomeStatus = "OPEN" | "REMOVED" | "SUSPENDED" | "%future added value";
+export type SuspensionReason = "EVENT_CLOSED" | "EVENT_SUSPENDED" | "FEED_UNAVAILABLE" | "MARKET_SUSPENDED" | "NOT_OFFERED_LIVE" | "NO_PRICE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type MarketCard$data = {
   readonly line: any | null | undefined;
@@ -20,8 +21,10 @@ export type MarketCard$data = {
     readonly name: string;
     readonly price: any;
     readonly status: OutcomeStatus;
+    readonly suspensionReason: SuspensionReason | null | undefined;
   }>;
   readonly status: MarketStatus;
+  readonly suspensionReason: SuspensionReason | null | undefined;
   readonly " $fragmentType": "MarketCard";
 };
 export type MarketCard$key = {
@@ -43,6 +46,13 @@ v1 = {
   "kind": "ScalarField",
   "name": "status",
   "storageKey": null
+},
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "suspensionReason",
+  "storageKey": null
 };
 return {
   "argumentDefinitions": [],
@@ -59,6 +69,7 @@ return {
       "storageKey": null
     },
     (v1/*:: as any*/),
+    (v2/*:: as any*/),
     {
       "alias": null,
       "args": null,
@@ -89,7 +100,8 @@ return {
           "name": "price",
           "storageKey": null
         },
-        (v1/*:: as any*/)
+        (v1/*:: as any*/),
+        (v2/*:: as any*/)
       ],
       "storageKey": null
     }
@@ -99,6 +111,6 @@ return {
 };
 })();
 
-(node as any).hash = "42a25f475d241ac4e7783815a9fa6768";
+(node as any).hash = "b516d090dcf298f71bde0658a55d57ac";
 
 export default node;

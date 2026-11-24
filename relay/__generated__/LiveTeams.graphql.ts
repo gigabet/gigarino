@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7e6cdf3fadb4ac1b20d455a015ea0cbc>>
+ * @generated SignedSource<<015a20b3215464a55199796995536d43>>
  * @lightSyntaxTransform
  */
 
@@ -14,6 +14,10 @@ export type LiveTeams$data = {
   readonly awayImageUrl: string | null | undefined;
   readonly homeCompetitor: string;
   readonly homeImageUrl: string | null | undefined;
+  readonly redCards: {
+    readonly away: number;
+    readonly home: number;
+  } | null | undefined;
   readonly " $fragmentType": "LiveTeams";
 };
 export type LiveTeams$key = {
@@ -54,12 +58,37 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "awayImageUrl",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "RedCards",
+      "kind": "LinkedField",
+      "name": "redCards",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "home",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "away",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
     }
   ],
   "type": "Event",
   "abstractKey": null
 };
 
-(node as any).hash = "0b71fcebbec839036b2eb9681e806afe";
+(node as any).hash = "b911e48a53a68269304ab693840ffec9";
 
 export default node;

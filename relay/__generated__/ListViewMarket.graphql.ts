@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<77e83ffa3996494b75ccf4d1c0e7051a>>
+ * @generated SignedSource<<bb2750cfd86fe4b06e2c06846195483e>>
  * @lightSyntaxTransform
  */
 
@@ -9,6 +9,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 export type OutcomeStatus = "OPEN" | "REMOVED" | "SUSPENDED" | "%future added value";
+export type SuspensionReason = "EVENT_CLOSED" | "EVENT_SUSPENDED" | "FEED_UNAVAILABLE" | "MARKET_SUSPENDED" | "NOT_OFFERED_LIVE" | "NO_PRICE" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type ListViewMarket$data = {
   readonly kind: string;
@@ -19,6 +20,7 @@ export type ListViewMarket$data = {
     readonly key: string;
     readonly price: any;
     readonly status: OutcomeStatus;
+    readonly suspensionReason: SuspensionReason | null | undefined;
   }>;
   readonly " $fragmentType": "ListViewMarket";
 };
@@ -89,6 +91,13 @@ const node: ReaderFragment = {
           "kind": "ScalarField",
           "name": "status",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "suspensionReason",
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -98,6 +107,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "25bb753dd889b8bbd124575fc680348a";
+(node as any).hash = "fd7e6a3fa560697156d62ddb13885e45";
 
 export default node;
