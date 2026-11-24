@@ -15,11 +15,15 @@ import { TeamBadge } from '@/components/team-badge'
 import { useT } from '@/context/providers'
 import { tKeysObj } from '@/i18n/tKey'
 import { getRelativeDayLabel, pairToHues } from '@/lib/utils'
-import type { EventLiveState$key } from '@/relay/__generated__/EventLiveState.graphql'
+import type {
+  EventLiveState$key,
+  TradingStatus,
+} from '@/relay/__generated__/EventLiveState.graphql'
 import type { PrematchSingleHeader$key } from '@/relay/__generated__/PrematchSingleHeader.graphql'
 import type { PrematchSingleView$key } from '@/relay/__generated__/PrematchSingleView.graphql'
 import type { PrematchSingleViewQuery } from '@/relay/__generated__/PrematchSingleViewQuery.graphql'
 import PrematchSingleViewQueryNode from '@/relay/__generated__/PrematchSingleViewQuery.graphql'
+import type { KnownEnum } from '@/types'
 
 export default function PrematchSingleView(props: {
   queryRef: PreloadedQuery<PrematchSingleViewQuery>
@@ -174,7 +178,7 @@ function Competitor(props: {
   )
 }
 
-const TRADING_STATUS_LABEL: Record<string, string> = tKeysObj({
+const TRADING_STATUS_LABEL: Record<KnownEnum<TradingStatus>, string> = tKeysObj({
   OPEN: 'Open',
   SUSPENDED: 'Suspended',
   CLOSED: 'Closed',
@@ -196,7 +200,7 @@ function EventLiveState(props: { event: EventLiveState$key; startTime: string })
 
   if (data.status !== 'LIVE') return <KickoffTime startTime={props.startTime} />
 
-  const tradingStatus = TRADING_STATUS_LABEL[data.tradingStatus]
+  const tradingStatus = TRADING_STATUS_LABEL[data.tradingStatus as KnownEnum<TradingStatus>]
 
   return (
     <div className='flex shrink-0 flex-col items-center gap-1 px-1'>

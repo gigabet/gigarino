@@ -149,8 +149,8 @@ export default function MarketGroups(props: { event: MarketGroups$key }) {
 
 export function MarketGroupsSkeleton() {
   return (
-    <div className='flex flex-col gap-4'>
-      <div className='flex gap-2'>
+    <div className='flex flex-col gap-2'>
+      <div className='flex w-fit max-w-full scrollbar-none gap-2 overflow-x-auto'>
         {Array(5)
           .fill(0)
           .map((_, i) => (
