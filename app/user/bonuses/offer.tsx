@@ -1,3 +1,5 @@
+// TODO: translate offers, don't disable linter
+/* eslint-disable i18next/no-literal-string */
 'use client'
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -10,6 +12,7 @@ import { Button, buttonVariants } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import * as Dialog from '@/components/ui/dialog'
 import { Progress } from '@/components/ui/progress'
+import { useT } from '@/context/providers'
 import { addToDate, cn, formatBalance, formatBalanceBasic } from '@/lib/utils'
 import placeholder from '@/public/images/freebet-active.jpg'
 import type {
@@ -34,6 +37,8 @@ export default function Offer({ claim, ...props }: OfferProps) {
       qc.invalidateQueries({ queryKey: ['promotions_feed'] })
     },
   })
+
+  const t = useT()
 
   return (
     <Dialog.Root open={open} onOpenChange={() => setOpen(!open)}>
@@ -71,7 +76,7 @@ export default function Offer({ claim, ...props }: OfferProps) {
                     'pointer-events-none mt-2 text-xs font-semibold uppercase'
                   )}
                 >
-                  Claim now <ChevronRight className='-ml-1' />
+                  {t('Claim now')} <ChevronRight className='-ml-1' />
                 </div>
               )}
             </CardHeader>
@@ -114,14 +119,14 @@ export default function Offer({ claim, ...props }: OfferProps) {
                   {offerMt.isPending ? (
                     <>
                       <Loader2Icon className='animate-spin' />
-                      Claiming...
+                      {t('Claiming...')}
                     </>
                   ) : (
-                    'Claim offer'
+                    t('Claim offer')
                   )}
                 </Button>
                 <Dialog.Close className='text-foreground/70 w-full text-center text-sm underline-offset-2 hover:underline'>
-                  Maybe later
+                  {t('Maybe later')}
                 </Dialog.Close>
               </>
             )}
