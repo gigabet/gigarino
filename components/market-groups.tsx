@@ -16,8 +16,9 @@ import type {
   MarketGroups$data,
   MarketGroups$key,
 } from '@/relay/__generated__/MarketGroups.graphql'
+import type { KnownEnum } from '@/types'
 
-type TabGroup = MarketGroup | 'ALL'
+type TabGroup = KnownEnum<MarketGroup> | 'ALL'
 
 const GROUP_ORDER: TabGroup[] = [
   'MAIN',
@@ -43,8 +44,6 @@ const GROUP_LABEL: Record<TabGroup, string> = tKeysObj({
   PENALTIES: 'Penalties',
   PLAYERS: 'Players',
   SPECIAL: 'Special',
-  // eslint-disable-next-line relay/no-future-added-value
-  '%future added value': 'Other',
 })
 
 const DEFAULT_OPEN_COUNT = 10
@@ -77,7 +76,7 @@ export default function MarketGroups(props: { event: MarketGroups$key }) {
       })
       return acc
     },
-    {} as Record<TabGroup, MarketGroups$data['markets']>
+    {} as Record<MarketGroup | 'ALL', MarketGroups$data['markets']>
   )
   // "All" holds every market exactly once, even if it belongs to several groups
   byGroup.ALL = sortedMarkets.filter(m => !!m)

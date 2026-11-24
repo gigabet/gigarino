@@ -18,6 +18,12 @@ export type ReplaceKeys<T, R extends Partial<Record<keyof T, unknown>>> = {
   [P in keyof T]: P extends keyof R ? R[P] : T[P]
 }
 
+/**
+ * Strips Relay's `%future added value` member from a generated enum, so a `Record` over it must
+ * list every real value (a new schema value is a compile error) without writing that literal.
+ */
+export type KnownEnum<T> = Exclude<T, `%${string}`>
+
 export interface ApiResponse<T> {
   statusCode: number
   message: string
@@ -106,98 +112,3 @@ export type LossCashbackPromotion = ReplaceKeys<
   AvailablePromotionDto,
   { type: 'LOSS_CASHBACK'; rules: LossCashbackRulesDto }
 >
-
-export type BetItemStatus = 'LOST' | 'PENDING' | 'PUSH' | 'VOID' | 'WON' | 'HALF_WON' | 'HALF_LOST'
-
-export type BetRejectionCode =
-  | 'BOOST_UNAVAILABLE'
-  | 'CASHOUT_UNAVAILABLE'
-  | 'CUTOFF_PASSED'
-  | 'DUPLICATE_EVENT'
-  | 'EVENT_NOT_BETTABLE'
-  | 'INSUFFICIENT_FUNDS'
-  | 'INTERNAL_ERROR'
-  | 'LIABILITY_LIMIT'
-  | 'LIVE_STATE_CHANGED'
-  | 'MULTI_SINGLE_NOT_SUPPORTED'
-  | 'ODDS_LIMIT'
-  | 'ODDS_UNAVAILABLE'
-  | 'OUTCOME_NOT_AVAILABLE'
-  | 'PRICE_CHANGED'
-  | 'PROVIDER_CURRENCY'
-  | 'RESPONSIBLE_GAMING'
-  | 'STAKE_LIMIT'
-  | 'SYSTEM_NOT_SUPPORTED'
-  | 'WALLET_UNAVAILABLE'
-
-export type BetslipItemAvailability =
-  | 'AVAILABLE'
-  | 'CUTOFF_PASSED'
-  | 'DUPLICATE_EVENT'
-  | 'EVENT_NOT_BETTABLE'
-  | 'NOT_FOUND'
-  | 'SUSPENDED'
-
-export type EventStatus = 'ABANDONED' | 'CANCELLED' | 'ENDED' | 'LIVE' | 'POSTPONED' | 'SCHEDULED'
-
-export type LiveEventState = 'ENDED' | 'LIVE' | 'SUSPENDED'
-
-export type MatchPeriod =
-  | 'BREAK'
-  | 'EXTRA_TIME'
-  | 'FIRST_HALF'
-  | 'FIRST_PERIOD'
-  | 'HALF_TIME'
-  | 'PENALTIES'
-  | 'SECOND_HALF'
-  | 'SECOND_PERIOD'
-  | 'THIRD_PERIOD'
-
-export type MarketGroup =
-  | 'CARDS'
-  | 'CORNERS'
-  | 'GOALS'
-  | 'MAIN'
-  | 'PENALTIES'
-  | 'PLAYERS'
-  | 'SPECIAL'
-
-export type MarketPeriod =
-  | 'FIRST_HALF'
-  | 'FIRST_PERIOD'
-  | 'FIRST_SET'
-  | 'FOURTH_PERIOD'
-  | 'FULL_TIME'
-  | 'INCLUDING_OVERTIME'
-  | 'SECOND_HALF'
-  | 'SECOND_PERIOD'
-  | 'SECOND_SET'
-  | 'THIRD_PERIOD'
-  | 'THIRD_SET'
-
-export type MarketStatus = 'CLOSED' | 'OPEN' | 'SUSPENDED'
-
-export type OddsChangePolicy = 'ACCEPT_ANY' | 'ACCEPT_HIGHER' | 'REJECT'
-
-export type OutcomeStatus = 'OPEN' | 'REMOVED' | 'SUSPENDED'
-
-export type PriceChange = {
-  currentPrice: string
-  expectedPrice: string
-  outcomeId: string
-}
-
-export type TicketStatus =
-  | 'ACCEPTED'
-  | 'CASHED_OUT'
-  | 'CASHOUT_PENDING'
-  | 'LOST'
-  | 'PARTIALLY_CASHED_OUT'
-  | 'PENDING_ACCEPTANCE'
-  | 'REJECTED'
-  | 'VOID'
-  | 'WON'
-
-export type TicketType = 'MULTIPLE' | 'SINGLE' | 'SYSTEM'
-
-export type TradingStatus = 'CLOSED' | 'OPEN' | 'SUSPENDED'

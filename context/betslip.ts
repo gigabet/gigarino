@@ -9,6 +9,7 @@ import type {
   OddsChangePolicy,
 } from '@/relay/__generated__/BetslipPlaceBetMutation.graphql'
 import type { BetslipSubscription$variables } from '@/relay/__generated__/BetslipSubscription.graphql'
+import type { KnownEnum } from '@/types'
 
 export type BetslipInput = BetslipSubscription$variables['input']
 
@@ -113,7 +114,7 @@ export function useBetslipPrices() {
   )
 }
 
-const COPY: Record<BetRejectionCode, string> = {
+const COPY: Record<KnownEnum<BetRejectionCode>, string> = {
   BOOST_UNAVAILABLE: tKey('Boost expired.'),
   BOOST_LIMIT: tKey('Over boost limit.'),
   CASHOUT_UNAVAILABLE: tKey('Cash out unavailable.'),
@@ -134,15 +135,13 @@ const COPY: Record<BetRejectionCode, string> = {
   STAKE_LIMIT: tKey('Stake outside limits.'),
   SYSTEM_NOT_SUPPORTED: tKey('System bet not supported.'),
   WALLET_UNAVAILABLE: tKey('Wallet unavailable.'),
-  // eslint-disable-next-line relay/no-future-added-value
-  '%future added value': '',
 }
 
 export function betCodeCopy(
   code: string,
   t: (key: string, params?: Record<string, string | number>) => string
 ): string | null {
-  const key = COPY[code as BetRejectionCode]
+  const key = COPY[code as KnownEnum<BetRejectionCode>]
   return key ? t(key) : t('Outcome unavailable.')
 }
 

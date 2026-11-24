@@ -20,17 +20,24 @@ import { unseenResettlementsAtom } from '@/context/tickets'
 import { tKey } from '@/i18n/tKey'
 import { translateMarketName, translateOutcomeName } from '@/lib/api-names'
 import { cn, formatBalance } from '@/lib/utils'
-import type { TicketCard$data, TicketCard$key } from '@/relay/__generated__/TicketCard.graphql'
+import type {
+  TicketCard$data,
+  TicketCard$key,
+  TicketStatus,
+} from '@/relay/__generated__/TicketCard.graphql'
 import type { TicketCardAcknowledgeMutation } from '@/relay/__generated__/TicketCardAcknowledgeMutation.graphql'
 import type { TicketCardCashoutMutation } from '@/relay/__generated__/TicketCardCashoutMutation.graphql'
 import type { TicketCardCashoutQuoteQuery } from '@/relay/__generated__/TicketCardCashoutQuoteQuery.graphql'
 import TicketCardCashoutQuoteQueryNode from '@/relay/__generated__/TicketCardCashoutQuoteQuery.graphql'
-import type { TicketCardDetails$key } from '@/relay/__generated__/TicketCardDetails.graphql'
-import type { BetItemStatus, TicketStatus } from '@/types'
+import type {
+  BetItemStatus,
+  TicketCardDetails$key,
+} from '@/relay/__generated__/TicketCardDetails.graphql'
+import type { KnownEnum } from '@/types'
 
-const CASHOUT_ELIGIBLE = new Set<TicketStatus>(['ACCEPTED', 'PARTIALLY_CASHED_OUT'])
+const CASHOUT_ELIGIBLE = new Set<KnownEnum<TicketStatus>>(['ACCEPTED', 'PARTIALLY_CASHED_OUT'])
 
-const STATUS_META: Record<TicketStatus, { label: string; className: string }> = {
+const STATUS_META: Record<KnownEnum<TicketStatus>, { label: string; className: string }> = {
   PENDING_ACCEPTANCE: {
     label: tKey('Pending'),
     className: 'bg-yellow-500/10 text-yellow-400',
@@ -57,7 +64,7 @@ const STATUS_META: Record<TicketStatus, { label: string; className: string }> = 
   },
 }
 
-const ITEM_STATUS_META: Record<BetItemStatus, { label: string; className: string }> = {
+const ITEM_STATUS_META: Record<KnownEnum<BetItemStatus>, { label: string; className: string }> = {
   PENDING: { label: '', className: 'bg-white/20' },
   WON: { label: tKey('W'), className: 'bg-primary text-black' },
   HALF_WON: { label: tKey('½W'), className: 'bg-primary/60 text-black' },
@@ -97,7 +104,7 @@ export function betTypeLabel(
 /** Takes the raw status verbatim: it is pure formatting, so it has no fragment. */
 export function TicketStatusPill(props: { status: string }) {
   const t = useT()
-  const meta = STATUS_META[props.status as TicketStatus] ?? {
+  const meta = STATUS_META[props.status as KnownEnum<TicketStatus>] ?? {
     label: props.status,
     className: 'bg-white/10 text-secondary',
   }
@@ -280,7 +287,7 @@ export function TicketCardDetails(props: {
     <div className='space-y-3'>
       <div className='divide-y divide-white/5'>
         {data.items.map(item => {
-          const itemMeta = ITEM_STATUS_META[item.status as BetItemStatus]
+          const itemMeta = ITEM_STATUS_META[item.status as KnownEnum<BetItemStatus>]
           return (
             <div key={item.id} className='flex items-start justify-between gap-3 py-2.5 text-xs'>
               <div className='flex min-w-0 items-start gap-2'>
@@ -397,7 +404,7 @@ export function TicketCardDetails(props: {
         </div>
       )}
 
-      {CASHOUT_ELIGIBLE.has(data.status as TicketStatus) && (
+      {CASHOUT_ELIGIBLE.has(data.status as KnownEnum<TicketStatus>) && (
         <div className='pt-1'>
           <CashoutButton ticketId={data.id} onCashedOut={props.onCashedOutAction} />
         </div>

@@ -65,7 +65,7 @@ import type { BetslipBody$key } from '@/relay/__generated__/BetslipBody.graphql'
 import type { BetslipFooter$key } from '@/relay/__generated__/BetslipFooter.graphql'
 import type { BetslipMobileBar$key } from '@/relay/__generated__/BetslipMobileBar.graphql'
 import type { BetslipPlaceBetMutation } from '@/relay/__generated__/BetslipPlaceBetMutation.graphql'
-import type { BetTypeTabs$key } from '@/relay/__generated__/BetTypeTabs.graphql'
+import type { BetTypeTabs$key, TicketType } from '@/relay/__generated__/BetTypeTabs.graphql'
 import type { BlockersBanner$key } from '@/relay/__generated__/BlockersBanner.graphql'
 import type { InvalidBetsBanner$key } from '@/relay/__generated__/InvalidBetsBanner.graphql'
 import type { PriceChangesBanner$key } from '@/relay/__generated__/PriceChangesBanner.graphql'
@@ -73,7 +73,6 @@ import type { SelectionList$key } from '@/relay/__generated__/SelectionList.grap
 import type { SystemSizeSelect$key } from '@/relay/__generated__/SystemSizeSelect.graphql'
 import type { Tip$key } from '@/relay/__generated__/Tip.graphql'
 import type { usePriceChanges$key } from '@/relay/__generated__/usePriceChanges.graphql'
-import type { TicketType } from '@/types'
 
 type MainTab = 'betslip' | 'tickets'
 type Placed = { id: string; stake: string; potentialPayout: string | null }
