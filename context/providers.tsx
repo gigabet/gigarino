@@ -7,7 +7,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { graphql, requestSubscription, useRelayEnvironment } from 'react-relay'
 import { BarLoader } from 'react-spinners'
 import { Toaster } from '@/components/ui/sonner'
-import { betslipInputAtom } from '@/context/betslip'
+import { betslipInputAtom, useActiveBoost } from '@/context/betslip'
 import type {
   BetslipSubscription,
   BetslipSubscription$data,
@@ -167,6 +167,9 @@ const betslipSubscription = graphql`
 export function BetslipQuoteProvider({ children }: { children: React.ReactNode }) {
   const environment = useRelayEnvironment()
   const betslipInput = useAtomValue(betslipInputAtom)
+  // only an active boost (exactly the boosted selections) is sent, so the server quotes at its
+  // price and reports `boostApplied`; the id is a primitive so the subscription isn't recreated
+  const boostId = useActiveBoost()?.id
   const [quote, setQuote] = useState<Quote>(null)
 
   useEffect(() => {
@@ -177,13 +180,13 @@ export function BetslipQuoteProvider({ children }: { children: React.ReactNode }
 
     const { dispose } = requestSubscription<BetslipSubscription>(environment, {
       subscription: betslipSubscription,
-      variables: { input: betslipInput },
+      variables: { input: boostId ? { ...betslipInput, boostId } : betslipInput },
       onNext: response => setQuote(response?.betslipUpdated ?? null),
       onError: (err: Error) => console.error('[betslip] subscription failed', err),
     })
 
     return dispose
-  }, [environment, betslipInput])
+  }, [environment, betslipInput, boostId])
 
   return <BetslipQuoteContext.Provider value={quote}>{children}</BetslipQuoteContext.Provider>
 }

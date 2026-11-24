@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d8b5232fd49a0e86310b3632dcb57ac7>>
+ * @generated SignedSource<<7aceb2108d378f1ec7ebd123396aad37>>
  * @lightSyntaxTransform
  */
 
@@ -224,6 +224,20 @@ return {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
+            "name": "payoutCapped",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "boostApplied",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
             "name": "placeable",
             "storageKey": null
           },
@@ -240,12 +254,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "5ae86748efbef40b3e2b5e44d2f05162",
+    "cacheID": "a8d10751415c7529f911d22f77e02b27",
     "id": null,
     "metadata": {},
     "name": "BetslipSubscription",
     "operationKind": "subscription",
-    "text": "subscription BetslipSubscription(\n  $input: BetslipQuoteInput!\n) {\n  betslipUpdated(input: $input) {\n    ...Betslip\n    ...BetslipMobileBar\n  }\n}\n\nfragment BetTypeTabs on BetslipQuote {\n  betType\n  items {\n    outcomeId\n    id\n  }\n}\n\nfragment Betslip on BetslipQuote {\n  ...BetslipBody\n  ...BetslipFooter\n}\n\nfragment BetslipBody on BetslipQuote {\n  ...BetTypeTabs\n  ...SystemSizeSelect\n  ...InvalidBetsBanner\n  ...PriceChangesBanner\n  ...SelectionList\n}\n\nfragment BetslipFooter on BetslipQuote {\n  betType\n  effectiveOdds\n  potentialPayout\n  placeable\n  items {\n    outcomeId\n    availability\n    price\n    id\n  }\n  ...BlockersBanner\n  ...usePriceChanges\n}\n\nfragment BetslipMobileBar on BetslipQuote {\n  effectiveOdds\n  items {\n    id\n  }\n}\n\nfragment BlockersBanner on BetslipQuote {\n  blockers\n}\n\nfragment InvalidBetsBanner on BetslipQuote {\n  items {\n    outcomeId\n    availability\n    id\n  }\n}\n\nfragment PriceChangesBanner on BetslipQuote {\n  ...usePriceChanges\n}\n\nfragment SelectionList on BetslipQuote {\n  items {\n    outcomeId\n    ...Tip\n    id\n  }\n}\n\nfragment SystemSizeSelect on BetslipQuote {\n  betType\n}\n\nfragment Tip on BetslipQuoteItem {\n  outcomeId\n  eventName\n  marketName\n  name\n  key\n  price\n  expectedPrice\n  priceChanged\n  availability\n  suspensionReason\n  isLive\n  eventId\n}\n\nfragment usePriceChanges on BetslipQuote {\n  items {\n    outcomeId\n    price\n    expectedPrice\n    priceChanged\n    id\n  }\n}\n"
+    "text": "subscription BetslipSubscription(\n  $input: BetslipQuoteInput!\n) {\n  betslipUpdated(input: $input) {\n    ...Betslip\n    ...BetslipMobileBar\n  }\n}\n\nfragment BetTypeTabs on BetslipQuote {\n  betType\n  items {\n    outcomeId\n    id\n  }\n}\n\nfragment Betslip on BetslipQuote {\n  ...BetslipBody\n  ...BetslipFooter\n}\n\nfragment BetslipBody on BetslipQuote {\n  ...BetTypeTabs\n  ...SystemSizeSelect\n  ...InvalidBetsBanner\n  ...PriceChangesBanner\n  ...SelectionList\n}\n\nfragment BetslipFooter on BetslipQuote {\n  betType\n  effectiveOdds\n  potentialPayout\n  payoutCapped\n  boostApplied\n  placeable\n  items {\n    outcomeId\n    availability\n    price\n    id\n  }\n  ...BlockersBanner\n  ...usePriceChanges\n}\n\nfragment BetslipMobileBar on BetslipQuote {\n  effectiveOdds\n  items {\n    id\n  }\n}\n\nfragment BlockersBanner on BetslipQuote {\n  blockers\n}\n\nfragment InvalidBetsBanner on BetslipQuote {\n  items {\n    outcomeId\n    availability\n    id\n  }\n}\n\nfragment PriceChangesBanner on BetslipQuote {\n  ...usePriceChanges\n}\n\nfragment SelectionList on BetslipQuote {\n  items {\n    outcomeId\n    ...Tip\n    id\n  }\n}\n\nfragment SystemSizeSelect on BetslipQuote {\n  betType\n}\n\nfragment Tip on BetslipQuoteItem {\n  outcomeId\n  eventName\n  marketName\n  name\n  key\n  price\n  expectedPrice\n  priceChanged\n  availability\n  suspensionReason\n  isLive\n  eventId\n}\n\nfragment usePriceChanges on BetslipQuote {\n  items {\n    outcomeId\n    price\n    expectedPrice\n    priceChanged\n    id\n  }\n}\n"
   }
 };
 })();

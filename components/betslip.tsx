@@ -79,7 +79,7 @@ import type { Tip$key } from '@/relay/__generated__/Tip.graphql'
 import type { usePriceChanges$key } from '@/relay/__generated__/usePriceChanges.graphql'
 
 type MainTab = 'betslip' | 'tickets'
-type Placed = { id: string; stake: string; potentialPayout: string | null }
+type Placed = NonNullable<BetslipPlaceBetMutation['response']['placeBet']['ticket']>
 
 /* -------------------------------------------------------------------------- */
 /*  Root                                                                      */
@@ -635,6 +635,8 @@ function BetslipFooter(props: { quoteRef: BetslipFooter$key; onPlaced: (ticket: 
         betType
         effectiveOdds
         potentialPayout
+        payoutCapped
+        boostApplied
         placeable
         items {
           outcomeId
@@ -669,6 +671,7 @@ function BetslipFooter(props: { quoteRef: BetslipFooter$key; onPlaced: (ticket: 
           status
           stake
           potentialPayout
+          payoutCapped
         }
         rejection {
           code
@@ -695,8 +698,9 @@ function BetslipFooter(props: { quoteRef: BetslipFooter$key; onPlaced: (ticket: 
         .reduce((sum, i) => sum + legStake(i.outcomeId), 0)
     : Number(input.stake) || 0
   const overBoostMax = !!boost?.maxStake && stake > Number(boost.maxStake)
-  const odds = boost ? Number(boost.boostedPrice) : Number(data.effectiveOdds)
-  const payout = boost ? stake * Number(boost.boostedPrice) : Number(data.potentialPayout) || 0
+  // the quote is already at the boosted price when a boost applies, and its payout respects the cap
+  const odds = Number(data.effectiveOdds)
+  const payout = Number(data.potentialPayout) || 0
 
   // --- placing the bet ---
 
@@ -752,11 +756,7 @@ function BetslipFooter(props: { quoteRef: BetslipFooter$key; onPlaced: (ticket: 
         if (ticket) {
           setBoost(null)
           resetOddsPrompt() // accepted odds changes only apply to the slip just submitted
-          props.onPlaced({
-            id: ticket.id,
-            stake: ticket.stake,
-            potentialPayout: ticket.potentialPayout,
-          })
+          props.onPlaced(ticket)
         }
       },
       onError: error => {
@@ -773,11 +773,13 @@ function BetslipFooter(props: { quoteRef: BetslipFooter$key; onPlaced: (ticket: 
       )}
       <BetslipSummary
         boost={boost}
+        boostApplied={data.boostApplied}
         isSingle={isSingle}
         stake={stake}
         overBoostMax={overBoostMax}
         odds={odds}
         payout={payout}
+        payoutCapped={data.payoutCapped}
       >
         <PlaceBetButton disabled={!canPlace} isPlacing={isPlacing} stake={stake} onClick={place} />
       </BetslipSummary>
@@ -788,11 +790,13 @@ function BetslipFooter(props: { quoteRef: BetslipFooter$key; onPlaced: (ticket: 
 /** Boost banner, stake input and the stake/odds + payout tile. */
 function BetslipSummary(props: {
   boost: ActiveBoost | null
+  boostApplied: boolean // the server quoted at the boost's price
   isSingle: boolean
   stake: number // total stake: per-leg stakes added up for singles
   overBoostMax: boolean
   odds: number
   payout: number
+  payoutCapped: boolean // payout was cut to the maximum winnings
   children: React.ReactNode // the place button
 }) {
   const [input, setInput] = useAtom(betslipInputAtom)
@@ -804,7 +808,7 @@ function BetslipSummary(props: {
 
   return (
     <div className='space-y-2.5 px-5 py-3'>
-      {boost && (
+      {boost && props.boostApplied && (
         <div className='border-primary/40 bg-primary/10 flex items-center justify-between rounded-lg border px-3 py-1 text-xs'>
           <span className='text-primary flex items-center gap-1.5 font-bold uppercase'>
             <ChevronsUpIcon className='size-3.5' />
@@ -814,7 +818,7 @@ function BetslipSummary(props: {
             <span className='text-secondary mr-1 line-through'>
               {Number(boost.combinedPrice).toFixed(2)}
             </span>
-            {Number(boost.boostedPrice).toFixed(2)}
+            {props.odds.toFixed(2)}
           </span>
         </div>
       )}
@@ -854,8 +858,21 @@ function BetslipSummary(props: {
         </div>
       </div>
 
+      {props.payoutCapped && <PayoutCappedNote />}
+
       {props.children}
     </div>
+  )
+}
+
+/** Shown when the payout was cut to the maximum winnings; the bet is still placeable. */
+function PayoutCappedNote() {
+  const t = useT()
+  return (
+    <p className='flex items-center gap-1.5 text-xs text-amber-400'>
+      <AlertTriangleIcon className='size-3.5 shrink-0' />
+      {t('Payout limited to the maximum winnings.')}
+    </p>
   )
 }
 
@@ -1193,6 +1210,7 @@ function PlacedState(props: { ticket: Placed; onNewBet: () => void; onViewTicket
           </span>
         </div>
       )}
+      {props.ticket.payoutCapped && <PayoutCappedNote />}
       <div className='mt-2 flex gap-2'>
         <Button
           variant='outline'

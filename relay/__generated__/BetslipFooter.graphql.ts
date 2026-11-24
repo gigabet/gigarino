@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4289fd2790a4246fc7c856c7f6742018>>
+ * @generated SignedSource<<2a1ce7b82e73c19f04a84f73747a922d>>
  * @lightSyntaxTransform
  */
 
@@ -13,12 +13,14 @@ export type TicketType = "MULTIPLE" | "SINGLE" | "SYSTEM" | "%future added value
 import { FragmentRefs } from "relay-runtime";
 export type BetslipFooter$data = {
   readonly betType: TicketType;
+  readonly boostApplied: boolean;
   readonly effectiveOdds: any;
   readonly items: ReadonlyArray<{
     readonly availability: BetslipItemAvailability;
     readonly outcomeId: string;
     readonly price: any | null | undefined;
   }>;
+  readonly payoutCapped: boolean;
   readonly placeable: boolean;
   readonly potentialPayout: any;
   readonly " $fragmentSpreads": FragmentRefs<"BlockersBanner" | "usePriceChanges">;
@@ -54,6 +56,20 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "ScalarField",
       "name": "potentialPayout",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "payoutCapped",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "boostApplied",
       "storageKey": null
     },
     {
@@ -110,6 +126,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "6b826b045a26b77d8fa5522c03d2da51";
+(node as any).hash = "f1d3bb9c1e1e352f58fe9fb1c762f00b";
 
 export default node;

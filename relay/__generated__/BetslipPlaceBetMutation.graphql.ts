@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d41cb2aa02e96bd9d080242394efdd93>>
+ * @generated SignedSource<<7caced50530fdd32f0c8b5b770ff6e16>>
  * @lightSyntaxTransform
  */
 
@@ -43,6 +43,7 @@ export type BetslipPlaceBetMutation$data = {
     } | null | undefined;
     readonly ticket: {
       readonly id: string;
+      readonly payoutCapped: boolean;
       readonly potentialPayout: any;
       readonly stake: any;
       readonly status: TicketStatus;
@@ -111,6 +112,13 @@ v1 = [
             "args": null,
             "kind": "ScalarField",
             "name": "potentialPayout",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "payoutCapped",
             "storageKey": null
           }
         ],
@@ -195,16 +203,16 @@ return {
     "selections": (v1/*:: as any*/)
   },
   "params": {
-    "cacheID": "bdc66bf642a4546ab020f04718178852",
+    "cacheID": "42e7d51b3416cf71585e920774d0ff10",
     "id": null,
     "metadata": {},
     "name": "BetslipPlaceBetMutation",
     "operationKind": "mutation",
-    "text": "mutation BetslipPlaceBetMutation(\n  $input: PlaceBetInput!\n) {\n  placeBet(input: $input) {\n    ticket {\n      id\n      status\n      stake\n      potentialPayout\n    }\n    rejection {\n      code\n      message\n      priceChanges {\n        outcomeId\n        expectedPrice\n        currentPrice\n      }\n    }\n  }\n}\n"
+    "text": "mutation BetslipPlaceBetMutation(\n  $input: PlaceBetInput!\n) {\n  placeBet(input: $input) {\n    ticket {\n      id\n      status\n      stake\n      potentialPayout\n      payoutCapped\n    }\n    rejection {\n      code\n      message\n      priceChanges {\n        outcomeId\n        expectedPrice\n        currentPrice\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "1baa57d1a40983c894cec766f9f99a6b";
+(node as any).hash = "7ce152350840e4e6881bb2557a5d4432";
 
 export default node;

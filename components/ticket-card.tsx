@@ -354,9 +354,9 @@ export function TicketCardDetails(props: {
                   </p>
                   <p className='text-secondary/80 flex flex-col gap-1 text-[0.7rem]'>
                     <span>{format(new Date(item.eventStartTime), 'dd MMM, HH:mm')}</span>
-                    <div>
+                    <span>
                       {item.inPlay && (
-                        <span className='rounded bg-red-500/10 px-1 text-[0.6rem] font-semibold text-red-400 uppercase'>
+                        <span className='rounded bg-red-500/10 px-1 text-[0.6rem] font-semibold tracking-wide text-red-400 uppercase'>
                           {t('Live')}
                         </span>
                       )}{' '}
@@ -367,6 +367,7 @@ export function TicketCardDetails(props: {
                       )}
                       {item.result && (
                         <span>
+                          {' '}
                           | {t('Final score')}{' '}
                           <span className='font-mono text-white/70'>
                             {item.result.home}–{item.result.away}
@@ -375,7 +376,7 @@ export function TicketCardDetails(props: {
                           </span>
                         </span>
                       )}
-                    </div>
+                    </span>
                   </p>
                 </div>
               </div>
