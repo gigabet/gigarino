@@ -49,9 +49,11 @@ export default function EventSidebar(props: {
 }
 
 function NoOtherEvents() {
+  const t = useT()
+
   return (
     <div className='bg-dark-200 hidden rounded-2xl border border-white/5 p-4 text-center text-xs text-white/40 xl:block'>
-      No other events in this tournament right now.
+      {t('No other events in this tournament right now.')}
     </div>
   )
 }
@@ -158,12 +160,16 @@ function TournamentEvents(props: {
   activeEventId: string
   onNavigate?: () => void
 }) {
+  const t = useT()
+
   return (
     <>
       <div className='flex items-center gap-2 px-1'>
         <SportIconBadge sport={props.sportKey} size='sm' />
         <div className='min-w-0'>
-          <p className='text-secondary text-[0.65rem] tracking-wider uppercase'>Tournament</p>
+          <p className='text-secondary text-[0.65rem] tracking-wider uppercase'>
+            {t('Tournament')}
+          </p>
           <p className='truncate text-sm font-semibold text-white'>{props.name}</p>
         </div>
       </div>
@@ -205,6 +211,8 @@ function EventStripCard(props: {
     props.event
   )
 
+  const t = useT()
+
   const matchWinner = event.markets.find(m => m.kind === 'match_winner') ?? event.markets[0] ?? null
 
   return (
@@ -218,7 +226,7 @@ function EventStripCard(props: {
     >
       {props.active && (
         <span className='bg-primary text-primary-foreground absolute -top-2 left-3 rounded-full px-2 py-0.5 text-[0.6rem] font-bold tracking-wide uppercase'>
-          Viewing
+          {t('Viewing')}
         </span>
       )}
 
@@ -231,7 +239,7 @@ function EventStripCard(props: {
       >
         <div className='flex items-center justify-between gap-2'>
           <span className='text-secondary text-[0.65rem]'>
-            {event.status === 'LIVE' ? 'Live' : getRelativeDayLabel(event.startTime)}
+            {event.status === 'LIVE' ? t('Live') : getRelativeDayLabel(event.startTime)}
           </span>
           {event.status === 'LIVE' && (
             <span className='relative inline-flex size-1.5'>
@@ -243,7 +251,7 @@ function EventStripCard(props: {
         <p className={cn('truncate font-semibold', props.active ? 'text-primary' : 'text-white')}>
           {event.homeCompetitor}
         </p>
-        <p className='text-secondary text-[0.65rem] uppercase'>vs</p>
+        <p className='text-secondary text-[0.65rem] uppercase'>{t('vs')}</p>
         <p className={cn('truncate font-semibold', props.active ? 'text-primary' : 'text-white')}>
           {event.awayCompetitor}
         </p>
@@ -323,21 +331,36 @@ function EventSidebarOdd(props: { outcome: EventSidebarOdd$key }) {
   )
 }
 
+// mirrors <EventSidebarTournament>: the xl aside, and the opener bar shown below xl
 export function EventSidebarSkeleton() {
   return (
-    <div className='sticky top-26.25 hidden w-full flex-col gap-3 xl:flex'>
-      <div className='flex items-center gap-2 px-1'>
-        <Skeleton className='size-7 rounded-full' />
-        <Skeleton className='h-4 w-32' />
+    <>
+      <div className='sticky top-26.25 hidden w-full flex-col gap-3 xl:flex'>
+        <div className='flex items-center gap-2 px-1'>
+          <Skeleton className='size-7 rounded-full' />
+          <Skeleton className='h-4 w-32' />
+        </div>
+        <div className='flex flex-col gap-2'>
+          {Array(6)
+            .fill(0)
+            .map((_, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: identical
+              <Skeleton key={i} className='h-25 w-full rounded-xl' />
+            ))}
+        </div>
       </div>
-      <div className='flex flex-col gap-2'>
-        {Array(6)
-          .fill(0)
-          .map((_, i) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: identical
-            <Skeleton key={i} className='h-25 w-full rounded-xl' />
-          ))}
+
+      <div className='-mb-4 xl:hidden'>
+        <div className='bg-dark-200 flex w-full items-center gap-3 rounded-2xl border border-white/5 px-4 py-3'>
+          <Skeleton className='size-7 shrink-0 rounded-full' />
+          <div className='flex min-w-0 flex-1 flex-col'>
+            <Skeleton className='h-4 w-44 max-w-full' />
+            <Skeleton className='mt-0.5 h-4.5 w-32 max-w-full' />
+          </div>
+          <Skeleton className='h-5 w-7 shrink-0 rounded-full' />
+          <Skeleton className='size-4 shrink-0' />
+        </div>
       </div>
-    </div>
+    </>
   )
 }
