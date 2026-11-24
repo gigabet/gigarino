@@ -1630,5 +1630,9 @@
   "Your betslip is empty": {
     "de": "Ihr Wettschein ist leer",
     "tr": "Kuponunuz boş"
+  },
+  "Rankings": {
+    "de": "",
+    "tr": ""
   }
 }

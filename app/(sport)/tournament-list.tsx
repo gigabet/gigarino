@@ -186,7 +186,7 @@ function TournamentListContent(props: {
           onReset={props.onReset}
         >
           <Suspense fallback={<TournamentSkeleton />}>
-            <Tournament queryRef={tournament} onShowMore={props.onShowMore} />
+            <Tournament queryRef={tournament} onShowMoreAction={props.onShowMore} />
           </Suspense>
         </ErrorBoundary>
       ))}

@@ -69,11 +69,12 @@ export function LeagueTableButton(props: { tournament: LeagueTableButton$key }) 
       <Dialog.Trigger asChild>
         <button
           type='button'
-          title={t('League table')}
-          aria-label={t('League table')}
-          className='text-foreground hover:text-primary shrink-0 rounded p-1 transition-colors'
+          title={t('Rankings')}
+          aria-label={t('Rankings')}
+          className='border-control-border bg-control hover:border-primary/40 hover:bg-primary/10 hover:text-primary focus-visible:ring-primary/50 inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 text-[0.65rem] font-medium text-white uppercase transition-colors outline-none focus-visible:ring-2'
         >
-          <ListOrderedIcon className='size-4' />
+          <ListOrderedIcon className='text-primary size-3.5' />
+          <span className='hidden leading-none sm:inline'>{t('Rankings')}</span>
         </button>
       </Dialog.Trigger>
       <Dialog.Content
@@ -185,7 +186,7 @@ function LeagueTableGroup(props: {
       <Table className='text-xs'>
         <TableHeader>
           <TableRow className='border-white/10 hover:bg-transparent'>
-            <TableHead className='text-secondary w-8 px-1 text-center font-normal'>#</TableHead>
+            <TableHead className='text-secondary w-10 px-1 text-center font-normal'>#</TableHead>
             <TableHead className='text-secondary px-1 font-normal'>{t('Team')}</TableHead>
             <TableHead className='text-secondary px-1 text-center font-normal' title={t('Played')}>
               {t('P')}
@@ -210,16 +211,17 @@ function LeagueTableGroup(props: {
         <TableBody>
           {data.rows.map(row => (
             <TableRow key={row.teamName} className='border-white/5'>
-              <TableCell className='px-1 py-1.5 text-center font-mono'>
-                <span className='inline-flex items-center gap-1'>
+              <TableCell className='relative px-1 py-1.5 text-center font-mono'>
+                {/* the bar is out of flow so the number stays centred under the "#" header */}
+                {row.zone && (
                   <span
                     className={cn(
-                      'h-4 w-1 rounded-full',
-                      row.zone ? zoneColor(row.zone) : 'bg-transparent'
+                      'absolute top-1/2 left-0 h-4 w-1 -translate-y-1/2 rounded-full',
+                      zoneColor(row.zone)
                     )}
                   />
-                  {row.position}
-                </span>
+                )}
+                {row.position}
               </TableCell>
               <TableCell className='max-w-40 truncate px-1 py-1.5 font-medium text-white'>
                 {row.teamName}

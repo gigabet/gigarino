@@ -22,7 +22,7 @@ export const MAX_EVENTS = 100
 export default function Tournament(props: {
   queryRef: Tournament$key
   /** Shows a "Show more" button under the events while the tournament has more. */
-  onShowMore?: () => void
+  onShowMoreAction?: () => void
 }) {
   const [data, refetch] = useRefetchableFragment(
     graphql`
@@ -82,7 +82,7 @@ export default function Tournament(props: {
             type='button'
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className='hover:bg-primary/10 hover:border-primary/30 hover:text-primary group inline-flex items-center gap-2 rounded-full border border-control-border bg-control px-4 py-2 text-xs font-medium text-white uppercase transition-all disabled:opacity-60'
+            className='hover:bg-primary/10 hover:border-primary/30 hover:text-primary group border-control-border bg-control inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-medium text-white uppercase transition-all disabled:opacity-60'
           >
             <RotateCwIcon className={isRefreshing ? 'size-3.5 animate-spin' : 'size-3.5'} />
             {t('Refresh')}
@@ -116,7 +116,7 @@ export default function Tournament(props: {
         <div className='hidden sm:block sm:w-0 lg:w-34' />
       </div>
       <Suspense fallback={<EventListSkeleton />}>
-        <EventList tournament={data} onShowMore={props.onShowMore} />
+        <EventList tournament={data} onShowMore={props.onShowMoreAction} />
       </Suspense>
     </section>
   )
@@ -155,7 +155,7 @@ function EventList(props: { tournament: TournamentEventList$key; onShowMore?: ()
         <button
           type='button'
           onClick={props.onShowMore}
-          className='hover:bg-primary/10 hover:border-primary/30 hover:text-primary self-center rounded-full border border-control-border bg-control px-4 py-2 text-xs font-medium text-white uppercase transition-all'
+          className='hover:bg-primary/10 hover:border-primary/30 hover:text-primary border-control-border bg-control self-center rounded-full border px-4 py-2 text-xs font-medium text-white uppercase transition-all'
         >
           {t('Show more')}
         </button>
