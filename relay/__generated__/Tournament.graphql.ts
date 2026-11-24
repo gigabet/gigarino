@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cb82c8c1e0486b6407ebf8672a99d882>>
+ * @generated SignedSource<<7b231d788c55a49b804ad8ade0421dee>>
  * @lightSyntaxTransform
  */
 
@@ -19,7 +19,7 @@ export type Tournament$data = {
   readonly sport: {
     readonly key: string;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"LeagueTableButton" | "TournamentEventList">;
+  readonly " $fragmentSpreads": FragmentRefs<"TournamentEventList">;
   readonly " $fragmentType": "Tournament";
 } | null | undefined;
 export type Tournament$key = {
@@ -114,11 +114,6 @@ return {
     },
     (v0/*:: as any*/),
     {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "LeagueTableButton"
-    },
-    {
       "kind": "Defer",
       "selections": [
         {
@@ -134,6 +129,6 @@ return {
 };
 })();
 
-(node as any).hash = "e194a0ed94a7b2873a7eaafa9d4790b3";
+(node as any).hash = "c659e540fc25958501750928030cb317";
 
 export default node;

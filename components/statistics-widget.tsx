@@ -15,6 +15,14 @@ import {
 import { SportIcon } from '@/components/sport-icon'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Skeleton } from '@/components/ui/skeleton'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import * as Tabs from '@/components/ui/tabs'
 import { useScrollFade } from '@/context/hooks'
 import { useT } from '@/context/providers'
@@ -28,6 +36,8 @@ import type {
 } from '@/relay/__generated__/StatisticsWidgetIncident.graphql'
 import type { StatisticsWidgetPastMatch$key } from '@/relay/__generated__/StatisticsWidgetPastMatch.graphql'
 import StatisticsWidgetRefetchNode from '@/relay/__generated__/StatisticsWidgetRefetch.graphql'
+import type { StatisticsWidgetTable$key } from '@/relay/__generated__/StatisticsWidgetTable.graphql'
+import type { StatisticsWidgetTableGroup$key } from '@/relay/__generated__/StatisticsWidgetTableGroup.graphql'
 import type { StatisticsWidgetTimeline$key } from '@/relay/__generated__/StatisticsWidgetTimeline.graphql'
 
 const POLL_MS = 30_000
@@ -74,6 +84,15 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key; b
           id
         }
         ...StatisticsWidgetTimeline
+        tournament {
+          # only to know whether there is a table at all (cups and friendlies have none)
+          standings {
+            groups {
+              __typename
+            }
+          }
+          ...StatisticsWidgetTable
+        }
         insights {
           homePosition
           awayPosition
@@ -133,13 +152,15 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key; b
   const hasForm = insights.homeRecent.length > 0 || insights.awayRecent.length > 0
   const hasH2H = insights.headToHead.length > 0
   const hasTimeline = data.timeline.length > 0
+  const hasTable = (data.tournament.standings?.groups.length ?? 0) > 0
 
   const tabs = [
     hasTimeline && 'timeline',
     stats.length > 0 && 'stats',
     hasForm && 'form',
     hasH2H && 'h2h',
-  ].filter(Boolean) as ('timeline' | 'stats' | 'form' | 'h2h')[]
+    hasTable && 'table',
+  ].filter(Boolean) as ('timeline' | 'stats' | 'form' | 'h2h' | 'table')[]
 
   // The API only fills `timeline` for football/esoccer, so "has a timeline" doubles as the
   // sport check. Only live games open on it; otherwise the first non-timeline tab stays default.
@@ -161,6 +182,7 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key; b
     stats: t('Stats'),
     form: t('Form'),
     h2h: t('Head to head'),
+    table: t('League table'),
   }
 
   // outcomes are relative to the event's home team
@@ -242,6 +264,14 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key; b
               ))}
             </Panel>
           </Tabs.Content>
+
+          <Tabs.Content value='table'>
+            <TableTab
+              tournament={data.tournament}
+              home={data.homeCompetitor}
+              away={data.awayCompetitor}
+            />
+          </Tabs.Content>
         </Tabs.Root>
       )}
     </section>
@@ -301,6 +331,7 @@ const TEAM = {
     bar: 'bg-primary',
     barDim: 'bg-primary/30',
     pill: 'bg-primary/10 text-primary',
+    tint: 'bg-primary/10',
   },
   away: {
     dot: 'bg-purple-accent',
@@ -308,6 +339,7 @@ const TEAM = {
     bar: 'bg-purple-accent',
     barDim: 'bg-purple-accent/30',
     pill: 'bg-purple-accent/15 text-purple-accent',
+    tint: 'bg-purple-accent/15',
   },
   draw: {
     dot: 'bg-white/40',
@@ -315,6 +347,7 @@ const TEAM = {
     bar: 'bg-white/30',
     barDim: 'bg-white/15',
     pill: 'bg-white/10 text-white/70',
+    tint: 'bg-white/10',
   },
 } as const
 
@@ -1016,6 +1049,201 @@ function H2HRow(props: { match: StatisticsWidgetPastMatch$key }) {
         homeScore={m.homeScore}
         awayScore={m.awayScore}
       />
+    </div>
+  )
+}
+
+/* --------------------------------- Table ---------------------------------- */
+
+// Zones are free text ("Champions League", "Relegation"), so each distinct one in a table gets the
+// next colour in order of first appearance, and the legend underneath says which is which.
+const ZONE_COLORS = [
+  'bg-emerald-400',
+  'bg-amber-400',
+  'bg-red-400',
+  'bg-fuchsia-400',
+  'bg-blue-400',
+]
+
+/** Which of the event's teams a table row is, if either. */
+const rowSide = (teamName: string, home: string, away: string): Side | null =>
+  teamName === home ? 'home' : teamName === away ? 'away' : null
+
+/** The competition's league table, with the event's two teams marked in their team colours. */
+function TableTab(props: { tournament: StatisticsWidgetTable$key; home: string; away: string }) {
+  const data = useFragment(
+    graphql`
+      fragment StatisticsWidgetTable on Tournament {
+        standings {
+          season
+          currentRound
+          maxRounds
+          groups {
+            ...StatisticsWidgetTableGroup
+          }
+        }
+      }
+    `,
+    props.tournament
+  )
+  const t = useT()
+  const standings = data.standings
+
+  if (!standings || standings.groups.length === 0) return null
+
+  const { season, currentRound, maxRounds } = standings
+
+  return (
+    <div className='flex flex-col gap-5'>
+      {(season || currentRound != null) && (
+        <p className='text-secondary text-xs'>
+          {season && t('Season {season}', { season })}
+          {season && currentRound != null && ' · '}
+          {currentRound != null &&
+            (maxRounds != null
+              ? t('Round {current} of {max}', { current: currentRound, max: maxRounds })
+              : t('Round {current}', { current: currentRound }))}
+        </p>
+      )}
+      {standings.groups.map((group, i) => (
+        <TableGroup
+          // biome-ignore lint/suspicious/noArrayIndexKey: groups have no id and keep their order
+          key={i}
+          group={group}
+          titled={standings.groups.length > 1}
+          home={props.home}
+          away={props.away}
+        />
+      ))}
+    </div>
+  )
+}
+
+function TableGroup(props: {
+  group: StatisticsWidgetTableGroup$key
+  /** Cups have several groups, which need telling apart; a league's single table does not. */
+  titled: boolean
+  home: string
+  away: string
+}) {
+  const data = useFragment(
+    graphql`
+      fragment StatisticsWidgetTableGroup on StandingGroup {
+        name
+        rows {
+          position
+          teamName
+          played
+          won
+          drawn
+          lost
+          goalsFor
+          goalsAgainst
+          points
+          zone
+        }
+      }
+    `,
+    props.group
+  )
+  const t = useT()
+
+  const zones = [...new Set(data.rows.flatMap(r => (r.zone ? [r.zone] : [])))]
+  const zoneColor = (zone: string) => ZONE_COLORS[zones.indexOf(zone) % ZONE_COLORS.length]
+
+  // W/D/L are dropped on phones: the team name needs the room more
+  const head = 'text-secondary px-1 text-center font-normal'
+  const cell = 'px-1 py-1.5 text-center font-mono'
+
+  return (
+    <div className='flex flex-col gap-2'>
+      {props.titled && data.name && (
+        <h3 className='text-sm font-semibold text-white'>
+          {/* eslint-disable-next-line local-i18n/no-untranslated-api-string -- a competition's own group label */}
+          {data.name}
+        </h3>
+      )}
+      <Table className='text-xs'>
+        <TableHeader>
+          <TableRow className='border-white/10 hover:bg-transparent'>
+            <TableHead className={cn(head, 'w-8 sm:w-10')}>#</TableHead>
+            <TableHead className='text-secondary px-1 font-normal'>{t('Team')}</TableHead>
+            <TableHead className={head} title={t('Played')}>
+              {t('P')}
+            </TableHead>
+            <TableHead className={cn(head, 'max-sm:hidden')} title={t('Won')}>
+              {t('W')}
+            </TableHead>
+            <TableHead className={cn(head, 'max-sm:hidden')} title={t('Drawn')}>
+              {t('D')}
+            </TableHead>
+            <TableHead className={cn(head, 'max-sm:hidden')} title={t('Lost')}>
+              {t('L')}
+            </TableHead>
+            <TableHead className={head} title={t('Goals')}>
+              {t('Goals')}
+            </TableHead>
+            <TableHead className={head} title={t('Points')}>
+              {t('Pts')}
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {data.rows.map(row => {
+            const side = rowSide(row.teamName, props.home, props.away)
+
+            return (
+              <TableRow
+                key={row.teamName}
+                className={cn('border-white/5', side && TEAM[side].tint)}
+              >
+                <TableCell className={cn(cell, 'relative')}>
+                  {/* the bar is out of flow so the number stays centred under the "#" header */}
+                  {row.zone && (
+                    <span
+                      className={cn(
+                        'absolute top-1/2 left-0 h-4 w-1 -translate-y-1/2 rounded-full',
+                        zoneColor(row.zone)
+                      )}
+                    />
+                  )}
+                  {row.position}
+                </TableCell>
+                <TableCell
+                  className={cn(
+                    'max-w-40 truncate px-1 py-1.5 font-medium text-white',
+                    side && TEAM[side].text
+                  )}
+                >
+                  {side && (
+                    <span className={cn('mr-2 inline-block size-2 rounded-full', TEAM[side].dot)} />
+                  )}
+                  {row.teamName}
+                </TableCell>
+                <TableCell className={cell}>{row.played}</TableCell>
+                <TableCell className={cn(cell, 'max-sm:hidden')}>{row.won}</TableCell>
+                <TableCell className={cn(cell, 'max-sm:hidden')}>{row.drawn}</TableCell>
+                <TableCell className={cn(cell, 'max-sm:hidden')}>{row.lost}</TableCell>
+                <TableCell className={cn(cell, 'whitespace-nowrap')}>
+                  {row.goalsFor}:{row.goalsAgainst}
+                </TableCell>
+                <TableCell className={cn(cell, 'font-bold text-white')}>{row.points}</TableCell>
+              </TableRow>
+            )
+          })}
+        </TableBody>
+      </Table>
+
+      {zones.length > 0 && (
+        <ul className='text-secondary flex flex-wrap gap-x-4 gap-y-1 text-[0.65rem]'>
+          {zones.map(zone => (
+            <li key={zone} className='flex items-center gap-1.5'>
+              <span className={cn('size-2 rounded-full', zoneColor(zone))} />
+              {zone}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   )
 }

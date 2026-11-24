@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4213eb1452762609edb5ba9b541629f9>>
+ * @generated SignedSource<<82e6cde7cd8d2c2fba5bb69671efed0e>>
  * @lightSyntaxTransform
  */
 
@@ -41,66 +41,73 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "__typename",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "outcome",
+  "name": "id",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "homeScore",
+  "name": "outcome",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "awayScore",
+  "name": "homeScore",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "homeName",
+  "name": "awayScore",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "awayName",
+  "name": "homeName",
   "storageKey": null
 },
 v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "competition",
+  "name": "awayName",
   "storageKey": null
 },
 v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "competition",
+  "storageKey": null
+},
+v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "startTime",
   "storageKey": null
 },
-v10 = [
-  (v6/*:: as any*/),
+v11 = [
   (v7/*:: as any*/),
-  (v4/*:: as any*/),
-  (v5/*:: as any*/),
   (v8/*:: as any*/),
+  (v5/*:: as any*/),
+  (v6/*:: as any*/),
   (v9/*:: as any*/),
-  (v3/*:: as any*/)
+  (v10/*:: as any*/),
+  (v4/*:: as any*/)
 ];
 return {
   "fragment": {
@@ -143,14 +150,8 @@ return {
         "name": "node",
         "plural": false,
         "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "__typename",
-            "storageKey": null
-          },
           (v2/*:: as any*/),
+          (v3/*:: as any*/),
           {
             "kind": "InlineFragment",
             "selections": [
@@ -195,7 +196,7 @@ return {
                 "name": "timeline",
                 "plural": true,
                 "selections": [
-                  (v2/*:: as any*/),
+                  (v3/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -245,7 +246,7 @@ return {
                     "name": "penalty",
                     "storageKey": null
                   },
-                  (v3/*:: as any*/),
+                  (v4/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -253,10 +254,154 @@ return {
                     "name": "cancelled",
                     "storageKey": null
                   },
-                  (v4/*:: as any*/),
-                  (v5/*:: as any*/)
+                  (v5/*:: as any*/),
+                  (v6/*:: as any*/)
                 ],
                 "storageKey": "timeline(types:[\"GOAL\",\"RED_CARD\",\"PENALTY\",\"CORNER\",\"YELLOW_CARD\"])"
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Tournament",
+                "kind": "LinkedField",
+                "name": "tournament",
+                "plural": false,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Standings",
+                    "kind": "LinkedField",
+                    "name": "standings",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "StandingGroup",
+                        "kind": "LinkedField",
+                        "name": "groups",
+                        "plural": true,
+                        "selections": [
+                          (v2/*:: as any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "name",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "StandingRow",
+                            "kind": "LinkedField",
+                            "name": "rows",
+                            "plural": true,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "position",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "teamName",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "played",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "won",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "drawn",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "lost",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "goalsFor",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "goalsAgainst",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "points",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "zone",
+                                "storageKey": null
+                              }
+                            ],
+                            "storageKey": null
+                          }
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "season",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "currentRound",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "maxRounds",
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  },
+                  (v3/*:: as any*/)
+                ],
+                "storageKey": null
               },
               {
                 "alias": null,
@@ -340,7 +485,7 @@ return {
                     "kind": "LinkedField",
                     "name": "homeRecent",
                     "plural": true,
-                    "selections": (v10/*:: as any*/),
+                    "selections": (v11/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -350,7 +495,7 @@ return {
                     "kind": "LinkedField",
                     "name": "awayRecent",
                     "plural": true,
-                    "selections": (v10/*:: as any*/),
+                    "selections": (v11/*:: as any*/),
                     "storageKey": null
                   },
                   {
@@ -361,13 +506,13 @@ return {
                     "name": "headToHead",
                     "plural": true,
                     "selections": [
-                      (v3/*:: as any*/),
-                      (v6/*:: as any*/),
-                      (v7/*:: as any*/),
                       (v4/*:: as any*/),
-                      (v5/*:: as any*/),
+                      (v7/*:: as any*/),
                       (v8/*:: as any*/),
-                      (v9/*:: as any*/)
+                      (v5/*:: as any*/),
+                      (v6/*:: as any*/),
+                      (v9/*:: as any*/),
+                      (v10/*:: as any*/)
                     ],
                     "storageKey": null
                   }
@@ -384,16 +529,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "390d4a2bf5fb2537a33824ea846eae8c",
+    "cacheID": "d3beea184d8e9e8fdaf9b08e40973474",
     "id": null,
     "metadata": {},
     "name": "StatisticsWidgetRefetch",
     "operationKind": "query",
-    "text": "query StatisticsWidgetRefetch(\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...StatisticsWidget\n    id\n  }\n}\n\nfragment StatisticsWidget on Event {\n  id\n  status\n  homeCompetitor\n  awayCompetitor\n  timeline(types: [GOAL, RED_CARD, PENALTY, CORNER, YELLOW_CARD]) {\n    id\n  }\n  ...StatisticsWidgetTimeline\n  insights {\n    homePosition\n    awayPosition\n    venue\n    referee\n    round\n    stats {\n      key\n      home\n      away\n    }\n    homeRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    awayRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    headToHead {\n      outcome\n      ...StatisticsWidgetPastMatch\n    }\n  }\n}\n\nfragment StatisticsWidgetIncident on MatchIncident {\n  type\n  minute\n  addedTime\n  scorer\n  detail\n  penalty\n  outcome\n  cancelled\n  homeScore\n  awayScore\n}\n\nfragment StatisticsWidgetPastMatch on PastMatch {\n  homeName\n  awayName\n  homeScore\n  awayScore\n  competition\n  startTime\n  outcome\n}\n\nfragment StatisticsWidgetTimeline on Event {\n  homeCompetitor\n  awayCompetitor\n  timeline(types: [GOAL, RED_CARD, PENALTY, CORNER, YELLOW_CARD]) {\n    id\n    side\n    minute\n    addedTime\n    ...StatisticsWidgetIncident\n  }\n}\n"
+    "text": "query StatisticsWidgetRefetch(\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...StatisticsWidget\n    id\n  }\n}\n\nfragment StatisticsWidget on Event {\n  id\n  status\n  homeCompetitor\n  awayCompetitor\n  timeline(types: [GOAL, RED_CARD, PENALTY, CORNER, YELLOW_CARD]) {\n    id\n  }\n  ...StatisticsWidgetTimeline\n  tournament {\n    standings {\n      groups {\n        __typename\n      }\n    }\n    ...StatisticsWidgetTable\n    id\n  }\n  insights {\n    homePosition\n    awayPosition\n    venue\n    referee\n    round\n    stats {\n      key\n      home\n      away\n    }\n    homeRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    awayRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    headToHead {\n      outcome\n      ...StatisticsWidgetPastMatch\n    }\n  }\n}\n\nfragment StatisticsWidgetIncident on MatchIncident {\n  type\n  minute\n  addedTime\n  scorer\n  detail\n  penalty\n  outcome\n  cancelled\n  homeScore\n  awayScore\n}\n\nfragment StatisticsWidgetPastMatch on PastMatch {\n  homeName\n  awayName\n  homeScore\n  awayScore\n  competition\n  startTime\n  outcome\n}\n\nfragment StatisticsWidgetTable on Tournament {\n  standings {\n    season\n    currentRound\n    maxRounds\n    groups {\n      ...StatisticsWidgetTableGroup\n    }\n  }\n}\n\nfragment StatisticsWidgetTableGroup on StandingGroup {\n  name\n  rows {\n    position\n    teamName\n    played\n    won\n    drawn\n    lost\n    goalsFor\n    goalsAgainst\n    points\n    zone\n  }\n}\n\nfragment StatisticsWidgetTimeline on Event {\n  homeCompetitor\n  awayCompetitor\n  timeline(types: [GOAL, RED_CARD, PENALTY, CORNER, YELLOW_CARD]) {\n    id\n    side\n    minute\n    addedTime\n    ...StatisticsWidgetIncident\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "1540eea9ff3b08c00cadd700979fc255";
+(node as any).hash = "9991d7d1edf43e2bf0e2537f4946fab7";
 
 export default node;

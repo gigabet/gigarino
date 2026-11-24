@@ -5,7 +5,6 @@ import { Suspense, useCallback, useEffect, useTransition } from 'react'
 import ReactCountryFlag from 'react-country-flag'
 import { graphql, useFragment, useRefetchableFragment } from 'react-relay'
 import PrematchEvent, { PrematchEventSkeleton } from '@/app/(sport)/prematch-event'
-import { LeagueTableButton } from '@/components/league-table'
 import { HEADER_LEAD, ListViewMarketDropdowns } from '@/components/list-view-markets'
 import { SportIconBadge } from '@/components/sport-icon'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -36,7 +35,6 @@ export default function Tournament(props: {
           countryCode
         }
         name
-        ...LeagueTableButton
         ...TournamentEventList @defer
       }
     `,
@@ -110,7 +108,6 @@ export default function Tournament(props: {
             style={{ width: undefined, height: undefined }}
           />
           <span className='min-w-0 truncate'>{stripCategory(data.name, data.category.name)}</span>
-          <LeagueTableButton tournament={data} />
         </h2>
         <ListViewMarketDropdowns sport={data.sport.key} />
         <div className='hidden sm:block sm:w-0 lg:w-34' />

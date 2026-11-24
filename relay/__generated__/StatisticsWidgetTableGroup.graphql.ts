@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<07470acdb57d1fcb8c5a9413bbccd07e>>
+ * @generated SignedSource<<1dadb040a8fad889b9e4279aa3f30e4b>>
  * @lightSyntaxTransform
  */
 
@@ -9,7 +9,7 @@
 
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type LeagueTableGroup$data = {
+export type StatisticsWidgetTableGroup$data = {
   readonly name: string | null | undefined;
   readonly rows: ReadonlyArray<{
     readonly drawn: number;
@@ -23,18 +23,18 @@ export type LeagueTableGroup$data = {
     readonly won: number;
     readonly zone: string | null | undefined;
   }>;
-  readonly " $fragmentType": "LeagueTableGroup";
+  readonly " $fragmentType": "StatisticsWidgetTableGroup";
 };
-export type LeagueTableGroup$key = {
-  readonly " $data"?: LeagueTableGroup$data;
-  readonly " $fragmentSpreads": FragmentRefs<"LeagueTableGroup">;
+export type StatisticsWidgetTableGroup$key = {
+  readonly " $data"?: StatisticsWidgetTableGroup$data;
+  readonly " $fragmentSpreads": FragmentRefs<"StatisticsWidgetTableGroup">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "LeagueTableGroup",
+  "name": "StatisticsWidgetTableGroup",
   "selections": [
     {
       "alias": null,
@@ -129,6 +129,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "22fd1b56e2f8a9449d89e262dd5d9be1";
+(node as any).hash = "1430483b3a9a234ae516cdd338108ec8";
 
 export default node;

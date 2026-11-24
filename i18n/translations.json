@@ -883,10 +883,6 @@
     "de": "Keine Spiele",
     "tr": "Oyun yok"
   },
-  "No league table is available for this competition.": {
-    "de": "Keine Tabelle für diesen Wettbewerb verfügbar.",
-    "tr": "Bu yarışma için puan durumu yok."
-  },
   "No live events match your search.": {
     "de": "Keine Live-Events entsprechen Ihrer Suche.",
     "tr": "Aramanızla eşleşen canlı etkinlik yok."
@@ -1644,10 +1640,6 @@
     "tr": ""
   },
   "Maybe later": {
-    "de": "",
-    "tr": ""
-  },
-  "Rankings": {
     "de": "",
     "tr": ""
   }

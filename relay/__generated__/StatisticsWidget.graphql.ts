@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<02631353f2ae9197abca74e8539a8910>>
+ * @generated SignedSource<<afd92522c4121ccfde55ab66e73a7976>>
  * @lightSyntaxTransform
  */
 
@@ -41,6 +41,14 @@ export type StatisticsWidget$data = {
   readonly timeline: ReadonlyArray<{
     readonly id: string;
   }>;
+  readonly tournament: {
+    readonly standings: {
+      readonly groups: ReadonlyArray<{
+        readonly __typename: "StandingGroup";
+      }>;
+    } | null | undefined;
+    readonly " $fragmentSpreads": FragmentRefs<"StatisticsWidgetTable">;
+  };
   readonly " $fragmentSpreads": FragmentRefs<"StatisticsWidgetTimeline">;
   readonly " $fragmentType": "StatisticsWidget";
 };
@@ -135,6 +143,51 @@ return {
       "args": null,
       "kind": "FragmentSpread",
       "name": "StatisticsWidgetTimeline"
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Tournament",
+      "kind": "LinkedField",
+      "name": "tournament",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "Standings",
+          "kind": "LinkedField",
+          "name": "standings",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "StandingGroup",
+              "kind": "LinkedField",
+              "name": "groups",
+              "plural": true,
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
+                }
+              ],
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "StatisticsWidgetTable"
+        }
+      ],
+      "storageKey": null
     },
     {
       "alias": null,
@@ -259,6 +312,6 @@ return {
 };
 })();
 
-(node as any).hash = "1540eea9ff3b08c00cadd700979fc255";
+(node as any).hash = "9991d7d1edf43e2bf0e2537f4946fab7";
 
 export default node;
