@@ -4,8 +4,11 @@ import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import { useCallback, useMemo } from 'react'
 import { tKey } from '@/i18n/tKey'
+import type {
+  BetRejectionCode,
+  OddsChangePolicy,
+} from '@/relay/__generated__/BetslipPlaceBetMutation.graphql'
 import type { BetslipSubscription$variables } from '@/relay/__generated__/BetslipSubscription.graphql'
-import type { BetRejectionCode, OddsChangePolicy } from '@/types'
 
 export type BetslipInput = BetslipSubscription$variables['input']
 
@@ -20,6 +23,8 @@ const defaultInput: BetslipInput = {
 export const betslipInputAtom = atomWithStorage<BetslipInput>('betslip', defaultInput)
 export const betslipOpenAtom = atom(false)
 export const oddsPolicyAtom = atom<OddsChangePolicy>('REJECT')
+/** Signature of the odds-change prompt the player dismissed; a further price move re-shows it. */
+export const dismissedPriceChangesAtom = atom<string | null>(null)
 
 export function useToggleOdd() {
   const setInput = useSetAtom(betslipInputAtom)
@@ -110,6 +115,7 @@ export function useBetslipPrices() {
 
 const COPY: Record<BetRejectionCode, string> = {
   BOOST_UNAVAILABLE: tKey('Boost expired.'),
+  BOOST_LIMIT: tKey('Over boost limit.'),
   CASHOUT_UNAVAILABLE: tKey('Cash out unavailable.'),
   CUTOFF_PASSED: tKey('Event started.'),
   DUPLICATE_EVENT: tKey('One combi bet per event.'),
@@ -128,6 +134,8 @@ const COPY: Record<BetRejectionCode, string> = {
   STAKE_LIMIT: tKey('Stake outside limits.'),
   SYSTEM_NOT_SUPPORTED: tKey('System bet not supported.'),
   WALLET_UNAVAILABLE: tKey('Wallet unavailable.'),
+  // eslint-disable-next-line relay/no-future-added-value
+  '%future added value': '',
 }
 
 export function betCodeCopy(
@@ -196,6 +204,31 @@ export function useSetLegStake() {
   )
 }
 
+/** Empties the slip: selections, system size, bet type and any boost. */
+export function useClearBetslip() {
+  const setInput = useSetAtom(betslipInputAtom)
+  const setBoost = useSetAtom(boostAtom)
+  return useCallback(() => {
+    setInput(prev => ({
+      ...prev,
+      items: [],
+      systemSize: null,
+      betType: 'SINGLE',
+    }))
+    setBoost(null)
+  }, [setInput, setBoost])
+}
+
+/** Back to asking from scratch: the default odds policy and no dismissed odds-change prompt. */
+export function useResetOddsPrompt() {
+  const setPolicy = useSetAtom(oddsPolicyAtom)
+  const setDismissed = useSetAtom(dismissedPriceChangesAtom)
+  return useCallback(() => {
+    setPolicy('REJECT')
+    setDismissed(null)
+  }, [setPolicy, setDismissed])
+}
+
 /**
  * SYSTEM only: the selections that are not bankers. A banker sits in every combination, so
  * `systemSize` and the "k out of N" label count only these.
@@ -237,7 +270,11 @@ export function withBanker(prev: BetslipInput, outcomeId: string, banker: boolea
   if (pool < 3) return prev
 
   const { systemSize } = prev
-  return { ...prev, items, systemSize: systemSize && systemSize >= pool ? pool - 1 : systemSize }
+  return {
+    ...prev,
+    items,
+    systemSize: systemSize && systemSize >= pool ? pool - 1 : systemSize,
+  }
 }
 
 export function withoutItems(prev: BetslipInput, ids: ReadonlySet<string>): BetslipInput {

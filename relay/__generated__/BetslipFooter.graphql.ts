@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f2327e34b00a8bf62f469e25ce0af9c0>>
+ * @generated SignedSource<<4289fd2790a4246fc7c856c7f6742018>>
  * @lightSyntaxTransform
  */
 
@@ -21,7 +21,7 @@ export type BetslipFooter$data = {
   }>;
   readonly placeable: boolean;
   readonly potentialPayout: any;
-  readonly " $fragmentSpreads": FragmentRefs<"BlockersBanner">;
+  readonly " $fragmentSpreads": FragmentRefs<"BlockersBanner" | "usePriceChanges">;
   readonly " $fragmentType": "BetslipFooter";
 };
 export type BetslipFooter$key = {
@@ -99,12 +99,17 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "BlockersBanner"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "usePriceChanges"
     }
   ],
   "type": "BetslipQuote",
   "abstractKey": null
 };
 
-(node as any).hash = "72edf31bdaf4cec96ada2bf583f93be1";
+(node as any).hash = "6b826b045a26b77d8fa5522c03d2da51";
 
 export default node;

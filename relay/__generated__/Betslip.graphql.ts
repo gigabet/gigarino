@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0657028a6e36c2488803b5d99e500f6a>>
+ * @generated SignedSource<<cd41d518e297fa4c18cff9ca318a790c>>
  * @lightSyntaxTransform
  */
 
@@ -10,7 +10,7 @@
 import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type Betslip$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"BetslipBody">;
+  readonly " $fragmentSpreads": FragmentRefs<"BetslipBody" | "BetslipFooter">;
   readonly " $fragmentType": "Betslip";
 };
 export type Betslip$key = {
@@ -28,12 +28,17 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "BetslipBody"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "BetslipFooter"
     }
   ],
   "type": "BetslipQuote",
   "abstractKey": null
 };
 
-(node as any).hash = "33a6aa2e4dc3402117d27c73c3a64076";
+(node as any).hash = "570ee8cdb8ee3b1b9509b7bccaf646d8";
 
 export default node;

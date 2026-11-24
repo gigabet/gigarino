@@ -41,10 +41,13 @@ import {
   betslipOpenAtom,
   betslipTabAtom,
   boostAtom,
+  dismissedPriceChangesAtom,
   oddsPolicyAtom,
   systemPoolSize,
   useActiveBoost,
   useBetslipPrices,
+  useClearBetslip,
+  useResetOddsPrompt,
   useSetDefaultStake,
   useSetLegStake,
   withBanker,
@@ -64,9 +67,12 @@ import type { BetslipMobileBar$key } from '@/relay/__generated__/BetslipMobileBa
 import type { BetslipPlaceBetMutation } from '@/relay/__generated__/BetslipPlaceBetMutation.graphql'
 import type { BetTypeTabs$key } from '@/relay/__generated__/BetTypeTabs.graphql'
 import type { BlockersBanner$key } from '@/relay/__generated__/BlockersBanner.graphql'
+import type { InvalidBetsBanner$key } from '@/relay/__generated__/InvalidBetsBanner.graphql'
+import type { PriceChangesBanner$key } from '@/relay/__generated__/PriceChangesBanner.graphql'
 import type { SelectionList$key } from '@/relay/__generated__/SelectionList.graphql'
 import type { SystemSizeSelect$key } from '@/relay/__generated__/SystemSizeSelect.graphql'
 import type { Tip$key } from '@/relay/__generated__/Tip.graphql'
+import type { usePriceChanges$key } from '@/relay/__generated__/usePriceChanges.graphql'
 import type { TicketType } from '@/types'
 
 type MainTab = 'betslip' | 'tickets'
@@ -86,15 +92,14 @@ export default function Betslip(props: {
       graphql`
         fragment Betslip on BetslipQuote {
           ...BetslipBody
+          ...BetslipFooter
         }
       `,
       props.query
     ) ?? null
 
   const input = useAtomValue(betslipInputAtom)
-  const setInput = useSetAtom(betslipInputAtom)
-  const setBoost = useSetAtom(boostAtom)
-  const setPolicy = useSetAtom(oddsPolicyAtom)
+  const resetOddsPrompt = useResetOddsPrompt()
 
   const [mainTab, setMainTab] = useState<MainTab>(props.initialTab ?? 'betslip')
   const [ticketsKey, setTicketsKey] = useState(0)
@@ -104,27 +109,13 @@ export default function Betslip(props: {
 
   // an emptied slip starts over with the default odds policy
   useEffect(() => {
-    if (isEmpty) setPolicy('REJECT')
-  }, [isEmpty, setPolicy])
+    if (isEmpty) resetOddsPrompt()
+  }, [isEmpty, resetOddsPrompt])
 
-  const clearAll = () => {
-    setInput(prev => ({
-      ...prev,
-      items: [],
-      systemSize: null,
-      betType: 'SINGLE',
-    }))
-    setBoost(null)
-  }
-
+  // `mainTab` and `placed` are this component's state, so the children report back through these
   const onPlaced = (ticket: Placed) => {
     setPlaced(ticket)
     setTicketsKey(k => k + 1) // remount My Tickets so the new ticket shows up
-  }
-
-  const startNewBet = () => {
-    setPlaced(null)
-    clearAll()
   }
 
   return (
@@ -134,7 +125,6 @@ export default function Betslip(props: {
         tab={mainTab}
         onTabChange={setMainTab}
         showClear={mainTab === 'betslip' && !isEmpty && !placed}
-        onClear={clearAll}
       />
 
       {mainTab === 'tickets' ? (
@@ -142,7 +132,7 @@ export default function Betslip(props: {
       ) : placed ? (
         <PlacedState
           ticket={placed}
-          onNewBet={startNewBet}
+          onNewBet={() => setPlaced(null)}
           onViewTickets={() => setMainTab('tickets')}
         />
       ) : isEmpty ? (
@@ -150,7 +140,10 @@ export default function Betslip(props: {
       ) : !data ? (
         <BetslipBodySkeleton count={input.items.length} />
       ) : (
-        <BetslipBody quoteRef={data} onPlaced={onPlaced} />
+        <>
+          <BetslipBody quoteRef={data} />
+          <BetslipFooter quoteRef={data} onPlaced={onPlaced} />
+        </>
       )}
     </div>
   )
@@ -164,10 +157,10 @@ function BetslipHeader(props: {
   tab: MainTab
   onTabChange: (tab: MainTab) => void
   showClear: boolean
-  onClear: () => void
 }) {
   const t = useT()
   const unseen = useAtomValue(unseenResettlementsAtom)
+  const clearBetslip = useClearBetslip()
 
   return (
     <div className='flex items-center justify-between border-b border-white/5 px-5 py-4'>
@@ -190,7 +183,7 @@ function BetslipHeader(props: {
         {props.showClear && (
           <motion.button
             type='button'
-            onClick={props.onClear}
+            onClick={clearBetslip}
             className='text-secondary hover:text-foreground mr-2 transition-colors'
             initial={{ scale: 0, opacity: 0 }}
             animate={{
@@ -245,127 +238,33 @@ function MainTabButton(props: {
 /*  Body (active betslip with selections)                                     */
 /* -------------------------------------------------------------------------- */
 
-function BetslipBody(props: { quoteRef: BetslipBody$key; onPlaced: (ticket: Placed) => void }) {
+function BetslipBody(props: { quoteRef: BetslipBody$key }) {
   const data = useFragment(
     graphql`
       fragment BetslipBody on BetslipQuote {
-        items {
-          outcomeId
-          availability
-          price
-          expectedPrice
-          priceChanged
-        }
         ...BetTypeTabs
         ...SystemSizeSelect
+        ...InvalidBetsBanner
+        ...PriceChangesBanner
         ...SelectionList
-        ...BetslipFooter
       }
     `,
     props.quoteRef
   )
-  const setInput = useSetAtom(betslipInputAtom)
-  const [policy, setPolicy] = useAtom(oddsPolicyAtom)
-  const { stamp, accept } = useBetslipPrices()
-  const [dismissedSig, setDismissedSig] = useState<string | null>(null)
 
-  const unavailable = new Set(
-    data.items.filter(i => i.availability !== 'AVAILABLE').map(i => i.outcomeId)
-  )
-
-  // --- odds changes: detection, the dismiss state and the accept actions ---
-  //
-  // Accepting also switches the odds policy sent with placeBet (ACCEPT_HIGHER /
-  // ACCEPT_ANY) so the server does not reject the slip for a move the player
-  // already accepted. The policy lives until the slip is empty or submitted.
-
-  // remember the first price we saw for each leg so we can detect moves later
-  useEffect(() => {
-    const unseen = new Map(
-      data.items.filter(i => i.price && !i.expectedPrice).map(i => [i.outcomeId, i.price as string])
-    )
-    if (unseen.size) stamp(unseen)
-  }, [data, stamp])
-
-  const changed = data.items.filter(i => i.priceChanged && i.price && i.expectedPrice)
-  const higher = changed.filter(i => Number(i.price) > Number(i.expectedPrice))
-  const lower = changed.filter(i => Number(i.price) < Number(i.expectedPrice))
-
-  // moves the active policy already covers will be accepted by the server: no prompt
-  const pending = policy === 'ACCEPT_ANY' ? [] : policy === 'ACCEPT_HIGHER' ? lower : changed
-  const signature = pending.map(i => `${i.outcomeId}:${i.price}`).join('|')
-  // a further move changes the signature, which re-shows a dismissed prompt
-  const hasPriceChanges = pending.length > 0 && signature !== dismissedSig
-
-  const toMap = (items: typeof changed) => new Map(items.map(i => [i.outcomeId, i.price as string]))
-  const dropLower = () => {
-    if (lower.length === 0) return // nothing to drop; avoids a needless input change/resubscribe
-    const lowerIds = new Set(lower.map(i => i.outcomeId))
-    setInput(prev => withoutItems(prev, lowerIds))
-  }
-
-  // the X: reject the worse odds by dropping those legs (same idea as the invalid-bets X).
-  // With nothing lower to drop, there is nothing to reject, so just hide the prompt.
-  const rejectPriceChanges = () => (lower.length > 0 ? dropLower() : setDismissedSig(signature))
-  const acceptAll = () => {
-    accept(toMap(changed))
-    setPolicy('ACCEPT_ANY')
-  }
-  const acceptHigher = () => {
-    accept(toMap(higher)) // rebase the legs that went up (no-op if none)
-    dropLower() // drop the legs that went down (no-op if none)
-    setPolicy('ACCEPT_HIGHER')
-  }
-
-  // placeBet rejected the odds unexpectedly: ask again from scratch
-  const resetPriceChanges = () => {
-    setDismissedSig(null)
-    setPolicy('REJECT')
-  }
-
+  // tabs, actionable banners and tips; scrolls with the rail
   return (
-    <div className='flex flex-1 flex-col'>
-      {/* tabs, actionable banners and tips; scrolls with the rail */}
-      <div className='flex-1'>
-        <BetTypeTabs quoteRef={data} />
-        <SystemSizeSelect quoteRef={data} />
+    <div className='flex-1'>
+      <BetTypeTabs quoteRef={data} />
+      <SystemSizeSelect quoteRef={data} />
 
-        {/* pinned while scrolling: these block placing, so they must stay visible */}
-        <div className='bg-dark-200 sticky top-0 z-10 mt-2 empty:hidden'>
-          <AnimatePresence initial={false}>
-            {unavailable.size > 0 && (
-              <Collapse key='invalid'>
-                <InvalidBetsBanner
-                  count={unavailable.size}
-                  onRemove={() => setInput(prev => withoutItems(prev, unavailable))}
-                />
-              </Collapse>
-            )}
-            {hasPriceChanges && (
-              <Collapse key='changes'>
-                <PriceChangesBanner
-                  count={pending.length}
-                  // always offer the narrower option while the policy is still REJECT,
-                  // whatever mix of higher/lower moves we got
-                  showAcceptHigher={policy === 'REJECT'}
-                  onAcceptHigher={acceptHigher}
-                  onAcceptAll={acceptAll}
-                  onReject={rejectPriceChanges}
-                />
-              </Collapse>
-            )}
-          </AnimatePresence>
-        </div>
-
-        <SelectionList quoteRef={data} />
+      {/* pinned while scrolling: these block placing, so they must stay visible */}
+      <div className='bg-dark-200 sticky top-0 z-10 mt-2 empty:hidden'>
+        <InvalidBetsBanner quoteRef={data} />
+        <PriceChangesBanner quoteRef={data} />
       </div>
 
-      <BetslipFooter
-        quoteRef={data}
-        hasPriceChanges={hasPriceChanges}
-        onPriceChanged={resetPriceChanges}
-        onPlaced={props.onPlaced}
-      />
+      <SelectionList quoteRef={data} />
     </div>
   )
 }
@@ -507,25 +406,48 @@ function SelectionList(props: { quoteRef: SelectionList$key }) {
 /*  Banners (slim, one line where possible)                                   */
 /* -------------------------------------------------------------------------- */
 
-function InvalidBetsBanner(props: { count: number; onRemove: () => void }) {
+function InvalidBetsBanner(props: { quoteRef: InvalidBetsBanner$key }) {
+  const { items } = useFragment(
+    graphql`
+      fragment InvalidBetsBanner on BetslipQuote {
+        items {
+          outcomeId
+          availability
+        }
+      }
+    `,
+    props.quoteRef
+  )
+  const setInput = useSetAtom(betslipInputAtom)
   const t = useT()
-  if (props.count === 0) return null
+
+  const unavailable = new Set(
+    items.filter(i => i.availability !== 'AVAILABLE').map(i => i.outcomeId)
+  )
 
   return (
-    <div className='flex items-center gap-2 bg-red-500/10 px-5 py-1.5 text-red-400'>
-      <AlertTriangleIcon className='size-3.5 shrink-0' />
-      <p className='mr-auto text-xs'>
-        {props.count === 1 ? t('1 invalid bet.') : t('{n} invalid bets.', { n: props.count })}
-      </p>
-      <Button
-        variant='ghost'
-        size='icon-sm'
-        className='-mr-1 size-6 rounded-full text-xs text-red-400 hover:bg-red-400/30 hover:text-white'
-        onClick={props.onRemove}
-      >
-        <XIcon />
-      </Button>
-    </div>
+    <AnimatePresence initial={false}>
+      {unavailable.size > 0 && (
+        <Collapse key='invalid'>
+          <div className='flex items-center gap-2 bg-red-500/10 px-5 py-1.5 text-red-400'>
+            <AlertTriangleIcon className='size-3.5 shrink-0' />
+            <p className='mr-auto text-xs'>
+              {unavailable.size === 1
+                ? t('1 invalid bet.')
+                : t('{n} invalid bets.', { n: unavailable.size })}
+            </p>
+            <Button
+              variant='ghost'
+              size='icon-sm'
+              className='-mr-1 size-6 rounded-full text-xs text-red-400 hover:bg-red-400/30 hover:text-white'
+              onClick={() => setInput(prev => withoutItems(prev, unavailable))}
+            >
+              <XIcon />
+            </Button>
+          </div>
+        </Collapse>
+      )}
+    </AnimatePresence>
   )
 }
 
@@ -569,50 +491,132 @@ function BlockersBanner(props: { quoteRef: BlockersBanner$key }) {
   )
 }
 
-function PriceChangesBanner(props: {
-  count: number
-  showAcceptHigher: boolean
-  onAcceptHigher: () => void
-  onAcceptAll: () => void
-  onReject: () => void
-}) {
+/**
+ * Odds changes: detection, the dismiss state and the price accept actions.
+ *
+ * Accepting also switches the odds policy sent with placeBet (ACCEPT_HIGHER / ACCEPT_ANY) so the
+ * server does not reject the slip for a move the player already accepted. The policy lives until
+ * the slip is empty or submitted. Used by the banner and by the footer (which blocks placing).
+ */
+function usePriceChanges(quoteRef: usePriceChanges$key) {
+  const { items } = useFragment(
+    graphql`
+      fragment usePriceChanges on BetslipQuote {
+        items {
+          outcomeId
+          price
+          expectedPrice
+          priceChanged
+        }
+      }
+    `,
+    quoteRef
+  )
+  const policy = useAtomValue(oddsPolicyAtom)
+  const dismissedSig = useAtomValue(dismissedPriceChangesAtom)
+
+  const changed = items.filter(i => i.priceChanged && i.price && i.expectedPrice)
+  const higher = changed.filter(i => Number(i.price) > Number(i.expectedPrice))
+  const lower = changed.filter(i => Number(i.price) < Number(i.expectedPrice))
+
+  // moves the active policy already covers will be accepted by the server: no prompt
+  const pending = policy === 'ACCEPT_ANY' ? [] : policy === 'ACCEPT_HIGHER' ? lower : changed
+  const signature = pending.map(i => `${i.outcomeId}:${i.price}`).join('|')
+  // a further move changes the signature, which re-shows a dismissed prompt
+  const hasPriceChanges = pending.length > 0 && signature !== dismissedSig
+
+  return { items, changed, higher, lower, pending, signature, hasPriceChanges }
+}
+
+function PriceChangesBanner(props: { quoteRef: PriceChangesBanner$key }) {
+  const data = useFragment(
+    graphql`
+      fragment PriceChangesBanner on BetslipQuote {
+        ...usePriceChanges
+      }
+    `,
+    props.quoteRef
+  )
+  const { items, changed, higher, lower, pending, signature, hasPriceChanges } =
+    usePriceChanges(data)
+  const setInput = useSetAtom(betslipInputAtom)
+  const [policy, setPolicy] = useAtom(oddsPolicyAtom)
+  const setDismissedSig = useSetAtom(dismissedPriceChangesAtom)
+  const { stamp, accept } = useBetslipPrices()
   const t = useT()
-  const { count } = props
+
+  // remember the first price we saw for each leg so we can detect moves later
+  useEffect(() => {
+    const unseen = new Map(
+      items.filter(i => i.price && !i.expectedPrice).map(i => [i.outcomeId, i.price as string])
+    )
+    if (unseen.size) stamp(unseen)
+  }, [items, stamp])
+
+  const toMap = (list: typeof changed) => new Map(list.map(i => [i.outcomeId, i.price as string]))
+  const dropLower = () => {
+    if (lower.length === 0) return // nothing to drop; avoids a needless input change/resubscribe
+    const lowerIds = new Set(lower.map(i => i.outcomeId))
+    setInput(prev => withoutItems(prev, lowerIds))
+  }
+
+  // the X: reject the worse odds by dropping those legs (same idea as the invalid-bets X).
+  // With nothing lower to drop, there is nothing to reject, so just hide the prompt.
+  const reject = () => (lower.length > 0 ? dropLower() : setDismissedSig(signature))
+  const acceptAll = () => {
+    accept(toMap(changed))
+    setPolicy('ACCEPT_ANY')
+  }
+  const acceptHigher = () => {
+    accept(toMap(higher)) // rebase the legs that went up (no-op if none)
+    dropLower() // drop the legs that went down (no-op if none)
+    setPolicy('ACCEPT_HIGHER')
+  }
+
+  const count = pending.length
   const btn = 'h-6 shrink-0 rounded-full px-2.5 text-[0.65rem] whitespace-nowrap'
 
   return (
-    <div className='flex items-center gap-1.5 bg-amber-500/10 px-5 py-1.5 text-amber-400'>
-      <TrendingUpIcon className='size-3.5 shrink-0' />
-      <p className='min-w-0 flex-1 truncate text-xs'>
-        {count === 1 ? t('1 odd change.') : t('{n} odds changes.', { n: count })}
-      </p>
-      {props.showAcceptHigher && (
-        <Button
-          variant='outline'
-          size='sm'
-          className={cn(btn, 'border-amber-400/50')}
-          onClick={props.onAcceptHigher}
-        >
-          {t('Accept higher')}
-        </Button>
+    <AnimatePresence initial={false}>
+      {hasPriceChanges && (
+        <Collapse key='changes'>
+          <div className='flex items-center gap-1.5 bg-amber-500/10 px-5 py-1.5 text-amber-400'>
+            <TrendingUpIcon className='size-3.5 shrink-0' />
+            <p className='min-w-0 flex-1 truncate text-xs'>
+              {count === 1 ? t('1 odd change.') : t('{n} odds changes.', { n: count })}
+            </p>
+            {/* always offer the narrower option while the policy is still REJECT,
+                whatever mix of higher/lower moves we got */}
+            {policy === 'REJECT' && (
+              <Button
+                variant='outline'
+                size='sm'
+                className={cn(btn, 'border-amber-400/50')}
+                onClick={acceptHigher}
+              >
+                {t('Accept higher')}
+              </Button>
+            )}
+            <Button
+              size='sm'
+              className={cn(btn, 'border-transparent bg-amber-400 text-black hover:bg-amber-300')}
+              onClick={acceptAll}
+            >
+              {t('Accept all')}
+            </Button>
+            <Button
+              variant='ghost'
+              size='icon-sm'
+              aria-label={t('Remove lower odds')}
+              className='-mr-1 size-6 shrink-0 rounded-full text-xs text-amber-400 hover:bg-amber-400/30 hover:text-white'
+              onClick={reject}
+            >
+              <XIcon />
+            </Button>
+          </div>
+        </Collapse>
       )}
-      <Button
-        size='sm'
-        className={cn(btn, 'border-transparent bg-amber-400 text-black hover:bg-amber-300')}
-        onClick={props.onAcceptAll}
-      >
-        {t('Accept all')}
-      </Button>
-      <Button
-        variant='ghost'
-        size='icon-sm'
-        aria-label={t('Remove lower odds')}
-        className='-mr-1 size-6 shrink-0 rounded-full text-xs text-amber-400 hover:bg-amber-400/30 hover:text-white'
-        onClick={props.onReject}
-      >
-        <XIcon />
-      </Button>
-    </div>
+    </AnimatePresence>
   )
 }
 
@@ -621,12 +625,7 @@ function PriceChangesBanner(props: {
 /* -------------------------------------------------------------------------- */
 
 /** Pinned to the bottom of the rail/drawer: the figures, and placing the bet. */
-function BetslipFooter(props: {
-  quoteRef: BetslipFooter$key
-  hasPriceChanges: boolean
-  onPriceChanged: () => void
-  onPlaced: (ticket: Placed) => void
-}) {
+function BetslipFooter(props: { quoteRef: BetslipFooter$key; onPlaced: (ticket: Placed) => void }) {
   const data = useFragment(
     graphql`
       fragment BetslipFooter on BetslipQuote {
@@ -640,6 +639,7 @@ function BetslipFooter(props: {
           price
         }
         ...BlockersBanner
+        ...usePriceChanges
       }
     `,
     props.quoteRef
@@ -650,7 +650,9 @@ function BetslipFooter(props: {
   const setBoost = useSetAtom(boostAtom)
   const setBetslipOpen = useSetAtom(betslipOpenAtom)
   const setLoginOpen = useSetAtom(loginDialogOpenAtom)
-  const [policy, setPolicy] = useAtom(oddsPolicyAtom)
+  const policy = useAtomValue(oddsPolicyAtom)
+  const resetOddsPrompt = useResetOddsPrompt()
+  const { hasPriceChanges } = usePriceChanges(data)
   const boost = useActiveBoost()
 
   const [placeError, setPlaceError] = useState<string | null>(null)
@@ -697,7 +699,7 @@ function BetslipFooter(props: {
 
   const hasInvalidLegs = data.items.some(i => i.availability !== 'AVAILABLE')
   const canPlace =
-    !isPlacing && data.placeable && !hasInvalidLegs && !props.hasPriceChanges && !overBoostMax
+    !isPlacing && data.placeable && !hasInvalidLegs && !hasPriceChanges && !overBoostMax
 
   const place = () => {
     // guests can't place bets: ask them to log in instead of hitting the API
@@ -733,7 +735,8 @@ function BetslipFooter(props: {
         const rej = response.placeBet.rejection
         if (rej) {
           if (rej.code === 'PRICE_CHANGED') {
-            props.onPriceChanged()
+            // unexpected odds rejection: ask again from scratch
+            resetOddsPrompt()
             setPlaceError(null)
           } else {
             if (rej.code === 'BOOST_UNAVAILABLE') setBoost(null)
@@ -745,7 +748,7 @@ function BetslipFooter(props: {
         const ticket = response.placeBet.ticket
         if (ticket) {
           setBoost(null)
-          setPolicy('REJECT') // accepted odds changes only apply to the slip just submitted
+          resetOddsPrompt() // accepted odds changes only apply to the slip just submitted
           props.onPlaced({
             id: ticket.id,
             stake: ticket.stake,
@@ -762,7 +765,7 @@ function BetslipFooter(props: {
   return (
     <div className='bg-dark-200 sticky bottom-0 z-20 shrink-0 border-t border-white/5'>
       <PlaceErrorBanner message={placeError} />
-      {!data.placeable && !hasInvalidLegs && !props.hasPriceChanges && (
+      {!data.placeable && !hasInvalidLegs && !hasPriceChanges && (
         <BlockersBanner quoteRef={data} />
       )}
       <BetslipSummary
@@ -1166,6 +1169,7 @@ function EmptyState() {
 
 function PlacedState(props: { ticket: Placed; onNewBet: () => void; onViewTickets: () => void }) {
   const t = useT()
+  const clearBetslip = useClearBetslip()
   return (
     <div className='flex max-h-[calc(100dvh-7rem)] w-full flex-col items-center justify-center gap-4 overflow-hidden px-6 py-16 text-center'>
       <div className='bg-primary/15 flex size-14 items-center justify-center rounded-full'>
@@ -1184,7 +1188,13 @@ function PlacedState(props: { ticket: Placed; onNewBet: () => void; onViewTicket
         </div>
       )}
       <div className='mt-2 flex gap-2'>
-        <Button variant='outline' onClick={props.onNewBet}>
+        <Button
+          variant='outline'
+          onClick={() => {
+            clearBetslip()
+            props.onNewBet()
+          }}
+        >
           {t('Place another bet')}
         </Button>
         <Button onClick={props.onViewTickets}>{t('My Tickets')}</Button>
