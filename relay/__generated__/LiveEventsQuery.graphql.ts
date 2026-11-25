@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e7f0f7add9003aee40d8f9c43c6d2ab7>>
+ * @generated SignedSource<<8bc953b874639e40e7dca3f1ab011330>>
  * @lightSyntaxTransform
  */
 
@@ -189,43 +189,71 @@ return {
         "plural": false,
         "selections": [
           {
-            "alias": null,
-            "args": null,
-            "concreteType": "EventEdge",
-            "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
+            "if": null,
+            "kind": "Stream",
+            "label": "LiveEventList$stream$edges",
             "selections": [
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "Event",
+                "concreteType": "EventEdge",
                 "kind": "LinkedField",
-                "name": "node",
-                "plural": false,
+                "name": "edges",
+                "plural": true,
                 "selections": [
-                  (v9/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
-                    "kind": "ScalarField",
-                    "name": "startTime",
-                    "storageKey": null
-                  },
-                  (v10/*:: as any*/),
-                  (v13/*:: as any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Tournament",
+                    "concreteType": "Event",
                     "kind": "LinkedField",
-                    "name": "tournament",
+                    "name": "node",
                     "plural": false,
                     "selections": [
-                      (v11/*:: as any*/),
                       (v9/*:: as any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "startTime",
+                        "storageKey": null
+                      },
+                      (v10/*:: as any*/),
                       (v13/*:: as any*/),
-                      (v14/*:: as any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Tournament",
+                        "kind": "LinkedField",
+                        "name": "tournament",
+                        "plural": false,
+                        "selections": [
+                          (v11/*:: as any*/),
+                          (v9/*:: as any*/),
+                          (v13/*:: as any*/),
+                          (v14/*:: as any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Category",
+                            "kind": "LinkedField",
+                            "name": "category",
+                            "plural": false,
+                            "selections": [
+                              (v14/*:: as any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "countryCode",
+                                "storageKey": null
+                              },
+                              (v9/*:: as any*/)
+                            ],
+                            "storageKey": null
+                          }
+                        ],
+                        "storageKey": null
+                      },
                       {
                         "alias": null,
                         "args": null,
@@ -233,193 +261,49 @@ return {
                         "kind": "LinkedField",
                         "name": "category",
                         "plural": false,
-                        "selections": [
-                          (v14/*:: as any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "countryCode",
-                            "storageKey": null
-                          },
-                          (v9/*:: as any*/)
-                        ],
+                        "selections": (v12/*:: as any*/),
                         "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Category",
-                    "kind": "LinkedField",
-                    "name": "category",
-                    "plural": false,
-                    "selections": (v12/*:: as any*/),
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "homeCompetitor",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "awayCompetitor",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "homeScore",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "awayScore",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "tradingStatus",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "oddCount",
-                    "storageKey": null
-                  },
-                  (v15/*:: as any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "clockRunning",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "clockDirection",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "clockElapsedSeconds",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "clockAnchorAt",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "liveSeenAt",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "homeImageUrl",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "homeCountryCode",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "awayImageUrl",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "awayCountryCode",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "RedCards",
-                    "kind": "LinkedField",
-                    "name": "redCards",
-                    "plural": false,
-                    "selections": (v18/*:: as any*/),
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "serving",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "PointScore",
-                    "kind": "LinkedField",
-                    "name": "pointScore",
-                    "plural": false,
-                    "selections": (v18/*:: as any*/),
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "PeriodScore",
-                    "kind": "LinkedField",
-                    "name": "periodScores",
-                    "plural": true,
-                    "selections": [
-                      (v15/*:: as any*/),
-                      (v16/*:: as any*/),
-                      (v17/*:: as any*/)
-                    ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Market",
-                    "kind": "LinkedField",
-                    "name": "markets",
-                    "plural": true,
-                    "selections": [
-                      (v9/*:: as any*/),
+                      },
                       {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "kind",
+                        "name": "homeCompetitor",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "awayCompetitor",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "homeScore",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "awayScore",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "tradingStatus",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "oddCount",
                         "storageKey": null
                       },
                       (v15/*:: as any*/),
@@ -427,42 +311,194 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "line",
+                        "name": "clockRunning",
                         "storageKey": null
                       },
                       {
                         "alias": null,
                         "args": null,
-                        "concreteType": "Outcome",
+                        "kind": "ScalarField",
+                        "name": "clockDirection",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "clockElapsedSeconds",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "clockAnchorAt",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "liveSeenAt",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "homeImageUrl",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "homeCountryCode",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "awayImageUrl",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "awayCountryCode",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "RedCards",
                         "kind": "LinkedField",
-                        "name": "outcomes",
+                        "name": "redCards",
+                        "plural": false,
+                        "selections": (v18/*:: as any*/),
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "serving",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "PointScore",
+                        "kind": "LinkedField",
+                        "name": "pointScore",
+                        "plural": false,
+                        "selections": (v18/*:: as any*/),
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "PeriodScore",
+                        "kind": "LinkedField",
+                        "name": "periodScores",
                         "plural": true,
                         "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "price",
-                            "storageKey": null
-                          },
+                          (v15/*:: as any*/),
+                          (v16/*:: as any*/),
+                          (v17/*:: as any*/)
+                        ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Market",
+                        "kind": "LinkedField",
+                        "name": "markets",
+                        "plural": true,
+                        "selections": [
                           (v9/*:: as any*/),
                           {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "index",
+                            "name": "kind",
                             "storageKey": null
                           },
-                          (v11/*:: as any*/),
-                          (v10/*:: as any*/),
+                          (v15/*:: as any*/),
                           {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
-                            "name": "suspensionReason",
+                            "name": "line",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Outcome",
+                            "kind": "LinkedField",
+                            "name": "outcomes",
+                            "plural": true,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "price",
+                                "storageKey": null
+                              },
+                              (v9/*:: as any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "index",
+                                "storageKey": null
+                              },
+                              (v11/*:: as any*/),
+                              (v10/*:: as any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "suspensionReason",
+                                "storageKey": null
+                              }
+                            ],
                             "storageKey": null
                           }
                         ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "isFavourite",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "isLive",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "sportradarMatchId",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "__typename",
                         "storageKey": null
                       }
                     ],
@@ -472,42 +508,13 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "isFavourite",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "isLive",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "sportradarMatchId",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "__typename",
+                    "name": "cursor",
                     "storageKey": null
                   }
                 ],
                 "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "cursor",
-                "storageKey": null
               }
-            ],
-            "storageKey": null
+            ]
           },
           {
             "alias": null,
@@ -554,12 +561,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "9060f10e5c1ee86aeacbafe173eae071",
+    "cacheID": "08c7482ff3f66487efdf780819e1241f",
     "id": null,
     "metadata": {},
     "name": "LiveEventsQuery",
     "operationKind": "query",
-    "text": "query LiveEventsQuery(\n  $orderBy: LiveEventOrder!\n  $sport: String\n  $search: String\n  $category: String\n) {\n  ...LiveEventList_4FYGU\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment ListViewMarket on Market {\n  kind\n  line\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n    suspensionReason\n  }\n}\n\nfragment ListViewMarkets on Event {\n  sport {\n    key\n    id\n  }\n  markets {\n    id\n    kind\n    period\n    line\n    outcomes {\n      price\n      id\n    }\n    ...ListViewMarket\n  }\n}\n\nfragment LiveEvent on Event {\n  id\n  homeCompetitor\n  awayCompetitor\n  homeScore\n  awayScore\n  tradingStatus\n  oddCount\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...ListViewMarkets\n  ...FavouriteButton\n  ...TrackerButton\n}\n\nfragment LiveEventList_4FYGU on Query {\n  liveEvents(first: 20, orderBy: $orderBy, sport: $sport, search: $search, category: $category) {\n    edges {\n      node {\n        ...LiveOrder\n        ...LiveEvent\n        tournament {\n          ...LiveTournament\n          id\n        }\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  status\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n  category {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  status\n  sport {\n    key\n    id\n  }\n  homeScore\n  awayScore\n  serving\n  pointScore {\n    home\n    away\n  }\n  periodScores {\n    period\n    home\n    away\n  }\n}\n\nfragment LiveTeams on Event {\n  sport {\n    key\n    id\n  }\n  homeCompetitor\n  homeImageUrl\n  homeCountryCode\n  awayCompetitor\n  awayImageUrl\n  awayCountryCode\n  redCards {\n    home\n    away\n  }\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n\nfragment LiveTournament on Tournament {\n  sport {\n    key\n    id\n  }\n  ...LiveTournamentTitle\n}\n\nfragment LiveTournamentTitle on Tournament {\n  name\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n}\n\nfragment TrackerButton on Event {\n  id\n  sportradarMatchId\n}\n"
+    "text": "query LiveEventsQuery(\n  $orderBy: LiveEventOrder!\n  $sport: String\n  $search: String\n  $category: String\n) {\n  ...LiveEventList_4FYGU\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment ListViewMarket on Market {\n  kind\n  line\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n    suspensionReason\n  }\n}\n\nfragment ListViewMarkets on Event {\n  sport {\n    key\n    id\n  }\n  markets {\n    id\n    kind\n    period\n    line\n    outcomes {\n      price\n      id\n    }\n    ...ListViewMarket\n  }\n}\n\nfragment LiveEvent on Event {\n  id\n  homeCompetitor\n  awayCompetitor\n  homeScore\n  awayScore\n  tradingStatus\n  oddCount\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...ListViewMarkets\n  ...FavouriteButton\n  ...TrackerButton\n}\n\nfragment LiveEventList_4FYGU on Query {\n  liveEvents(first: 20, orderBy: $orderBy, sport: $sport, search: $search, category: $category) {\n    edges @stream(label: \"LiveEventList$stream$edges\", initialCount: 3) {\n      node {\n        ...LiveOrder\n        ...LiveEvent\n        tournament {\n          ...LiveTournament\n          id\n        }\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  status\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n  category {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  status\n  sport {\n    key\n    id\n  }\n  homeScore\n  awayScore\n  serving\n  pointScore {\n    home\n    away\n  }\n  periodScores {\n    period\n    home\n    away\n  }\n}\n\nfragment LiveTeams on Event {\n  sport {\n    key\n    id\n  }\n  homeCompetitor\n  homeImageUrl\n  homeCountryCode\n  awayCompetitor\n  awayImageUrl\n  awayCountryCode\n  redCards {\n    home\n    away\n  }\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n\nfragment LiveTournament on Tournament {\n  sport {\n    key\n    id\n  }\n  ...LiveTournamentTitle\n}\n\nfragment LiveTournamentTitle on Tournament {\n  name\n  sport {\n    key\n    id\n  }\n  category {\n    name\n    countryCode\n    id\n  }\n}\n\nfragment TrackerButton on Event {\n  id\n  sportradarMatchId\n}\n"
   }
 };
 })();

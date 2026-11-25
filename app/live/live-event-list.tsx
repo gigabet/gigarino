@@ -69,7 +69,7 @@ export default function LiveEventList(props: {
           search: $search
           category: $category
         ) @connection(key: "LiveEventList_liveEvents") {
-          edges {
+          edges @stream(initialCount: 3) {
             node {
               ...LiveOrder
               ...LiveEvent

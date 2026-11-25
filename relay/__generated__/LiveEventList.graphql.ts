@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<95af17331bf82ba21f1c263da5000142>>
+ * @generated SignedSource<<3f9e7d7f3c032eb95be20aa7f0126209>>
  * @lightSyntaxTransform
  */
 
@@ -121,43 +121,56 @@ return {
       "plural": false,
       "selections": [
         {
-          "alias": null,
-          "args": null,
-          "concreteType": "EventEdge",
-          "kind": "LinkedField",
-          "name": "edges",
-          "plural": true,
+          "kind": "Stream",
           "selections": [
             {
               "alias": null,
               "args": null,
-              "concreteType": "Event",
+              "concreteType": "EventEdge",
               "kind": "LinkedField",
-              "name": "node",
-              "plural": false,
+              "name": "edges",
+              "plural": true,
               "selections": [
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "LiveOrder"
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "LiveEvent"
-                },
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "Tournament",
+                  "concreteType": "Event",
                   "kind": "LinkedField",
-                  "name": "tournament",
+                  "name": "node",
                   "plural": false,
                   "selections": [
                     {
                       "args": null,
                       "kind": "FragmentSpread",
-                      "name": "LiveTournament"
+                      "name": "LiveOrder"
+                    },
+                    {
+                      "args": null,
+                      "kind": "FragmentSpread",
+                      "name": "LiveEvent"
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "concreteType": "Tournament",
+                      "kind": "LinkedField",
+                      "name": "tournament",
+                      "plural": false,
+                      "selections": [
+                        {
+                          "args": null,
+                          "kind": "FragmentSpread",
+                          "name": "LiveTournament"
+                        }
+                      ],
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "__typename",
+                      "storageKey": null
                     }
                   ],
                   "storageKey": null
@@ -166,21 +179,13 @@ return {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "__typename",
+                  "name": "cursor",
                   "storageKey": null
                 }
               ],
               "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "cursor",
-              "storageKey": null
             }
-          ],
-          "storageKey": null
+          ]
         },
         {
           "alias": null,
@@ -216,6 +221,6 @@ return {
 };
 })();
 
-(node as any).hash = "a2dc8baa6248c34416f35476bfb2a15c";
+(node as any).hash = "a46a439a04c5fa194fb04b1bb46af416";
 
 export default node;
