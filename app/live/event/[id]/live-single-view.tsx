@@ -4,6 +4,7 @@ import { format } from 'date-fns'
 import { SearchXIcon } from 'lucide-react'
 import { Suspense, useEffect } from 'react'
 import { graphql, type PreloadedQuery, useFragment, usePreloadedQuery } from 'react-relay'
+import { CompetitorBadge } from '@/app/live/competitor-badge'
 import { GoalBadge, hasGoals } from '@/app/live/goal-badge'
 import { getPeriod, getPeriodAt } from '@/app/live/helpers'
 import { SET_SPORTS, useLiveClock } from '@/app/live/live-event'
@@ -14,7 +15,6 @@ import MarketGroups, { MarketGroupsSkeleton } from '@/components/market-groups'
 import { MatchTracker } from '@/components/match-tracker'
 import { SportIcon } from '@/components/sport-icon'
 import { StatisticsSection } from '@/components/statistics-widget'
-import { TeamBadge } from '@/components/team-badge'
 import { useGoalFlash } from '@/context/hooks'
 import { useT } from '@/context/providers'
 import { cn, getRelativeDayLabel, pairToHues } from '@/lib/utils'
@@ -32,10 +32,15 @@ export default function LiveSingleView(props: { queryRef: PreloadedQuery<LiveSin
   const data = useFragment<LiveSingleView$key>(
     graphql`
       fragment LiveSingleView on Event {
+        sport {
+          key
+        }
         homeCompetitor
         homeImageUrl
+        homeCountryCode
         awayCompetitor
         awayImageUrl
+        awayCountryCode
         startTime
         ...LiveSingleHeader
         ...EventState
@@ -63,8 +68,10 @@ export default function LiveSingleView(props: { queryRef: PreloadedQuery<LiveSin
         <LiveSingleHeader event={data} />
         <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-4'>
           <Competitor
+            sport={data.sport.key}
             name={data.homeCompetitor}
             imageUrl={data.homeImageUrl}
+            countryCode={data.homeCountryCode}
             badge={<ServingIndicator event={data} side='HOME' />}
             hue={homeHue}
           />
@@ -72,8 +79,10 @@ export default function LiveSingleView(props: { queryRef: PreloadedQuery<LiveSin
             <EventState event={data} startTime={data.startTime} />
           </Suspense>
           <Competitor
+            sport={data.sport.key}
             name={data.awayCompetitor}
             imageUrl={data.awayImageUrl}
+            countryCode={data.awayCountryCode}
             badge={<ServingIndicator event={data} side='AWAY' />}
             hue={awayHue}
             reverse
@@ -152,8 +161,10 @@ function LiveSingleHeader(props: { event: LiveSingleHeader$key }) {
 }
 
 function Competitor(props: {
+  sport: string
   name: string
   imageUrl?: string | null
+  countryCode?: string | null
   reverse?: boolean
   badge?: React.ReactNode
   hue?: number
@@ -162,9 +173,11 @@ function Competitor(props: {
     <div
       className={`flex min-w-0 items-center gap-2 sm:gap-3 ${props.reverse ? 'flex-row-reverse text-right' : ''}`}
     >
-      <TeamBadge
+      <CompetitorBadge
+        sport={props.sport}
         name={props.name}
         imageUrl={props.imageUrl}
+        countryCode={props.countryCode}
         className='size-8 min-w-8 text-xs sm:size-10 sm:min-w-10 sm:text-sm'
         hue={props.hue}
       />

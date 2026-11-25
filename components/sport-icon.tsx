@@ -32,6 +32,8 @@ export function SportIcon({
       return <GiTennisBall {...finalProps} />
     case 'volleyball':
       return <GiVolleyballBall {...finalProps} />
+    case 'table-tennis':
+      return <GiPingPongBat {...finalProps} />
     case 'ice-hockey':
       return <GiHockey {...finalProps} />
     case 'esoccer':

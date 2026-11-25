@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useEffect } from 'react'
 import { MdSignalWifiStatusbarConnectedNoInternet1 } from 'react-icons/md'
 import { graphql, useFragment } from 'react-relay'
+import { CompetitorBadge } from '@/app/live/competitor-badge'
 import { GoalBadge, hasGoals } from '@/app/live/goal-badge'
 import { getPeriod, isTiebreak, useNow, useNowSelector } from '@/app/live/helpers'
 import { FINISHED } from '@/app/live/live-state'
@@ -13,7 +14,6 @@ import { useRefetchBatcher, useRefetchRegistration } from '@/app/live/refetch-co
 import { ServeDot } from '@/app/live/serve-dot'
 import { FavouriteButton } from '@/components/favourite-button'
 import { ListViewMarkets, ROW_LEAD } from '@/components/list-view-markets'
-import { TeamBadge } from '@/components/team-badge'
 import { TrackerButton } from '@/components/tracker-button'
 import { buttonVariants } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -250,10 +250,15 @@ export function LiveTeams(props: { event: LiveTeams$key }) {
   const data = useFragment(
     graphql`
       fragment LiveTeams on Event {
+        sport {
+          key
+        }
         homeCompetitor
         homeImageUrl
+        homeCountryCode
         awayCompetitor
         awayImageUrl
+        awayCountryCode
         redCards {
           home
           away
@@ -270,13 +275,25 @@ export function LiveTeams(props: { event: LiveTeams$key }) {
     <div className='flex min-w-0 flex-col justify-center gap-2'>
       {/* home */}
       <div className='flex h-6 items-center gap-2'>
-        <TeamBadge name={data.homeCompetitor} imageUrl={data.homeImageUrl} hue={homeHue} />
+        <CompetitorBadge
+          sport={data.sport.key}
+          name={data.homeCompetitor}
+          imageUrl={data.homeImageUrl}
+          countryCode={data.homeCountryCode}
+          hue={homeHue}
+        />
         <span className='truncate'>{data.homeCompetitor}</span>
         <RedCardMark count={data.redCards?.home} />
       </div>
       {/* away */}
       <div className='flex h-6 items-center gap-2'>
-        <TeamBadge name={data.awayCompetitor} imageUrl={data.awayImageUrl} hue={awayHue} />
+        <CompetitorBadge
+          sport={data.sport.key}
+          name={data.awayCompetitor}
+          imageUrl={data.awayImageUrl}
+          countryCode={data.awayCountryCode}
+          hue={awayHue}
+        />
         <span className='truncate'>{data.awayCompetitor}</span>
         <RedCardMark count={data.redCards?.away} />
       </div>
@@ -302,7 +319,7 @@ function RedCardMark(props: { count: number | undefined }) {
   )
 }
 
-const CELL = 'flex h-6 min-w-4 items-center justify-center'
+const CELL = 'flex h-6 min-w-3 items-center justify-center sm:min-w-4'
 
 // two h-6 cells with gap-y-2, so every column lines up with the rows in LiveTeams
 function Column(props: { home: React.ReactNode; away: React.ReactNode; className?: string }) {
@@ -353,18 +370,20 @@ export function LiveScore(props: { event: LiveScore$key }) {
     live && !!data.pointScore && isTiebreak(data.pointScore.home, data.pointScore.away)
 
   return (
-    <div className='ml-auto flex shrink-0 items-start gap-3 pl-3 font-mono font-semibold'>
+    <div className='relative ml-auto flex shrink-0 items-start gap-2 pl-3 font-mono font-semibold sm:gap-3'>
       {live && data.serving && (
         <Column
           home={<ServeDot active={data.serving === 'HOME'} />}
           away={<ServeDot active={data.serving === 'AWAY'} />}
+          // phones: sit in the gutter left of the scores instead of taking width from the names
+          className='max-sm:absolute max-sm:top-0 max-sm:left-0'
         />
       )}
 
       {data.periodScores.length > 0 && (
         <div
           className={cn(
-            'text-secondary flex gap-2 text-xs font-normal',
+            'text-secondary flex gap-1.5 text-xs font-normal sm:gap-2',
             // no room for quarters/periods next to the names on phones; the total remains
             !inSets && 'max-sm:hidden'
           )}
@@ -397,7 +416,7 @@ export function LiveScore(props: { event: LiveScore$key }) {
           <Column
             home={data.pointScore.home}
             away={data.pointScore.away}
-            className='text-primary border-l border-white/10 pl-3 text-xs'
+            className='text-primary border-l border-white/10 pl-2 text-xs sm:pl-3'
           />
         </div>
       )}

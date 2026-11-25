@@ -36,7 +36,13 @@ export interface ErrorResponse {
   error: string
 }
 
-export type Sport = 'football' | 'basketball' | 'tennis' | 'ice-hockey' | 'volleyball'
+export type Sport =
+  | 'football'
+  | 'basketball'
+  | 'tennis'
+  | 'ice-hockey'
+  | 'volleyball'
+  | 'table-tennis'
 // | 'volleyball' | 'handball' | 'baseball' | 'american-football' | 'rugby-union' | 'rugby-league' | 'cricket' | 'darts' | 'snooker' | 'table-tennis' | 'mma' | 'boxing'
 
 export type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>

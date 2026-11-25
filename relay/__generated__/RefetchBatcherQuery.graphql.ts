@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7187dacd18cb7a21a9b6e4861565eafd>>
+ * @generated SignedSource<<66ff01c1b46c86c1519bd604cdbb73cf>>
  * @lightSyntaxTransform
  */
 
@@ -62,30 +62,30 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "key",
+  "storageKey": null
+},
+v6 = [
+  (v5/*:: as any*/),
+  (v2/*:: as any*/)
+],
+v7 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "home",
   "storageKey": null
 },
-v6 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "away",
   "storageKey": null
 },
-v7 = [
-  (v5/*:: as any*/),
-  (v6/*:: as any*/)
-],
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "key",
-  "storageKey": null
-},
 v9 = [
-  (v8/*:: as any*/),
-  (v2/*:: as any*/)
+  (v7/*:: as any*/),
+  (v8/*:: as any*/)
 ];
 return {
   "fragment": {
@@ -216,8 +216,25 @@ return {
           {
             "alias": null,
             "args": null,
+            "concreteType": "Sport",
+            "kind": "LinkedField",
+            "name": "sport",
+            "plural": false,
+            "selections": (v6/*:: as any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "kind": "ScalarField",
             "name": "homeImageUrl",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "homeCountryCode",
             "storageKey": null
           },
           {
@@ -230,19 +247,16 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "RedCards",
-            "kind": "LinkedField",
-            "name": "redCards",
-            "plural": false,
-            "selections": (v7/*:: as any*/),
+            "kind": "ScalarField",
+            "name": "awayCountryCode",
             "storageKey": null
           },
           {
             "alias": null,
             "args": null,
-            "concreteType": "Sport",
+            "concreteType": "RedCards",
             "kind": "LinkedField",
-            "name": "sport",
+            "name": "redCards",
             "plural": false,
             "selections": (v9/*:: as any*/),
             "storageKey": null
@@ -261,7 +275,7 @@ return {
             "kind": "LinkedField",
             "name": "pointScore",
             "plural": false,
-            "selections": (v7/*:: as any*/),
+            "selections": (v9/*:: as any*/),
             "storageKey": null
           },
           {
@@ -273,8 +287,8 @@ return {
             "plural": true,
             "selections": [
               (v4/*:: as any*/),
-              (v5/*:: as any*/),
-              (v6/*:: as any*/)
+              (v7/*:: as any*/),
+              (v8/*:: as any*/)
             ],
             "storageKey": null
           },
@@ -325,7 +339,7 @@ return {
                     "name": "index",
                     "storageKey": null
                   },
-                  (v8/*:: as any*/),
+                  (v5/*:: as any*/),
                   (v3/*:: as any*/),
                   {
                     "alias": null,
@@ -375,7 +389,7 @@ return {
             "kind": "LinkedField",
             "name": "tournament",
             "plural": false,
-            "selections": (v9/*:: as any*/),
+            "selections": (v6/*:: as any*/),
             "storageKey": null
           },
           {
@@ -385,7 +399,7 @@ return {
             "kind": "LinkedField",
             "name": "category",
             "plural": false,
-            "selections": (v9/*:: as any*/),
+            "selections": (v6/*:: as any*/),
             "storageKey": null
           }
         ],
@@ -394,12 +408,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d0f5b6534a589006d1c207a1f7209148",
+    "cacheID": "d57a16d49f730649c9eef033145b6a7d",
     "id": null,
     "metadata": {},
     "name": "RefetchBatcherQuery",
     "operationKind": "query",
-    "text": "query RefetchBatcherQuery(\n  $ids: [ID!]!\n) {\n  eventsByIds(ids: $ids) {\n    ...LiveEvent\n    ...LiveOrder\n    id\n  }\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment ListViewMarket on Market {\n  kind\n  line\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n    suspensionReason\n  }\n}\n\nfragment ListViewMarkets on Event {\n  sport {\n    key\n    id\n  }\n  markets {\n    id\n    kind\n    period\n    line\n    outcomes {\n      price\n      id\n    }\n    ...ListViewMarket\n  }\n}\n\nfragment LiveEvent on Event {\n  id\n  homeCompetitor\n  awayCompetitor\n  homeScore\n  awayScore\n  tradingStatus\n  oddCount\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...ListViewMarkets\n  ...FavouriteButton\n  ...TrackerButton\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  status\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n  category {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  status\n  sport {\n    key\n    id\n  }\n  homeScore\n  awayScore\n  serving\n  pointScore {\n    home\n    away\n  }\n  periodScores {\n    period\n    home\n    away\n  }\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  redCards {\n    home\n    away\n  }\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n\nfragment TrackerButton on Event {\n  id\n  sportradarMatchId\n}\n"
+    "text": "query RefetchBatcherQuery(\n  $ids: [ID!]!\n) {\n  eventsByIds(ids: $ids) {\n    ...LiveEvent\n    ...LiveOrder\n    id\n  }\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment ListViewMarket on Market {\n  kind\n  line\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n    suspensionReason\n  }\n}\n\nfragment ListViewMarkets on Event {\n  sport {\n    key\n    id\n  }\n  markets {\n    id\n    kind\n    period\n    line\n    outcomes {\n      price\n      id\n    }\n    ...ListViewMarket\n  }\n}\n\nfragment LiveEvent on Event {\n  id\n  homeCompetitor\n  awayCompetitor\n  homeScore\n  awayScore\n  tradingStatus\n  oddCount\n  ...LiveTime\n  ...LiveTeams\n  ...LiveScore\n  ...ListViewMarkets\n  ...FavouriteButton\n  ...TrackerButton\n}\n\nfragment LiveOrder on Event {\n  id\n  startTime\n  status\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    id\n  }\n  category {\n    key\n    id\n  }\n}\n\nfragment LiveScore on Event {\n  status\n  sport {\n    key\n    id\n  }\n  homeScore\n  awayScore\n  serving\n  pointScore {\n    home\n    away\n  }\n  periodScores {\n    period\n    home\n    away\n  }\n}\n\nfragment LiveTeams on Event {\n  sport {\n    key\n    id\n  }\n  homeCompetitor\n  homeImageUrl\n  homeCountryCode\n  awayCompetitor\n  awayImageUrl\n  awayCountryCode\n  redCards {\n    home\n    away\n  }\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n\nfragment TrackerButton on Event {\n  id\n  sportradarMatchId\n}\n"
   }
 };
 })();

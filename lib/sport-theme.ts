@@ -30,6 +30,16 @@ const themes: Record<string, SportTheme> = {
     glow: 'rgba(56, 189, 248, 0.45)',
     soft: 'rgba(56, 189, 248, 0.12)',
   },
+  volleyball: {
+    primary: '#f472b6',
+    glow: 'rgba(244, 114, 182, 0.45)',
+    soft: 'rgba(244, 114, 182, 0.12)',
+  },
+  'table-tennis': {
+    primary: '#2dd4bf',
+    glow: 'rgba(45, 212, 191, 0.45)',
+    soft: 'rgba(45, 212, 191, 0.12)',
+  },
   esoccer: {
     primary: '#c084fc',
     glow: 'rgba(192, 132, 252, 0.45)',

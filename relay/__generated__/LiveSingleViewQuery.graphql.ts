@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a6531ef8711c1d23b7707294960f2de0>>
+ * @generated SignedSource<<d5e6b8719b321559fb5191c1792425d4>>
  * @lightSyntaxTransform
  */
 
@@ -49,35 +49,35 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "homeCompetitor",
+  "name": "key",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "awayCompetitor",
+  "name": "id",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "startTime",
+  "name": "homeCompetitor",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "key",
+  "name": "awayCompetitor",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "startTime",
   "storageKey": null
 },
 v7 = {
@@ -163,7 +163,7 @@ v18 = [
   (v10/*:: as any*/),
   (v11/*:: as any*/),
   (v17/*:: as any*/),
-  (v4/*:: as any*/),
+  (v6/*:: as any*/),
   (v14/*:: as any*/)
 ],
 v19 = {
@@ -232,23 +232,6 @@ return {
         "name": "event",
         "plural": false,
         "selections": [
-          (v2/*:: as any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "homeImageUrl",
-            "storageKey": null
-          },
-          (v3/*:: as any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "awayImageUrl",
-            "storageKey": null
-          },
-          (v4/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -257,11 +240,42 @@ return {
             "name": "sport",
             "plural": false,
             "selections": [
-              (v5/*:: as any*/),
-              (v6/*:: as any*/)
+              (v2/*:: as any*/),
+              (v3/*:: as any*/)
             ],
             "storageKey": null
           },
+          (v4/*:: as any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "homeImageUrl",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "homeCountryCode",
+            "storageKey": null
+          },
+          (v5/*:: as any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "awayImageUrl",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "awayCountryCode",
+            "storageKey": null
+          },
+          (v6/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -270,9 +284,9 @@ return {
             "name": "tournament",
             "plural": false,
             "selections": [
-              (v5/*:: as any*/),
+              (v2/*:: as any*/),
               (v7/*:: as any*/),
-              (v6/*:: as any*/)
+              (v3/*:: as any*/)
             ],
             "storageKey": null
           },
@@ -285,13 +299,13 @@ return {
             "plural": false,
             "selections": [
               (v7/*:: as any*/),
-              (v6/*:: as any*/)
+              (v3/*:: as any*/)
             ],
             "storageKey": null
           },
           (v8/*:: as any*/),
           (v9/*:: as any*/),
-          (v6/*:: as any*/),
+          (v3/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -401,10 +415,10 @@ return {
                 "kind": "Defer",
                 "label": "LiveSingleView$defer$StatisticsWidget",
                 "selections": [
-                  (v6/*:: as any*/),
-                  (v8/*:: as any*/),
-                  (v2/*:: as any*/),
                   (v3/*:: as any*/),
+                  (v8/*:: as any*/),
+                  (v4/*:: as any*/),
+                  (v5/*:: as any*/),
                   {
                     "alias": null,
                     "args": [
@@ -425,7 +439,7 @@ return {
                     "name": "timeline",
                     "plural": true,
                     "selections": [
-                      (v6/*:: as any*/),
+                      (v3/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -628,7 +642,7 @@ return {
                         ],
                         "storageKey": null
                       },
-                      (v6/*:: as any*/)
+                      (v3/*:: as any*/)
                     ],
                     "storageKey": null
                   },
@@ -683,7 +697,7 @@ return {
                         "name": "stats",
                         "plural": true,
                         "selections": [
-                          (v5/*:: as any*/),
+                          (v2/*:: as any*/),
                           (v12/*:: as any*/),
                           (v13/*:: as any*/)
                         ],
@@ -723,7 +737,7 @@ return {
                           (v10/*:: as any*/),
                           (v11/*:: as any*/),
                           (v17/*:: as any*/),
-                          (v4/*:: as any*/)
+                          (v6/*:: as any*/)
                         ],
                         "storageKey": null
                       }
@@ -747,7 +761,7 @@ return {
                 "name": "markets",
                 "plural": true,
                 "selections": [
-                  (v6/*:: as any*/),
+                  (v3/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -781,7 +795,7 @@ return {
                     "name": "outcomes",
                     "plural": true,
                     "selections": [
-                      (v6/*:: as any*/),
+                      (v3/*:: as any*/),
                       (v19/*:: as any*/),
                       (v7/*:: as any*/),
                       {
@@ -807,12 +821,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "29fb49891757b6f3d4215436c80bb09b",
+    "cacheID": "da0ee88814c1a874ca289b67cf569257",
     "id": null,
     "metadata": {},
     "name": "LiveSingleViewQuery",
     "operationKind": "query",
-    "text": "query LiveSingleViewQuery(\n  $id: ID!\n  $showStats: Boolean!\n) {\n  event(id: $id) {\n    ...LiveSingleView\n    id\n  }\n}\n\nfragment EventState on Event {\n  status\n  sport {\n    key\n    id\n  }\n  homeScore\n  awayScore\n  ...LiveTime\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment LiveScoreboard on Event {\n  status\n  sport {\n    key\n    id\n  }\n  homeCompetitor\n  awayCompetitor\n  homeScore\n  awayScore\n  pointScore {\n    home\n    away\n  }\n  periodScores {\n    period\n    home\n    away\n  }\n}\n\nfragment LiveSingleHeader on Event {\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    name\n    id\n  }\n  category {\n    name\n    id\n  }\n  status\n  period\n  ...FavouriteButton\n}\n\nfragment LiveSingleView on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  ...LiveSingleHeader\n  ...EventState\n  ...LiveScoreboard\n  ...ServingIndicator\n  ...MatchTracker\n  ...StatisticsWidget @include(if: $showStats) @defer(label: \"LiveSingleView$defer$StatisticsWidget\")\n  ...MarketGroups @defer(label: \"LiveSingleView$defer$MarketGroups\")\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  suspensionReason\n  outcomes {\n    id\n    index\n    name\n    price\n    status\n    suspensionReason\n  }\n}\n\nfragment MarketGroups on Event {\n  markets {\n    id\n    groups\n    kind\n    index\n    ...MarketCard\n  }\n}\n\nfragment MatchTracker on Event {\n  sportradarMatchId\n}\n\nfragment ServingIndicator on Event {\n  status\n  serving\n}\n\nfragment StatisticsWidget on Event {\n  id\n  status\n  homeCompetitor\n  awayCompetitor\n  timeline(types: [GOAL, RED_CARD, PENALTY, CORNER, YELLOW_CARD]) {\n    id\n  }\n  ...StatisticsWidgetTimeline\n  tournament {\n    standings {\n      groups {\n        __typename\n      }\n    }\n    ...StatisticsWidgetTable\n    id\n  }\n  insights {\n    homePosition\n    awayPosition\n    venue\n    referee\n    round\n    stats {\n      key\n      home\n      away\n    }\n    homeRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    awayRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    headToHead {\n      outcome\n      ...StatisticsWidgetPastMatch\n    }\n  }\n}\n\nfragment StatisticsWidgetIncident on MatchIncident {\n  type\n  minute\n  addedTime\n  scorer\n  detail\n  penalty\n  outcome\n  cancelled\n  homeScore\n  awayScore\n}\n\nfragment StatisticsWidgetPastMatch on PastMatch {\n  homeName\n  awayName\n  homeScore\n  awayScore\n  competition\n  startTime\n  outcome\n}\n\nfragment StatisticsWidgetTable on Tournament {\n  standings {\n    season\n    currentRound\n    maxRounds\n    groups {\n      ...StatisticsWidgetTableGroup\n    }\n  }\n}\n\nfragment StatisticsWidgetTableGroup on StandingGroup {\n  name\n  rows {\n    position\n    teamName\n    played\n    won\n    drawn\n    lost\n    goalsFor\n    goalsAgainst\n    points\n    zone\n  }\n}\n\nfragment StatisticsWidgetTimeline on Event {\n  homeCompetitor\n  awayCompetitor\n  timeline(types: [GOAL, RED_CARD, PENALTY, CORNER, YELLOW_CARD]) {\n    id\n    side\n    minute\n    addedTime\n    ...StatisticsWidgetIncident\n  }\n}\n"
+    "text": "query LiveSingleViewQuery(\n  $id: ID!\n  $showStats: Boolean!\n) {\n  event(id: $id) {\n    ...LiveSingleView\n    id\n  }\n}\n\nfragment EventState on Event {\n  status\n  sport {\n    key\n    id\n  }\n  homeScore\n  awayScore\n  ...LiveTime\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment LiveScoreboard on Event {\n  status\n  sport {\n    key\n    id\n  }\n  homeCompetitor\n  awayCompetitor\n  homeScore\n  awayScore\n  pointScore {\n    home\n    away\n  }\n  periodScores {\n    period\n    home\n    away\n  }\n}\n\nfragment LiveSingleHeader on Event {\n  sport {\n    key\n    id\n  }\n  tournament {\n    key\n    name\n    id\n  }\n  category {\n    name\n    id\n  }\n  status\n  period\n  ...FavouriteButton\n}\n\nfragment LiveSingleView on Event {\n  sport {\n    key\n    id\n  }\n  homeCompetitor\n  homeImageUrl\n  homeCountryCode\n  awayCompetitor\n  awayImageUrl\n  awayCountryCode\n  startTime\n  ...LiveSingleHeader\n  ...EventState\n  ...LiveScoreboard\n  ...ServingIndicator\n  ...MatchTracker\n  ...StatisticsWidget @include(if: $showStats) @defer(label: \"LiveSingleView$defer$StatisticsWidget\")\n  ...MarketGroups @defer(label: \"LiveSingleView$defer$MarketGroups\")\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n\nfragment MarketCard on Market {\n  name\n  line\n  status\n  suspensionReason\n  outcomes {\n    id\n    index\n    name\n    price\n    status\n    suspensionReason\n  }\n}\n\nfragment MarketGroups on Event {\n  markets {\n    id\n    groups\n    kind\n    index\n    ...MarketCard\n  }\n}\n\nfragment MatchTracker on Event {\n  sportradarMatchId\n}\n\nfragment ServingIndicator on Event {\n  status\n  serving\n}\n\nfragment StatisticsWidget on Event {\n  id\n  status\n  homeCompetitor\n  awayCompetitor\n  timeline(types: [GOAL, RED_CARD, PENALTY, CORNER, YELLOW_CARD]) {\n    id\n  }\n  ...StatisticsWidgetTimeline\n  tournament {\n    standings {\n      groups {\n        __typename\n      }\n    }\n    ...StatisticsWidgetTable\n    id\n  }\n  insights {\n    homePosition\n    awayPosition\n    venue\n    referee\n    round\n    stats {\n      key\n      home\n      away\n    }\n    homeRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    awayRecent {\n      ...StatisticsWidgetPastMatch\n    }\n    headToHead {\n      outcome\n      ...StatisticsWidgetPastMatch\n    }\n  }\n}\n\nfragment StatisticsWidgetIncident on MatchIncident {\n  type\n  minute\n  addedTime\n  scorer\n  detail\n  penalty\n  outcome\n  cancelled\n  homeScore\n  awayScore\n}\n\nfragment StatisticsWidgetPastMatch on PastMatch {\n  homeName\n  awayName\n  homeScore\n  awayScore\n  competition\n  startTime\n  outcome\n}\n\nfragment StatisticsWidgetTable on Tournament {\n  standings {\n    season\n    currentRound\n    maxRounds\n    groups {\n      ...StatisticsWidgetTableGroup\n    }\n  }\n}\n\nfragment StatisticsWidgetTableGroup on StandingGroup {\n  name\n  rows {\n    position\n    teamName\n    played\n    won\n    drawn\n    lost\n    goalsFor\n    goalsAgainst\n    points\n    zone\n  }\n}\n\nfragment StatisticsWidgetTimeline on Event {\n  homeCompetitor\n  awayCompetitor\n  timeline(types: [GOAL, RED_CARD, PENALTY, CORNER, YELLOW_CARD]) {\n    id\n    side\n    minute\n    addedTime\n    ...StatisticsWidgetIncident\n  }\n}\n"
   }
 };
 })();

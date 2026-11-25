@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9b53ccef90b934e17d9f9162a1d9fdf3>>
+ * @generated SignedSource<<0060ebc2d1d9ed844118a11c77c3a903>>
  * @lightSyntaxTransform
  */
 
@@ -248,6 +248,13 @@ return {
                 "alias": null,
                 "args": null,
                 "kind": "ScalarField",
+                "name": "homeCountryCode",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
                 "name": "awayCompetitor",
                 "storageKey": null
               },
@@ -256,6 +263,13 @@ return {
                 "args": null,
                 "kind": "ScalarField",
                 "name": "awayImageUrl",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "awayCountryCode",
                 "storageKey": null
               },
               {
@@ -313,12 +327,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "4071480000c3c8161e812c9cdf378a25",
+    "cacheID": "e1e5b731c80d023582788f538b229e3b",
     "id": null,
     "metadata": {},
     "name": "LiveStateSubscription",
     "operationKind": "subscription",
-    "text": "subscription LiveStateSubscription(\n  $eventIds: [ID!]!\n) {\n  eventStateUpdated(eventIds: $eventIds) {\n    event {\n      id\n      status\n      tradingStatus\n      ...LiveScore\n      ...LiveTeams\n      ...LiveTime\n    }\n  }\n}\n\nfragment LiveScore on Event {\n  status\n  sport {\n    key\n    id\n  }\n  homeScore\n  awayScore\n  serving\n  pointScore {\n    home\n    away\n  }\n  periodScores {\n    period\n    home\n    away\n  }\n}\n\nfragment LiveTeams on Event {\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  redCards {\n    home\n    away\n  }\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n"
+    "text": "subscription LiveStateSubscription(\n  $eventIds: [ID!]!\n) {\n  eventStateUpdated(eventIds: $eventIds) {\n    event {\n      id\n      status\n      tradingStatus\n      ...LiveScore\n      ...LiveTeams\n      ...LiveTime\n    }\n  }\n}\n\nfragment LiveScore on Event {\n  status\n  sport {\n    key\n    id\n  }\n  homeScore\n  awayScore\n  serving\n  pointScore {\n    home\n    away\n  }\n  periodScores {\n    period\n    home\n    away\n  }\n}\n\nfragment LiveTeams on Event {\n  sport {\n    key\n    id\n  }\n  homeCompetitor\n  homeImageUrl\n  homeCountryCode\n  awayCompetitor\n  awayImageUrl\n  awayCountryCode\n  redCards {\n    home\n    away\n  }\n}\n\nfragment LiveTime on Event {\n  id\n  status\n  period\n  clockRunning\n  clockDirection\n  clockElapsedSeconds\n  clockAnchorAt\n  liveSeenAt\n  tradingStatus\n}\n"
   }
 };
 })();
