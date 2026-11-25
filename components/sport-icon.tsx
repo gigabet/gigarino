@@ -2,9 +2,11 @@ import {
   GiBasketballBall,
   GiConsoleController,
   GiHockey,
+  GiPingPongBat,
   GiSoccerBall,
   GiTennisBall,
   GiTrophyCup,
+  GiVolleyballBall,
 } from 'react-icons/gi'
 import type { IconBaseProps } from 'react-icons/lib'
 import { getSportTheme } from '@/lib/sport-theme'
@@ -28,6 +30,8 @@ export function SportIcon({
       return <GiBasketballBall {...finalProps} />
     case 'tennis':
       return <GiTennisBall {...finalProps} />
+    case 'volleyball':
+      return <GiVolleyballBall {...finalProps} />
     case 'ice-hockey':
       return <GiHockey {...finalProps} />
     case 'esoccer':

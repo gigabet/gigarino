@@ -308,6 +308,11 @@ type Event implements Node {
   awayCompetitor: String!
 
   """
+  Away competitor country, ISO 3166-1 alpha-2; null when unknown.
+  """
+  awayCountryCode: String
+
+  """
   Away team crest URL; null when unavailable.
   """
   awayImageUrl: String
@@ -334,6 +339,11 @@ type Event implements Node {
   """
   clockRunning: Boolean!
   homeCompetitor: String!
+
+  """
+  Home competitor country, ISO 3166-1 alpha-2 (as Category.countryCode); for flags where there is no crest, e.g. tennis players. Null when unknown.
+  """
+  homeCountryCode: String
 
   """
   Home team crest URL; null when unavailable.
