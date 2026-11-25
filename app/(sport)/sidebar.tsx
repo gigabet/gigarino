@@ -126,7 +126,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
           <hr className='w-8 border-white/7' />
           <Link
             href='/'
-            className='text-secondary hover:bg-dark-300 hover:text-foreground flex size-9 items-center justify-center rounded-full transition-all hover:scale-110'
+            className='text-secondary hover:bg-dark-300 hover:text-foreground flex size-9 items-center justify-center rounded-full transition-colors'
           >
             <SportIcon sport='highlights' colored className='size-5' />
           </Link>
@@ -139,7 +139,7 @@ export default function Sidebar(props: { queryRef: PreloadedQuery<PrematchLayout
               trigger={
                 <button
                   type='button'
-                  className='text-secondary hover:bg-dark-300 hover:text-foreground flex size-9 items-center justify-center rounded-full transition-all hover:scale-110'
+                  className='text-secondary hover:bg-dark-300 hover:text-foreground flex size-9 items-center justify-center rounded-full transition-colors'
                 >
                   <SportIcon sport={sport.key} colored className='size-5' />
                 </button>

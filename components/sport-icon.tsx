@@ -55,7 +55,7 @@ export function SportIconBadge(props: { sport: Sport | string; size?: 'sm' | 'md
 
   return (
     <span
-      className={`relative flex ${size} shrink-0 items-center justify-center rounded-full transition-all duration-300 group-hover:scale-105`}
+      className={`relative flex ${size} shrink-0 items-center justify-center rounded-full`}
       style={{
         background: `radial-gradient(circle at 30% 30%, ${theme.soft}, transparent 70%)`,
         border: `1px solid ${theme.glow}`,

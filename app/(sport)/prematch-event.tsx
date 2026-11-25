@@ -4,9 +4,9 @@ import { useAtomValue } from 'jotai'
 import Link from 'next/link'
 import { Suspense } from 'react'
 import { fetchQuery, graphql, useFragment, useRelayEnvironment } from 'react-relay'
+import { CompetitorBadge } from '@/components/competitor-badge'
 import { FavouriteButton } from '@/components/favourite-button'
 import { ListViewMarkets, ListViewMarketsSkeleton, ROW_LEAD } from '@/components/list-view-markets'
-import { TeamBadge } from '@/components/team-badge'
 import { TrackerButton } from '@/components/tracker-button'
 import { buttonVariants } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -21,10 +21,15 @@ export default function PrematchEvent(props: { node: PrematchEvent$key; scope?: 
     graphql`
       fragment PrematchEvent on Event {
         id
+        sport {
+          key
+        }
         homeCompetitor
         homeImageUrl
+        homeCountryCode
         awayCompetitor
         awayImageUrl
+        awayCountryCode
         startTime
         oddCount
         ...FavouriteButton
@@ -67,11 +72,23 @@ export default function PrematchEvent(props: { node: PrematchEvent$key; scope?: 
           prefetch={false}
         >
           <div className='flex items-center gap-2'>
-            <TeamBadge name={data.homeCompetitor} imageUrl={data.homeImageUrl} hue={homeHue} />
+            <CompetitorBadge
+              sport={data.sport.key}
+              name={data.homeCompetitor}
+              imageUrl={data.homeImageUrl}
+              countryCode={data.homeCountryCode}
+              hue={homeHue}
+            />
             <span className='truncate'>{data.homeCompetitor}</span>
           </div>
           <div className='flex items-center gap-2'>
-            <TeamBadge name={data.awayCompetitor} imageUrl={data.awayImageUrl} hue={awayHue} />
+            <CompetitorBadge
+              sport={data.sport.key}
+              name={data.awayCompetitor}
+              imageUrl={data.awayImageUrl}
+              countryCode={data.awayCountryCode}
+              hue={awayHue}
+            />
             <span className='truncate'>{data.awayCompetitor}</span>
           </div>
         </Link>

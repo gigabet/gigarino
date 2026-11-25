@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b8287c62f719e3381457980b457a88cf>>
+ * @generated SignedSource<<0e15e04f662842f1e17750079233ccb9>>
  * @lightSyntaxTransform
  */
 
@@ -43,6 +43,19 @@ v2 = {
   "args": null,
   "kind": "ScalarField",
   "name": "key",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "Sport",
+  "kind": "LinkedField",
+  "name": "sport",
+  "plural": false,
+  "selections": [
+    (v2/*:: as any*/),
+    (v1/*:: as any*/)
+  ],
   "storageKey": null
 };
 return {
@@ -99,6 +112,7 @@ return {
                     "name": "isLive",
                     "storageKey": null
                   },
+                  (v3/*:: as any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -117,6 +131,13 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
+                    "name": "homeCountryCode",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
                     "name": "awayCompetitor",
                     "storageKey": null
                   },
@@ -125,6 +146,13 @@ return {
                     "args": null,
                     "kind": "ScalarField",
                     "name": "awayImageUrl",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "awayCountryCode",
                     "storageKey": null
                   },
                   {
@@ -160,19 +188,7 @@ return {
                     "kind": "Defer",
                     "label": "PrematchEvent$defer$ListViewMarkets",
                     "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "Sport",
-                        "kind": "LinkedField",
-                        "name": "sport",
-                        "plural": false,
-                        "selections": [
-                          (v2/*:: as any*/),
-                          (v1/*:: as any*/)
-                        ],
-                        "storageKey": null
-                      },
+                      (v3/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -311,12 +327,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "21f926c6bf27f0531955e6de3f30e5e8",
+    "cacheID": "ae5df9a8703e635d64622872b24c5a37",
     "id": null,
     "metadata": {},
     "name": "FavouriteEventsPollQuery",
     "operationKind": "query",
-    "text": "query FavouriteEventsPollQuery {\n  ...FavouriteEvents\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment FavouriteEvents on Query {\n  events(first: 50, favourites: true) {\n    edges {\n      node {\n        id\n        isLive\n        ...PrematchEvent\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ListViewMarket on Market {\n  kind\n  line\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n    suspensionReason\n  }\n}\n\nfragment ListViewMarkets on Event {\n  sport {\n    key\n    id\n  }\n  markets {\n    id\n    kind\n    period\n    line\n    outcomes {\n      price\n      id\n    }\n    ...ListViewMarket\n  }\n}\n\nfragment PrematchEvent on Event {\n  id\n  homeCompetitor\n  homeImageUrl\n  awayCompetitor\n  awayImageUrl\n  startTime\n  oddCount\n  ...FavouriteButton\n  ...TrackerButton\n  ...ListViewMarkets @defer(label: \"PrematchEvent$defer$ListViewMarkets\")\n}\n\nfragment TrackerButton on Event {\n  id\n  sportradarMatchId\n}\n"
+    "text": "query FavouriteEventsPollQuery {\n  ...FavouriteEvents\n}\n\nfragment FavouriteButton on Event {\n  id\n  isFavourite\n  isLive\n}\n\nfragment FavouriteEvents on Query {\n  events(first: 50, favourites: true) {\n    edges {\n      node {\n        id\n        isLive\n        ...PrematchEvent\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n}\n\nfragment ListViewMarket on Market {\n  kind\n  line\n  outcomes {\n    id\n    index\n    key\n    price\n    status\n    suspensionReason\n  }\n}\n\nfragment ListViewMarkets on Event {\n  sport {\n    key\n    id\n  }\n  markets {\n    id\n    kind\n    period\n    line\n    outcomes {\n      price\n      id\n    }\n    ...ListViewMarket\n  }\n}\n\nfragment PrematchEvent on Event {\n  id\n  sport {\n    key\n    id\n  }\n  homeCompetitor\n  homeImageUrl\n  homeCountryCode\n  awayCompetitor\n  awayImageUrl\n  awayCountryCode\n  startTime\n  oddCount\n  ...FavouriteButton\n  ...TrackerButton\n  ...ListViewMarkets @defer(label: \"PrematchEvent$defer$ListViewMarkets\")\n}\n\nfragment TrackerButton on Event {\n  id\n  sportradarMatchId\n}\n"
   }
 };
 })();

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<662955111fa7d1ae3c37820c881cffbe>>
+ * @generated SignedSource<<f3ec2e1a78e86bf5c456fc254d3a1596>>
  * @lightSyntaxTransform
  */
 
@@ -11,11 +11,16 @@ import { ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PrematchEvent$data = {
   readonly awayCompetitor: string;
+  readonly awayCountryCode: string | null | undefined;
   readonly awayImageUrl: string | null | undefined;
   readonly homeCompetitor: string;
+  readonly homeCountryCode: string | null | undefined;
   readonly homeImageUrl: string | null | undefined;
   readonly id: string;
   readonly oddCount: number;
+  readonly sport: {
+    readonly key: string;
+  };
   readonly startTime: string;
   readonly " $fragmentSpreads": FragmentRefs<"FavouriteButton" | "ListViewMarkets" | "TrackerButton">;
   readonly " $fragmentType": "PrematchEvent";
@@ -41,6 +46,24 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
+      "concreteType": "Sport",
+      "kind": "LinkedField",
+      "name": "sport",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "key",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
       "kind": "ScalarField",
       "name": "homeCompetitor",
       "storageKey": null
@@ -56,6 +79,13 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
+      "name": "homeCountryCode",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
       "name": "awayCompetitor",
       "storageKey": null
     },
@@ -64,6 +94,13 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "ScalarField",
       "name": "awayImageUrl",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "awayCountryCode",
       "storageKey": null
     },
     {
@@ -105,6 +142,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "e02a183e132de1ad9d140bd5d708bb92";
+(node as any).hash = "7ac189df7c8c3909547e9dd809a78272";
 
 export default node;
