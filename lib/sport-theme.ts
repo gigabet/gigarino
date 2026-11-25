@@ -6,9 +6,9 @@ export interface SportTheme {
 
 const themes: Record<string, SportTheme> = {
   highlights: {
-    primary: '#facc15',
-    glow: 'rgba(250, 204, 21, 0.45)',
-    soft: 'rgba(250, 204, 21, 0.12)',
+    primary: '#d4af37',
+    glow: 'rgba(212, 175, 55, 0.45)',
+    soft: 'rgba(212, 175, 55, 0.12)',
   },
   football: {
     primary: '#fff',
@@ -31,14 +31,14 @@ const themes: Record<string, SportTheme> = {
     soft: 'rgba(56, 189, 248, 0.12)',
   },
   volleyball: {
-    primary: '#f472b6',
-    glow: 'rgba(244, 114, 182, 0.45)',
-    soft: 'rgba(244, 114, 182, 0.12)',
+    primary: '#f5e050',
+    glow: 'rgba(245, 224, 80, 0.45)',
+    soft: 'rgba(245, 224, 80, 0.12)',
   },
   'table-tennis': {
-    primary: '#2dd4bf',
-    glow: 'rgba(45, 212, 191, 0.45)',
-    soft: 'rgba(45, 212, 191, 0.12)',
+    primary: '#dc2626',
+    glow: 'rgba(220, 38, 38, 0.45)',
+    soft: 'rgba(220, 38, 38, 0.12)',
   },
   esoccer: {
     primary: '#c084fc',
