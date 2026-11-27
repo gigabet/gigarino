@@ -52,7 +52,7 @@ function NoOtherEvents() {
   const t = useT()
 
   return (
-    <div className='bg-dark-200 hidden rounded-2xl border border-white/5 p-4 text-center text-xs text-white/40 xl:block'>
+    <div className='bg-surface border-line text-foreground/40 hidden rounded-2xl border p-4 text-center text-xs xl:block'>
       {t('No other events in this tournament right now.')}
     </div>
   )
@@ -117,15 +117,15 @@ function EventSidebarTournament(props: {
         <button
           type='button'
           onClick={() => setOpen(true)}
-          className='bg-dark-200 hover:bg-dark-300 flex w-full items-center gap-3 rounded-2xl border border-white/5 px-4 py-3 text-left transition-colors'
+          className='bg-surface hover:bg-surface-2 border-line flex w-full items-center gap-3 rounded-2xl border px-4 py-3 text-left transition-colors'
         >
           <SportIconBadge sport={tournament.sport.key} size='sm' />
           <div className='min-w-0 flex-1'>
             <p className='text-secondary text-[0.65rem]'>{t('Other matches in this tournament')}</p>
             {/* eslint-disable-next-line local-i18n/no-untranslated-api-string -- proper noun */}
-            <p className='truncate text-sm font-semibold text-white'>{tournament.name}</p>
+            <p className='text-foreground truncate text-sm font-semibold'>{tournament.name}</p>
           </div>
-          <span className='bg-dark-300 rounded-full px-2 py-0.5 font-mono text-[0.65rem]'>
+          <span className='bg-surface-2 rounded-full px-2 py-0.5 font-mono text-[0.65rem]'>
             {events.length}
           </span>
           <ChevronRightIcon className='text-secondary size-4 shrink-0' />
@@ -135,7 +135,7 @@ function EventSidebarTournament(props: {
           <Drawer.Portal>
             <Drawer.Overlay className='fixed inset-0 z-50 bg-black/50' />
             <Drawer.Content
-              className='bg-dark-200 fixed inset-y-0 left-0 z-50 flex w-[88vw] max-w-sm flex-col outline-none'
+              className='bg-surface fixed inset-y-0 left-0 z-50 flex w-[88vw] max-w-sm flex-col outline-none'
               aria-describedby={undefined}
             >
               <VisuallyHidden.Root>
@@ -170,7 +170,7 @@ function TournamentEvents(props: {
           <p className='text-secondary text-[0.65rem] tracking-wider uppercase'>
             {t('Tournament')}
           </p>
-          <p className='truncate text-sm font-semibold text-white'>{props.name}</p>
+          <p className='text-foreground truncate text-sm font-semibold'>{props.name}</p>
         </div>
       </div>
 
@@ -220,8 +220,8 @@ function EventStripCard(props: {
       className={cn(
         'group relative flex flex-col gap-2 rounded-xl border p-3 transition-colors',
         props.active
-          ? 'border-primary bg-primary/10 shadow-primary/30 shadow-[0_0_12px]'
-          : 'border-white/5 bg-black/20 hover:border-white/20'
+          ? 'border-brand bg-brand/10 shadow-primary/30 shadow-[0_0_12px]'
+          : 'border-line bg-glass hover:border-line-3'
       )}
     >
       {props.active && (
@@ -248,11 +248,15 @@ function EventStripCard(props: {
             </span>
           )}
         </div>
-        <p className={cn('truncate font-semibold', props.active ? 'text-primary' : 'text-white')}>
+        <p
+          className={cn('truncate font-semibold', props.active ? 'text-brand' : 'text-foreground')}
+        >
           {event.homeCompetitor}
         </p>
         <p className='text-secondary text-[0.65rem] uppercase'>{t('vs')}</p>
-        <p className={cn('truncate font-semibold', props.active ? 'text-primary' : 'text-white')}>
+        <p
+          className={cn('truncate font-semibold', props.active ? 'text-brand' : 'text-foreground')}
+        >
           {event.awayCompetitor}
         </p>
       </Link>
@@ -311,7 +315,7 @@ function EventSidebarOdd(props: { outcome: EventSidebarOdd$key }) {
       disabled={suspended}
       suppressHydrationWarning
       className={cn(
-        'group/odd hover:bg-primary/5 hover:border-primary/20 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 flex flex-1 flex-col items-center justify-center gap-0.5 rounded-lg border border-white/10 bg-black/20 py-1.5 transition disabled:pointer-events-none disabled:opacity-40',
+        'group/odd hover:bg-brand/5 hover:border-brand/20 data-[state=on]:border-brand data-[state=on]:bg-brand/10 border-line-2 bg-glass flex flex-1 flex-col items-center justify-center gap-0.5 rounded-lg border py-1.5 transition disabled:pointer-events-none disabled:opacity-40',
         upDown === 'up' && 'animate-odds-flash-up',
         upDown === 'down' && 'animate-odds-flash-down'
       )}
@@ -322,7 +326,7 @@ function EventSidebarOdd(props: { outcome: EventSidebarOdd$key }) {
         {translateOutcomeName(t, outcome.name)}
       </span>
       <span
-        className='group-data-[state=on]/odd:text-primary text-foreground text-xs font-semibold'
+        className='group-data-[state=on]/odd:text-brand text-foreground text-xs font-semibold'
         suppressHydrationWarning
       >
         {Number(outcome.price).toFixed(2)}
@@ -351,7 +355,7 @@ export function EventSidebarSkeleton() {
       </div>
 
       <div className='-mb-4 xl:hidden'>
-        <div className='bg-dark-200 flex w-full items-center gap-3 rounded-2xl border border-white/5 px-4 py-3'>
+        <div className='bg-surface border-line flex w-full items-center gap-3 rounded-2xl border px-4 py-3'>
           <Skeleton className='size-7 shrink-0 rounded-full' />
           <div className='flex min-w-0 flex-1 flex-col'>
             <Skeleton className='h-4 w-44 max-w-full' />

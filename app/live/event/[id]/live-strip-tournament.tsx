@@ -31,7 +31,7 @@ export default function LiveStripTournament(props: {
     // opaque so rows scroll under the sticky group header cleanly
     <div
       className={cn(
-        'relative mb-2 flex items-center gap-2 border-b border-white/5 bg-[#0c0c0c] px-1 py-2',
+        'border-line bg-background relative mb-2 flex items-center gap-2 border-b px-1 py-2',
         props.pad && 'mt-8'
       )}
     >

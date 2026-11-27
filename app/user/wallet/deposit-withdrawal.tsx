@@ -89,17 +89,17 @@ export default function DepositWithdrawal(props: { balance: number }) {
       className='lg:col-span-2'
     >
       <Tabs.Root value={activeTab} onValueChange={tab => setActiveTab(tab)} className='w-full'>
-        <Tabs.List className='mb-6 grid w-full grid-cols-2 border border-white/5 p-1'>
+        <Tabs.List className='border-line mb-6 grid w-full grid-cols-2 border p-1'>
           <Tabs.Trigger
             value='deposit'
-            className='data-[state=active]:bg-primary text-gray-400 data-[state=active]:text-black'
+            className='data-[state=active]:bg-primary text-secondary data-[state=active]:text-primary-foreground'
           >
             <ArrowDownIcon className='mr-2 size-4' />
             Deposit
           </Tabs.Trigger>
           <Tabs.Trigger
             value='withdraw'
-            className='data-[state=active]:bg-primary text-gray-400 data-[state=active]:text-black'
+            className='data-[state=active]:bg-primary text-secondary data-[state=active]:text-primary-foreground'
           >
             <ArrowUpIcon className='mr-2 size-4' />
             Withdraw
@@ -142,8 +142,8 @@ function DepositForm() {
   }
 
   return (
-    <Form action={deposit} className='bg-dark/40 rounded-2xl border border-white/5 p-6'>
-      <h2 className='mb-6 text-xl font-bold text-white'>Add Funds</h2>
+    <Form action={deposit} className='bg-background/40 border-line rounded-2xl border p-6'>
+      <h2 className='text-foreground mb-6 text-xl font-bold'>Add Funds</h2>
 
       {/* Payment Methods */}
       <div className='mb-6 grid grid-cols-2 gap-3'>
@@ -154,17 +154,17 @@ function DepositForm() {
             onClick={() => setSelectedMethod(method.id)}
             className={`rounded-xl border p-4 text-left transition-all ${
               selectedMethod === method.id
-                ? 'border-primary bg-primary/10'
-                : 'bg-dark border-white/10 hover:border-white/30'
+                ? 'border-brand bg-brand/10'
+                : 'bg-background border-line-2 hover:border-line-3'
             }`}
           >
             <method.icon
               className={`mb-2 h-6 w-6 ${
-                selectedMethod === method.id ? 'text-primary' : 'text-gray-400'
+                selectedMethod === method.id ? 'text-brand' : 'text-secondary'
               }`}
             />
-            <div className='text-sm font-medium text-white'>{method.name}</div>
-            <div className='text-xs text-gray-500'>{method.description}</div>
+            <div className='text-foreground text-sm font-medium'>{method.name}</div>
+            <div className='text-subtle text-xs'>{method.description}</div>
           </button>
         ))}
       </div>
@@ -172,7 +172,7 @@ function DepositForm() {
 
       {/* Amount Selection */}
       <div className='mb-6'>
-        <Label className='mb-3 block text-sm text-gray-400' htmlFor='amount'>
+        <Label className='text-secondary mb-3 block text-sm' htmlFor='amount'>
           Select Amount
         </Label>
         <div className='mb-4 grid grid-cols-3 gap-2 sm:grid-cols-6'>
@@ -183,8 +183,8 @@ function DepositForm() {
               onClick={() => handleAmountSelect(amt)}
               className={`rounded-lg px-3 py-2 text-sm font-medium transition-all ${
                 amount === amt.toFixed(2)
-                  ? 'bg-primary text-black'
-                  : 'bg-dark border border-white/10 text-gray-400 hover:text-white'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-background border-line-2 text-secondary hover:text-foreground border'
               }`}
             >
               €{amt}
@@ -198,23 +198,23 @@ function DepositForm() {
           placeholder='Or enter custom amount'
           value={amount}
           onChange={e => setAmount(e.target.value)}
-          className='bg-dark focus:border-primary border-white/10 text-white placeholder:text-gray-600'
+          className='bg-background focus:border-brand border-line-2 text-foreground placeholder:text-muted-foreground'
         />
       </div>
 
       {/* Error Message */}
       {!!depositState.error && (
-        <div className='mb-4 flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 p-3'>
-          <AlertCircleIcon className='size-4 text-red-400' />
-          <span className='text-sm text-red-400'>{depositState.error}</span>
+        <div className='border-danger/30 bg-danger/10 mb-4 flex items-center gap-2 rounded-lg border p-3'>
+          <AlertCircleIcon className='text-danger size-4' />
+          <span className='text-danger text-sm'>{depositState.error}</span>
         </div>
       )}
 
       {/* Success Message */}
       {depositState.success && (
-        <div className='mb-4 flex items-center gap-2 rounded-lg border border-green-500/30 bg-green-500/10 p-3'>
-          <CheckCircle2Icon className='size-4 text-green-400' />
-          <span className='text-sm text-green-400'>Deposit successful!</span>
+        <div className='border-success/30 bg-success/10 mb-4 flex items-center gap-2 rounded-lg border p-3'>
+          <CheckCircle2Icon className='text-success size-4' />
+          <span className='text-success text-sm'>Deposit successful!</span>
         </div>
       )}
 
@@ -234,7 +234,7 @@ function DepositForm() {
           <span className='relative'>Deposit</span>
         )}
       </button>
-      <p className='mt-4 text-center text-xs text-gray-500'>
+      <p className='text-subtle mt-4 text-center text-xs'>
         Processing time: {paymentMethods.find(m => m.id === selectedMethod)?.processingTime}
       </p>
     </Form>
@@ -257,8 +257,8 @@ function WithdrawForm(props: { balance: number }) {
   }
 
   return (
-    <Form action={withdraw} className='bg-dark/40 rounded-2xl border border-white/5 p-6'>
-      <h2 className='mb-6 text-xl font-bold text-white'>Withdraw Funds</h2>
+    <Form action={withdraw} className='bg-background/40 border-line rounded-2xl border p-6'>
+      <h2 className='text-foreground mb-6 text-xl font-bold'>Withdraw Funds</h2>
 
       {/* Payment Methods */}
       <div className='mb-6 grid grid-cols-2 gap-3'>
@@ -269,17 +269,17 @@ function WithdrawForm(props: { balance: number }) {
             onClick={() => setSelectedMethod(method.id)}
             className={`rounded-xl border p-4 text-left transition-all ${
               selectedMethod === method.id
-                ? 'border-primary bg-primary/10'
-                : 'bg-dark border-white/10 hover:border-white/30'
+                ? 'border-brand bg-brand/10'
+                : 'bg-background border-line-2 hover:border-line-3'
             }`}
           >
             <method.icon
               className={`mb-2 h-6 w-6 ${
-                selectedMethod === method.id ? 'text-primary' : 'text-gray-400'
+                selectedMethod === method.id ? 'text-brand' : 'text-secondary'
               }`}
             />
-            <div className='text-sm font-medium text-white'>{method.name}</div>
-            <div className='text-xs text-gray-500'>{method.description}</div>
+            <div className='text-foreground text-sm font-medium'>{method.name}</div>
+            <div className='text-subtle text-xs'>{method.description}</div>
           </button>
         ))}
       </div>
@@ -287,7 +287,7 @@ function WithdrawForm(props: { balance: number }) {
 
       {/* Amount Input */}
       <div className='mb-6'>
-        <Label className='mb-3 block text-sm text-gray-400'>Amount</Label>
+        <Label className='text-secondary mb-3 block text-sm'>Amount</Label>
         <div className='relative'>
           <Input
             type='number'
@@ -295,12 +295,12 @@ function WithdrawForm(props: { balance: number }) {
             placeholder='Enter amount'
             value={amount}
             onChange={e => setAmount(e.target.value)}
-            className='bg-dark focus:border-primary border-white/10 pr-20 text-white placeholder:text-gray-600'
+            className='bg-background focus:border-brand border-line-2 text-foreground placeholder:text-muted-foreground pr-20'
           />
           <button
             type='button'
             onClick={() => handleAmountSelect(props.balance)}
-            className='text-primary hover:text-primary-400 absolute top-1/2 right-4 -translate-y-1/2 text-xs font-medium'
+            className='text-brand hover:text-brand absolute top-1/2 right-4 -translate-y-1/2 text-xs font-medium'
           >
             MAX
           </button>
@@ -308,16 +308,16 @@ function WithdrawForm(props: { balance: number }) {
       </div>
 
       {/* Withdrawal Info */}
-      <div className='bg-dark mb-6 space-y-2 rounded-xl p-4'>
-        <div className='flex items-center gap-2 text-sm text-gray-400'>
+      <div className='bg-background mb-6 space-y-2 rounded-xl p-4'>
+        <div className='text-secondary flex items-center gap-2 text-sm'>
           <ClockIcon className='size-4' />
           Processing time: {paymentMethods.find(m => m.id === selectedMethod)?.processingTime}
         </div>
-        <div className='flex items-center gap-2 text-sm text-gray-400'>
+        <div className='text-secondary flex items-center gap-2 text-sm'>
           <ArrowRightLeftIcon className='size-4' />
           Min: {formatCurrency(paymentMethods.find(m => m.id === selectedMethod)?.minAmount || 0)}
         </div>
-        <div className='flex items-center gap-2 text-sm text-gray-400'>
+        <div className='text-secondary flex items-center gap-2 text-sm'>
           <ArrowRightLeftIcon className='size-4' />
           Max: {formatCurrency(paymentMethods.find(m => m.id === selectedMethod)?.maxAmount || 0)}
           /day
@@ -326,17 +326,17 @@ function WithdrawForm(props: { balance: number }) {
 
       {/* Error Message */}
       {!!withdrawState.error && (
-        <div className='mb-4 flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 p-3'>
-          <AlertCircleIcon className='size-4 text-red-400' />
-          <span className='text-sm text-red-400'>{withdrawState.error}</span>
+        <div className='border-danger/30 bg-danger/10 mb-4 flex items-center gap-2 rounded-lg border p-3'>
+          <AlertCircleIcon className='text-danger size-4' />
+          <span className='text-danger text-sm'>{withdrawState.error}</span>
         </div>
       )}
 
       {/* Success Message */}
       {withdrawState.success && (
-        <div className='mb-4 flex items-center gap-2 rounded-lg border border-green-500/30 bg-green-500/10 p-3'>
-          <CheckCircle2Icon className='size-4 text-green-400' />
-          <span className='text-sm text-green-400'>Withdrawal successful!</span>
+        <div className='border-success/30 bg-success/10 mb-4 flex items-center gap-2 rounded-lg border p-3'>
+          <CheckCircle2Icon className='text-success size-4' />
+          <span className='text-success text-sm'>Withdrawal successful!</span>
         </div>
       )}
 

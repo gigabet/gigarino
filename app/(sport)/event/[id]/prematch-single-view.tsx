@@ -61,7 +61,7 @@ export default function PrematchSingleView(props: {
 
   return (
     <main className='mx-auto flex w-full max-w-7xl min-w-0 flex-col gap-4 sm:gap-6'>
-      <section className='flex flex-col gap-3 rounded-2xl border border-white/5 bg-black/20 p-4 sm:gap-4 sm:p-6'>
+      <section className='glass-flat flex flex-col gap-3 rounded-2xl p-4 sm:gap-4 sm:p-6'>
         <PrematchSingleHeader event={data} />
         <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-4'>
           <Competitor name={data.homeCompetitor} imageUrl={data.homeImageUrl} hue={homeHue} />
@@ -79,10 +79,7 @@ export default function PrematchSingleView(props: {
         </div>
       </section>
 
-      <MatchTracker
-        event={data}
-        className='overflow-hidden rounded-2xl border border-white/5 bg-black/20'
-      />
+      <MatchTracker event={data} className='glass-flat overflow-hidden rounded-2xl' />
 
       <StatisticsSection
         event={data?.StatisticsWidget}
@@ -138,7 +135,7 @@ function PrematchSingleHeader(props: { event: PrematchSingleHeader$key }) {
                 tournaments: `${data.sport.key}:${data.tournament.key}`,
               },
             }}
-            className='group relative flex min-w-0 items-center gap-2 text-current transition-colors hover:text-white'
+            className='group hover:text-foreground relative flex min-w-0 items-center gap-2 text-current transition-colors'
           >
             {/* eslint-disable-next-line local-i18n/no-untranslated-api-string -- proper noun */}
             <span className='truncate'>{data.tournament.name}</span>
@@ -146,7 +143,7 @@ function PrematchSingleHeader(props: { event: PrematchSingleHeader$key }) {
             {/* eslint-disable-next-line local-i18n/no-untranslated-api-string -- proper noun */}
             <span className='truncate'>{data.category.name}</span>
             <ExternalLinkIcon className='size-3 shrink-0' />
-            <span className='bg-primary absolute bottom-0 h-px w-full opacity-0 transition-all group-hover:opacity-100' />
+            <span className='bg-brand absolute bottom-0 h-px w-full opacity-0 transition-all group-hover:opacity-100' />
           </Link>
         </>
       }
@@ -171,7 +168,7 @@ function Competitor(props: {
         className='size-8 min-w-8 text-xs sm:size-10 sm:min-w-10 sm:text-sm'
         hue={props.hue}
       />
-      <span className='truncate text-xs font-semibold text-white sm:text-sm lg:text-base'>
+      <span className='text-foreground truncate text-xs font-semibold sm:text-sm lg:text-base'>
         {props.name}
       </span>
     </div>
@@ -204,7 +201,7 @@ function EventLiveState(props: { event: EventLiveState$key; startTime: string })
 
   return (
     <div className='flex shrink-0 flex-col items-center gap-1 px-1'>
-      <span className='text-base leading-none font-bold text-white sm:text-lg'>
+      <span className='text-foreground text-base leading-none font-bold sm:text-lg'>
         {data.homeScore ?? 0} - {data.awayScore ?? 0}
       </span>
       <span className='text-secondary text-[0.6rem] uppercase sm:text-[0.65rem]'>
@@ -243,7 +240,7 @@ function EventNotFound() {
   const t = useT()
   return (
     <main className='mx-auto flex w-full max-w-7xl min-w-0 flex-col items-center justify-center gap-4 px-4 py-16 text-center sm:py-24'>
-      <div className='bg-dark-300 text-muted-foreground flex size-14 items-center justify-center rounded-full'>
+      <div className='bg-surface-2 text-muted-foreground flex size-14 items-center justify-center rounded-full'>
         <SearchXIcon className='size-6' />
       </div>
       <div className='space-y-1'>

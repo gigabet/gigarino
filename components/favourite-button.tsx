@@ -36,9 +36,7 @@ export function FavouriteButton(props: { event: FavouriteButton$key; className?:
       aria-label={active ? t('Remove from favourites') : t('Add to favourites')}
       onClick={() => toggle({ id, isFavourite, isLive })}
     >
-      <StarIcon
-        className={cn('size-4 transition-colors', active && 'fill-yellow-400 text-yellow-400')}
-      />
+      <StarIcon className={cn('size-4 transition-colors', active && 'fill-warning text-warning')} />
     </Button>
   )
 }

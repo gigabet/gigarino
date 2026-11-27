@@ -65,7 +65,7 @@ function StatsView(props: { queryRef: PreloadedQuery<PageStatsQuery> }) {
   return (
     <>
       <title>{`${data.homeCompetitor} vs ${data.awayCompetitor}`}</title>
-      <h1 className='truncate text-base font-semibold text-white'>
+      <h1 className='text-foreground truncate text-base font-semibold'>
         {data.homeCompetitor} <span className='text-secondary font-normal'>{t('vs')}</span>{' '}
         {data.awayCompetitor}
       </h1>

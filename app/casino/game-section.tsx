@@ -76,7 +76,7 @@ export default function GameSection({
             {data?.total && (
               <Link
                 href={`/casino/${category.slug}`}
-                className='hover:text-primary group flex items-center gap-1 text-sm text-white/60 transition-colors'
+                className='hover:text-brand group text-foreground/60 flex items-center gap-1 text-sm transition-colors'
               >
                 <span>{t('See all {n}', { n: data.total })}</span>
                 <ChevronRightIcon className='size-4 transition-transform group-hover:translate-x-1' />
@@ -104,7 +104,7 @@ export default function GameSection({
           <div className='flex items-center justify-end pt-6'>
             <Link
               href={`/casino/${category.slug}`}
-              className='hover:text-primary group flex items-center gap-1 text-sm text-white/60 transition-colors'
+              className='hover:text-brand group text-foreground/60 flex items-center gap-1 text-sm transition-colors'
             >
               <span>{t('See all {n}', { n: data.total })}</span>
               <ChevronRightIcon className='size-4 transition-transform group-hover:translate-x-1' />
@@ -161,7 +161,7 @@ export function GameCard({ game }: { game: Game }) {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      <div className='relative scale-100 overflow-hidden rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.3)] transition-all duration-300 group-hover:scale-104 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.5),0_0_30px_rgba(209,243,102,0.2)]'>
+      <div className='relative scale-100 overflow-hidden rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.3)] transition-all duration-300 group-hover:scale-104 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.5),0_0_30px_color-mix(in_oklab,var(--primary)_20%,transparent)]'>
         {/* Image - 16:10 aspect ratio */}
         <div className='relative aspect-16/10 overflow-hidden'>
           {game.image ? (
@@ -184,7 +184,7 @@ export function GameCard({ game }: { game: Game }) {
           {/* Badge */}
           <div className='absolute top-2 right-2 flex items-center gap-1'>
             {game.isNew && (
-              <div className='bg-dark/70 flex h-5 items-center rounded-full px-2 text-[0.675rem] leading-none font-semibold text-white uppercase'>
+              <div className='bg-background/70 flex h-5 items-center rounded-full px-2 text-[0.675rem] leading-none font-semibold text-white uppercase'>
                 {t('new')}
               </div>
             )}
@@ -198,7 +198,7 @@ export function GameCard({ game }: { game: Game }) {
           {/* Hover overlay with play button */}
           <div className='absolute inset-0 z-1 flex items-center justify-center opacity-0 transition-all duration-300 group-hover:opacity-100'>
             <div className='bg-primary shadow-glow-lg flex h-12 w-12 transform cursor-pointer items-center justify-center rounded-full transition-all duration-300 hover:scale-110'>
-              <PlayIcon className='ml-0.5 h-5 w-5 text-black' fill='black' />
+              <PlayIcon className='text-primary-foreground ml-0.5 h-5 w-5' fill='black' />
             </div>
           </div>
 
@@ -216,7 +216,7 @@ export function GameCard({ game }: { game: Game }) {
           <h3 className='mb-0.5 h-4.5 truncate text-left text-sm leading-none font-semibold text-white text-shadow-[0_0_3px_black]'>
             {game.name}
           </h3>
-          <div className='flex items-center text-xs text-gray-400'>
+          <div className='text-secondary flex items-center text-xs'>
             <span>{game.providerName}</span>
           </div>
         </div>

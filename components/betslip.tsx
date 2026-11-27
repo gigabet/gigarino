@@ -122,7 +122,7 @@ export default function Betslip(props: {
   }
 
   return (
-    <div className='bg-dark-200 scrollbar-hide flex h-full min-h-0 w-full flex-col overflow-y-auto'>
+    <div className='bg-surface scrollbar-hide flex h-full min-h-0 w-full flex-col overflow-y-auto'>
       <BetslipTracker variant={props.variant === 'drawer' ? 'drawer' : 'panel'} />
       <BetslipHeader
         tab={mainTab}
@@ -166,7 +166,7 @@ function BetslipHeader(props: {
   const clearBetslip = useClearBetslip()
 
   return (
-    <div className='flex items-center justify-between border-b border-white/5 px-5 py-4'>
+    <div className='border-line flex items-center justify-between border-b px-5 py-4'>
       <div className='flex items-center gap-1'>
         <MainTabButton
           active={props.tab === 'betslip'}
@@ -227,7 +227,7 @@ function MainTabButton(props: {
       onClick={props.onClick}
       className={cn(
         'flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold tracking-wide uppercase transition-colors',
-        props.active ? 'bg-primary/10 text-primary' : 'text-secondary hover:text-foreground'
+        props.active ? 'bg-brand/10 text-brand' : 'text-secondary hover:text-foreground'
       )}
     >
       {props.icon}
@@ -262,7 +262,7 @@ function BetslipBody(props: { quoteRef: BetslipBody$key }) {
       <SystemSizeSelect quoteRef={data} />
 
       {/* pinned while scrolling: these block placing, so they must stay visible */}
-      <div className='bg-dark-200 sticky top-0 z-10 mt-2 empty:hidden'>
+      <div className='bg-surface sticky top-0 z-10 mt-2 empty:hidden'>
         <InvalidBetsBanner quoteRef={data} />
         <PriceChangesBanner quoteRef={data} />
       </div>
@@ -275,7 +275,7 @@ function BetslipBody(props: { quoteRef: BetslipBody$key }) {
 export function BetslipRailSkeleton() {
   return (
     <div className='sticky top-20 flex h-[calc(100dvh-5rem)] flex-col overflow-hidden'>
-      <div className='flex items-center gap-1 border-b border-white/5 px-5 py-4'>
+      <div className='border-line flex items-center gap-1 border-b px-5 py-4'>
         <Skeleton className='h-9 w-28 rounded-lg' />
         <Skeleton className='h-9 w-32 rounded-lg' />
       </div>
@@ -314,7 +314,7 @@ function BetTypeTabs(props: { quoteRef: BetTypeTabs$key }) {
   const t = useT()
 
   const triggerClass =
-    'data-[state=active]:bg-primary hover:bg-dark-300 transition-colors data-[state=active]:text-black'
+    'data-[state=active]:bg-primary hover:bg-surface-2 transition-colors data-[state=active]:text-primary-foreground'
 
   return (
     <Tabs.Root
@@ -322,7 +322,7 @@ function BetTypeTabs(props: { quoteRef: BetTypeTabs$key }) {
       onValueChange={v => setInput(i => withBetType(i, v as TicketType))}
       className='px-5 pt-4'
     >
-      <Tabs.List className='grid w-full grid-cols-3 gap-1 border border-white/5 p-1'>
+      <Tabs.List className='border-line grid w-full grid-cols-3 gap-1 border p-1'>
         <Tabs.Trigger value='SINGLE' className={triggerClass}>
           {t('Singles')}
         </Tabs.Trigger>
@@ -432,7 +432,7 @@ function InvalidBetsBanner(props: { quoteRef: InvalidBetsBanner$key }) {
     <AnimatePresence initial={false}>
       {unavailable.size > 0 && (
         <Collapse key='invalid'>
-          <div className='flex items-center gap-2 bg-red-500/10 px-5 py-1.5 text-red-400'>
+          <div className='bg-danger/10 text-danger flex items-center gap-2 px-5 py-1.5'>
             <AlertTriangleIcon className='size-3.5 shrink-0' />
             <p className='mr-auto text-xs'>
               {unavailable.size === 1
@@ -442,7 +442,7 @@ function InvalidBetsBanner(props: { quoteRef: InvalidBetsBanner$key }) {
             <Button
               variant='ghost'
               size='icon-sm'
-              className='-mr-1 size-6 rounded-full text-xs text-red-400 hover:bg-red-400/30 hover:text-white'
+              className='text-danger hover:bg-danger/30 hover:text-foreground -mr-1 size-6 rounded-full text-xs'
               onClick={() => setInput(prev => withoutItems(prev, unavailable))}
             >
               <XIcon />
@@ -458,7 +458,7 @@ function PlaceErrorBanner(props: { message: string | null }) {
   if (!props.message) return null
 
   return (
-    <div className='flex items-start gap-2 bg-red-500/10 px-5 py-1.5 text-red-400'>
+    <div className='bg-danger/10 text-danger flex items-start gap-2 px-5 py-1.5'>
       <AlertTriangleIcon className='mt-0.5 size-3.5 shrink-0' />
       <p className='text-xs'>{props.message}</p>
     </div>
@@ -478,7 +478,7 @@ function BlockersBanner(props: { quoteRef: BlockersBanner$key }) {
   if (blockers.length === 0) return null
 
   return (
-    <div className='flex items-center gap-2 bg-red-500/10 px-5 py-1.5 text-red-400'>
+    <div className='bg-danger/10 text-danger flex items-center gap-2 px-5 py-1.5'>
       <AlertTriangleIcon className='size-3.5 shrink-0' />
       <div className='mr-auto space-y-0.5 text-xs'>
         {[...new Set(blockers)].map(b => (
@@ -583,7 +583,7 @@ function PriceChangesBanner(props: { quoteRef: PriceChangesBanner$key }) {
     <AnimatePresence initial={false}>
       {hasPriceChanges && (
         <Collapse key='changes'>
-          <div className='flex items-center gap-1.5 bg-amber-500/10 px-5 py-1.5 text-amber-400'>
+          <div className='bg-warning/10 text-warning flex items-center gap-1.5 px-5 py-1.5'>
             <TrendingUpIcon className='size-3.5 shrink-0' />
             <p className='min-w-0 flex-1 truncate text-xs'>
               {count === 1 ? t('1 odd change.') : t('{n} odds changes.', { n: count })}
@@ -594,7 +594,7 @@ function PriceChangesBanner(props: { quoteRef: PriceChangesBanner$key }) {
               <Button
                 variant='outline'
                 size='sm'
-                className={cn(btn, 'border-amber-400/50')}
+                className={cn(btn, 'border-warning/50')}
                 onClick={acceptHigher}
               >
                 {t('Accept higher')}
@@ -602,7 +602,10 @@ function PriceChangesBanner(props: { quoteRef: PriceChangesBanner$key }) {
             )}
             <Button
               size='sm'
-              className={cn(btn, 'border-transparent bg-amber-400 text-black hover:bg-amber-300')}
+              className={cn(
+                btn,
+                'text-primary-foreground border-transparent bg-amber-400 hover:bg-amber-300'
+              )}
               onClick={acceptAll}
             >
               {t('Accept all')}
@@ -611,7 +614,7 @@ function PriceChangesBanner(props: { quoteRef: PriceChangesBanner$key }) {
               variant='ghost'
               size='icon-sm'
               aria-label={t('Remove lower odds')}
-              className='-mr-1 size-6 shrink-0 rounded-full text-xs text-amber-400 hover:bg-amber-400/30 hover:text-white'
+              className='text-warning hover:bg-warning/30 hover:text-foreground -mr-1 size-6 shrink-0 rounded-full text-xs'
               onClick={reject}
             >
               <XIcon />
@@ -766,7 +769,7 @@ function BetslipFooter(props: { quoteRef: BetslipFooter$key; onPlaced: (ticket: 
   }
 
   return (
-    <div className='bg-dark-200 sticky bottom-0 z-20 shrink-0 border-t border-white/5'>
+    <div className='bg-surface border-line sticky bottom-0 z-20 shrink-0 border-t'>
       <PlaceErrorBanner message={placeError} />
       {!data.placeable && !hasInvalidLegs && !hasPriceChanges && (
         <BlockersBanner quoteRef={data} />
@@ -809,8 +812,8 @@ function BetslipSummary(props: {
   return (
     <div className='space-y-2.5 px-5 py-3'>
       {boost && props.boostApplied && (
-        <div className='border-primary/40 bg-primary/10 flex items-center justify-between rounded-lg border px-3 py-1 text-xs'>
-          <span className='text-primary flex items-center gap-1.5 font-bold uppercase'>
+        <div className='border-brand/40 bg-brand/10 flex items-center justify-between rounded-lg border px-3 py-1 text-xs'>
+          <span className='text-brand flex items-center gap-1.5 font-bold uppercase'>
             <ChevronsUpIcon className='size-3.5' />
             {t('Bet Boost')}
           </span>
@@ -835,7 +838,7 @@ function BetslipSummary(props: {
       </div>
 
       {props.overBoostMax && boost?.maxStake && (
-        <p className='text-xs text-amber-400'>
+        <p className='text-warning text-xs'>
           {t('Boost applies up to {max}. Lower your stake to use it.', {
             max: fmt(Number(boost.maxStake)),
           })}
@@ -843,18 +846,18 @@ function BetslipSummary(props: {
       )}
 
       {/* one tile: total stake (or combined odds) on the left, payout on the right */}
-      <div className='bg-dark grid grid-cols-2 items-center gap-3 rounded-xl border border-white/5 px-4 py-2'>
+      <div className='bg-background border-line grid grid-cols-2 items-center gap-3 rounded-xl border px-4 py-2'>
         <div className='flex flex-col'>
           <span className='text-secondary text-[0.65rem] uppercase'>
             {isSingle ? t('Total stake') : t('Combined odds')}
           </span>
-          <span className={cn('text-sm font-semibold text-white', !isSingle && 'font-mono')}>
+          <span className={cn('text-foreground text-sm font-semibold', !isSingle && 'font-mono')}>
             {isSingle ? fmt(props.stake) : props.odds.toFixed(2)}
           </span>
         </div>
         <div className='flex flex-col items-end'>
           <span className='text-secondary text-[0.65rem] uppercase'>{t('Potential payout')}</span>
-          <span className='text-primary text-lg leading-tight font-bold'>{fmt(props.payout)}</span>
+          <span className='text-brand text-lg leading-tight font-bold'>{fmt(props.payout)}</span>
         </div>
       </div>
 
@@ -869,7 +872,7 @@ function BetslipSummary(props: {
 function PayoutCappedNote() {
   const t = useT()
   return (
-    <p className='flex items-center gap-1.5 text-xs text-amber-400'>
+    <p className='text-warning flex items-center gap-1.5 text-xs'>
       <AlertTriangleIcon className='size-3.5 shrink-0' />
       {t('Payout limited to the maximum winnings.')}
     </p>
@@ -890,7 +893,7 @@ function PlaceBetButton(props: {
       type='button'
       disabled={props.disabled}
       onClick={props.onClick}
-      className='group/button bg-primary hover:shadow-glow-lg text-primary-foreground relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-4 py-3 text-sm font-bold tracking-wide whitespace-nowrap uppercase transition-all duration-300 select-none disabled:pointer-events-none disabled:bg-neutral-400 disabled:text-neutral-700 sm:text-base'
+      className='group/button bg-primary hover:shadow-glow-lg text-primary-foreground disabled:bg-muted-foreground disabled:text-muted relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-4 py-3 text-sm font-bold tracking-wide whitespace-nowrap uppercase transition-all duration-300 select-none disabled:pointer-events-none sm:text-base'
     >
       <div className='from-primary to-primary absolute inset-0 bg-linear-to-r via-white/30 opacity-0 transition-opacity duration-500 group-hover/button:opacity-100' />
       <div className='absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/40 to-transparent transition-transform duration-1000 group-hover/button:translate-x-full' />
@@ -974,8 +977,8 @@ function Tip(props: { item: Tip$key }) {
   return (
     <div
       className={cn(
-        'mb-2 rounded-xl border bg-black/20 px-3 py-2 transition-colors',
-        blocked ? 'border-neutral-500/30 bg-neutral-500/5 opacity-80' : 'border-white/5'
+        'bg-glass mb-2 rounded-xl border px-3 py-2 transition-colors',
+        blocked ? 'border-line-2 bg-foreground/5 opacity-80' : 'border-line'
       )}
     >
       <Link
@@ -997,8 +1000,8 @@ function Tip(props: { item: Tip$key }) {
             className={cn(
               'flex size-5 shrink-0 items-center justify-center self-center rounded-full border text-[0.65rem] leading-none font-bold transition-colors disabled:pointer-events-none disabled:opacity-40',
               banker
-                ? 'border-primary bg-primary text-black'
-                : 'text-secondary border-white/20 hover:text-white'
+                ? 'border-primary bg-primary text-primary-foreground'
+                : 'text-secondary border-line-3 hover:text-foreground'
             )}
           >
             B
@@ -1008,7 +1011,7 @@ function Tip(props: { item: Tip$key }) {
           <p
             className={cn(
               'truncate text-sm leading-tight font-bold',
-              blocked ? 'text-secondary line-through' : 'text-primary'
+              blocked ? 'text-secondary line-through' : 'text-brand'
             )}
           >
             {getLabel(data.eventName, data.key, data.name, data.marketName, t) ?? '—'}
@@ -1016,16 +1019,16 @@ function Tip(props: { item: Tip$key }) {
           <p className='text-secondary truncate text-[0.7rem] leading-tight'>{subline}</p>
         </div>
 
-        <span className='flex shrink-0 items-center gap-1 font-mono text-sm font-semibold text-white'>
+        <span className='text-foreground flex shrink-0 items-center gap-1 font-mono text-sm font-semibold'>
           {changed ? (
             <>
               <span className='text-secondary text-[0.65rem] line-through'>
                 {Number(data.expectedPrice).toFixed(2)}
               </span>
               <TrendingUpIcon
-                className={cn('size-3', up ? 'text-primary' : 'rotate-90 text-red-400')}
+                className={cn('size-3', up ? 'text-brand' : 'text-danger rotate-90')}
               />
-              <span className={up ? 'text-primary' : 'text-red-400'}>
+              <span className={up ? 'text-brand' : 'text-danger'}>
                 {Number(data.price).toFixed(2)}
               </span>
             </>
@@ -1041,14 +1044,14 @@ function Tip(props: { item: Tip$key }) {
           type='button'
           onClick={() => setInput(prev => withoutItems(prev, new Set([data.outcomeId])))}
           aria-label={t('Remove selection')}
-          className='text-secondary hover:bg-dark-300 -mr-1 flex size-5 shrink-0 items-center justify-center rounded-full transition-colors hover:text-white'
+          className='text-secondary hover:bg-surface-2 hover:text-foreground -mr-1 flex size-5 shrink-0 items-center justify-center rounded-full transition-colors'
         >
           <XIcon className='size-3.5' />
         </button>
       </Link>
 
       {blocked && (
-        <p className='mt-1 flex items-center gap-1.5 text-xs text-red-400'>
+        <p className='text-danger mt-1 flex items-center gap-1.5 text-xs'>
           <AlertTriangleIcon className='size-3.5' />
           {data.suspensionReason
             ? translateSuspensionReason(t, data.suspensionReason)
@@ -1059,7 +1062,7 @@ function Tip(props: { item: Tip$key }) {
       {!blocked && input.betType === 'SINGLE' && (
         <div className='mt-1.5 flex items-center gap-2'>
           <StakeInput compact value={stake} onCommit={v => setLegStake(data.outcomeId, v)} />
-          <span className='text-primary ml-auto text-xs font-semibold'>
+          <span className='text-brand ml-auto text-xs font-semibold'>
             → {formatBalance((Number(stake) || 0) * (Number(data.price) || 0), currency)}
           </span>
         </div>
@@ -1139,7 +1142,7 @@ function StakeInput(props: {
 
   return (
     <InputGroup
-      className={cn('bg-dark flex-1 rounded-full', props.compact && 'h-7 w-28 flex-none')}
+      className={cn('bg-background flex-1 rounded-full', props.compact && 'h-7 w-28 flex-none')}
     >
       <InputGroupInput
         type='number'
@@ -1179,7 +1182,7 @@ function EmptyState() {
   const t = useT()
   return (
     <div className='text-secondary flex h-96.25 flex-col items-center justify-center gap-3 px-6 text-center'>
-      <div className='bg-dark flex size-14 items-center justify-center rounded-full border border-white/5'>
+      <div className='bg-background border-line flex size-14 items-center justify-center rounded-full border'>
         <PiTicket className='size-6 opacity-40' />
       </div>
       <p className='text-sm'>{t('Your betslip is empty')}</p>
@@ -1195,17 +1198,17 @@ function PlacedState(props: { ticket: Placed; onNewBet: () => void; onViewTicket
   const clearBetslip = useClearBetslip()
   return (
     <div className='flex max-h-[calc(100dvh-7rem)] w-full flex-col items-center justify-center gap-4 overflow-hidden px-6 py-16 text-center'>
-      <div className='bg-primary/15 flex size-14 items-center justify-center rounded-full'>
-        <TicketIcon className='text-primary size-6' />
+      <div className='bg-brand/15 flex size-14 items-center justify-center rounded-full'>
+        <TicketIcon className='text-brand size-6' />
       </div>
       <div>
-        <p className='font-semibold text-white'>{t('Bet placed!')}</p>
+        <p className='text-foreground font-semibold'>{t('Bet placed!')}</p>
         <p className='text-secondary mt-1 text-xs'>{t('Good luck — track it under My Tickets.')}</p>
       </div>
       {props.ticket.potentialPayout && (
-        <div className='bg-dark flex w-full max-w-60 items-center justify-between rounded-xl border border-white/5 px-4 py-3'>
+        <div className='bg-background border-line flex w-full max-w-60 items-center justify-between rounded-xl border px-4 py-3'>
           <span className='text-secondary text-sm'>{t('Potential payout')}</span>
-          <span className='text-primary text-lg font-bold'>
+          <span className='text-brand text-lg font-bold'>
             {formatBalance(Number(props.ticket.potentialPayout))}
           </span>
         </div>
@@ -1299,7 +1302,7 @@ export function BetslipDrawer(props: { query: Betslip$key | null }) {
         <Drawer.Overlay className='fixed inset-0 z-50 bg-black/50' />
         <Drawer.Content
           className={cn(
-            'bg-dark-200 fixed z-50 flex flex-col outline-none',
+            'bg-surface fixed z-50 flex flex-col outline-none',
             direction === 'bottom' && 'inset-x-0 bottom-0 max-h-[85dvh]',
             direction === 'right' && 'inset-y-0 right-0 h-full w-full max-w-sm'
           )}
@@ -1309,7 +1312,7 @@ export function BetslipDrawer(props: { query: Betslip$key | null }) {
             <Drawer.Title>{t('Betslip')}</Drawer.Title>
           </VisuallyHidden.Root>
           {direction === 'bottom' && (
-            <div className='mx-auto mt-3 h-1.5 w-10 shrink-0 rounded-full bg-white/20' />
+            <div className='bg-foreground/20 mx-auto mt-3 h-1.5 w-10 shrink-0 rounded-full' />
           )}
           <Betslip query={props.query} variant='drawer' initialTab={tab} />
         </Drawer.Content>

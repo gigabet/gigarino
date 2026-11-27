@@ -21,6 +21,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import BottomBar from '@/app/bottom-bar'
 import Search from '@/app/search'
+import ThemeToggle from '@/app/theme-toggle'
 import { CountBadge } from '@/components/count-badge'
 import LoginDialog from '@/components/login-dialog'
 import Logo from '@/components/logo'
@@ -58,7 +59,7 @@ export default function Navbar(props: { token: string | undefined }) {
 
   return (
     <>
-      <header className='bg-dark/90 sticky top-0 right-0 left-0 z-50 border-b border-white/5 backdrop-blur-xl transition-all duration-500'>
+      <header className='bg-background/90 border-line sticky top-0 right-0 left-0 z-50 border-b backdrop-blur-xl transition-all duration-500'>
         <div className='mx-auto max-w-480 px-6 lg:px-8'>
           {/* Top Bar */}
           <div className={cx(NAVBAR_HEIGHT, 'flex items-center justify-between py-3')}>
@@ -82,14 +83,14 @@ export default function Navbar(props: { token: string | undefined }) {
                         'group/nav relative flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-300',
                         pathname === link.href ||
                           (pathname.startsWith('/live') && link.href.startsWith('/live'))
-                          ? 'text-primary'
-                          : 'text-gray-400 hover:text-white'
+                          ? 'text-brand'
+                          : 'text-secondary hover:text-foreground'
                       )}
                     >
                       <span>{t(link.label)}</span>
                       <span
                         className={cx(
-                          'bg-primary absolute bottom-0 left-1/2 h-0.5 w-0 -translate-x-1/2 transition-all duration-300',
+                          'bg-brand absolute bottom-0 left-1/2 h-0.5 w-0 -translate-x-1/2 transition-all duration-300',
                           pathname === link.href ||
                             (pathname.startsWith('/live') && link.href.startsWith('/live'))
                             ? 'w-3/4'
@@ -105,6 +106,7 @@ export default function Navbar(props: { token: string | undefined }) {
             {/* Right Actions */}
             <div className='flex items-center gap-2 sm:gap-3'>
               <Search />
+              <ThemeToggle />
 
               {!!user && !!wallet && (
                 <>
@@ -114,47 +116,47 @@ export default function Navbar(props: { token: string | undefined }) {
                     <DropdownMenu.Trigger asChild>
                       <button
                         type='button'
-                        className='-mr-2 flex items-center gap-2 rounded-full p-1.5 transition-colors hover:bg-white/5'
+                        className='hover:bg-foreground/5 -mr-2 flex items-center gap-2 rounded-full p-1.5 transition-colors'
                       >
-                        <div className='from-primary-200 to-primary-400 relative flex size-6 items-center justify-center rounded-full bg-linear-to-br sm:size-8'>
-                          <UserIcon className='size-3 text-black sm:size-4' />
+                        <div className='from-primary to-primary/70 relative flex size-6 items-center justify-center rounded-full bg-linear-to-br sm:size-8'>
+                          <UserIcon className='text-primary-foreground size-3 sm:size-4' />
                           <CountBadge count={unseen} className='absolute -top-1.5 -right-1.5' />
                         </div>
-                        <span className='hidden text-sm font-medium text-white md:block'>
+                        <span className='text-foreground hidden text-sm font-medium md:block'>
                           {user.displayName}
                         </span>
-                        <ChevronDownIcon className='size-4 text-gray-400' />
+                        <ChevronDownIcon className='text-secondary size-4' />
                       </button>
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content align='end' className='w-56'>
-                      <div className='border-b border-white/10 px-3 py-2'>
-                        <p className='text-sm font-medium text-white'>{user.username}</p>
-                        <p className='text-xs text-gray-400'>{user.email}</p>
+                      <div className='border-line-2 border-b px-3 py-2'>
+                        <p className='text-foreground text-sm font-medium'>{user.username}</p>
+                        <p className='text-secondary text-xs'>{user.email}</p>
                       </div>
                       <DropdownMenu.Item
                         onClick={() => router.push('/user/account')}
-                        className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'
+                        className='text-secondary focus:bg-foreground/5 focus:text-foreground cursor-pointer'
                       >
                         <UserIcon className='mr-2 size-4' />
                         {t('Account')}
                       </DropdownMenu.Item>
                       <DropdownMenu.Item
                         onClick={() => router.push('/user/wallet')}
-                        className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'
+                        className='text-secondary focus:bg-foreground/5 focus:text-foreground cursor-pointer'
                       >
                         <WalletIcon className='mr-2 size-4' />
                         {t('Wallet')}
                       </DropdownMenu.Item>
                       <DropdownMenu.Item
                         onClick={() => router.push('/user/transactions')}
-                        className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'
+                        className='text-secondary focus:bg-foreground/5 focus:text-foreground cursor-pointer'
                       >
                         <CreditCardIcon className='mr-2 size-4' />
                         {t('Transactions')}
                       </DropdownMenu.Item>
                       <DropdownMenu.Item
                         onClick={() => router.push('/user/tickets')}
-                        className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'
+                        className='text-secondary focus:bg-foreground/5 focus:text-foreground cursor-pointer'
                       >
                         <TicketIcon className='mr-2 size-4' />
                         {t('My Tickets')}
@@ -162,17 +164,17 @@ export default function Navbar(props: { token: string | undefined }) {
                       </DropdownMenu.Item>
                       <DropdownMenu.Item
                         onClick={() => router.push('/user/bonuses')}
-                        className='cursor-pointer text-gray-300 focus:bg-white/5 focus:text-white'
+                        className='text-secondary focus:bg-foreground/5 focus:text-foreground cursor-pointer'
                       >
                         <GiftIcon className='mr-2 size-4' />
                         {t('Bonuses')}
                       </DropdownMenu.Item>
-                      <DropdownMenu.Separator className='bg-white/10' />
+                      <DropdownMenu.Separator className='bg-foreground/10' />
                       <DropdownMenu.Item
-                        className='group/logout cursor-pointer text-red-400 focus:bg-red-500/10 focus:text-red-300'
+                        className='group/logout text-danger focus:bg-danger/10 focus:text-danger cursor-pointer'
                         onClick={handleLogout}
                       >
-                        <LogOutIcon className='mr-2 size-4 group-focus/logout:text-red-200' />
+                        <LogOutIcon className='group-focus/logout:text-danger mr-2 size-4' />
                         {t('Logout')}
                       </DropdownMenu.Item>
                     </DropdownMenu.Content>
@@ -185,13 +187,13 @@ export default function Navbar(props: { token: string | undefined }) {
                 <>
                   <Link
                     href='/register'
-                    className='hidden cursor-default rounded-full border border-white/20 px-4 py-2 text-sm font-medium text-white uppercase transition-all hover:bg-white/5 sm:block'
+                    className='border-line-3 text-foreground hover:bg-foreground/5 hidden cursor-default rounded-full border px-4 py-2 text-sm font-medium uppercase transition-all sm:block'
                   >
                     {t('Register')}
                   </Link>
                   <Link
                     href='/login'
-                    className='bg-primary hover:shadow-glow flex cursor-default items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-black uppercase transition-all'
+                    className='bg-primary hover:shadow-glow text-primary-foreground flex cursor-default items-center gap-2 rounded-full px-4 py-2 text-sm font-medium uppercase transition-all'
                   >
                     <span className='tracking-wide'>{t('Log in')}</span>
                   </Link>
@@ -216,9 +218,9 @@ function BalanceDisplay(props: { token: string; wallet: Wallet }) {
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
-      className='border-primary-500/30 bg-primary-500/10 flex items-center gap-2 rounded-full border px-3 py-1.5'
+      className='border-brand/30 bg-brand/10 flex items-center gap-2 rounded-full border px-3 py-1.5'
     >
-      <span className='text-primary text-xs font-semibold sm:text-sm'>
+      <span className='text-brand text-xs font-semibold sm:text-sm'>
         {formatBalance(Number(balance))}
       </span>
     </motion.div>
@@ -238,7 +240,7 @@ function MobileMenu() {
       {/** biome-ignore lint/a11y/noStaticElementInteractions: is background overlay */}
       {/** biome-ignore lint/a11y/useKeyWithClickEvents: no need */}
       <div
-        className='bg-dark/95 absolute inset-0 backdrop-blur-xl'
+        className='bg-background/95 absolute inset-0 backdrop-blur-xl'
         onClick={() => setIsMobileMenuOpen(false)}
       />
       <div
@@ -254,8 +256,8 @@ function MobileMenu() {
               key={link.label}
               className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left transition-all ${
                 pathname === link.href
-                  ? 'bg-primary/10 text-primary border-primary/30 border'
-                  : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                  ? 'bg-brand/10 text-brand border-brand/30 border'
+                  : 'text-secondary hover:bg-foreground/5 hover:text-foreground'
               }`}
               onClick={() => setIsMobileMenuOpen(false)}
             >

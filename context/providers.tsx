@@ -98,10 +98,10 @@ function LoadingOverlay() {
     <div
       className={cx(
         isLoading ? 'flex' : 'hidden',
-        'fixed top-0 left-0 isolate z-100 h-dvh w-dvw items-center justify-center overflow-hidden bg-black/30 text-white backdrop-blur-xs'
+        'bg-background/40 text-foreground fixed top-0 left-0 isolate z-100 h-dvh w-dvw items-center justify-center overflow-hidden backdrop-blur-xs'
       )}
     >
-      <BarLoader color='#ffffff' />
+      <BarLoader color='var(--foreground)' />
     </div>
   )
 }

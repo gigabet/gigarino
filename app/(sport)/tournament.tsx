@@ -62,8 +62,8 @@ export default function Tournament(props: {
   if (!data)
     return (
       <section>
-        <div className='flex flex-col items-center justify-center gap-4 rounded-2xl border border-white/5 bg-black/20 px-6 py-16 text-center'>
-          <div className='bg-dark-300 text-muted-foreground flex size-14 items-center justify-center rounded-full'>
+        <div className='glass-flat flex flex-col items-center justify-center gap-4 rounded-2xl px-6 py-16 text-center'>
+          <div className='bg-surface-2 text-muted-foreground flex size-14 items-center justify-center rounded-full'>
             <SearchXIcon className='size-6' />
           </div>
 
@@ -80,7 +80,7 @@ export default function Tournament(props: {
             type='button'
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className='hover:bg-primary/10 hover:border-primary/30 hover:text-primary group border-control-border bg-control inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-medium text-white uppercase transition-all disabled:opacity-60'
+            className='hover:bg-brand/10 hover:border-brand/30 hover:text-brand group border-control-border bg-control text-foreground inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-medium uppercase transition-all disabled:opacity-60'
           >
             <RotateCwIcon className={isRefreshing ? 'size-3.5 animate-spin' : 'size-3.5'} />
             {t('Refresh')}
@@ -92,7 +92,7 @@ export default function Tournament(props: {
   const theme = getSportTheme(data.sport.key)
   return (
     <section>
-      <div className='text-secondary relative mb-4 flex items-end gap-4 border-b border-white/5 py-2 text-sm'>
+      <div className='text-secondary border-line relative mb-4 flex items-end gap-4 border-b py-2 text-sm'>
         <span
           className='pointer-events-none absolute inset-x-0 -bottom-px h-px opacity-70'
           style={{
@@ -152,7 +152,7 @@ function EventList(props: { tournament: TournamentEventList$key; onShowMore?: ()
         <button
           type='button'
           onClick={props.onShowMore}
-          className='hover:bg-primary/10 hover:border-primary/30 hover:text-primary border-control-border bg-control self-center rounded-full border px-4 py-2 text-xs font-medium text-white uppercase transition-all'
+          className='hover:bg-brand/10 hover:border-brand/30 hover:text-brand border-control-border bg-control text-foreground self-center rounded-full border px-4 py-2 text-xs font-medium uppercase transition-all'
         >
           {t('Show more')}
         </button>

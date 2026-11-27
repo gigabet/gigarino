@@ -220,7 +220,7 @@ function Chip({
       aria-pressed={active}
       className={cn(
         'flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-[0.7rem] leading-4 whitespace-nowrap transition-colors',
-        active ? 'text-foreground bg-dark-400' : 'text-secondary hover:text-foreground',
+        active ? 'text-foreground bg-surface-3' : 'text-secondary hover:text-foreground',
         className
       )}
       {...props}
@@ -272,7 +272,7 @@ function MoreCountries(props: {
         <Popover.Content
           align='end'
           sideOffset={8}
-          className='bg-dark-200 z-50 w-72 rounded-2xl border border-white/5 p-2 shadow-2xl'
+          className='bg-surface border-line z-50 w-72 rounded-2xl border p-2 shadow-2xl'
         >
           <CountryList
             countries={props.countries}
@@ -301,13 +301,13 @@ function CountryList(props: {
   const alphabetical = sortBy(props.countries, c => countryLabel(c, locale, t))
 
   const item =
-    'flex w-full cursor-pointer items-center gap-3 rounded-lg px-2 py-2.5 text-left text-sm text-neutral-200 data-[selected=true]:bg-white/8'
+    'flex w-full cursor-pointer items-center gap-3 rounded-lg px-2 py-2.5 text-left text-sm text-foreground data-[selected=true]:bg-foreground/8'
 
   return (
     <Command loop label={t('Country')} className='flex min-h-0 flex-col gap-2'>
       <Command.Input
         placeholder={t('Search countries...')}
-        className='bg-dark focus:border-primary border-control-border w-full rounded-full border px-4 py-2 text-sm text-neutral-200 placeholder-neutral-500 focus:outline-none'
+        className='bg-background focus:border-brand border-control-border text-foreground placeholder-subtle w-full rounded-full border px-4 py-2 text-sm focus:outline-none'
       />
       <Command.List className={cn('overflow-y-auto overscroll-contain', props.listClassName)}>
         <Command.Empty className='text-secondary px-2 py-6 text-center text-xs'>
@@ -315,7 +315,7 @@ function CountryList(props: {
         </Command.Empty>
         <Command.Item value={t('All')} onSelect={() => props.onSelectAction(null)} className={item}>
           <span className='min-w-0 flex-1 truncate'>{t('All')}</span>
-          {props.active === null && <CheckIcon className='text-primary size-4 shrink-0' />}
+          {props.active === null && <CheckIcon className='text-brand size-4 shrink-0' />}
         </Command.Item>
         {alphabetical.map(c => (
           <Command.Item
@@ -327,7 +327,7 @@ function CountryList(props: {
             <Flag code={c.countryCode} />
             <span className='min-w-0 flex-1 truncate'>{countryLabel(c, locale, t)}</span>
             <span className='text-secondary text-xs'>{c.liveEventCount}</span>
-            {props.active === c.key && <CheckIcon className='text-primary size-4 shrink-0' />}
+            {props.active === c.key && <CheckIcon className='text-brand size-4 shrink-0' />}
           </Command.Item>
         ))}
       </Command.List>

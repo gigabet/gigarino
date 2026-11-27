@@ -17,7 +17,9 @@
     "test:watch": "vitest",
     "lint": "biome check",
     "format": "biome format --write",
-    "relay": "relay-compiler --watch"
+    "relay": "relay-compiler --watch",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "graphql": {
     "schema": [
@@ -78,7 +80,13 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.3",
+    "@chromatic-com/storybook": "^5.6.0",
     "@eslint/js": "^10.0.1",
+    "@storybook/addon-a11y": "^10.6.9",
+    "@storybook/addon-docs": "^10.6.9",
+    "@storybook/addon-mcp": "^10.6.9",
+    "@storybook/addon-vitest": "^10.6.9",
+    "@storybook/nextjs-vite": "^10.6.9",
     "@tailwindcss/postcss": "4.3.0",
     "@tanstack/react-query-devtools": "^5.91.3",
     "@types/lodash": "^4.17.24",
@@ -86,6 +94,8 @@
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@types/relay-compiler": "~14.0.4",
+    "@vitest/browser-playwright": "5.1.1",
+    "@vitest/coverage-v8": "5.1.1",
     "babel-plugin-react-compiler": "1.0.0",
     "chokidar-cli": "^3.0.0",
     "concurrently": "^10.0.5",
@@ -93,16 +103,20 @@
     "eslint-plugin-i18next": "^6.1.5",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-relay": "^2.0.0",
+    "eslint-plugin-storybook": "^10.6.9",
     "globals": "^17.7.0",
+    "playwright": "latest",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "relay-compiler": "^21.0.1",
+    "storybook": "^10.6.9",
     "tailwindcss": "^4.3.0",
     "tailwindcss-animate": "^1.0.7",
     "ts-morph": "^28.0.0",
     "tsx": "^4.23.13",
     "typescript": "^5",
     "typescript-eslint": "^8.62.1",
+    "vite": "latest",
     "vitest": "^5.1.1"
   },
   "packageManager": "pnpm@12.21.0"

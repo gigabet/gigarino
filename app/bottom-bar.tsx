@@ -32,8 +32,8 @@ export default function BottomBar(props: {
             className={cx(
               'group flex flex-1 flex-col items-center justify-center gap-1.5 transition-all duration-300 text-shadow-[0_0_18px] text-shadow-transparent',
               pathname === link.href
-                ? 'text-primary text-shadow-primary'
-                : 'text-gray-400 hover:text-white'
+                ? 'text-brand text-shadow-primary'
+                : 'text-secondary hover:text-foreground'
             )}
           >
             <span className='relative'>
@@ -42,8 +42,8 @@ export default function BottomBar(props: {
                 className={cx(
                   'absolute inset-0 top-1/2 left-1/2 size-8 -translate-1/2 scale-100 rounded-full blur-lg transition-all duration-300',
                   pathname === link.href
-                    ? 'bg-primary/40'
-                    : 'bg-white/30 opacity-0 group-hover:opacity-100'
+                    ? 'bg-brand/40'
+                    : 'bg-foreground/30 opacity-0 group-hover:opacity-100'
                 )}
               />
             </span>
@@ -74,7 +74,7 @@ function MyTicketsButton() {
       }}
       className={cx(
         'group flex flex-1 flex-col items-center justify-center gap-1.5 transition-all duration-300 text-shadow-[0_0_18px] text-shadow-transparent',
-        active ? 'text-primary text-shadow-primary' : 'text-gray-400 hover:text-white'
+        active ? 'text-brand text-shadow-primary' : 'text-secondary hover:text-foreground'
       )}
     >
       <span className='relative'>
@@ -85,7 +85,7 @@ function MyTicketsButton() {
         <div
           className={cx(
             'absolute inset-0 top-1/2 left-1/2 size-8 -translate-1/2 scale-100 rounded-full blur-lg transition-all duration-300',
-            active ? 'bg-primary/40' : 'bg-white/30 opacity-0 group-hover:opacity-100'
+            active ? 'bg-brand/40' : 'bg-foreground/30 opacity-0 group-hover:opacity-100'
           )}
         />
       </span>

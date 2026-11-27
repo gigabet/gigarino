@@ -76,8 +76,8 @@ export default async function Footer() {
   return (
     <footer className='relative z-0 pt-16 pb-28 lg:pb-8'>
       {/* Background with subtle pattern */}
-      <div className='from-dark-100 pointer-events-none absolute inset-0 bg-linear-to-t to-transparent' />
-      <div className='absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(209,243,102,0.03),transparent_50%)]' />
+      <div className='from-card pointer-events-none absolute inset-0 bg-linear-to-t to-transparent' />
+      <div className='absolute inset-0 bg-[radial-gradient(ellipse_at_top,color-mix(in_oklab,var(--primary)_3%,transparent),transparent_50%)]' />
 
       <div className='relative z-10 mx-auto max-w-7xl px-6 lg:px-8'>
         {/* Logo Section */}
@@ -89,7 +89,7 @@ export default async function Footer() {
         <div className='mb-12 grid grid-cols-2 justify-center gap-8 sm:grid-cols-3 lg:grid-cols-6'>
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
-              <h4 className='mb-4 text-xs font-bold tracking-wider text-gray-300 uppercase'>
+              <h4 className='text-secondary mb-4 text-xs font-bold tracking-wider uppercase'>
                 {category}
               </h4>
               <ul className='space-y-2'>
@@ -97,10 +97,10 @@ export default async function Footer() {
                   <li key={label}>
                     <Link
                       href={href ?? ''}
-                      className='hover:text-primary group relative text-sm text-gray-500 transition-colors duration-300'
+                      className='hover:text-brand group text-subtle relative text-sm transition-colors duration-300'
                     >
                       {t(label)}
-                      <span className='bg-primary absolute bottom-0 left-0 h-px w-0 transition-all duration-300 group-hover:w-full' />
+                      <span className='bg-brand absolute bottom-0 left-0 h-px w-0 transition-all duration-300 group-hover:w-full' />
                     </Link>
                   </li>
                 ))}
@@ -111,45 +111,45 @@ export default async function Footer() {
 
         {/* Trust Badges */}
         <div className='mb-8 flex flex-wrap items-center justify-center gap-6'>
-          <div className='flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2'>
-            <div className='bg-primary/10 flex h-6 w-6 items-center justify-center rounded-full'>
-              <ShieldCheckIcon className='text-primary h-3 w-3' />
+          <div className='border-line-2 bg-foreground/5 flex items-center gap-2 rounded-full border px-4 py-2'>
+            <div className='bg-brand/10 flex h-6 w-6 items-center justify-center rounded-full'>
+              <ShieldCheckIcon className='text-brand h-3 w-3' />
             </div>
-            <span className='text-xs text-gray-400'>
+            <span className='text-secondary text-xs'>
               {t('Secure')} &amp; {t('Licensed')}
             </span>
           </div>
-          <div className='flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2'>
-            <div className='bg-primary/10 flex h-6 w-6 items-center justify-center rounded-full'>
-              <ZapIcon className='text-primary h-3 w-3' />
+          <div className='border-line-2 bg-foreground/5 flex items-center gap-2 rounded-full border px-4 py-2'>
+            <div className='bg-brand/10 flex h-6 w-6 items-center justify-center rounded-full'>
+              <ZapIcon className='text-brand h-3 w-3' />
             </div>
-            <span className='text-xs text-gray-400'>{t('Fast Payouts')}</span>
+            <span className='text-secondary text-xs'>{t('Fast Payouts')}</span>
           </div>
-          <div className='flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2'>
-            <div className='bg-primary/10 flex h-6 w-6 items-center justify-center rounded-full'>
-              <LockIcon className='text-primary h-3 w-3' />
+          <div className='border-line-2 bg-foreground/5 flex items-center gap-2 rounded-full border px-4 py-2'>
+            <div className='bg-brand/10 flex h-6 w-6 items-center justify-center rounded-full'>
+              <LockIcon className='text-brand h-3 w-3' />
             </div>
             {/* eslint-disable-next-line i18next/no-literal-string */}
-            <span className='text-xs text-gray-400'>256-bit SSL</span>
+            <span className='text-secondary text-xs'>256-bit SSL</span>
           </div>
-          <div className='flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2'>
-            <div className='bg-primary/10 flex h-6 w-6 items-center justify-center rounded-full'>
-              <SmartphoneIcon className='text-primary h-3 w-3' />
+          <div className='border-line-2 bg-foreground/5 flex items-center gap-2 rounded-full border px-4 py-2'>
+            <div className='bg-brand/10 flex h-6 w-6 items-center justify-center rounded-full'>
+              <SmartphoneIcon className='text-brand h-3 w-3' />
             </div>
-            <span className='text-xs text-gray-400'>{t('Mobile Optimized')}</span>
+            <span className='text-secondary text-xs'>{t('Mobile Optimized')}</span>
           </div>
         </div>
 
         {/* Payment Methods */}
         <div className='mb-8'>
-          <p className='mb-4 text-center text-xs tracking-wider text-gray-500 uppercase'>
+          <p className='text-subtle mb-4 text-center text-xs tracking-wider uppercase'>
             {t('Accepted Payment Methods')}
           </p>
           <div className='flex flex-wrap items-center justify-center gap-3'>
             {paymentMethods.map(method => (
               <div
                 key={method.name}
-                className='hover:border-primary/50 hover:text-primary flex h-8 w-12 cursor-pointer items-center justify-center rounded border border-white/10 bg-white/5 text-[10px] font-bold text-gray-400 transition-all'
+                className='hover:border-brand/50 hover:text-brand border-line-2 bg-foreground/5 text-secondary flex h-8 w-12 cursor-pointer items-center justify-center rounded border text-[10px] font-bold transition-all'
               >
                 {method.icon}
               </div>
@@ -158,10 +158,10 @@ export default async function Footer() {
         </div>
 
         {/* Contact Info */}
-        <div className='mb-8 flex flex-wrap items-center justify-center gap-6 text-xs text-gray-500'>
+        <div className='text-subtle mb-8 flex flex-wrap items-center justify-center gap-6 text-xs'>
           <a
             href='mailto:support@gigarino.com'
-            className='hover:text-primary flex items-center gap-2 transition-colors'
+            className='hover:text-brand flex items-center gap-2 transition-colors'
           >
             {/* eslint-disable-next-line i18next/no-literal-string */}
             <Mail className='h-4 w-4' />
@@ -169,7 +169,7 @@ export default async function Footer() {
           </a>
           <a
             href='tel:+441234567890'
-            className='hover:text-primary flex items-center gap-2 transition-colors'
+            className='hover:text-brand flex items-center gap-2 transition-colors'
           >
             {/* eslint-disable-next-line i18next/no-literal-string */}
             <Phone className='h-4 w-4' />
@@ -183,10 +183,10 @@ export default async function Footer() {
         </div>
 
         {/* Divider */}
-        <div className='mb-6 h-px bg-white/10' />
+        <div className='bg-foreground/10 mb-6 h-px' />
 
         {/* Copyright & Legal */}
-        <div className='flex flex-col items-center justify-between gap-4 text-xs text-gray-600 md:flex-row'>
+        <div className='text-muted-foreground flex flex-col items-center justify-between gap-4 text-xs md:flex-row'>
           <p>
             {t(
               'Gambling can be addictive. Play responsibly. This platform only accepts customers over 18 years of age.'

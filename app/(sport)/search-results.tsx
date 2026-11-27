@@ -15,8 +15,8 @@ export default function SearchResults(props: {
 
   if (events.length === 0) {
     return (
-      <section className='flex flex-col items-center justify-center gap-4 rounded-2xl border border-white/5 bg-black/20 px-6 py-16 text-center'>
-        <div className='bg-dark-300 text-muted-foreground flex size-14 items-center justify-center rounded-full'>
+      <section className='glass-flat flex flex-col items-center justify-center gap-4 rounded-2xl px-6 py-16 text-center'>
+        <div className='bg-surface-2 text-muted-foreground flex size-14 items-center justify-center rounded-full'>
           <SearchXIcon className='size-6' />
         </div>
         <div className='space-y-1'>

@@ -20,17 +20,15 @@ export default function Logo({ size = 'md', subtitle, Component = 'h1' }: LogoPr
           'text-4xl lg:text-4xl': size === 'lg',
         })}
       >
-        <span className='text-primary text-shadow-primary group-hover:animate-pulse-glow-primary transition-all text-shadow-none'>
+        <span className='text-brand text-shadow-primary group-hover:animate-pulse-glow-primary transition-all text-shadow-none'>
           GIGA
         </span>
-        <span className='group-hover:animate-pulse-glow-white text-white transition-all text-shadow-none text-shadow-white'>
+        <span className='group-hover:animate-pulse-glow-white text-foreground text-shadow-foreground transition-all text-shadow-none'>
           RINO
         </span>
       </Component>
       {subtitle && (
-        <p className='text-sm tracking-[0.3em] text-gray-500 uppercase'>
-          {t('High Energy Gaming')}
-        </p>
+        <p className='text-subtle text-sm tracking-[0.3em] uppercase'>{t('High Energy Gaming')}</p>
       )}
     </div>
   )

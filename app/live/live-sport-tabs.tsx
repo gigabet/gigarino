@@ -109,8 +109,8 @@ function Tab(props: {
         // lg+: original horizontal pill
         'lg:min-w-0 lg:flex-row lg:gap-2 lg:rounded-2xl lg:px-3.5 lg:py-2',
         props.active
-          ? 'text-white'
-          : 'lg:hover:bg-dark-300 hover:bg-dark-400 text-white/60 hover:text-white max-lg:text-white/75'
+          ? 'text-foreground'
+          : 'lg:hover:bg-surface-2 hover:bg-surface-3 text-foreground/60 hover:text-foreground max-lg:text-foreground/75'
       )}
     >
       <span className='[&>svg]:size-5 lg:[&>svg]:size-4'>{props.icon}</span>

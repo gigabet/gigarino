@@ -286,7 +286,7 @@ function OddToggle(props: {
       <Toggle.Root
         suppressHydrationWarning
         className={cn(
-          'group hover:bg-primary/10 hover:border-primary/60 shadow-primary/60 data-[state=on]:border-primary data-[state=on]:bg-primary-500/10 border-control-border bg-control flex flex-1 flex-col items-center justify-center gap-1 rounded-lg border transition-all disabled:pointer-events-none disabled:opacity-40',
+          'group hover:bg-brand/10 hover:border-brand/60 shadow-primary/60 data-[state=on]:border-brand data-[state=on]:bg-brand/10 border-control-border bg-control flex flex-1 flex-col items-center justify-center gap-1 rounded-lg border transition-all disabled:pointer-events-none disabled:opacity-40',
           'data-[state=on]:shadow-[0_0_12px]',
           upDown === 'up' && 'animate-odds-flash-up',
           upDown === 'down' && 'animate-odds-flash-down'
@@ -301,7 +301,7 @@ function OddToggle(props: {
         >
           {props.label}
         </span>
-        <span className='group-data-[state=on]:text-primary text-shadow-primary/70 text-foreground relative flex flex-col items-center justify-center gap-1 text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'>
+        <span className='group-data-[state=on]:text-brand text-shadow-primary/70 text-foreground relative flex flex-col items-center justify-center gap-1 text-sm font-semibold group-data-[state=on]:text-shadow-[0_0_12px]'>
           {props.odd.status === 'OPEN' ? (
             <>
               <span suppressHydrationWarning>{Number(props.odd.price).toFixed(2)}</span>

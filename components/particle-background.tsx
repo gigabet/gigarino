@@ -1,4 +1,5 @@
 'use client'
+import { useTheme } from 'next-themes'
 import { useEffect, useRef } from 'react'
 
 interface Particle {
@@ -15,6 +16,10 @@ export default function ParticleBackground() {
   const particlesRef = useRef<Particle[]>([])
   const animationRef = useRef<number | null>(null)
   const mouseRef = useRef({ x: 0, y: 0 })
+  const { resolvedTheme } = useTheme()
+  // canvas can't read CSS variables, so the particle colour is picked per theme here:
+  // the brand lime on dark, its darkened counterpart on light (see --brand in globals.css)
+  const rgb = resolvedTheme === 'light' ? '77, 124, 15' : '209, 243, 102'
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -78,7 +83,7 @@ export default function ParticleBackground() {
           // Draw particle
           ctx.beginPath()
           ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
-          ctx.fillStyle = `rgba(209, 243, 102, ${particle.opacity})`
+          ctx.fillStyle = `rgba(${rgb}, ${particle.opacity})`
           ctx.fill()
         })
 
@@ -100,7 +105,7 @@ export default function ParticleBackground() {
               ctx.beginPath()
               ctx.moveTo(particle.x, particle.y)
               ctx.lineTo(other.x, other.y)
-              ctx.strokeStyle = `rgba(209, 243, 102, ${0.1 * (1 - dist / 100)})`
+              ctx.strokeStyle = `rgba(${rgb}, ${0.1 * (1 - dist / 100)})`
               ctx.lineWidth = 0.5
               ctx.stroke()
             }
@@ -120,7 +125,7 @@ export default function ParticleBackground() {
         cancelAnimationFrame(animationRef.current)
       }
     }
-  }, [])
+  }, [rgb])
 
   return (
     <canvas

@@ -59,7 +59,7 @@ export default function ProviderSection(
             <h2 className='font-display text-2xl font-bold sm:text-3xl'>Providers</h2>
             <Link
               href={`/casino/providers`}
-              className='hover:text-primary group flex items-center gap-1 text-sm text-white/60 transition-colors'
+              className='hover:text-brand group text-foreground/60 flex items-center gap-1 text-sm transition-colors'
             >
               <span>See all ({data?.length})</span>
               <ChevronRightIcon className='size-4 transition-transform group-hover:translate-x-1' />
@@ -86,7 +86,7 @@ export default function ProviderSection(
           <div className='flex items-center justify-end pt-6'>
             <Link
               href={`/casino/providers`}
-              className='hover:text-primary group flex items-center gap-1 text-sm text-white/60 transition-colors'
+              className='hover:text-brand group text-foreground/60 flex items-center gap-1 text-sm transition-colors'
             >
               <span>See all ({data?.length})</span>
               <ChevronRightIcon className='size-4 transition-transform group-hover:translate-x-1' />
@@ -129,7 +129,7 @@ export function ProviderCard({ provider }: { provider: GameProvider }) {
       onMouseLeave={handleMouseLeave}
     >
       <div
-        className='relative scale-100 overflow-hidden rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.3)] transition-all duration-300 group-hover:scale-104 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.5),0_0_30px_rgba(209,243,102,0.2)]'
+        className='relative scale-100 overflow-hidden rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.3)] transition-all duration-300 group-hover:scale-104 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.5),0_0_30px_color-mix(in_oklab,var(--primary)_20%,transparent)]'
         // style={{
         //   transform: `rotateX(${transform.rotateX}deg) rotateY(${transform.rotateY}deg)`,
         //   transformStyle: 'preserve-3d',

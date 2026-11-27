@@ -33,7 +33,7 @@ export default async function Casino() {
         <HeroBanner />
 
         <GameSection title='Top Games' category={categories['Top Games']}>
-          <div className='absolute inset-0 h-full bg-linear-to-b from-black via-transparent to-transparent' />
+          <div className='from-background absolute inset-0 h-full bg-linear-to-b via-transparent to-transparent' />
         </GameSection>
 
         <GameSection title='New Releases' category={categories['New Releases']} />

@@ -9,8 +9,10 @@ export default function Header(props: { title: string; subtitle: string }) {
       transition={{ duration: 0.5 }}
       className='mb-8'
     >
-      <h1 className='font-display mb-2 text-3xl font-bold text-white md:text-4xl'>{props.title}</h1>
-      <p className='text-gray-400'>{props.subtitle}</p>
+      <h1 className='font-display text-foreground mb-2 text-3xl font-bold md:text-4xl'>
+        {props.title}
+      </h1>
+      <p className='text-secondary'>{props.subtitle}</p>
     </motion.div>
   )
 }

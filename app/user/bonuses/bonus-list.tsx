@@ -51,7 +51,7 @@ export default function BonusList(props: { user: User }) {
           <motion.div
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
-            className='mb-6 inline-flex items-center gap-8 self-start rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-red-400'
+            className='border-danger/30 bg-danger/10 text-danger mb-6 inline-flex items-center gap-8 self-start rounded-lg border p-4'
           >
             <div className='flex items-center gap-3'>
               <AlertCircleIcon className='size-5 shrink-0' />
@@ -73,7 +73,7 @@ export default function BonusList(props: { user: User }) {
         <motion.div
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
-          className='mb-6 inline-flex items-center gap-8 self-start rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-red-400'
+          className='border-danger/30 bg-danger/10 text-danger mb-6 inline-flex items-center gap-8 self-start rounded-lg border p-4'
         >
           <div className='flex items-center gap-3'>
             <AlertCircleIcon className='size-5 shrink-0' />

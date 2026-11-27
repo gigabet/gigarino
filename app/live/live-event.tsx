@@ -64,7 +64,7 @@ export default function LiveEvent(props: { eventRef: LiveEvent$key; scope?: stri
   return (
     <div
       className={cn(
-        'sport-texture group relative flex h-32 flex-col gap-2 overflow-hidden border-b border-white/15 py-3 last:border-b-0 max-sm:overflow-visible sm:gap-3 sm:rounded-2xl sm:border-b-0 sm:border-white/5 sm:bg-black/20 sm:px-4 lg:h-27 lg:flex-row lg:flex-nowrap lg:items-center lg:gap-4 lg:px-5',
+        'sport-texture group border-line-2 sm:border-line sm:bg-glass relative flex h-32 flex-col gap-2 overflow-hidden border-b py-3 last:border-b-0 max-sm:overflow-visible sm:gap-3 sm:rounded-2xl sm:border-b-0 sm:px-4 lg:h-27 lg:flex-row lg:flex-nowrap lg:items-center lg:gap-4 lg:px-5',
         suspended && 'opacity-60'
       )}
     >
@@ -195,7 +195,7 @@ export function LiveTime(props: { event: LiveTime$key; aside?: boolean; classNam
   if (finished) {
     return (
       <div className={cn('flex items-center gap-1.5', props.className)}>
-        <div className='size-2 rounded-full bg-neutral-500' />
+        <div className='bg-subtle size-2 rounded-full' />
         <span className='text-foreground'>{t(STATUS_LABEL[data.status] ?? 'Ended')}</span>
       </div>
     )
@@ -216,8 +216,8 @@ export function LiveTime(props: { event: LiveTime$key; aside?: boolean; classNam
         {!stale && (
           <>
             <div className='relative flex shrink-0 items-center justify-center'>
-              <div className='absolute size-2 animate-ping rounded-full bg-red-500' />
-              <div className='size-2 rounded-full bg-red-500' />
+              <div className='bg-danger absolute size-2 animate-ping rounded-full' />
+              <div className='bg-danger size-2 rounded-full' />
             </div>
             {seconds !== null ? (
               <time className='text-foreground font-mono'>
@@ -233,7 +233,7 @@ export function LiveTime(props: { event: LiveTime$key; aside?: boolean; classNam
       {!props.aside && seconds !== null && data.period && <span className='lg:hidden'>·</span>}
       {data.period && <div>{t(getPeriod(data.period).long)}</div>}
       {data.tradingStatus === 'SUSPENDED' && (
-        <div className='flex items-center gap-1 truncate text-[0.6rem] text-amber-400'>
+        <div className='text-warning flex items-center gap-1 truncate text-[0.6rem]'>
           <TriangleAlert className='size-3' /> <span>{t('Suspended')}</span>
         </div>
       )}
@@ -313,7 +313,7 @@ function RedCardMark(props: { count: number | undefined }) {
       aria-label={t('Red cards')}
       className='flex shrink-0 items-center gap-0.5 text-[0.65rem] font-bold'
     >
-      <span className='h-3 w-2 rounded-[1px] bg-red-500' />
+      <span className='bg-danger h-3 w-2 rounded-[1px]' />
       {props.count > 1 && props.count}
     </span>
   )
@@ -408,7 +408,7 @@ export function LiveScore(props: { event: LiveScore$key }) {
           {tiebreak && (
             <span
               title={t('Tiebreak')}
-              className='bg-primary/15 text-primary absolute -top-3.5 left-3 rounded px-1 text-[0.55rem] leading-4 font-bold tracking-wide uppercase'
+              className='bg-brand/15 text-brand absolute -top-3.5 left-3 rounded px-1 text-[0.55rem] leading-4 font-bold tracking-wide uppercase'
             >
               {t('TB')}
             </span>
@@ -416,7 +416,7 @@ export function LiveScore(props: { event: LiveScore$key }) {
           <Column
             home={data.pointScore.home}
             away={data.pointScore.away}
-            className='text-primary border-l border-white/10 pl-2 text-xs sm:pl-3'
+            className='text-brand border-line-2 border-l pl-2 text-xs sm:pl-3'
           />
         </div>
       )}
@@ -436,7 +436,7 @@ function ScoreCell(props: { value: number | null | undefined; enabled: boolean }
 
   return (
     <span
-      className={cn('relative flex h-6 items-center transition-colors', goalId && 'text-primary')}
+      className={cn('relative flex h-6 items-center transition-colors', goalId && 'text-brand')}
       suppressHydrationWarning
     >
       <GoalBadge goalId={goalId} />

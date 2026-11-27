@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 export default function PrematchSingleViewSkeleton() {
   return (
     <main className='mx-auto flex w-full max-w-7xl min-w-0 flex-col gap-4 sm:gap-6'>
-      <section className='flex flex-col gap-3 rounded-2xl border border-white/5 bg-black/20 p-4 sm:gap-4 sm:p-6'>
+      <section className='glass-flat flex flex-col gap-3 rounded-2xl p-4 sm:gap-4 sm:p-6'>
         <EventHeaderRow
           left={<Skeleton className='h-4 w-48 max-w-full' />}
           favourite={<Skeleton className='size-8 rounded-full' />}

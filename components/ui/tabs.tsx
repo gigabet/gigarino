@@ -18,7 +18,7 @@ export function List({ className, ...props }: React.ComponentProps<typeof TabsPr
     <TabsPrimitive.List
       data-slot='tabs-list'
       className={cx(
-        'bg-dark-200 text-muted-foreground inline-flex h-12 w-fit items-center justify-center rounded-lg p-0.75',
+        'bg-surface text-muted-foreground inline-flex h-12 w-fit items-center justify-center rounded-lg p-0.75',
         className
       )}
       {...props}

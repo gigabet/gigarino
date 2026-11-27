@@ -4,51 +4,172 @@ layer(base);
 @import 'tailwindcss';
 @plugin 'tailwindcss-animate';
 
+/* next-themes puts `.dark` on <html>; light is the default (:root) */
 @custom-variant dark (&:is(.dark *));
 
 /* ------------------------------------------------------------------ */
-/* Semantic tokens. Tailwind palette variables wherever an exact match */
-/* exists, oklch literals for the rest.                                */
+/* Semantic tokens                                                     */
+/*                                                                     */
+/*   surfaces   background < card/surface < surface-2 < surface-3      */
+/*   text       foreground > secondary > subtle > muted-foreground     */
+/*   lines      line (hairline) < line-2 < line-3                      */
+/*   brand      the lime, as text/border/icon colour. Darkened in light */
+/*              mode so it stays readable. `primary` is the lime as a   */
+/*              FILL and always carries `primary-foreground` (black).   */
+/*   status     danger / warning / success / info (text + tints);      */
+/*              destructive is the solid red fill                       */
+/*                                                                     */
+/* Never hardcode white/black/gray for chrome: use these, so both      */
+/* themes keep working.                                                */
 /* ------------------------------------------------------------------ */
 @layer base {
   :root {
-    --background: var(--color-neutral-950);
-    --foreground: var(--color-white);
-    --card: oklch(16.8% 0 0);
-    --card-foreground: var(--color-white);
-    --popover: var(--card);
-    --popover-foreground: var(--color-white);
-    --primary: var(--color-lime);
+    color-scheme: light;
+
+    --background: oklch(97.6% 0.008 270);
+    --foreground: oklch(19% 0.03 275);
+    --card: oklch(100% 0 0);
+    --card-foreground: var(--foreground);
+    --popover: oklch(100% 0 0);
+    --popover-foreground: var(--foreground);
+    --surface: oklch(100% 0 0);
+    --surface-2: oklch(95.2% 0.012 275);
+    --surface-3: oklch(91% 0.016 275);
+
+    --primary: oklch(84% 0.2 124);
     --primary-foreground: var(--color-black);
-    --secondary: oklch(78% 0.022 261.5); /* was 70.5%, secondary text */
-    --secondary-foreground: var(--color-white);
-    --muted: var(--color-neutral-800);
-    --muted-foreground: oklch(47.4% 0 0);
-    --accent: var(--color-purple-accent);
+    --brand: oklch(50% 0.15 131);
+    --secondary: oklch(36% 0.025 275);
+    --secondary-foreground: var(--foreground);
+    --subtle: oklch(47% 0.02 275);
+    --muted: oklch(93% 0.012 275);
+    --muted-foreground: oklch(55% 0.015 275);
+    --purple-accent: oklch(52% 0.24 285);
+    --accent: var(--purple-accent);
     --accent-foreground: var(--color-white);
-    --destructive: var(--color-red-500);
-    --destructive-foreground: var(--color-neutral-50);
-    --border: var(--color-neutral-800);
-    --input: var(--color-neutral-700); /* was neutral-800 */
-    --control: oklch(100% 0 0 / 0.11);
-    --control-border: oklch(100% 0 0 / 0.14);
-    --ring: var(--primary);
+
+    --destructive: oklch(57.7% 0.245 27.3);
+    --destructive-foreground: var(--color-white);
+    --danger: oklch(53% 0.22 27);
+    --warning: oklch(52% 0.15 55);
+    --success: oklch(50% 0.15 150);
+    --info: oklch(48% 0.13 240);
+
+    --border: oklch(88% 0.012 275);
+    --input: oklch(82% 0.015 275);
+    --control: oklch(0% 0 0 / 0.05);
+    --control-border: oklch(0% 0 0 / 0.14);
+    --line: oklch(0% 0 0 / 0.09);
+    --line-2: oklch(0% 0 0 / 0.14);
+    --line-3: oklch(0% 0 0 / 0.26);
+    --ring: var(--brand);
     --radius: 0.625rem;
-    --sidebar-background: var(--card);
-    --sidebar-foreground: var(--color-white);
+
+    /* neon glass */
+    --glass-bg: oklch(100% 0 0 / 0.6);
+    --glass-bg-strong: oklch(100% 0 0 / 0.84);
+    --glass-border: oklch(0% 0 0 / 0.08);
+    --glass-highlight: inset 0 1px 0 oklch(100% 0 0 / 0.9);
+    --glass-shadow: 0 10px 30px -12px oklch(35% 0.12 285 / 0.28);
+    --glow: oklch(72% 0.2 126 / 0.45);
+    --glow-lg: oklch(72% 0.2 126 / 0.55);
+    --glow-purple: oklch(58% 0.24 287 / 0.4);
+    --glow-text: transparent;
+
+    /* background aurora + grid */
+    --aurora-lime: oklch(88% 0.19 124 / 0.42);
+    --aurora-violet: oklch(80% 0.12 290 / 0.38);
+    --aurora-sky: oklch(88% 0.08 225 / 0.45);
+    --grid-line: oklch(30% 0.05 275 / 0.06);
+
+    /* sport accents (see lib/sport-theme.ts) */
+    --sport-default: #6b7280;
+    --sport-highlights: #b8860b;
+    --sport-football: #1f2937;
+    --sport-tennis: #65a30d;
+    --sport-basketball: #ea580c;
+    --sport-ice-hockey: #0284c7;
+    --sport-volleyball: #a16207;
+    --sport-table-tennis: #dc2626;
+    --sport-esports: #9333ea;
+
+    --sidebar-background: var(--surface);
+    --sidebar-foreground: var(--foreground);
     --sidebar-primary: var(--primary);
-    --sidebar-primary-foreground: var(--color-black);
+    --sidebar-primary-foreground: var(--primary-foreground);
     --sidebar-accent: var(--muted);
-    --sidebar-accent-foreground: var(--color-white);
+    --sidebar-accent-foreground: var(--foreground);
     --sidebar-border: var(--border);
-    --sidebar-ring: var(--primary);
+    --sidebar-ring: var(--ring);
   }
 
+  .dark {
+    color-scheme: dark;
+
+    --background: oklch(14% 0.015 280);
+    --foreground: var(--color-white);
+    --card: oklch(17.5% 0.016 280);
+    --popover: var(--card);
+    --surface: oklch(21.8% 0.017 280);
+    --surface-2: oklch(28.5% 0.018 280);
+    --surface-3: oklch(34.8% 0.02 280);
+
+    --primary: var(--color-lime);
+    --brand: var(--color-lime);
+    --secondary: oklch(78% 0.022 261.5); /* was 70.5%, secondary text */
+    --subtle: oklch(62% 0.02 265);
+    --muted: oklch(26% 0.015 280);
+    --muted-foreground: oklch(47.4% 0 0);
+    --purple-accent: oklch(60.2% 0.23 287.2);
+
+    --destructive: var(--color-red-500);
+    --destructive-foreground: var(--color-neutral-50);
+    --danger: var(--color-red-400);
+    --warning: var(--color-amber-400);
+    --success: var(--color-green-400);
+    --info: var(--color-sky-400);
+
+    --border: oklch(26% 0.015 280);
+    --input: oklch(37% 0.015 280);
+    --control: oklch(100% 0 0 / 0.11);
+    --control-border: oklch(100% 0 0 / 0.14);
+    --line: oklch(100% 0 0 / 0.06);
+    --line-2: oklch(100% 0 0 / 0.11);
+    --line-3: oklch(100% 0 0 / 0.22);
+
+    --glass-bg: oklch(100% 0 0 / 0.05);
+    --glass-bg-strong: oklch(20% 0.02 280 / 0.78);
+    --glass-border: oklch(100% 0 0 / 0.1);
+    --glass-highlight: inset 0 1px 0 oklch(100% 0 0 / 0.08);
+    --glass-shadow: 0 12px 40px -12px oklch(0% 0 0 / 0.6);
+    --glow: oklch(91.2% 0.17 121.3 / 0.5);
+    --glow-lg: oklch(91.2% 0.17 121.3 / 0.6);
+    --glow-purple: oklch(60.2% 0.23 287.2 / 0.5);
+    --glow-text: oklch(91.2% 0.17 121.3 / 0.5);
+
+    --aurora-lime: oklch(91.2% 0.17 121.3 / 0.07);
+    --aurora-violet: oklch(60.2% 0.23 287.2 / 0.16);
+    --aurora-sky: oklch(75% 0.12 230 / 0.07);
+    --grid-line: oklch(91.2% 0.17 121.3 / 0.03);
+
+    --sport-default: #9ca3af;
+    --sport-highlights: #d4af37;
+    --sport-football: #fff;
+    --sport-tennis: #d1f366;
+    --sport-basketball: #fb923c;
+    --sport-ice-hockey: #38bdf8;
+    --sport-volleyball: #f5e050;
+    --sport-table-tennis: #dc2626;
+    --sport-esports: #c084fc;
+  }
+
+  /* fine pointers get the quieter control fills */
   @media (hover: hover) and (pointer: fine) {
     :root {
-      --input: var(--color-neutral-700);
+      --control: oklch(0% 0 0 / 0.035);
+    }
+    .dark {
       --control: oklch(100% 0 0 / 0.04);
-      --control-border: oklch(100% 0 0 / 0.14);
       --secondary: oklch(74% 0.022 261.5);
     }
   }
@@ -71,19 +192,36 @@ layer(base);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+
+  --color-glass: var(--glass-bg);
+
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-line-3: var(--line-3);
+
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-brand: var(--brand);
 
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
+  --color-subtle: var(--subtle);
 
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
+  --color-success: var(--success);
+  --color-info: var(--info);
 
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
 
   --color-accent: var(--accent);
+  --color-purple-accent: var(--purple-accent);
   --color-accent-foreground: var(--accent-foreground);
 
   --color-popover: var(--popover);
@@ -101,18 +239,6 @@ layer(base);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* the primary scale is Tailwind's lime scale, except 300 which is the brand colour */
-  --color-primary-50: var(--color-lime-50);
-  --color-primary-100: var(--color-lime-100);
-  --color-primary-200: var(--color-lime-200);
-  --color-primary-300: var(--color-lime);
-  --color-primary-400: var(--color-lime-400);
-  --color-primary-500: var(--color-lime-500);
-  --color-primary-600: var(--color-lime-600);
-  --color-primary-700: var(--color-lime-700);
-  --color-primary-800: var(--color-lime-800);
-  --color-primary-900: var(--color-lime-900);
-
   --radius-xl: calc(var(--radius) + 4px);
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
@@ -121,24 +247,17 @@ layer(base);
 
   --font-sans: var(--font-poppins);
   --font-display: var(--font-rajdhani);
+
+  /* inline so the halo follows the active theme */
+  --shadow-glow: 0 0 20px var(--glow);
+  --shadow-glow-lg: 0 0 40px var(--glow-lg);
+  --shadow-glow-purple: 0 0 20px var(--glow-purple);
 }
 
 /* Static design tokens */
 @theme {
   /* overrides Tailwind's own lime (the bare name, not the -50..-950 scale) */
   --color-lime: oklch(91.2% 0.17 121.3);
-  --color-purple-accent: oklch(60.2% 0.23 287.2);
-
-  --color-dark: var(--color-neutral-950);
-  --color-dark-100: oklch(16.8% 0 0);
-  --color-dark-200: oklch(21.8% 0 0);
-  --color-dark-300: oklch(28.5% 0 0);
-  --color-dark-400: oklch(34.8% 0 0);
-
-  /* Tailwind's default --shadow-xs is identical to the one that used to be redefined here */
-  --shadow-glow: 0 0 20px --alpha(var(--color-lime) / 50%);
-  --shadow-glow-lg: 0 0 40px --alpha(var(--color-lime) / 60%);
-  --shadow-glow-purple: 0 0 20px --alpha(var(--color-purple-accent) / 50%);
 
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
@@ -187,19 +306,19 @@ layer(base);
   @keyframes pulse-glow-primary {
     0%,
     100% {
-      text-shadow: 0 0 20px --alpha(var(--color-lime) / 80%);
+      text-shadow: 0 0 20px var(--glow-text);
     }
     50% {
-      text-shadow: 0 0 24px var(--color-lime);
+      text-shadow: 0 0 24px var(--glow-text), 0 0 8px var(--glow-text);
     }
   }
   @keyframes pulse-glow-white {
     0%,
     100% {
-      text-shadow: 0 0 20px --alpha(var(--color-white) / 80%);
+      text-shadow: 0 0 20px --alpha(var(--foreground) / 60%);
     }
     50% {
-      text-shadow: 0 0 24px var(--color-white);
+      text-shadow: 0 0 24px --alpha(var(--foreground) / 90%);
     }
   }
   @keyframes float {
@@ -303,19 +422,40 @@ layer(base);
 }
 
 @utility gradient-text {
-  @apply from-lime to-purple-accent bg-linear-135 bg-clip-text text-transparent;
+  @apply from-brand to-purple-accent bg-linear-135 bg-clip-text text-transparent;
 }
 
 @utility gradient-text-primary {
-  @apply from-lime bg-linear-135 to-lime-400 bg-clip-text text-transparent;
+  @apply from-brand to-brand/70 bg-linear-135 bg-clip-text text-transparent;
 }
 
+/*
+ * Neon glass. Three weights:
+ *   glass         frosted panel with backdrop blur (use sparingly: large containers)
+ *   glass-strong  more opaque, for things that sit over content (dialogs, bars, forms)
+ *   glass-flat    same look without backdrop-filter, for repeated rows/cards where
+ *                 blurring dozens of layers would cost mobile GPUs
+ */
 @utility glass {
-  @apply border border-white/10 bg-white/5 backdrop-blur-xl;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-highlight), var(--glass-shadow);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  backdrop-filter: blur(20px) saturate(1.5);
 }
 
-@utility glass-dark {
-  @apply border border-white/5 bg-black/40 backdrop-blur-xl;
+@utility glass-strong {
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-highlight), var(--glass-shadow);
+  -webkit-backdrop-filter: blur(28px) saturate(1.6);
+  backdrop-filter: blur(28px) saturate(1.6);
+}
+
+@utility glass-flat {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-highlight);
 }
 
 @utility btn-primary {
@@ -327,7 +467,7 @@ layer(base);
 
   &::before {
     content: '';
-    @apply absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/30 to-transparent;
+    @apply absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/40 to-transparent;
     transition: transform 0.6s;
   }
 
@@ -351,8 +491,8 @@ layer(base);
     content: '';
     @apply absolute inset-0 rounded-lg opacity-0 transition-opacity duration-300;
     box-shadow:
-      0 0 20px --alpha(var(--color-lime) / 50%),
-      inset 0 0 20px --alpha(var(--color-lime) / 10%);
+      0 0 20px var(--glow),
+      inset 0 0 20px --alpha(var(--brand) / 10%);
   }
 
   &:hover::after {
@@ -361,7 +501,7 @@ layer(base);
 }
 
 @utility text-glow {
-  text-shadow: 0 0 20px --alpha(var(--color-lime) / 50%);
+  text-shadow: 0 0 20px var(--glow-text);
 }
 
 @utility scrollbar-hide {
@@ -400,7 +540,7 @@ layer(base);
 }
 
 @utility shimmer-bg {
-  @apply via-lime/10 bg-linear-90 from-transparent to-transparent bg-size-[200%_100%];
+  @apply via-brand/10 bg-linear-90 from-transparent to-transparent bg-size-[200%_100%];
 }
 
 @utility noise-overlay {
@@ -411,9 +551,27 @@ layer(base);
 /* background-size is 0 on purpose: the grid is switched off for now */
 @utility sport-texture {
   background-image:
-    linear-gradient(--alpha(var(--color-white) / 2%) 1px, transparent 1px),
-    linear-gradient(90deg, --alpha(var(--color-white) / 2%) 1px, transparent 1px);
+    linear-gradient(--alpha(var(--foreground) / 2%) 1px, transparent 1px),
+    linear-gradient(90deg, --alpha(var(--foreground) / 2%) 1px, transparent 1px);
   background-size: 0px 0px;
+}
+
+/* page backdrop: tinted base + three soft neon washes, theme-aware via --aurora-* */
+@utility bg-aurora {
+  background-color: var(--background);
+  background-image:
+    radial-gradient(60rem 40rem at 12% -8%, var(--aurora-lime), transparent 60%),
+    radial-gradient(50rem 38rem at 100% 8%, var(--aurora-violet), transparent 58%),
+    radial-gradient(46rem 34rem at 70% 105%, var(--aurora-sky), transparent 60%);
+}
+
+/* fintech grid, fading out towards the bottom */
+@utility bg-grid-fade {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse at 50% 0%, black 0%, transparent 75%);
 }
 
 @utility font-racing {
@@ -441,22 +599,22 @@ layer(base);
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-dark-100);
+  background: var(--card);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-dark-300);
+  background: var(--surface-3);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-lime);
+  background: var(--brand);
 }
 
 /* Selection color */
 ::selection {
-  background: --alpha(var(--color-lime) / 30%);
-  color: var(--color-white);
+  background: --alpha(var(--brand) / 30%);
+  color: var(--foreground);
 }
 
 /* Reduced motion preference */

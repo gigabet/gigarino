@@ -20,7 +20,7 @@ export default function CategorySection(props: { categories: typeof categories }
 
   return (
     <section ref={sectionRef} className='relative py-12 sm:py-20'>
-      <div className='absolute inset-0 h-full border-y border-white/5 bg-black/30' />
+      <div className='border-line bg-glass absolute inset-0 h-full border-y' />
       <div className='mx-auto max-w-360 px-6 lg:px-8'>
         <motion.div
           initial={{ opacity: 0, y: 32, z: 1 }}
@@ -81,7 +81,7 @@ function Tab({
         'shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-all duration-300',
         tab === label
           ? 'bg-primary text-primary-foreground shadow-primary/50 shadow-[0_0_15px]'
-          : 'bg-dark-200 text-white/70 hover:bg-white/10 hover:text-white'
+          : 'bg-surface text-foreground/70 hover:bg-foreground/10 hover:text-foreground'
       )}
     >
       <span>{t(label)}</span>

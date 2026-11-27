@@ -194,10 +194,7 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key; b
 
   return (
     <section
-      className={cn(
-        'flex flex-col gap-4',
-        !props.bare && 'rounded-2xl border border-white/5 bg-black/20 p-4 sm:p-6'
-      )}
+      className={cn('flex flex-col gap-4', !props.bare && 'glass-flat rounded-2xl p-4 sm:p-6')}
     >
       {meta && <p className='text-secondary truncate text-xs'>{meta}</p>}
 
@@ -212,7 +209,7 @@ export default function StatisticsWidget(props: { event: StatisticsWidget$key; b
               <Tabs.Trigger
                 key={tab}
                 value={tab}
-                className='data-[state=active]:bg-primary border-control-border shrink-0 rounded-full border bg-white/10 px-4 py-2 text-xs font-medium whitespace-nowrap text-gray-300 shadow-none data-[state=active]:text-black'
+                className='data-[state=active]:bg-primary border-control-border bg-foreground/10 text-secondary data-[state=active]:text-primary-foreground shrink-0 rounded-full border px-4 py-2 text-xs font-medium whitespace-nowrap shadow-none'
               >
                 {TAB_LABEL[tab]}
               </Tabs.Trigger>
@@ -298,9 +295,9 @@ export function StatisticsSection(props: { event?: StatisticsWidget$key | null; 
           id={switchId}
           checked={enabled}
           onCheckedChange={setEnabled}
-          className='data-[state=checked]:bg-primary focus-visible:ring-ring relative h-5 w-9 shrink-0 cursor-pointer rounded-full bg-white/15 transition-colors outline-none focus-visible:ring-2'
+          className='data-[state=checked]:bg-primary focus-visible:ring-ring bg-foreground/15 relative h-5 w-9 shrink-0 cursor-pointer rounded-full transition-colors outline-none focus-visible:ring-2'
         >
-          <Switch.Thumb className='data-[state=checked]:bg-primary-foreground block size-4 translate-x-0.5 rounded-full bg-white shadow transition-transform data-[state=checked]:translate-x-4.5' />
+          <Switch.Thumb className='data-[state=checked]:bg-primary-foreground bg-foreground block size-4 translate-x-0.5 rounded-full shadow transition-transform data-[state=checked]:translate-x-4.5' />
         </Switch.Root>
       </div>
 
@@ -326,12 +323,12 @@ type Side = 'home' | 'away'
 
 const TEAM = {
   home: {
-    dot: 'bg-primary',
-    text: 'text-primary',
-    bar: 'bg-primary',
-    barDim: 'bg-primary/30',
-    pill: 'bg-primary/10 text-primary',
-    tint: 'bg-primary/10',
+    dot: 'bg-brand',
+    text: 'text-brand',
+    bar: 'bg-brand',
+    barDim: 'bg-brand/30',
+    pill: 'bg-brand/10 text-brand',
+    tint: 'bg-brand/10',
   },
   away: {
     dot: 'bg-purple-accent',
@@ -342,19 +339,19 @@ const TEAM = {
     tint: 'bg-purple-accent/15',
   },
   draw: {
-    dot: 'bg-white/40',
-    text: 'text-white',
-    bar: 'bg-white/30',
-    barDim: 'bg-white/15',
-    pill: 'bg-white/10 text-white/70',
-    tint: 'bg-white/10',
+    dot: 'bg-foreground/40',
+    text: 'text-foreground',
+    bar: 'bg-foreground/30',
+    barDim: 'bg-foreground/15',
+    pill: 'bg-foreground/10 text-foreground/70',
+    tint: 'bg-foreground/10',
   },
 } as const
 
 const RESULT_STYLE: Record<string, string> = {
-  W: 'bg-primary text-black',
-  D: 'bg-white/20 text-white',
-  L: 'bg-red-500 text-white',
+  W: 'bg-primary text-primary-foreground',
+  D: 'bg-foreground/20 text-foreground',
+  L: 'bg-destructive text-destructive-foreground',
 }
 
 function Panel(props: {
@@ -366,11 +363,9 @@ function Panel(props: {
   return (
     <div className={props.className}>
       {props.header && (
-        <div className={cn('border-b border-white/5 pb-3', props.headerClassName)}>
-          {props.header}
-        </div>
+        <div className={cn('border-line border-b pb-3', props.headerClassName)}>{props.header}</div>
       )}
-      <div className='divide-y divide-white/4'>{props.children}</div>
+      <div className='divide-line divide-y'>{props.children}</div>
     </div>
   )
 }
@@ -392,9 +387,9 @@ function TeamLabel(props: {
       )}
     >
       <span className={cn('size-2.5 shrink-0 rounded-full', TEAM[props.side].dot)} />
-      <span className='truncate text-sm font-semibold text-white'>{props.name}</span>
+      <span className='text-foreground truncate text-sm font-semibold'>{props.name}</span>
       {props.position != null && (
-        <span className='bg-dark-300 rounded-full px-2 py-0.5 font-mono text-[0.65rem]'>
+        <span className='bg-surface-2 rounded-full px-2 py-0.5 font-mono text-[0.65rem]'>
           #{props.position}
         </span>
       )}
@@ -422,9 +417,9 @@ function Chip(props: { className?: string; children: React.ReactNode }) {
 
 function ScoreBox(props: { home?: string | null; away?: string | null }) {
   return (
-    <span className='flex min-w-12 shrink-0 items-center justify-center gap-1.5 font-mono text-sm font-bold text-white tabular-nums'>
+    <span className='text-foreground flex min-w-12 shrink-0 items-center justify-center gap-1.5 font-mono text-sm font-bold tabular-nums'>
       <span>{props.home ?? '-'}</span>
-      <span className='text-white/30'>:</span>
+      <span className='text-foreground/30'>:</span>
       <span>{props.away ?? '-'}</span>
     </span>
   )
@@ -439,9 +434,13 @@ function MatchCells(props: {
 }) {
   return (
     <>
-      <span className='min-w-0 truncate text-right text-sm text-white/90'>{props.homeName}</span>
+      <span className='text-foreground/90 min-w-0 truncate text-right text-sm'>
+        {props.homeName}
+      </span>
       <ScoreBox home={props.homeScore} away={props.awayScore} />
-      <span className='min-w-0 truncate text-left text-sm text-white/90'>{props.awayName}</span>
+      <span className='text-foreground/90 min-w-0 truncate text-left text-sm'>
+        {props.awayName}
+      </span>
     </>
   )
 }
@@ -524,21 +523,23 @@ function StatRow(props: { stat: { home: string; away: string }; label: string })
   return (
     <div className='flex flex-col gap-1 py-1.5'>
       <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-xs'>
-        <span className={cn('font-mono font-semibold', h >= a ? TEAM.home.text : 'text-white/60')}>
+        <span
+          className={cn('font-mono font-semibold', h >= a ? TEAM.home.text : 'text-foreground/60')}
+        >
           {props.stat.home}
         </span>
         <span className='text-secondary text-center'>{props.label}</span>
         <span
           className={cn(
             'text-right font-mono font-semibold',
-            a >= h ? TEAM.away.text : 'text-white/60'
+            a >= h ? TEAM.away.text : 'text-foreground/60'
           )}
         >
           {props.stat.away}
         </span>
       </div>
       <div className='flex h-1 gap-1'>
-        <div className='flex flex-1 justify-end overflow-hidden rounded-full bg-white/5'>
+        <div className='bg-foreground/5 flex flex-1 justify-end overflow-hidden rounded-full'>
           <div
             className={cn(
               'h-full rounded-full transition-all',
@@ -547,7 +548,7 @@ function StatRow(props: { stat: { home: string; away: string }; label: string })
             style={{ width: `${homePct}%` }}
           />
         </div>
-        <div className='flex flex-1 overflow-hidden rounded-full bg-white/5'>
+        <div className='bg-foreground/5 flex flex-1 overflow-hidden rounded-full'>
           <div
             className={cn(
               'h-full rounded-full transition-all',
@@ -692,7 +693,7 @@ function TimelineTab(props: { event: StatisticsWidgetTimeline$key }) {
           '--minpx': `${MINUTE_PX}px`,
         })}
       >
-        <div className='relative rounded-full bg-white/5 max-sm:mx-auto max-sm:h-[calc(var(--end)*var(--minpx)+2rem)] max-sm:w-6 sm:h-6'>
+        <div className='bg-foreground/5 relative rounded-full max-sm:mx-auto max-sm:h-[calc(var(--end)*var(--minpx)+2rem)] max-sm:w-6 sm:h-6'>
           {/* the positioning box: inset so the end labels and markers stay inside the track */}
           <div className='absolute inset-0 max-sm:inset-y-4 sm:inset-x-4'>
             {ticks.map(m => (
@@ -797,7 +798,7 @@ function IncidentMarker(props: {
             if ((e.nativeEvent as PointerEvent).pointerType === 'mouse') e.preventDefault()
           }}
           className={cn(
-            'flex items-center justify-center rounded-md p-0.5 transition-colors hover:bg-white/10 data-[state=open]:bg-white/15',
+            'hover:bg-foreground/10 data-[state=open]:bg-foreground/15 flex items-center justify-center rounded-md p-0.5 transition-colors',
             props.at ? ['absolute', ALONG, OUT[props.side]] : 'relative',
             i.cancelled && 'opacity-40'
           )}
@@ -823,13 +824,13 @@ function IncidentMarker(props: {
         <div className={cn('flex items-center gap-3', i.cancelled && 'line-through opacity-50')}>
           <IncidentIcon type={i.type} outcome={i.outcome} />
           <div className='min-w-0'>
-            <p className='text-sm text-white/90'>{title}</p>
+            <p className='text-foreground/90 text-sm'>{title}</p>
             <p className='text-secondary text-[0.7rem]'>{subtitle}</p>
           </div>
           <div className='flex flex-col items-end gap-0.5'>
             <span className='text-secondary font-mono text-xs'>{minute}</span>
             {showScore && (
-              <span className='font-mono text-xs font-semibold text-white'>
+              <span className='text-foreground font-mono text-xs font-semibold'>
                 {i.homeScore}-{i.awayScore}
               </span>
             )}
@@ -846,9 +847,9 @@ function IncidentIcon(props: {
 }) {
   switch (props.type) {
     case 'RED_CARD':
-      return <span className='h-3.5 w-2.5 shrink-0 rounded-xs bg-red-500' />
+      return <span className='bg-danger h-3.5 w-2.5 shrink-0 rounded-xs' />
     case 'YELLOW_CARD':
-      return <span className='h-3.5 w-2.5 shrink-0 rounded-xs bg-yellow-400' />
+      return <span className='bg-warning h-3.5 w-2.5 shrink-0 rounded-xs' />
     case 'CORNER':
       return <FlagTriangleRightIcon className='text-secondary size-4 shrink-0' />
     case 'PENALTY':
@@ -856,7 +857,7 @@ function IncidentIcon(props: {
         <TargetIcon
           className={cn(
             'size-4 shrink-0',
-            props.outcome === 'MISSED' ? 'text-red-400' : 'text-primary'
+            props.outcome === 'MISSED' ? 'text-danger' : 'text-brand'
           )}
         />
       )
@@ -882,7 +883,7 @@ function FormTab(props: { home: FormTeam; away: FormTeam }) {
 
   return (
     <div className='flex flex-col gap-3'>
-      <div className='bg-dark-200 flex gap-1 rounded-full p-1 sm:hidden'>
+      <div className='bg-surface flex gap-1 rounded-full p-1 sm:hidden'>
         {/* eslint-disable-next-line i18next/no-literal-string */}
         {(['home', 'away'] as const).map(side => (
           <button
@@ -892,7 +893,7 @@ function FormTab(props: { home: FormTeam; away: FormTeam }) {
             aria-pressed={active === side}
             className={cn(
               'flex min-w-0 flex-1 items-center justify-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium transition-colors',
-              active === side ? 'bg-white/10 text-white' : 'text-white/50'
+              active === side ? 'bg-foreground/10 text-foreground' : 'text-foreground/50'
             )}
           >
             <span className={cn('size-2 shrink-0 rounded-full', TEAM[side].dot)} />
@@ -938,7 +939,9 @@ function PastMatchRow(props: { match: StatisticsWidgetPastMatch$key }) {
 
   return (
     <div className='grid grid-cols-[auto_1fr_auto_1fr] items-center gap-x-3 gap-y-1 py-2.5'>
-      <Chip className={cn('row-span-2', (m.outcome && RESULT_STYLE[m.outcome]) || 'bg-white/10')}>
+      <Chip
+        className={cn('row-span-2', (m.outcome && RESULT_STYLE[m.outcome]) || 'bg-foreground/10')}
+      >
         {m.outcome ?? ''}
       </Chip>
       <MatchCells
@@ -1034,7 +1037,7 @@ function H2HRow(props: { match: StatisticsWidgetPastMatch$key }) {
           className='text-secondary flex min-w-0 shrink-0 flex-col items-end text-[0.7rem] leading-snug sm:order-last sm:justify-self-end'
           suppressHydrationWarning
         >
-          <span className='text-white/70'>{format(m.startTime, 'dd MMM yyyy')}</span>
+          <span className='text-foreground/70'>{format(m.startTime, 'dd MMM yyyy')}</span>
           {m.competition && (
             <span className='hidden max-w-full truncate sm:block' title={m.competition}>
               {m.competition}
@@ -1057,13 +1060,7 @@ function H2HRow(props: { match: StatisticsWidgetPastMatch$key }) {
 
 // Zones are free text ("Champions League", "Relegation"), so each distinct one in a table gets the
 // next colour in order of first appearance, and the legend underneath says which is which.
-const ZONE_COLORS = [
-  'bg-emerald-400',
-  'bg-amber-400',
-  'bg-red-400',
-  'bg-fuchsia-400',
-  'bg-blue-400',
-]
+const ZONE_COLORS = ['bg-success', 'bg-warning', 'bg-danger', 'bg-fuchsia-400', 'bg-info']
 
 /** Which of the event's teams a table row is, if either. */
 const rowSide = (teamName: string, home: string, away: string): Side | null =>
@@ -1158,14 +1155,14 @@ function TableGroup(props: {
   return (
     <div className='flex flex-col gap-2'>
       {props.titled && data.name && (
-        <h3 className='text-sm font-semibold text-white'>
+        <h3 className='text-foreground text-sm font-semibold'>
           {/* eslint-disable-next-line local-i18n/no-untranslated-api-string -- a competition's own group label */}
           {data.name}
         </h3>
       )}
       <Table className='text-xs'>
         <TableHeader>
-          <TableRow className='border-white/10 hover:bg-transparent'>
+          <TableRow className='border-line-2 hover:bg-transparent'>
             <TableHead className={cn(head, 'w-8 sm:w-10')}>#</TableHead>
             <TableHead className='text-secondary px-1 font-normal'>{t('Team')}</TableHead>
             <TableHead className={head} title={t('Played')}>
@@ -1193,10 +1190,7 @@ function TableGroup(props: {
             const side = rowSide(row.teamName, props.home, props.away)
 
             return (
-              <TableRow
-                key={row.teamName}
-                className={cn('border-white/5', side && TEAM[side].tint)}
-              >
+              <TableRow key={row.teamName} className={cn('border-line', side && TEAM[side].tint)}>
                 <TableCell className={cn(cell, 'relative')}>
                   {/* the bar is out of flow so the number stays centred under the "#" header */}
                   {row.zone && (
@@ -1211,7 +1205,7 @@ function TableGroup(props: {
                 </TableCell>
                 <TableCell
                   className={cn(
-                    'max-w-40 truncate px-1 py-1.5 font-medium text-white',
+                    'text-foreground max-w-40 truncate px-1 py-1.5 font-medium',
                     side && TEAM[side].text
                   )}
                 >
@@ -1227,7 +1221,9 @@ function TableGroup(props: {
                 <TableCell className={cn(cell, 'whitespace-nowrap')}>
                   {row.goalsFor}:{row.goalsAgainst}
                 </TableCell>
-                <TableCell className={cn(cell, 'font-bold text-white')}>{row.points}</TableCell>
+                <TableCell className={cn(cell, 'text-foreground font-bold')}>
+                  {row.points}
+                </TableCell>
               </TableRow>
             )
           })}

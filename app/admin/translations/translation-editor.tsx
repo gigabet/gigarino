@@ -88,9 +88,9 @@ export default function TranslationEditor(props: { initial: Translations }) {
           onChange={e => setQuery(e.target.value)}
           placeholder='Search English or translations...'
           aria-label='Search translations'
-          className='focus:border-primary/40 h-10 min-w-64 flex-1 rounded-full border bg-black/50 px-4 text-sm outline-none'
+          className='focus:border-brand/40 bg-glass h-10 min-w-64 flex-1 rounded-full border px-4 text-sm outline-none'
         />
-        <div className='bg-dark-200 flex gap-1 rounded-full border border-white/5 p-1'>
+        <div className='bg-surface border-line flex gap-1 rounded-full border p-1'>
           {FILTERS.map(f => (
             <button
               key={f.value}
@@ -98,7 +98,9 @@ export default function TranslationEditor(props: { initial: Translations }) {
               onClick={() => setFilter(f.value)}
               className={cn(
                 'rounded-full px-3 py-1.5 text-xs font-medium transition-colors',
-                filter === f.value ? 'bg-primary text-black' : 'text-white/60 hover:text-white'
+                filter === f.value
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-foreground/60 hover:text-foreground'
               )}
             >
               {f.label}
@@ -117,7 +119,7 @@ export default function TranslationEditor(props: { initial: Translations }) {
       <div className='flex flex-col gap-2'>
         {rows.map(key => (
           <div key={key} className='grid gap-2 border-b pt-4 pb-6 md:grid-cols-3 md:gap-3'>
-            <p className='self-center pl-3 text-sm font-medium wrap-break-word text-white/90 sm:pl-0'>
+            <p className='text-foreground/90 self-center pl-3 text-sm font-medium wrap-break-word sm:pl-0'>
               {key}
             </p>
             {LOCALES.map(locale => {
@@ -137,17 +139,17 @@ export default function TranslationEditor(props: { initial: Translations }) {
                     }))
                   }
                   className={cn(
-                    'field-sizing-content min-h-9 w-full resize-none rounded-lg border bg-black/30 px-3 py-2 text-sm outline-none',
-                    'focus:border-primary/40',
-                    empty && 'border-amber-500/40',
-                    edited && 'border-primary/60',
-                    isBad(key, locale) && 'border-red-500'
+                    'bg-glass field-sizing-content min-h-9 w-full resize-none rounded-lg border px-3 py-2 text-sm outline-none',
+                    'focus:border-brand/40',
+                    empty && 'border-warning/40',
+                    edited && 'border-brand/60',
+                    isBad(key, locale) && 'border-danger'
                   )}
                 />
               )
             })}
             {LOCALES.some(l => isBad(key, l)) && (
-              <p className='text-xs text-red-400 md:col-span-3'>
+              <p className='text-danger text-xs md:col-span-3'>
                 Placeholders like {'{n}'} must be kept exactly as in the English text.
               </p>
             )}
@@ -155,9 +157,9 @@ export default function TranslationEditor(props: { initial: Translations }) {
         ))}
       </div>
 
-      <div className='bg-dark-200/95 fixed inset-x-0 bottom-0 z-40 border-t border-white/10 px-4 py-3 backdrop-blur-xl'>
+      <div className='bg-surface/95 border-line-2 fixed inset-x-0 bottom-0 z-40 border-t px-4 py-3 backdrop-blur-xl'>
         <div className='mx-auto flex max-w-6xl items-center gap-4'>
-          <p className={cn('mr-auto text-sm', result?.ok === false && 'text-red-400')}>
+          <p className={cn('mr-auto text-sm', result?.ok === false && 'text-danger')}>
             {result ? (
               <>
                 {result.message}{' '}
@@ -166,7 +168,7 @@ export default function TranslationEditor(props: { initial: Translations }) {
                     href={result.url}
                     target='_blank'
                     rel='noreferrer'
-                    className='text-primary underline'
+                    className='text-brand underline'
                   >
                     View on GitHub
                   </a>

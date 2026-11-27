@@ -11,7 +11,7 @@ import type { LiveTournamentTitle$key } from '@/relay/__generated__/LiveTourname
 
 export function HeaderRow(props: { left?: React.ReactNode; sport?: string | null }) {
   return (
-    <div className='text-secondary relative flex h-12 items-center gap-4 border-b border-white/5 text-sm'>
+    <div className='text-secondary border-line relative flex h-12 items-center gap-4 border-b text-sm'>
       <div className={HEADER_LEAD}>{props.left}</div>
       <ListViewMarketDropdowns sport={props.sport} />
       <div className='hidden sm:block sm:w-0 lg:w-34' />
@@ -31,8 +31,8 @@ export function LiveMarketsHeader(props: { stuck?: boolean }) {
     <div className={cn('pointer-events-none', GAP)}>
       <div
         className={cn(
-          'bg-dark/10 pointer-events-auto backdrop-blur-sm transition-colors'
-          // props.stuck ? 'bg-dark/10 backdrop-blur-xl' : 'bg-transparent'
+          'bg-background/10 pointer-events-auto backdrop-blur-sm transition-colors'
+          // props.stuck ? 'bg-background/10 backdrop-blur-xl' : 'bg-transparent'
         )}
       >
         <HeaderRow />

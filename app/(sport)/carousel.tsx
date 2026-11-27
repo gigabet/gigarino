@@ -86,8 +86,8 @@ function CarouselContent(props: { queryRef: PreloadedQuery<PrematchQuery> }) {
   return (
     <section className='relative'>
       <div className='mb-1 flex items-center justify-between'>
-        <h2 className='font-display flex items-center gap-2 text-lg font-bold text-white sm:text-xl'>
-          <HiOutlineSparkles className='text-primary size-5' />
+        <h2 className='font-display text-foreground flex items-center gap-2 text-lg font-bold sm:text-xl'>
+          <HiOutlineSparkles className='text-brand size-5' />
           {t('Featured Bets')}
         </h2>
         <div className='hidden items-center gap-2 sm:flex'>
@@ -95,7 +95,7 @@ function CarouselContent(props: { queryRef: PreloadedQuery<PrematchQuery> }) {
             type='button'
             onClick={() => scroll('left')}
             aria-label={t('Scroll left')}
-            className='bg-dark-200 hover:bg-dark-300 flex size-8 items-center justify-center rounded-full text-white/60 transition-colors hover:text-white'
+            className='bg-surface hover:bg-surface-2 text-foreground/60 hover:text-foreground flex size-8 items-center justify-center rounded-full transition-colors'
           >
             <ChevronLeft className='size-4' />
           </button>
@@ -103,7 +103,7 @@ function CarouselContent(props: { queryRef: PreloadedQuery<PrematchQuery> }) {
             type='button'
             onClick={() => scroll('right')}
             aria-label={t('Scroll right')}
-            className='bg-dark-200 hover:bg-dark-300 flex size-8 items-center justify-center rounded-full text-white/60 transition-colors hover:text-white'
+            className='bg-surface hover:bg-surface-2 text-foreground/60 hover:text-foreground flex size-8 items-center justify-center rounded-full transition-colors'
           >
             <ChevronRight className='size-4' />
           </button>
@@ -171,7 +171,7 @@ function PromoWordmark(props: {
   return (
     <div className='relative flex items-start justify-between gap-2'>
       <div className='leading-[0.82]'>
-        <p className='font-display text-xl font-black text-white uppercase italic'>{top}</p>
+        <p className='font-display text-foreground text-xl font-black uppercase italic'>{top}</p>
         <p
           className={cn('font-display text-3xl font-black uppercase italic', props.accentClassName)}
         >
@@ -235,17 +235,17 @@ function BetBoostCard(props: { bet: BetBoostCard$key; id: string }) {
     <div
       className={cn(
         CARD_SIZE,
-        'group bg-dark-200 border-primary/40 hover:border-primary/70 relative flex shrink-0 snap-start flex-col gap-2 overflow-hidden rounded-2xl border p-3.5 transition-colors duration-300'
+        'group bg-surface border-brand/40 hover:border-brand/70 relative flex shrink-0 snap-start flex-col gap-2 overflow-hidden rounded-2xl border p-3.5 transition-colors duration-300'
       )}
     >
-      <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_100%_0%,rgba(209,243,102,0.14),transparent_55%)]' />
+      <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_100%_0%,color-mix(in_oklab,var(--primary)_14%,transparent),transparent_55%)]' />
 
       <PromoWordmark
         phrase={t('Bet Boost')}
-        accentClassName='text-primary text-shadow-[0_0_16px_rgba(209,243,102,0.55)]'
+        accentClassName='text-brand text-shadow-[0_0_16px_color-mix(in_oklab,var(--primary)_55%,transparent)]'
         icon={
           <ChevronsUp
-            className='text-primary size-8 drop-shadow-[0_0_10px_rgba(209,243,102,0.7)]'
+            className='text-brand size-8 drop-shadow-[0_0_10px_color-mix(in_oklab,var(--primary)_70%,transparent)]'
             strokeWidth={3}
           />
         }
@@ -258,7 +258,7 @@ function BetBoostCard(props: { bet: BetBoostCard$key; id: string }) {
       )}
 
       <div className='relative min-w-0'>
-        <p className='truncate text-sm font-bold text-white'>
+        <p className='text-foreground truncate text-sm font-bold'>
           {home || leg?.eventName || '—'}
           {away && (
             <>
@@ -277,7 +277,7 @@ function BetBoostCard(props: { bet: BetBoostCard$key; id: string }) {
         <span className='text-secondary text-sm font-semibold line-through'>
           {was ? was.toFixed(2) : '—'}
         </span>
-        <span className='text-primary text-4xl leading-none font-black'>
+        <span className='text-brand text-4xl leading-none font-black'>
           {boosted ? boosted.toFixed(2) : '—'}
         </span>
       </div>
@@ -292,7 +292,7 @@ function BetBoostCard(props: { bet: BetBoostCard$key; id: string }) {
             </span>
           )}
           {data.betsRemaining != null && (
-            <span className={cn('shrink-0', used && 'text-amber-400')}>
+            <span className={cn('shrink-0', used && 'text-warning')}>
               {used ? t('Boost used') : t('Bets left: {n}', { n: data.betsRemaining })}
             </span>
           )}
@@ -309,8 +309,8 @@ function BetBoostCard(props: { bet: BetBoostCard$key; id: string }) {
           className={cn(
             'group/cta ml-auto flex shrink-0 items-center gap-1.5 rounded-full px-4 py-2 text-xs font-bold uppercase transition-all',
             allAdded
-              ? 'bg-primary/15 text-primary cursor-default'
-              : 'bg-primary hover:shadow-glow text-black'
+              ? 'bg-brand/15 text-brand cursor-default'
+              : 'bg-primary hover:shadow-glow text-primary-foreground'
           )}
         >
           {allAdded ? (
@@ -368,22 +368,22 @@ function ComboOfWeekCard(props: { bet: ComboOfWeekCard$key }) {
     <div
       className={cn(
         CARD_SIZE,
-        'group bg-dark-200 border-purple-accent/40 hover:border-purple-accent/70 relative flex shrink-0 snap-start flex-col gap-1.5 overflow-hidden rounded-2xl border p-3 transition-colors duration-300'
+        'group bg-surface border-purple-accent/40 hover:border-purple-accent/70 relative flex shrink-0 snap-start flex-col gap-1.5 overflow-hidden rounded-2xl border p-3 transition-colors duration-300'
       )}
     >
-      <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_100%_0%,rgba(127,92,255,0.16),transparent_55%)]' />
+      <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_100%_0%,color-mix(in_oklab,var(--accent)_16%,transparent),transparent_55%)]' />
 
       <PromoWordmark
         phrase={t('Combo of the Week')}
-        accentClassName='text-purple-accent text-shadow-[0_0_16px_rgba(127,92,255,0.55)]'
+        accentClassName='text-purple-accent text-shadow-[0_0_16px_color-mix(in_oklab,var(--accent)_55%,transparent)]'
         icon={
-          <HiSquare3Stack3D className='text-purple-accent size-8 drop-shadow-[0_0_10px_rgba(127,92,255,0.7)]' />
+          <HiSquare3Stack3D className='text-purple-accent size-8 drop-shadow-[0_0_10px_color-mix(in_oklab,var(--accent)_70%,transparent)]' />
         }
       />
 
       <div className='text-secondary relative flex items-center gap-2 text-[0.6rem] tracking-wide uppercase'>
         {data.title && (
-          <span className='min-w-0 truncate text-white/80 normal-case'>{data.title}</span>
+          <span className='text-foreground/80 min-w-0 truncate normal-case'>{data.title}</span>
         )}
         {endsIn && (
           <span className='ml-auto shrink-0'>{t('Ends in {time}', { time: endsIn })}</span>
@@ -395,16 +395,16 @@ function ComboOfWeekCard(props: { bet: ComboOfWeekCard$key }) {
           <div
             key={s.outcomeId}
             className={cn(
-              'flex items-center justify-between gap-2 rounded-lg border border-white/5 bg-white/3 px-2.5 py-1 text-[0.7rem]',
+              'border-line bg-foreground/3 flex items-center justify-between gap-2 rounded-lg border px-2.5 py-1 text-[0.7rem]',
               !s.available && 'line-through opacity-40'
             )}
           >
-            <span className='truncate text-white/90'>
+            <span className='text-foreground/90 truncate'>
               {s.outcomeName ? translateOutcomeName(t, s.outcomeName) : '—'}
               {s.eventName && <span className='text-secondary'> · {s.eventName}</span>}
             </span>
             {s.price && (
-              <span className='shrink-0 font-semibold text-white'>
+              <span className='text-foreground shrink-0 font-semibold'>
                 {Number(s.price).toFixed(2)}
               </span>
             )}
@@ -495,16 +495,16 @@ function FeaturedGameCard(props: { bet: FeaturedGameCard$key }) {
     <div
       className={cn(
         CARD_SIZE,
-        'group bg-dark-200 relative flex shrink-0 snap-start flex-col gap-2 overflow-hidden rounded-2xl border border-sky-400/40 p-3.5 transition-colors duration-300 hover:border-sky-400/70'
+        'group bg-surface border-info/40 hover:border-info/70 relative flex shrink-0 snap-start flex-col gap-2 overflow-hidden rounded-2xl border p-3.5 transition-colors duration-300'
       )}
     >
-      <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_100%_0%,rgba(56,189,248,0.16),transparent_55%)]' />
+      <div className='pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_100%_0%,color-mix(in_oklab,var(--info)_16%,transparent),transparent_55%)]' />
 
       <PromoWordmark
         phrase={t('Top Pick')}
-        accentClassName='text-sky-400 text-shadow-[0_0_16px_rgba(56,189,248,0.55)]'
+        accentClassName='text-info text-shadow-[0_0_16px_color-mix(in_oklab,var(--info)_55%,transparent)]'
         icon={
-          <GiLaurelCrown className='size-8 text-sky-400 drop-shadow-[0_0_10px_rgba(56,189,248,0.7)]' />
+          <GiLaurelCrown className='text-info size-8 drop-shadow-[0_0_10px_color-mix(in_oklab,var(--info)_70%,transparent)]' />
         }
       />
 
@@ -528,11 +528,11 @@ function FeaturedGameCard(props: { bet: FeaturedGameCard$key }) {
           </div>
 
           <div className='relative flex-1'>
-            <p className='truncate text-base leading-tight font-bold text-white'>
+            <p className='text-foreground truncate text-base leading-tight font-bold'>
               {event.homeCompetitor}
             </p>
             <p className='text-secondary text-[0.65rem] uppercase'>{t('vs')}</p>
-            <p className='truncate text-base leading-tight font-bold text-white'>
+            <p className='text-foreground truncate text-base leading-tight font-bold'>
               {event.awayCompetitor}
             </p>
           </div>
@@ -547,7 +547,7 @@ function FeaturedGameCard(props: { bet: FeaturedGameCard$key }) {
 
           <Link
             href={`/event/${event.id}`}
-            className='text-secondary relative flex items-center justify-end gap-1 text-[0.65rem] font-semibold uppercase transition-colors hover:text-sky-400'
+            className='text-secondary hover:text-info relative flex items-center justify-end gap-1 text-[0.65rem] font-semibold uppercase transition-colors'
           >
             {t('Full match odds')}
             <ChevronRight className='size-3' />
@@ -555,7 +555,7 @@ function FeaturedGameCard(props: { bet: FeaturedGameCard$key }) {
         </>
       ) : (
         <div className='relative flex flex-1 flex-col items-center justify-center gap-2 text-center'>
-          <div className='bg-dark-300 text-muted-foreground flex size-10 items-center justify-center rounded-full'>
+          <div className='bg-surface-2 text-muted-foreground flex size-10 items-center justify-center rounded-full'>
             <SearchXIcon className='size-5' />
           </div>
           <p className='text-secondary text-xs'>{t('This event is no longer available.')}</p>
@@ -579,7 +579,7 @@ function FeaturedOutcomeToggle(props: {
       disabled={suspended}
       suppressHydrationWarning
       className={cn(
-        'group/odd flex flex-1 flex-col items-center justify-center gap-0.5 rounded-lg border border-control-border bg-control py-1.5 transition hover:border-sky-400/20 hover:bg-sky-400/5 disabled:pointer-events-none disabled:opacity-40 data-[state=on]:border-sky-400 data-[state=on]:bg-sky-400/10',
+        'group/odd border-control-border bg-control hover:border-info/20 hover:bg-info/5 data-[state=on]:border-info data-[state=on]:bg-info/10 flex flex-1 flex-col items-center justify-center gap-0.5 rounded-lg border py-1.5 transition disabled:pointer-events-none disabled:opacity-40',
         upDown === 'up' && 'animate-odds-flash-up',
         upDown === 'down' && 'animate-odds-flash-down'
       )}
@@ -590,7 +590,7 @@ function FeaturedOutcomeToggle(props: {
         {translateOutcomeName(t, props.outcome.name)}
       </span>
       <span
-        className='text-foreground text-sm font-semibold group-data-[state=on]/odd:text-sky-400'
+        className='text-foreground group-data-[state=on]/odd:text-info text-sm font-semibold'
         suppressHydrationWarning
       >
         {Number(props.outcome.price).toFixed(2)}

@@ -94,7 +94,7 @@ function ListSection(props: { queryRef: LayoutRef }) {
                 }}
               />
               <h2 className='flex items-center gap-2'>
-                <StarIcon className='size-4 shrink-0 fill-yellow-400 text-yellow-400' />
+                <StarIcon className='fill-warning text-warning size-4 shrink-0' />
                 <span className='min-w-0 truncate'>{t('Favourites')}</span>
                 <span className='text-xs'>{events.length}</span>
               </h2>
@@ -137,12 +137,12 @@ function Strips(props: { queryRef: LayoutRef; activeId: string }) {
   return (
     <div className='mb-4'>
       {/* same look as LiveStripTournament */}
-      <div className='relative mb-2 flex items-center gap-2 border-b border-white/5 bg-[#0c0c0c] px-1 py-2'>
+      <div className='border-line bg-background relative mb-2 flex items-center gap-2 border-b px-1 py-2'>
         <span
           className='pointer-events-none absolute inset-x-0 -bottom-px h-px opacity-70'
           style={{ background: theme.primary }}
         />
-        <StarIcon className='size-4 shrink-0 fill-yellow-400 text-yellow-400' />
+        <StarIcon className='fill-warning text-warning size-4 shrink-0' />
         <p className='text-foreground truncate text-sm font-semibold'>{t('Favourites')}</p>
         <span className='text-secondary text-xs'>{events.length}</span>
       </div>

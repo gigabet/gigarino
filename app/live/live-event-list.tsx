@@ -191,7 +191,7 @@ function EmptyLive(props: { searching: boolean }) {
   const t = useT()
 
   return (
-    <div className='text-secondary flex flex-col items-center justify-center gap-3 rounded-2xl border border-white/5 bg-black/20 px-6 py-16 text-center text-sm'>
+    <div className='text-secondary glass-flat flex flex-col items-center justify-center gap-3 rounded-2xl px-6 py-16 text-center text-sm'>
       {props.searching
         ? t('No live events match your search.')
         : t('No events are live right now.')}

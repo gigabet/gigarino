@@ -34,7 +34,7 @@ export default function ForgotPassForm() {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className='font-display mb-2 text-3xl font-bold text-white'
+              className='font-display text-foreground mb-2 text-3xl font-bold'
             >
               {t('Forgot Password?')}
             </motion.h1>
@@ -53,10 +53,10 @@ export default function ForgotPassForm() {
             <motion.div
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
-              className='mb-6 flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4'
+              className='border-danger/30 bg-danger/10 mb-6 flex items-center gap-3 rounded-lg border p-4'
             >
-              <AlertCircleIcon className='size-5 shrink-0 text-red-400' />
-              <p className='text-sm text-red-400'>{state.error}</p>
+              <AlertCircleIcon className='text-danger size-5 shrink-0' />
+              <p className='text-danger text-sm'>{state.error}</p>
             </motion.div>
           </Activity>
 
@@ -67,11 +67,11 @@ export default function ForgotPassForm() {
               transition={{ delay: 0.3 }}
               className='space-y-2'
             >
-              <Label htmlFor='email' className='text-sm font-medium text-gray-300'>
+              <Label htmlFor='email' className='text-secondary text-sm font-medium'>
                 {t('Email')}
               </Label>
               <div className='relative'>
-                <MailIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
+                <MailIcon className='text-subtle absolute top-1/2 left-3 size-5 -translate-y-1/2' />
                 <Input
                   className='pl-10'
                   id='email'
@@ -92,7 +92,7 @@ export default function ForgotPassForm() {
               <button
                 type='submit'
                 disabled={isPending}
-                className='bg-primary hover:shadow-glow flex w-full cursor-default items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-black uppercase transition-all'
+                className='bg-primary hover:shadow-glow text-primary-foreground flex w-full cursor-default items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium uppercase transition-all'
               >
                 {isPending ? (
                   <>
@@ -112,7 +112,7 @@ export default function ForgotPassForm() {
             >
               <Link
                 href='/login'
-                className='hover:text-primary mx-auto inline-flex items-center justify-center gap-2 px-4 text-sm text-gray-500 transition-colors'
+                className='hover:text-brand text-subtle mx-auto inline-flex items-center justify-center gap-2 px-4 text-sm transition-colors'
               >
                 <ArrowLeftIcon className='size-4' />
                 <span>{t('Back to Login')}</span>
@@ -129,7 +129,7 @@ export default function ForgotPassForm() {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className='font-display mb-2 text-3xl font-bold text-white'
+              className='font-display text-foreground mb-2 text-3xl font-bold'
             >
               {t('Password Reset')}
             </motion.h1>
@@ -151,7 +151,7 @@ export default function ForgotPassForm() {
           >
             <Link
               href='/login'
-              className='bg-primary hover:shadow-glow flex w-full cursor-default items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-black uppercase transition-all'
+              className='bg-primary hover:shadow-glow text-primary-foreground flex w-full cursor-default items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium uppercase transition-all'
             >
               {t('Log in')}
             </Link>

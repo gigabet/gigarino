@@ -27,7 +27,7 @@ export function TeamBadge(props: {
   return (
     <div
       className={cn(
-        'flex size-6 min-w-6 shrink-0 items-center justify-center rounded-full text-[0.55rem] font-bold text-white',
+        'text-foreground flex size-6 min-w-6 shrink-0 items-center justify-center rounded-full text-[0.55rem] font-bold',
         props.className
       )}
       style={{

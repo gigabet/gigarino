@@ -33,11 +33,11 @@ const FETCH_EVENTS = 12
 const searchOpenState = atom(false)
 
 const ITEM =
-  'flex w-full cursor-pointer items-center gap-4 rounded-lg p-2 text-left transition-colors data-[selected=true]:bg-white/8 data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50'
+  'flex w-full cursor-pointer items-center gap-4 rounded-lg p-2 text-left transition-colors data-[selected=true]:bg-foreground/8 data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50'
 const GROUP =
   '**:[[cmdk-group-heading]]:text-secondary **:[[cmdk-group-heading]]:px-2 **:[[cmdk-group-heading]]:pb-1 **:[[cmdk-group-heading]]:text-xs **:[[cmdk-group-heading]]:font-semibold **:[[cmdk-group-heading]]:tracking-wider **:[[cmdk-group-heading]]:uppercase'
 const TAB =
-  'data-[state=active]:bg-primary flex-none rounded-full bg-white/8 px-4 py-2 text-xs font-medium whitespace-nowrap text-white shadow-none data-[state=active]:text-black'
+  'data-[state=active]:bg-primary flex-none rounded-full bg-foreground/8 px-4 py-2 text-xs font-medium whitespace-nowrap text-foreground shadow-none data-[state=active]:text-primary-foreground'
 
 type SearchTab = 'events' | 'casino'
 
@@ -85,12 +85,12 @@ export default function Search() {
   return (
     <Dialog.Root open={open} onOpenChange={handleOpenChange}>
       <Dialog.Trigger aria-label={t('Search')}>
-        <SearchIcon className='size-5 text-neutral-500 hover:text-white sm:size-6' />
+        <SearchIcon className='text-subtle hover:text-foreground size-5 sm:size-6' />
       </Dialog.Trigger>
 
       <Dialog.Portal>
         <Dialog.Overlay className='bg-black/70 backdrop-blur-sm' />
-        <Dialog.Content className='bg-dark-200 flex h-dvh w-full max-w-dvw flex-col gap-0 overflow-hidden border-white/10 p-0 shadow-2xl sm:h-[75dvh] sm:max-w-2xl!'>
+        <Dialog.Content className='bg-surface border-line-2 flex h-dvh w-full max-w-dvw flex-col gap-0 overflow-hidden p-0 shadow-2xl sm:h-[75dvh] sm:max-w-2xl!'>
           <Dialog.Title className='sr-only'>{t('Search')}</Dialog.Title>
 
           {/* results come from the server, so cmdk only does keyboard navigation */}
@@ -106,7 +106,7 @@ export default function Search() {
               className='min-h-0 grow gap-0'
             >
               {/* pr-12 leaves room for the dialog's close button */}
-              <div className='flex flex-col gap-3 border-b border-white/10 p-4 pr-12'>
+              <div className='border-line-2 flex flex-col gap-3 border-b p-4 pr-12'>
                 <div className='relative'>
                   <Command.Input
                     ref={inputRef}
@@ -118,9 +118,9 @@ export default function Search() {
                         ? t('Search teams, leagues...')
                         : t('Search games, providers...')
                     }
-                    className='bg-dark focus:border-primary focus:ring-primary/20 w-full rounded-full border border-control-border px-10 py-2.5 text-sm text-neutral-200 placeholder-neutral-500 transition-all focus:ring-4 focus:outline-none'
+                    className='bg-background focus:border-brand focus:ring-brand/20 border-control-border text-foreground placeholder-subtle w-full rounded-full border px-10 py-2.5 text-sm transition-all focus:ring-4 focus:outline-none'
                   />
-                  <SearchIcon className='pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2 text-neutral-400' />
+                  <SearchIcon className='text-secondary pointer-events-none absolute top-1/2 left-4 size-4 -translate-y-1/2' />
                   {value && (
                     <button
                       type='button'
@@ -128,7 +128,7 @@ export default function Search() {
                       // keep focus in the input
                       onMouseDown={e => e.preventDefault()}
                       onClick={() => setValue('')}
-                      className='absolute top-1/2 right-3 -translate-y-1/2 text-neutral-500 hover:text-neutral-300'
+                      className='text-subtle hover:text-secondary absolute top-1/2 right-3 -translate-y-1/2'
                     >
                       <XIcon className='size-4' />
                     </button>
@@ -172,7 +172,7 @@ export default function Search() {
 function Hint(props: { icon: React.ReactNode; title: string; description?: string }) {
   return (
     <div className='flex flex-col items-center justify-center gap-3 px-6 py-16 text-center'>
-      <div className='bg-dark-300 text-secondary flex size-12 items-center justify-center rounded-full'>
+      <div className='bg-surface-2 text-secondary flex size-12 items-center justify-center rounded-full'>
         {props.icon}
       </div>
       <div className='space-y-1'>
@@ -312,11 +312,11 @@ function EventResult(props: { event: SearchEvent$key; onSelectAction: (href: str
     >
       <div className='flex min-w-0 flex-1 flex-col gap-1'>
         <p className='text-secondary truncate text-[0.65rem] uppercase'>{data.tournament.name}</p>
-        <div className='flex items-center gap-2 text-sm text-neutral-200'>
+        <div className='text-foreground flex items-center gap-2 text-sm'>
           <TeamBadge name={data.homeCompetitor} imageUrl={data.homeImageUrl} hue={homeHue} />
           <span className='truncate'>{data.homeCompetitor}</span>
         </div>
-        <div className='flex items-center gap-2 text-sm text-neutral-200'>
+        <div className='text-foreground flex items-center gap-2 text-sm'>
           <TeamBadge name={data.awayCompetitor} imageUrl={data.awayImageUrl} hue={awayHue} />
           <span className='truncate'>{data.awayCompetitor}</span>
         </div>
@@ -423,10 +423,8 @@ function CasinoTab(props: { term: string; onNavigateAction: (href: string) => vo
                 />
               </div>
               <div>
-                <p className='text-sm text-neutral-200'>{provider.name}</p>
-                <p className='text-xs text-neutral-500'>
-                  {t('{n} Games', { n: provider.gamesCount })}
-                </p>
+                <p className='text-foreground text-sm'>{provider.name}</p>
+                <p className='text-subtle text-xs'>{t('{n} Games', { n: provider.gamesCount })}</p>
               </div>
             </Command.Item>
           ))}
@@ -450,12 +448,12 @@ function CasinoTab(props: { term: string; onNavigateAction: (href: string) => vo
                 onSelect={() => openGame(game.uuid)}
                 className={ITEM}
               >
-                <div className='h-10 w-16 overflow-hidden rounded-lg bg-white/5'>
+                <div className='bg-foreground/5 h-10 w-16 overflow-hidden rounded-lg'>
                   {game.image && <Image src={game.image} alt={game.name} width={64} height={40} />}
                 </div>
                 <div>
-                  <p className='text-sm text-neutral-200'>{game.name}</p>
-                  <p className='text-xs text-neutral-500'>{game.providerName}</p>
+                  <p className='text-foreground text-sm'>{game.name}</p>
+                  <p className='text-subtle text-xs'>{game.providerName}</p>
                 </div>
               </Command.Item>
             ))}

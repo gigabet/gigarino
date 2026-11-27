@@ -32,7 +32,7 @@ export default function SidebarSearch() {
   }, [term])
 
   return (
-    <div className='focus-within:border-primary/40 flex h-10 items-center gap-3 rounded-full border bg-black/50 px-4'>
+    <div className='focus-within:border-brand/40 bg-glass flex h-10 items-center gap-3 rounded-full border px-4'>
       <SearchIcon className='text-muted-foreground size-4 shrink-0' />
       <input
         value={value}

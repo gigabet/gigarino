@@ -64,7 +64,7 @@ export default function LiveSingleView(props: { queryRef: PreloadedQuery<LiveSin
 
   return (
     <main className='flex min-w-0 flex-col gap-4 sm:gap-6'>
-      <section className='flex flex-col gap-3 rounded-2xl border border-white/5 bg-black/20 p-4 sm:gap-4 sm:p-6'>
+      <section className='glass-flat flex flex-col gap-3 rounded-2xl p-4 sm:gap-4 sm:p-6'>
         <LiveSingleHeader event={data} />
         <div className='grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-4'>
           <Competitor
@@ -91,10 +91,7 @@ export default function LiveSingleView(props: { queryRef: PreloadedQuery<LiveSin
         <LiveScoreboard event={data} />
       </section>
 
-      <MatchTracker
-        event={data}
-        className='overflow-hidden rounded-2xl border border-white/5 bg-black/20'
-      />
+      <MatchTracker event={data} className='glass-flat overflow-hidden rounded-2xl' />
 
       <StatisticsSection
         event={data?.StatisticsWidget}
@@ -181,7 +178,7 @@ function Competitor(props: {
         className='size-8 min-w-8 text-xs sm:size-10 sm:min-w-10 sm:text-sm'
         hue={props.hue}
       />
-      <span className='truncate text-xs font-semibold text-white sm:text-sm lg:text-base'>
+      <span className='text-foreground truncate text-xs font-semibold sm:text-sm lg:text-base'>
         {props.name}
       </span>
       {props.badge}
@@ -223,8 +220,8 @@ function EventState(props: { event: EventState$key; startTime: string }) {
       <GoalBadge goalId={awayGoal} side='right' />
       <span
         className={cn(
-          'text-base leading-none font-bold text-white transition-colors sm:text-lg',
-          (homeGoal || awayGoal) && 'text-primary'
+          'text-foreground text-base leading-none font-bold transition-colors sm:text-lg',
+          (homeGoal || awayGoal) && 'text-brand'
         )}
       >
         {data.homeScore ?? 0} - {data.awayScore ?? 0}
@@ -307,7 +304,7 @@ function LiveScoreboard(props: { event: LiveScoreboard$key }) {
   ]
 
   return (
-    <div className='border-t border-white/5 pt-3 sm:pt-4'>
+    <div className='border-line border-t pt-3 sm:pt-4'>
       <table className='w-full table-fixed font-mono text-xs'>
         <thead>
           <tr className='text-secondary'>
@@ -320,12 +317,12 @@ function LiveScoreboard(props: { event: LiveScoreboard$key }) {
               </th>
             ))}
             {points && (
-              <th scope='col' className='text-primary w-10 font-normal'>
+              <th scope='col' className='text-brand w-10 font-normal'>
                 {t('Pts')}
               </th>
             )}
             {showTotal && (
-              <th scope='col' className='w-12 font-normal text-white'>
+              <th scope='col' className='text-foreground w-12 font-normal'>
                 {t('Total')}
               </th>
             )}
@@ -336,7 +333,7 @@ function LiveScoreboard(props: { event: LiveScoreboard$key }) {
             <tr key={row.side}>
               <th
                 scope='row'
-                className='truncate py-1 text-left font-sans font-normal text-white/90'
+                className='text-foreground/90 truncate py-1 text-left font-sans font-normal'
               >
                 {/* eslint-disable-next-line local-i18n/no-untranslated-api-string */}
                 {row.name}
@@ -346,15 +343,15 @@ function LiveScoreboard(props: { event: LiveScoreboard$key }) {
                   key={p.period}
                   className={cn(
                     'text-center',
-                    emphasiseLast && i === last ? 'font-semibold text-white' : 'text-secondary'
+                    emphasiseLast && i === last ? 'text-foreground font-semibold' : 'text-secondary'
                   )}
                 >
                   {p.score}
                 </td>
               ))}
-              {points && <td className='text-primary text-center font-semibold'>{row.point}</td>}
+              {points && <td className='text-brand text-center font-semibold'>{row.point}</td>}
               {showTotal && (
-                <td className='text-center font-semibold text-white'>{row.total ?? '-'}</td>
+                <td className='text-foreground text-center font-semibold'>{row.total ?? '-'}</td>
               )}
             </tr>
           ))}
@@ -387,7 +384,7 @@ function EventNotFound() {
 
   return (
     <main className='flex min-w-0 flex-col items-center justify-center gap-4 px-4 py-16 text-center sm:py-24'>
-      <div className='bg-dark-300 text-muted-foreground flex size-14 items-center justify-center rounded-full'>
+      <div className='bg-surface-2 text-muted-foreground flex size-14 items-center justify-center rounded-full'>
         <SearchXIcon className='size-6' />
       </div>
       <div className='space-y-1'>

@@ -27,22 +27,22 @@ export default function TransactionsTable(props: { id: string; infinite?: boolea
     <div className='md:overflow-x-auto'>
       <table className='w-full table-fixed border-collapse md:min-w-160'>
         <thead className='hidden md:table-header-group'>
-          <tr className='border-b border-white/10'>
+          <tr className='border-line-2 border-b'>
             {/* Date - shrink */}
-            <th className='w-52 px-4 py-3 text-left text-sm font-medium whitespace-nowrap text-gray-400'>
+            <th className='text-secondary w-52 px-4 py-3 text-left text-sm font-medium whitespace-nowrap'>
               Date
             </th>
 
             {/* Type - shrink */}
-            <th className='w-32 px-4 py-3 text-left text-sm font-medium whitespace-nowrap text-gray-400'>
+            <th className='text-secondary w-32 px-4 py-3 text-left text-sm font-medium whitespace-nowrap'>
               Type
             </th>
 
             {/* Description - EXPANDS to take all remaining space */}
-            <th className='px-4 py-3 text-left text-sm font-medium text-gray-400'>Description</th>
+            <th className='text-secondary px-4 py-3 text-left text-sm font-medium'>Description</th>
 
             {/* Amount - shrink + right aligned */}
-            <th className='w-32 px-4 py-3 text-right text-sm font-medium whitespace-nowrap text-gray-400'>
+            <th className='text-secondary w-32 px-4 py-3 text-right text-sm font-medium whitespace-nowrap'>
               Amount
             </th>
           </tr>
@@ -55,10 +55,10 @@ export default function TransactionsTable(props: { id: string; infinite?: boolea
               map(page.data, tx => (
                 <tr
                   key={tx.id}
-                  className='grid grid-cols-2 gap-2 border-b border-white/5 py-2 transition-colors hover:bg-white/5 md:table-row md:py-0'
+                  className='border-line hover:bg-foreground/5 grid grid-cols-2 gap-2 border-b py-2 transition-colors md:table-row md:py-0'
                 >
                   {/* Date */}
-                  <td className='text-xs whitespace-nowrap text-gray-300 md:px-4 md:py-4 md:text-sm'>
+                  <td className='text-secondary text-xs whitespace-nowrap md:px-4 md:py-4 md:text-sm'>
                     <div className='flex items-center gap-2'>
                       <CalendarIcon className='text-muted-foreground size-4 shrink-0' />
                       {format(tx.createdAt, 'dd MMM y, HH:mm')}
@@ -69,7 +69,7 @@ export default function TransactionsTable(props: { id: string; infinite?: boolea
                   <td className='hidden whitespace-nowrap md:table-cell md:px-4 md:py-4'>
                     <div
                       className={`flex items-center gap-2 text-sm ${
-                        tx.type === 'CREDIT' ? 'text-sky-400' : 'text-red-400'
+                        tx.type === 'CREDIT' ? 'text-info' : 'text-danger'
                       }`}
                     >
                       {tx.type === 'CREDIT' ? (
@@ -82,15 +82,15 @@ export default function TransactionsTable(props: { id: string; infinite?: boolea
                   </td>
 
                   {/* Description - expanding column */}
-                  <td className='col-span-2 row-start-2 text-xs wrap-break-word text-gray-400 md:px-4 md:py-4 md:text-sm md:text-gray-300'>
+                  <td className='text-secondary md:text-secondary col-span-2 row-start-2 text-xs wrap-break-word md:px-4 md:py-4 md:text-sm'>
                     {tx.description}
                   </td>
 
                   {/* Amount */}
                   <td
                     className={cx(
-                      'col-start-2 row-start-1 place-self-end text-right font-mono text-sm font-medium whitespace-nowrap md:px-4 md:py-4 md:text-white',
-                      tx.type === 'CREDIT' ? 'text-sky-400' : 'text-red-400'
+                      'md:text-foreground col-start-2 row-start-1 place-self-end text-right font-mono text-sm font-medium whitespace-nowrap md:px-4 md:py-4',
+                      tx.type === 'CREDIT' ? 'text-info' : 'text-danger'
                     )}
                   >
                     {tx.type === 'CREDIT' ? '+' : '-'}

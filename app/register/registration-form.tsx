@@ -63,7 +63,7 @@ export default function RegistrationForm() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className='font-display mb-2 text-3xl font-bold text-white'
+            className='font-display text-foreground mb-2 text-3xl font-bold'
           >
             {t('Create Account')}
           </motion.h1>
@@ -71,7 +71,7 @@ export default function RegistrationForm() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
-            className='text-gray-400'
+            className='text-secondary'
           >
             {t('Join {brand} for exclusive bonuses', { brand: 'Gigarino' })}
           </motion.p>
@@ -82,10 +82,10 @@ export default function RegistrationForm() {
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            className='mb-6 flex items-center gap-3 rounded-lg border border-red-500/30 bg-red-500/10 p-4'
+            className='border-danger/30 bg-danger/10 mb-6 flex items-center gap-3 rounded-lg border p-4'
           >
-            <AlertCircleIcon className='size-5 shrink-0 text-red-400' />
-            <p className='text-sm text-red-400'>{prevState.error}</p>
+            <AlertCircleIcon className='text-danger size-5 shrink-0' />
+            <p className='text-danger text-sm'>{prevState.error}</p>
           </motion.div>
         </Activity>
 
@@ -98,11 +98,11 @@ export default function RegistrationForm() {
             transition={{ delay: 0.3 }}
             className='space-y-2'
           >
-            <Label htmlFor='username' className='text-sm font-medium text-gray-300'>
+            <Label htmlFor='username' className='text-secondary text-sm font-medium'>
               {t('Username')}
             </Label>
             <div className='relative'>
-              <UserIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
+              <UserIcon className='text-subtle absolute top-1/2 left-3 size-5 -translate-y-1/2' />
               <Input
                 id='username'
                 name='username'
@@ -122,11 +122,11 @@ export default function RegistrationForm() {
             transition={{ delay: 0.35 }}
             className='space-y-2'
           >
-            <Label htmlFor='email' className='text-sm font-medium text-gray-300'>
+            <Label htmlFor='email' className='text-secondary text-sm font-medium'>
               {t('Email')}
             </Label>
             <div className='relative'>
-              <MailIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
+              <MailIcon className='text-subtle absolute top-1/2 left-3 size-5 -translate-y-1/2' />
               <Input
                 id='email'
                 name='email'
@@ -146,11 +146,11 @@ export default function RegistrationForm() {
             transition={{ delay: 0.4 }}
             className='relative space-y-2'
           >
-            <Label htmlFor='password' className='text-sm font-medium text-gray-300'>
+            <Label htmlFor='password' className='text-secondary text-sm font-medium'>
               {t('Password')}
             </Label>
             <div className='relative'>
-              <LockIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
+              <LockIcon className='text-subtle absolute top-1/2 left-3 size-5 -translate-y-1/2' />
               <Input
                 id='password'
                 name='password'
@@ -164,7 +164,7 @@ export default function RegistrationForm() {
               <button
                 type='button'
                 onClick={() => setShowPassword(!showPassword)}
-                className='absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 transition-colors hover:text-gray-300'
+                className='text-subtle hover:text-secondary absolute top-1/2 right-3 -translate-y-1/2 transition-colors'
               >
                 {showPassword ? <EyeOffIcon className='size-5' /> : <EyeIcon className='size-5' />}
               </button>
@@ -178,11 +178,11 @@ export default function RegistrationForm() {
                     className={`h-1 flex-1 rounded-full transition-colors ${
                       passwordStrength >= level
                         ? passwordStrength >= 3
-                          ? 'bg-green-500'
+                          ? 'bg-success'
                           : passwordStrength >= 2
-                            ? 'bg-yellow-500'
-                            : 'bg-red-500'
-                        : 'bg-gray-700'
+                            ? 'bg-warning'
+                            : 'bg-danger'
+                        : 'bg-surface-3'
                     }`}
                   />
                 ))}
@@ -197,11 +197,11 @@ export default function RegistrationForm() {
             transition={{ delay: 0.45 }}
             className='space-y-2'
           >
-            <Label htmlFor='confirmPassword' className='text-sm font-medium text-gray-300'>
+            <Label htmlFor='confirmPassword' className='text-secondary text-sm font-medium'>
               {t('Confirm Password')}
             </Label>
             <div className='relative'>
-              <LockIcon className='absolute top-1/2 left-3 size-5 -translate-y-1/2 text-gray-500' />
+              <LockIcon className='text-subtle absolute top-1/2 left-3 size-5 -translate-y-1/2' />
               <Input
                 id='confirmPassword'
                 type={showConfirmPassword ? 'text' : 'password'}
@@ -214,7 +214,7 @@ export default function RegistrationForm() {
               <button
                 type='button'
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className='absolute top-1/2 right-3 -translate-y-1/2 text-gray-500 transition-colors hover:text-gray-300'
+                className='text-subtle hover:text-secondary absolute top-1/2 right-3 -translate-y-1/2 transition-colors'
               >
                 {showConfirmPassword ? (
                   <EyeOffIcon className='size-5' />
@@ -241,7 +241,10 @@ export default function RegistrationForm() {
                 onCheckedChange={checked => setConfirmAge(checked as boolean)}
                 className='mt-1'
               />
-              <Label htmlFor='age' className='cursor-pointer text-sm leading-relaxed text-gray-400'>
+              <Label
+                htmlFor='age'
+                className='text-secondary cursor-pointer text-sm leading-relaxed'
+              >
                 {t('I confirm I am 18+ years old and agree to the responsible gaming terms')}
               </Label>
             </div>
@@ -258,7 +261,7 @@ export default function RegistrationForm() {
               disabled={
                 isPending || !confirmAge || password !== confirmPassword || passwordStrength < 3
               }
-              className='bg-primary enabled:hover:shadow-glow disabled:bg-muted disabled:text-muted-foreground flex w-full cursor-default items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-black uppercase transition-all disabled:cursor-not-allowed'
+              className='bg-primary enabled:hover:shadow-glow disabled:bg-muted disabled:text-muted-foreground text-primary-foreground flex w-full cursor-default items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-medium uppercase transition-all disabled:cursor-not-allowed'
               title={
                 !confirmAge
                   ? t('Please confirm your age')
@@ -286,15 +289,15 @@ export default function RegistrationForm() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
-          className='mt-6 text-center text-sm text-gray-400'
+          className='text-secondary mt-6 text-center text-sm'
         >
           {t('Already have an account?')}{' '}
           <Link
             href='/login'
-            className='text-primary group relative font-medium transition-colors hover:text-white'
+            className='text-brand group hover:text-foreground relative font-medium transition-colors'
           >
             {t('Log in')}
-            <span className='bg-primary absolute -bottom-0.5 left-0 h-px w-0 transition-all duration-300 group-hover:w-full' />
+            <span className='bg-brand absolute -bottom-0.5 left-0 h-px w-0 transition-all duration-300 group-hover:w-full' />
           </Link>
         </motion.p>
       </div>

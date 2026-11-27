@@ -9,7 +9,7 @@ export function CountBadge(props: { count: number; className?: string }) {
   return (
     <span
       className={cn(
-        'bg-destructive flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full px-1 text-[0.6rem] leading-none font-bold text-white normal-case',
+        'bg-destructive text-destructive-foreground flex h-4 min-w-4 shrink-0 items-center justify-center rounded-full px-1 text-[0.6rem] leading-none font-bold normal-case',
         props.className
       )}
     >

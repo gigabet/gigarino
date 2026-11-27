@@ -26,9 +26,7 @@ export function RailSlot(props: { skeleton: React.ReactNode }) {
   return (
     <aside
       className={
-        reserved
-          ? 'group bg-dark-200 hidden w-80 shrink-0 border-l border-white/5 xl:block'
-          : 'hidden'
+        reserved ? 'group bg-surface border-line hidden w-80 shrink-0 border-l xl:block' : 'hidden'
       }
     >
       {/* portal target is its own node, so React never mixes portal and regular children.
