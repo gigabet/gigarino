@@ -55,7 +55,7 @@ function TrackerToggle(props: { eventId: string; className?: string }) {
       className={cn(
         'rounded-full transition-shadow',
         props.className,
-        active && 'hover:drop-shadow-none!'
+        active && 'hover:filter-none! not-dark:bg-brand/10 not-dark:hover:bg-brand/15'
       )}
       aria-pressed={active}
       aria-label={active ? t('Hide match tracker') : t('Show match tracker')}
@@ -64,7 +64,7 @@ function TrackerToggle(props: { eventId: string; className?: string }) {
       <GiSoccerField
         className={cn(
           'size-4 transition-colors',
-          active && 'text-brand drop-shadow-primary drop-shadow-[0_0_2px,0_0_6px,0_0_12px]'
+          active && 'text-brand icon-glow-strong'
         )}
       />
     </Button>

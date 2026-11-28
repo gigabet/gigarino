@@ -43,7 +43,7 @@ export default function LiveEventStrip(props: { event: LiveEventStrip$key; activ
       className={cn(
         'relative flex flex-col gap-2 rounded-xl border p-3 transition-colors',
         props.active
-          ? 'border-brand bg-brand/10 shadow-primary/30 shadow-[0_0_12px]'
+          ? 'border-brand bg-brand-tint glow-sm'
           : 'border-control-border bg-control hover:border-line-3',
         data.tradingStatus === 'SUSPENDED' && 'opacity-60'
       )}
@@ -141,8 +141,8 @@ function LiveStripOdd(props: { outcome: LiveStripOdd$key; suspended: boolean }) 
       disabled={props.suspended || outcome.status !== 'OPEN'}
       suppressHydrationWarning
       className={cn(
-        'group/odd hover:bg-brand/10 hover:border-brand/60 shadow-primary/60 data-[state=on]:border-brand data-[state=on]:bg-brand/10 border-control-border bg-control flex flex-1 flex-col items-center justify-center gap-0.5 rounded-lg border py-1.5 transition-all disabled:pointer-events-none disabled:opacity-40',
-        'data-[state=on]:shadow-[0_0_12px]',
+        'group/odd hover:bg-brand-tint hover:border-brand/60 data-[state=on]:border-brand data-[state=on]:bg-brand-tint border-control-border bg-control flex flex-1 flex-col items-center justify-center gap-0.5 rounded-lg border py-1.5 transition-all disabled:pointer-events-none disabled:opacity-40',
+        'data-[state=on]:glow-sm',
         upDown === 'up' && 'animate-odds-flash-up',
         upDown === 'down' && 'animate-odds-flash-down'
       )}

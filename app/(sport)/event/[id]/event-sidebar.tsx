@@ -220,7 +220,7 @@ function EventStripCard(props: {
       className={cn(
         'group relative flex flex-col gap-2 rounded-xl border p-3 transition-colors',
         props.active
-          ? 'border-brand bg-brand/10 shadow-primary/30 shadow-[0_0_12px]'
+          ? 'border-brand bg-brand-tint glow-sm'
           : 'border-line bg-glass hover:border-line-3'
       )}
     >
@@ -315,7 +315,7 @@ function EventSidebarOdd(props: { outcome: EventSidebarOdd$key }) {
       disabled={suspended}
       suppressHydrationWarning
       className={cn(
-        'group/odd hover:bg-brand/5 hover:border-brand/20 data-[state=on]:border-brand data-[state=on]:bg-brand/10 border-line-2 bg-glass flex flex-1 flex-col items-center justify-center gap-0.5 rounded-lg border py-1.5 transition disabled:pointer-events-none disabled:opacity-40',
+        'group/odd hover:bg-brand/5 hover:border-brand/20 data-[state=on]:border-brand data-[state=on]:bg-brand-tint border-line-2 bg-glass flex flex-1 flex-col items-center justify-center gap-0.5 rounded-lg border py-1.5 transition disabled:pointer-events-none disabled:opacity-40',
         upDown === 'up' && 'animate-odds-flash-up',
         upDown === 'down' && 'animate-odds-flash-down'
       )}

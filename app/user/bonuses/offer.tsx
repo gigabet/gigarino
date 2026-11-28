@@ -45,11 +45,11 @@ export default function Offer({ claim, ...props }: OfferProps) {
       <Dialog.Trigger asChild>
         <Card
           // data-claimed={claim?.status}
-          // className='group bg-surface data-[claimed=PENDING_TRIGGER]:border-accent data-[claimed=ACTIVE]:border-brand data-[claimed=PENDING_TRIGGER]:shadow-accent data-[claimed=ACTIVE]:shadow-primary @container cursor-pointer gap-0 overflow-clip p-0 transition-transform duration-300 hover:scale-103 data-claimed:shadow-[0_0_6px]'
+          // className='group bg-surface data-[claimed=PENDING_TRIGGER]:border-accent data-[claimed=ACTIVE]:border-brand data-[claimed=PENDING_TRIGGER]:shadow-accent data-[claimed=ACTIVE]:shadow-primary @container cursor-pointer gap-0 overflow-clip p-0 transition-transform duration-300 hover:scale-103 data-claimed:glow-xs'
           className={cn(
-            'group bg-surface @container cursor-pointer gap-0 overflow-clip p-0 transition-transform duration-300 hover:scale-103 data-claimed:shadow-[0_0_6px]',
-            claim?.status === 'PENDING_TRIGGER' && 'border-accent shadow-accent shadow-[0_0_6px]',
-            claim?.status === 'ACTIVE' && 'border-brand shadow-primary shadow-[0_0_6px]',
+            'group bg-surface @container cursor-pointer gap-0 overflow-clip p-0 transition-transform duration-300 hover:scale-103 data-claimed:glow-xs',
+            claim?.status === 'PENDING_TRIGGER' && 'border-accent glow-xs glow-accent',
+            claim?.status === 'ACTIVE' && 'border-brand glow-xs',
             claim?.status === 'EXPIRED' && 'grayscale'
           )}
         >
@@ -87,8 +87,8 @@ export default function Offer({ claim, ...props }: OfferProps) {
         className={cn(
           'data-claimed:border-accent data-claimed:shadow-accent w-full! max-w-3xl! gap-0 overflow-hidden p-0',
           claim?.status === 'PENDING_TRIGGER' &&
-            'border-accent/70 shadow-accent/70 shadow-[0_0_24px]',
-          claim?.status === 'ACTIVE' && 'border-brand/60 shadow-primary/50 shadow-[0_0_24px]',
+            'border-accent/70 glow-lg glow-accent',
+          claim?.status === 'ACTIVE' && 'border-brand/60 glow-lg',
           claim?.status === 'EXPIRED' && 'grayscale'
         )}
         aria-describedby={undefined}

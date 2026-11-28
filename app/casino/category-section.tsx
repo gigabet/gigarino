@@ -80,7 +80,7 @@ function Tab({
       className={cx(
         'shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-all duration-300',
         tab === label
-          ? 'bg-primary text-primary-foreground shadow-primary/50 shadow-[0_0_15px]'
+          ? 'bg-primary text-primary-foreground glow-md'
           : 'bg-surface text-foreground/70 hover:bg-foreground/10 hover:text-foreground'
       )}
     >

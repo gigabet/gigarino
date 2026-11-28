@@ -242,10 +242,10 @@ function BetBoostCard(props: { bet: BetBoostCard$key; id: string }) {
 
       <PromoWordmark
         phrase={t('Bet Boost')}
-        accentClassName='text-brand text-shadow-[0_0_16px_color-mix(in_oklab,var(--primary)_55%,transparent)]'
+        accentClassName='text-brand text-glow-md'
         icon={
           <ChevronsUp
-            className='text-brand size-8 drop-shadow-[0_0_10px_color-mix(in_oklab,var(--primary)_70%,transparent)]'
+            className='text-brand icon-glow size-8'
             strokeWidth={3}
           />
         }
@@ -375,9 +375,9 @@ function ComboOfWeekCard(props: { bet: ComboOfWeekCard$key }) {
 
       <PromoWordmark
         phrase={t('Combo of the Week')}
-        accentClassName='text-purple-accent text-shadow-[0_0_16px_color-mix(in_oklab,var(--accent)_55%,transparent)]'
+        accentClassName='text-purple-accent glow-accent text-glow-md'
         icon={
-          <HiSquare3Stack3D className='text-purple-accent size-8 drop-shadow-[0_0_10px_color-mix(in_oklab,var(--accent)_70%,transparent)]' />
+          <HiSquare3Stack3D className='text-purple-accent glow-accent icon-glow size-8' />
         }
       />
 
@@ -502,9 +502,9 @@ function FeaturedGameCard(props: { bet: FeaturedGameCard$key }) {
 
       <PromoWordmark
         phrase={t('Top Pick')}
-        accentClassName='text-info text-shadow-[0_0_16px_color-mix(in_oklab,var(--info)_55%,transparent)]'
+        accentClassName='text-info glow-info text-glow-md'
         icon={
-          <GiLaurelCrown className='text-info size-8 drop-shadow-[0_0_10px_color-mix(in_oklab,var(--info)_70%,transparent)]' />
+          <GiLaurelCrown className='text-info glow-info icon-glow size-8' />
         }
       />
 

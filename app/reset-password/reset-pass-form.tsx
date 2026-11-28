@@ -47,7 +47,7 @@ export default function ResetPassForm() {
       className='relative w-full max-w-md'
     >
       {/* Card */}
-      <div className='min-[28rem]:glass-dark border-0 p-8 min-[28rem]:rounded-2xl min-[28rem]:border min-[28rem]:shadow-2xl'>
+      <div className='min-[28rem]:glass-strong border-0 p-8 min-[28rem]:rounded-2xl min-[28rem]:border min-[28rem]:shadow-2xl'>
         {/* Header */}
         <div className='mb-8 text-center'>
           <motion.h1

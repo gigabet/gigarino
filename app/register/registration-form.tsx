@@ -56,7 +56,7 @@ export default function RegistrationForm() {
       className='relative w-full max-w-lg'
     >
       {/* Card */}
-      <div className='min-[32rem]:glass-dark border-0 p-8 min-[32rem]:rounded-2xl min-[32rem]:border min-[32rem]:shadow-2xl'>
+      <div className='min-[32rem]:glass-strong border-0 p-8 min-[32rem]:rounded-2xl min-[32rem]:border min-[32rem]:shadow-2xl'>
         {/* Header */}
         <div className='mb-8 text-center'>
           <motion.h1

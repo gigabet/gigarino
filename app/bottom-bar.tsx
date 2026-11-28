@@ -23,16 +23,16 @@ export default function BottomBar(props: {
   const t = useT()
 
   return (
-    <div className='glass-dark fixed bottom-0 left-0 z-50 h-20 w-full lg:hidden [body[data-scroll-locked]_&]:pr-(--removed-body-scroll-bar-size,0px)'>
+    <div className='glass-strong fixed bottom-0 left-0 z-50 h-20 w-full lg:hidden [body[data-scroll-locked]_&]:pr-(--removed-body-scroll-bar-size,0px)'>
       <nav className='mx-auto flex h-full w-full max-w-480 items-center justify-around'>
         {props.links.map(link => (
           <Link
             key={link.label}
             href={link.href}
             className={cx(
-              'group flex flex-1 flex-col items-center justify-center gap-1.5 transition-all duration-300 text-shadow-[0_0_18px] text-shadow-transparent',
+              'group flex flex-1 flex-col items-center justify-center gap-1.5 transition-all duration-300',
               pathname === link.href
-                ? 'text-brand text-shadow-primary'
+                ? 'text-brand text-glow-md'
                 : 'text-secondary hover:text-foreground'
             )}
           >
@@ -73,8 +73,8 @@ function MyTicketsButton() {
         setOpen(true)
       }}
       className={cx(
-        'group flex flex-1 flex-col items-center justify-center gap-1.5 transition-all duration-300 text-shadow-[0_0_18px] text-shadow-transparent',
-        active ? 'text-brand text-shadow-primary' : 'text-secondary hover:text-foreground'
+        'group flex flex-1 flex-col items-center justify-center gap-1.5 transition-all duration-300',
+        active ? 'text-brand text-glow-md' : 'text-secondary hover:text-foreground'
       )}
     >
       <span className='relative'>

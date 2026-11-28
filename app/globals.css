@@ -39,6 +39,8 @@ layer(base);
     --primary: oklch(84% 0.2 124);
     --primary-foreground: var(--color-black);
     --brand: oklch(50% 0.15 131);
+    /* fill for selected/hovered controls: fresh pale lime (brand/10 over a grey control goes olive) */
+    --brand-tint: oklch(95% 0.09 124);
     --secondary: oklch(36% 0.025 275);
     --secondary-foreground: var(--foreground);
     --subtle: oklch(47% 0.02 275);
@@ -65,21 +67,56 @@ layer(base);
     --ring: var(--brand);
     --radius: 0.625rem;
 
-    /* neon glass */
-    --glass-bg: oklch(100% 0 0 / 0.6);
-    --glass-bg-strong: oklch(100% 0 0 / 0.84);
-    --glass-border: oklch(0% 0 0 / 0.08);
-    --glass-highlight: inset 0 1px 0 oklch(100% 0 0 / 0.9);
-    --glass-shadow: 0 10px 30px -12px oklch(35% 0.12 285 / 0.28);
-    --glow: oklch(72% 0.2 126 / 0.45);
-    --glow-lg: oklch(72% 0.2 126 / 0.55);
-    --glow-purple: oklch(58% 0.24 287 / 0.4);
+    /* Glass: frosted white over the aurora. A white top-lit edge plus a hairline ring reads as
+       lit glass; shadows are tinted indigo, never black, so nothing goes muddy. */
+    --glass-bg: oklch(100% 0 0 / 0.58);
+    --glass-bg-strong: oklch(100% 0 0 / 0.82);
+    --glass-border: oklch(100% 0 0 / 0.75);
+    --glass-highlight: inset 0 1px 0 oklch(100% 0 0 / 0.95), 0 0 0 1px oklch(28% 0.05 275 / 0.07);
+    --glass-shadow:
+      0 1px 2px oklch(28% 0.05 275 / 0.06), 0 14px 32px -12px oklch(35% 0.12 280 / 0.24);
+    --glass-shadow-flat: 0 1px 2px oklch(28% 0.05 275 / 0.06);
+
+    /* Glow. A zero-offset halo disappears on a light page (or turns into a grey shadow), so in
+       light mode a glow is a saturated, tinted, y-offset shadow with a lit top edge. Text and
+       icon glows are off. --glow-c is the hue the glow-* utilities draw with. */
+    --glow-c: oklch(68% 0.21 130);
+    --glow: oklch(62% 0.2 131 / 0.4);
+    --glow-lg: oklch(62% 0.2 131 / 0.5);
+    --glow-purple: oklch(55% 0.24 287 / 0.4);
     --glow-text: transparent;
+    --glow-text-fg: transparent;
+    --glow-text-fg-strong: transparent;
+    --glow-shadow:
+      0 8px 20px -6px oklch(62% 0.2 131 / 0.55), 0 2px 4px oklch(55% 0.18 131 / 0.25),
+      inset 0 1px 0 oklch(100% 0 0 / 0.45);
+    --glow-shadow-lg:
+      0 14px 32px -8px oklch(62% 0.2 131 / 0.6), 0 3px 8px oklch(55% 0.18 131 / 0.3),
+      inset 0 1px 0 oklch(100% 0 0 / 0.5);
+    --glow-shadow-purple:
+      0 8px 20px -6px oklch(55% 0.24 287 / 0.5), 0 2px 4px oklch(48% 0.22 287 / 0.25),
+      inset 0 1px 0 oklch(100% 0 0 / 0.3);
+
+    /* elevation: the stock Tailwind shadow scale, tinted instead of black */
+    --elev-2xs: 0 1px oklch(28% 0.06 275 / 0.05);
+    --elev-xs: 0 1px 2px oklch(28% 0.06 275 / 0.06);
+    --elev-sm: 0 1px 3px oklch(28% 0.06 275 / 0.08), 0 1px 2px -1px oklch(28% 0.06 275 / 0.08);
+    --elev-md: 0 4px 8px -2px oklch(28% 0.06 275 / 0.09), 0 2px 4px -2px oklch(28% 0.06 275 / 0.06);
+    --elev-lg: 0 12px 24px -6px oklch(28% 0.06 275 / 0.12), 0 4px 8px -4px oklch(28% 0.06 275 / 0.07);
+    --elev-xl: 0 20px 32px -8px oklch(28% 0.07 278 / 0.14), 0 8px 12px -6px oklch(28% 0.07 278 / 0.08);
+    --elev-2xl: 0 32px 64px -16px oklch(30% 0.1 280 / 0.28);
+
+    /* casino / provider tiles (image cards): rest, then lifted on hover */
+    --tile-shadow:
+      0 1px 2px oklch(28% 0.06 275 / 0.08), 0 8px 24px -8px oklch(35% 0.1 280 / 0.25);
+    --tile-shadow-hover:
+      0 2px 4px oklch(28% 0.06 275 / 0.08), 0 24px 48px -16px oklch(35% 0.12 280 / 0.4),
+      0 12px 32px -12px oklch(62% 0.2 131 / 0.45);
 
     /* background aurora + grid */
-    --aurora-lime: oklch(88% 0.19 124 / 0.42);
-    --aurora-violet: oklch(80% 0.12 290 / 0.38);
-    --aurora-sky: oklch(88% 0.08 225 / 0.45);
+    --aurora-lime: oklch(88% 0.19 124 / 0.34);
+    --aurora-violet: oklch(80% 0.12 290 / 0.34);
+    --aurora-sky: oklch(88% 0.08 225 / 0.42);
     --grid-line: oklch(30% 0.05 275 / 0.06);
 
     /* sport accents (see lib/sport-theme.ts) */
@@ -116,6 +153,7 @@ layer(base);
 
     --primary: var(--color-lime);
     --brand: var(--color-lime);
+    --brand-tint: color-mix(in oklab, var(--brand) 10%, transparent);
     --secondary: oklch(78% 0.022 261.5); /* was 70.5%, secondary text */
     --subtle: oklch(62% 0.02 265);
     --muted: oklch(26% 0.015 280);
@@ -142,10 +180,32 @@ layer(base);
     --glass-border: oklch(100% 0 0 / 0.1);
     --glass-highlight: inset 0 1px 0 oklch(100% 0 0 / 0.08);
     --glass-shadow: 0 12px 40px -12px oklch(0% 0 0 / 0.6);
+    --glass-shadow-flat: 0 0 #0000;
+
+    /* dark: the neon halos, unchanged */
+    --glow-c: var(--primary);
     --glow: oklch(91.2% 0.17 121.3 / 0.5);
     --glow-lg: oklch(91.2% 0.17 121.3 / 0.6);
     --glow-purple: oklch(60.2% 0.23 287.2 / 0.5);
     --glow-text: oklch(91.2% 0.17 121.3 / 0.5);
+    --glow-text-fg: color-mix(in oklab, var(--foreground) 60%, transparent);
+    --glow-text-fg-strong: color-mix(in oklab, var(--foreground) 90%, transparent);
+    --glow-shadow: 0 0 20px var(--glow);
+    --glow-shadow-lg: 0 0 40px var(--glow-lg);
+    --glow-shadow-purple: 0 0 20px var(--glow-purple);
+
+    /* Tailwind's stock shadow scale */
+    --elev-2xs: 0 1px rgb(0 0 0 / 0.05);
+    --elev-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --elev-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --elev-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --elev-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --elev-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --elev-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
+    --tile-shadow: 0 4px 20px rgb(0 0 0 / 0.3);
+    --tile-shadow-hover:
+      0 20px 40px rgb(0 0 0 / 0.5), 0 0 30px color-mix(in oklab, var(--primary) 20%, transparent);
 
     --aurora-lime: oklch(91.2% 0.17 121.3 / 0.07);
     --aurora-violet: oklch(60.2% 0.23 287.2 / 0.16);
@@ -205,6 +265,7 @@ layer(base);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-brand: var(--brand);
+  --color-brand-tint: var(--brand-tint);
 
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
@@ -248,10 +309,21 @@ layer(base);
   --font-sans: var(--font-poppins);
   --font-display: var(--font-rajdhani);
 
-  /* inline so the halo follows the active theme */
-  --shadow-glow: 0 0 20px var(--glow);
-  --shadow-glow-lg: 0 0 40px var(--glow-lg);
-  --shadow-glow-purple: 0 0 20px var(--glow-purple);
+  /* inline so every shadow follows the active theme (the shapes are per-theme tokens) */
+  --shadow-glow: var(--glow-shadow);
+  --shadow-glow-lg: var(--glow-shadow-lg);
+  --shadow-glow-purple: var(--glow-shadow-purple);
+  --shadow-tile: var(--tile-shadow);
+  --shadow-tile-hover: var(--tile-shadow-hover);
+
+  /* redefines Tailwind's own scale: tinted in light, stock in dark */
+  --shadow-2xs: var(--elev-2xs);
+  --shadow-xs: var(--elev-xs);
+  --shadow-sm: var(--elev-sm);
+  --shadow-md: var(--elev-md);
+  --shadow-lg: var(--elev-lg);
+  --shadow-xl: var(--elev-xl);
+  --shadow-2xl: var(--elev-2xl);
 }
 
 /* Static design tokens */
@@ -315,10 +387,10 @@ layer(base);
   @keyframes pulse-glow-white {
     0%,
     100% {
-      text-shadow: 0 0 20px --alpha(var(--foreground) / 60%);
+      text-shadow: 0 0 20px var(--glow-text-fg);
     }
     50% {
-      text-shadow: 0 0 24px --alpha(var(--foreground) / 90%);
+      text-shadow: 0 0 24px var(--glow-text-fg-strong);
     }
   }
   @keyframes float {
@@ -455,7 +527,7 @@ layer(base);
 @utility glass-flat {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-highlight);
+  box-shadow: var(--glass-highlight), var(--glass-shadow-flat);
 }
 
 @utility btn-primary {
@@ -502,6 +574,103 @@ layer(base);
 
 @utility text-glow {
   text-shadow: 0 0 20px var(--glow-text);
+}
+
+/*
+ * Emphasis glows. Same markup in both themes, different physics:
+ *   dark   a neon halo around the element (zero offset, blurred)
+ *   light  a tinted, y-offset shadow with a faint ring, which is what a "glow" has to be on a
+ *          light page. Text and icon glows are dark-only (a text-shadow on white is a smudge).
+ *
+ * Sizes: glow-xs (dots, tags) < glow-sm (selected rows / odds) < glow-md (active pills)
+ *        < glow-lg (dialogs, hero panels).
+ * Hue:   --glow-c (lime by default). Retint with glow-accent / glow-info / glow-current.
+ */
+@utility glow-accent {
+  --glow-c: var(--accent);
+}
+
+@utility glow-info {
+  --glow-c: var(--info);
+}
+
+@utility glow-current {
+  --glow-c: currentColor;
+}
+
+@utility glow-xs {
+  box-shadow:
+    0 0 0 2px color-mix(in oklab, var(--glow-c) 20%, transparent),
+    0 1px 4px color-mix(in oklab, var(--glow-c) 45%, transparent);
+
+  @variant dark {
+    box-shadow: 0 0 6px color-mix(in oklab, var(--glow-c) 60%, transparent);
+  }
+}
+
+@utility glow-sm {
+  box-shadow:
+    0 0 0 3px color-mix(in oklab, var(--glow-c) 14%, transparent),
+    0 4px 14px -3px color-mix(in oklab, var(--glow-c) 45%, transparent);
+
+  @variant dark {
+    box-shadow: 0 0 12px color-mix(in oklab, var(--glow-c) 50%, transparent);
+  }
+}
+
+@utility glow-md {
+  box-shadow:
+    0 6px 18px -4px color-mix(in oklab, var(--glow-c) 60%, transparent),
+    0 1px 3px color-mix(in oklab, var(--glow-c) 40%, transparent),
+    inset 0 1px 0 oklch(100% 0 0 / 0.4);
+
+  @variant dark {
+    box-shadow: 0 0 20px var(--glow-c);
+  }
+}
+
+@utility glow-lg {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--glow-c) 25%, transparent),
+    0 20px 40px -14px color-mix(in oklab, var(--glow-c) 55%, transparent),
+    0 6px 14px -6px color-mix(in oklab, var(--glow-c) 35%, transparent);
+
+  @variant dark {
+    box-shadow: 0 0 24px color-mix(in oklab, var(--glow-c) 55%, transparent);
+  }
+}
+
+/* text-glow-fg: foreground-coloured, for the label of a selected control */
+@utility text-glow-fg {
+  @variant dark {
+    text-shadow: 0 0 8px var(--foreground);
+  }
+}
+
+@utility text-glow-sm {
+  @variant dark {
+    text-shadow: 0 0 12px color-mix(in oklab, var(--glow-c) 70%, transparent);
+  }
+}
+
+@utility text-glow-md {
+  @variant dark {
+    text-shadow: 0 0 18px color-mix(in oklab, var(--glow-c) 60%, transparent);
+  }
+}
+
+@utility icon-glow {
+  @variant dark {
+    filter: drop-shadow(0 0 10px color-mix(in oklab, var(--glow-c) 70%, transparent));
+  }
+}
+
+@utility icon-glow-strong {
+  @variant dark {
+    filter: drop-shadow(0 0 2px color-mix(in oklab, var(--glow-c) 80%, transparent))
+      drop-shadow(0 0 6px color-mix(in oklab, var(--glow-c) 80%, transparent))
+      drop-shadow(0 0 12px color-mix(in oklab, var(--glow-c) 80%, transparent));
+  }
 }
 
 @utility scrollbar-hide {

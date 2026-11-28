@@ -161,7 +161,7 @@ export function GameCard({ game }: { game: Game }) {
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
-      <div className='relative scale-100 overflow-hidden rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.3)] transition-all duration-300 group-hover:scale-104 group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.5),0_0_30px_color-mix(in_oklab,var(--primary)_20%,transparent)]'>
+      <div className='relative scale-100 overflow-hidden rounded-xl shadow-tile transition-all duration-300 group-hover:scale-104 group-hover:shadow-tile-hover'>
         {/* Image - 16:10 aspect ratio */}
         <div className='relative aspect-16/10 overflow-hidden'>
           {game.image ? (

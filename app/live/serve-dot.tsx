@@ -9,7 +9,7 @@ export function ServeDot(props: { active: boolean }) {
       className='flex size-2 shrink-0 items-center justify-center'
     >
       {props.active && (
-        <span className='bg-primary shadow-primary/60 size-1.5 rounded-full shadow-[0_0_6px]' />
+        <span className='bg-primary glow-xs size-1.5 rounded-full' />
       )}
     </span>
   )

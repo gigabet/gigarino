@@ -21,7 +21,7 @@ export default function CategoryTabs(props: { categories: typeof categories }) {
             className={cx(
               'shrink-0 rounded-full px-4 py-2 text-sm font-medium transition-all duration-300',
               pathname === `/casino/${category.slug}`
-                ? 'bg-primary text-primary-foreground shadow-primary shadow-[0_0_20px]'
+                ? 'bg-primary text-primary-foreground glow-md'
                 : 'bg-surface text-foreground/70 hover:bg-foreground/10 hover:text-foreground'
             )}
           >
